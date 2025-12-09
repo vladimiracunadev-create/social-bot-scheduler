@@ -1,0 +1,105 @@
+{
+  "name": "Social Bot Receiver (social-bot-scheduler, PHP API)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "social-bot",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "webhook-social-bot",
+      "name": "Webhook Social Bot",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "social-bot-scheduler"
+    },
+    {
+      "parameters": {
+        "functionCode": "const data = items[0].json;\nconst channels = Array.isArray(data.channels) ? data.channels : [];\nconst result = [];\n\nfor (const channel of channels) {\n  result.push({\n    json: {\n      id: data.id,\n      text: data.text,\n      scheduled_at: data.scheduled_at,\n      channel,\n    },\n  });\n}\n\nif (result.length === 0) {\n  result.push({\n    json: {\n      id: data.id,\n      text: data.text,\n      scheduled_at: data.scheduled_at,\n      channel: 'default',\n    },\n  });\n}\n\nreturn result;"
+      },
+      "id": "split-by-channel",
+      "name": "Split by Channel",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        520,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "http://localhost:8080/api/social_bot_receiver.php",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "={{$json[\"id\"]}}"
+            },
+            {
+              "name": "text",
+              "value": "={{$json[\"text\"]}}"
+            },
+            {
+              "name": "channel",
+              "value": "={{$json[\"channel\"]}}"
+            },
+            {
+              "name": "scheduled_at",
+              "value": "={{$json[\"scheduled_at\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "send-to-php-api",
+      "name": "Send to PHP API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        820,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Social Bot": {
+      "main": [
+        [
+          {
+            "node": "Split by Channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split by Channel": {
+      "main": [
+        [
+          {
+            "node": "Send to PHP API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "social-bot-v1-php",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "workflow-social-bot-php",
+  "tags": []
+}
