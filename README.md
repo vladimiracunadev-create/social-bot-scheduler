@@ -56,7 +56,20 @@ De esta forma, el sistema es fácilmente extensible:
 
 ## Estructura de archivos recomendada
 
-```text
+```
+
+---
+
+## Documentación del proyecto
+
+- `LICENSE` — Licencia MIT (2026) — **maintainer@example.com**
+- `NOTICE` — Información de créditos y avisos
+- `CONTRIBUTING.md` — Guía para contribuir y normas
+- `SECURITY.md` — Cómo reportar vulnerabilidades
+- `ROADMAP.md` — Hoja de ruta del proyecto
+
+> Si prefieres otra licencia o quieres que use un contacto distinto, indícalo y lo actualizo.
+text
 social-bot-scheduler/
 ├─ bot.py
 ├─ posts.json
