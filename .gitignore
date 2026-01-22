@@ -11,3 +11,5 @@ logs/
 # Archivos temporales
 __pycache__/
 *.pyc
+
+
