@@ -1,62 +1,47 @@
-# 🌟 Guía para Principiantes: Social Bot Scheduler
+# 🌟 Guía para Principiantes: El Universo Social Bot
 
-¡Bienvenido! Si eres nuevo en este repositorio, no te preocupes. Esta guía está diseñada para explicarte **qué está pasando aquí**, por qué usamos tantos lenguajes diferentes y cómo este sistema te ayuda a ser un maestro de la automatización.
-
----
-
-## 🤔 ¿Qué es esto y para qué sirve?
-
-El **Social Bot Scheduler** es como un "director de orquesta" para tus redes sociales. Su trabajo es tomar mensajes que tú has escrito, esperar al momento exacto en que deben publicarse, y enviarlos a través de internet para que aparezcan en tus canales favoritos.
-
-### ¿A qué ayuda?
-1.  **Ahorro de tiempo**: Escribe todos tus posts una vez al mes y deja que el bot trabaje por ti.
-2.  **Organización**: Mantén un registro claro de qué has publicado y qué falta por salir.
-3.  **Flexibilidad**: Puedes enviar un mismo mensaje a Twitter, Telegram o Slack al mismo tiempo.
+¡Bienvenido! Estás ante un proyecto único. A diferencia de otros bots, este es un **laboratorio de automatización**. Aquí aprenderás cómo diferentes lenguajes de programación pueden hablar entre sí usando un "puente" llamado **n8n**.
 
 ---
 
-## 🏗️ La "Triada" Tecnológica (Python, n8n y PHP)
+## 👋 ¿Qué es un "Caso Technològico"?
 
-En este proyecto verás tres piezas moviéndose juntas. Puede parecer complicado, pero cada una tiene un "superpoder" específico:
+Hemos creado **6 formas diferentes** de hacer lo mismo. Imagina que quieres ir de un punto A a un punto B. Puedes ir en coche, en bici o en avión. 
 
-### 1. 🐍 Python (El Cerebro Programador)
-- **¿Qué es?**: Es el lenguaje que maneja la lógica.
-- **¿Qué hace aquí?**: Lee el archivo `posts.json` (donde están tus mensajes), revisa el reloj y decide: *"¡Oye, ya es hora de enviar este post!"*.
-- **¿Por qué Python?**: Porque es excelente manejando calendarios, datos y procesos en segundo plano.
+En este proyecto:
+- **Punto A (Origen)**: El programa que envía tus mensajes.
+- **n8n (El Puente)**: El cartero que reparte tus mensajes a las redes sociales.
+- **Punto B (Destino)**: La pantalla donde ves que el mensaje llegó bien.
 
-### 2. 🔗 n8n (El Puente de Automatización)
-- **¿Qué es?**: Es una herramienta visual de automatización (como un LEGO para internet).
-- **¿Qué hace aquí?**: Recibe el mensaje que le envía Python y lo "reparte". Si Python dice "Publica esto", n8n se encarga de hablar con las APIs de Facebook, Instagram o X.
-- **¿Por qué n8n?**: Porque conectar una red social a mano es difícil. n8n lo hace fácil con sus "nodos" visuales.
-
-### 3. 🐘 PHP (El Receptor / API)
-- **¿Qué es?**: Un lenguaje clásico de la web.
-- **¿Qué hace aquí?**: Actúa como un "buzón de entrada". En este proyecto, tenemos un script PHP que recibe los datos finales, los guarda en un log y confirma que todo llegó bien.
-- **¿Por qué PHP?**: Muchos servidores web ya tienen PHP instalado. Es la forma más rápida y universal de crear un "punto de recepción" (API) que cualquier servidor pueda entender.
+Cada "Caso" usa un vehículo diferente (Python, Go, Node, etc.). ¡Tú eliges cuál quieres probar!
 
 ---
 
-## 🔄 El Flujo de Trabajo (Paso a Paso)
+## 🛠️ ¿Cómo empiezo? (Sin miedo)
 
-1.  **Tú escribes**: Pones tus posts en el archivo `posts.json`.
-2.  **Python detecta**: El script de Python ve que ya es la hora señalada.
-3.  **Envío al Puente**: Python le "lanza" el mensaje a **n8n**.
-4.  **n8n procesa**: n8n decide a qué canales enviarlo (vía el flujo de trabajo en `n8n/social-bot.json`).
-5.  **PHP confirma**: Al final del camino, el receptor en **PHP** guarda el registro de que el post fue enviado con éxito.
+No necesitas ser un experto. Sigue estos 3 pasos:
 
----
-
-## 🚀 ¿Cómo lo hago funcionar?
-
-Para que no tengas que instalar cada cosa por separado, usamos **Docker**. Imagina que Docker es una caja donde ya viene todo instalado y configurado.
-
-1.  Asegúrate de tener **Docker Desktop** instalado.
-2.  Ejecuta el comando mágico:
+1.  **Ejecuta el Asistente**: Abre tu terminal y escribe:
     ```bash
-    docker-compose up -d
+    python setup.py
     ```
-3.  ¡Listo! El cerebro (Python), el puente (n8n) y el receptor (PHP) estarán hablando entre ellos automáticamente.
+    Elige el número del caso que te dé curiosidad (recomendamos el 1 para empezar).
+
+2.  **Levanta la Infraestructura**: El asistente te dirá un comando de Docker. Escríbelo. Por ejemplo:
+    ```bash
+    docker-compose up -d n8n dest-php
+    ```
+
+3.  **Mira la Magia**: Abre tu navegador en la dirección que el asistente te dio (ej. `http://localhost:8081`). Verás un tablero vacío esperando tus mensajes.
 
 ---
-> [!TIP]
-> Si quieres ver qué está haciendo el bot en tiempo real, usa el comando `make logs`.
+
+## 🧩 ¿Por qué tantos lenguajes?
+
+¡Para que aprendas! 
+- **Python** es genial por su sencillez.
+- **Go** es ultra-rápido.
+- **Node.js** es lo que usa la mayoría de la web actual.
+- **Laravel/Symfony** son como los "tanques" blindados de las empresas.
+
+¡Diviértete explorando la interacción entre todos ellos! 🚀

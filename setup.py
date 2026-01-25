@@ -14,7 +14,7 @@ def run_cmd(cmd, cwd=None):
 
 
 def configure_env(case_id, webhook_suffix):
-    webhook = f"http://n8n:5678/webhook/social-bot-scheduler{webhook_suffix}"
+    webhook = f"http://localhost:5678/webhook/social-bot-scheduler{webhook_suffix}"
     env_content = f"WEBHOOK_URL={webhook}\nLOG_LEVEL=INFO\nPOSTS_FILE=posts.json\n"
     # Escribir en la carpeta del origen del caso
     case_folders = [f for f in os.listdir("cases") if f.startswith(case_id)]
