@@ -62,11 +62,13 @@ python bot.py
 
 ### 📊 ¿Dónde están mis Logs?
 Si los logs aparecen vacíos, sigue estos pasos:
-1.  **Logs en Tiempo Real**: Ejecuta `make logs` en la raíz para ver la actividad de todos los contenedores Docker.
-2.  **Logs de n8n**: Ejecuta `make logs-n8n` para ver si el puente está recibiendo datos.
-3.  **Logs persistentes (Archivos)**: Revisa carpetas como `cases/01-python-to-php/dest/logs/`. Estos archivos solo se crean si el `WEBHOOK_URL` en tu `.env` es correcto y el post llega al destino.
+1.  **Dashboard Maestro (Global)**: Entra en [http://localhost:8080](http://localhost:8080) para ver el estado de todos los casos.
+2.  **Logs en Tiempo Real**: Ejecuta `make logs` en la raíz para ver la actividad de todos los contenedores Docker.
+3.  **Logs de n8n**: Ejecuta `make logs-n8n` para ver si el puente está recibiendo datos.
+4.  **Logs persistentes (Archivos)**: Revisa carpetas como `cases/01-python-to-php/dest/logs/`. Estos archivos solo se crean si el `WEBHOOK_URL` en tu `.env` es correcto y el post llega al destino.
 
-Verifica el Dashboard: [http://localhost:8081](http://localhost:8081)
+Verifica el Dashboard del Caso 01: [http://localhost:8081](http://localhost:8081)
+
 
 
 ---

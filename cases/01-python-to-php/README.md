@@ -5,7 +5,7 @@ Este eje tecnológico demuestra la integración entre un script de automatizaci�
 ## 🏗️ Arquitectura del Flujo
 1.  **Origen (Emisor)**: `bot.py` (Python 3.11)
 2.  **Puente (Orquestador)**: n8n (Nodo Webhook -> Nodo HTTP Request)
-3.  **Destino (Receptor)**: `webhook.php` (Apache/PHP 8.2)
+3.  **Destino (Receptor)**: `index.php` (Apache/PHP 8.2)
 
 ## 🐍 Funcionamiento: Origen (Python)
 El bot de Python actúa como un scheduler local:
