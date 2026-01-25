@@ -12,15 +12,16 @@ from .models import Post
 logging.basicConfig(
     level=settings.LOG_LEVEL,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-    handlers=[logging.StreamHandler(sys.stdout)]
+    handlers=[logging.StreamHandler(sys.stdout)],
 )
 logger = logging.getLogger(__name__)
+
 
 class BotService:
     """
     Servicio principal que coordina la carga, envío y actualización de posts.
     """
-    
+
     def __init__(self):
         self.posts_path = settings.POSTS_FILE
         self.webhook_url = str(settings.WEBHOOK_URL) if settings.WEBHOOK_URL else None
@@ -43,8 +44,7 @@ class BotService:
         try:
             data = [post.model_dump(mode="json") for post in posts]
             self.posts_path.write_text(
-                json.dumps(data, indent=2, ensure_ascii=False), 
-                encoding="utf-8"
+                json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8"
             )
             logger.info("Base de datos de posts actualizada.")
         except Exception as e:
@@ -71,15 +71,15 @@ class BotService:
         logger.info("Iniciando Social Bot Service...")
         all_posts = self.load_posts()
         now = datetime.now()
-        
+
         due_posts = [p for p in all_posts if p.should_publish(now)]
-        
+
         if not due_posts:
             logger.info("No hay posts pendientes.")
             return
 
         logger.info(f"Procesando {len(due_posts)} posts...")
-        
+
         status_changed = False
         for post in due_posts:
             if self.send_post(post):
@@ -88,5 +88,5 @@ class BotService:
 
         if status_changed:
             self.save_posts(all_posts)
-        
+
         logger.info("Ciclo de ejecución completado.")
