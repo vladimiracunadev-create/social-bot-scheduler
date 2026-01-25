@@ -1,6 +1,16 @@
-# Changelog
-
 Todos los cambios notables en este proyecto serán documentados en este archivo.
+
+## [2.1.0] - 2026-01-25
+### Corregido
+- **Estandarización Sistémica**: Todos los receptores internos (Go, Node, FastAPI, React, Sinatra, Flask) ahora escuchan en `/webhook` (o `/webhook.php`), eliminando errores 404 en n8n.
+- **Normalización de Datos**: Unificados los campos de envío de posts a `id`, `text` y `channel` en toda la matriz.
+- **Formateado de Código**: Aplicado `black` a todos los archivos Python para asegurar cumplimiento con el CI.
+- **Construcción de Imágenes**: Añadidas dependencias de compilación (`build-base`) en el Dockerfile de Ruby para evitar fallos de gemas nativas.
+
+### Añadido
+- **Manual de Usuario**: Nueva `Guía Paso a Paso` detallada para principiantes en la carpeta `docs/`.
+- **Dashboard Maestro Funcional**: Los botones de "Probar Integración" ahora abren los verificadores reales de cada caso.
+
 
 ## [2.0.0] - 2026-01-25
 ### Añadido
