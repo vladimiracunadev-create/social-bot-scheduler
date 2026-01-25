@@ -20,4 +20,4 @@ El receptor utiliza un controlador estandarizado de Symfony:
 
 ## 🚦 Verificación
 - **URL Dashboard**: [http://localhost:8086](http://localhost:8086)
-- **Endpoint Webhook**: `POST /webhook.php` (Interno: 80)
+- **Endpoint Webhook**: `POST /index.php` (Interno: 80)

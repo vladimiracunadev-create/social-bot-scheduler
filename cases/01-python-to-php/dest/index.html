@@ -117,7 +117,7 @@
     <script>
         async function fetchLogs() {
             try {
-                const response = await fetch('webhook.php?action=get_logs');
+                const response = await fetch('index.php?action=get_logs');
                 const data = await response.json();
                 const tbody = document.getElementById('log-body');
                 tbody.innerHTML = '';

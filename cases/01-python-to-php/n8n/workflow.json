@@ -18,7 +18,7 @@
         {
             "parameters": {
                 "requestMethod": "POST",
-                "url": "http://dest-php:80/webhook.php",
+                "url": "http://dest-php:80/index.php",
                 "jsonParameters": true,
                 "options": {},
                 "bodyParametersJson": "={{JSON.stringify($json.body)}}"

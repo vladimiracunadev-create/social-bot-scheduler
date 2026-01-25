@@ -53,13 +53,21 @@ Esta es la única parte manual e importante:
 3.  Importa el flujo (Workflow) desde el archivo JSON ubicado en `cases/0X-.../n8n/workflow.json`.
 4.  **ACTIVA** el workflow (switch arriba a la derecha).
 
-### Paso 5: ¡Disparar!
+### Paso 5: ¡Disparar y Monitorear!
 Ejecuta el bot emisor desde su carpeta `origin`:
 ```bash
 cd cases/01-python-to-php/origin
 python bot.py
 ```
-Verifica el resultado en el Dashboard: [http://localhost:8081](http://localhost:8081)
+
+### 📊 ¿Dónde están mis Logs?
+Si los logs aparecen vacíos, sigue estos pasos:
+1.  **Logs en Tiempo Real**: Ejecuta `make logs` en la raíz para ver la actividad de todos los contenedores Docker.
+2.  **Logs de n8n**: Ejecuta `make logs-n8n` para ver si el puente está recibiendo datos.
+3.  **Logs persistentes (Archivos)**: Revisa carpetas como `cases/01-python-to-php/dest/logs/`. Estos archivos solo se crean si el `WEBHOOK_URL` en tu `.env` es correcto y el post llega al destino.
+
+Verifica el Dashboard: [http://localhost:8081](http://localhost:8081)
+
 
 ---
 

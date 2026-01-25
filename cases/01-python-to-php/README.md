@@ -24,4 +24,4 @@ El receptor es un script PHP ligero que actúa como verificador:
 
 ## 🚦 Verificación
 - **URL Dashboard**: [http://localhost:8081](http://localhost:8081)
-- **Endpoint Webhook**: `POST /webhook.php`
+- **Endpoint Webhook**: `POST /index.php`
