@@ -270,6 +270,9 @@
     <header>
         <h1>Social Bot Scheduler: Matriz de Integración</h1>
         <p>Automatización avanzada: Orquestación Multi-Eje mediante n8n</p>
+        <button class="btn-test" style="margin: 1rem auto; background: var(--success);" onclick="runAllCases()">
+            🚀 PROBAR INTEGRACIÓN GLOBAL (TODOS LOS CASOS)
+        </button>
     </header>
 
     <main id="cases-container">
@@ -422,15 +425,50 @@
             terminal.scrollTop = terminal.scrollHeight;
         }
 
-        async function runCase(id, origin, dest) {
+        async function runAllCases() {
+            const cases = [
+                { id: '01', origin: 'Python', dest: 'PHP' },
+                { id: '02', origin: 'Python', dest: 'Go' },
+                { id: '03', origin: 'Go', dest: 'Node.js' },
+                { id: '04', origin: 'Node.js', dest: 'FastAPI' },
+                { id: '05', origin: 'Laravel', dest: 'React' },
+                { id: '06', origin: 'Go', dest: 'Symfony' },
+                { id: '07', origin: 'Rust', dest: 'Ruby' },
+                { id: '08', origin: 'C#', dest: 'Flask' }
+            ];
+
             terminal.innerHTML = `
                 <div class="term-header">
                     <div class="dot red"></div>
                     <div class="dot yellow"></div>
                     <div class="dot green"></div>
-                    <div style="margin-left: 10px; color: #555">bash — testing case ${id}</div>
+                    <div style="margin-left: 10px; color: #555">bash — global-integration-test</div>
                 </div>
             `;
+
+            log(`INICIANDO SECUENCIA MAESTRA DE PRUEBAS`, 'info');
+
+            for (const c of cases) {
+                log(`----------------------------------------`, 'meta');
+                await runCase(c.id, c.origin, c.dest, false); // false to not clear terminal
+                await wait(500);
+            }
+
+            log(`----------------------------------------`, 'meta');
+            log(`✅ TODAS LAS INTEGRACIONES COMPLETADAS`, 'success');
+        }
+
+        async function runCase(id, origin, dest, clear = true) {
+            if (clear) {
+                terminal.innerHTML = `
+                    <div class="term-header">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                        <div style="margin-left: 10px; color: #555">bash — testing case ${id}</div>
+                    </div>
+                `;
+            }
 
             log(`Iniciando prueba de flujo: <b>CASO-${id}</b>`, 'info');
             log(`Configuración: ${origin} ➔ n8n ➔ ${dest}`, 'meta');
@@ -447,7 +485,7 @@
 
             await wait(1500);
             log(`✓ INTEGRACIÓN EXITOSA: Los datos fueron procesados por ${dest} correctamente.`, 'success');
-            log(`Puedes verificar el dashboard en http://localhost:808${id}`, 'meta');
+            if (clear) log(`Puedes verificar el dashboard en http://localhost:808${parseInt(id)}`, 'meta');
         }
 
         function wait(ms) {

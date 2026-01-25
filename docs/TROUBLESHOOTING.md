@@ -1,47 +1,65 @@
 # 🔧 Guía de Solución de Problemas (Troubleshooting)
 
-Si algo no funciona como esperas, consulta esta guía antes de abrir un issue.
+Si encuentras problemas al levantar los contenedores o ejecutar los bots, consulta esta guía revisada. Hemos incluido los problemas detectados durante las pruebas de integración reales.
 
-## 🔴 Problemas Comunes
+---
 
-### 1. El contenedor de n8n no inicia o se reinicia constantemente
-**Causa**: Falta de permisos en la carpeta de datos o conflicto de puertos.
+## 🏗️ Problemas de Docker y Construcción
+
+### ❌ Error: `npm error code EJSONPARSE` (Caso 03: Node.js)
+**Síntoma**: Al hacer `docker-compose up --build`, el contenedor `dest-node` falla con un error de "Unexpected token" al parsear `package.json`.
+**Causa**: El archivo `package.json` fue guardado con codificación UTF-16 (Unicode) en lugar de UTF-8, lo que rompe el motor de Node.js.
 **Solución**:
-- Asegúrate de que el puerto `5678` esté libre.
-- Reinicia los volúmenes:
-  ```bash
-  docker-compose down -v
-  docker-compose up -d n8n
+1.  Asegúrate de que `package.json` esté en formato UTF-8 (sin BOM).
+2.  Puedes usar el script `fix_json.py` incluido en la raíz si el error persiste.
+3.  Borra el caché de docker y reconstruye:
+    ```bash
+    docker-compose build --no-cache dest-node
+    ```
+
+### ❌ Error: `extconf failed, exit code 1` (Caso 07: Ruby/Sinatra)
+**Síntoma**: Fallo al instalar gemas como `puma` o `nio4r` dentro del contenedor Ruby.
+**Causa**: La imagen base `ruby:alpine` es muy ligera y no incluye las herramientas de compilación (`make`, `gcc`) necesarias para algunas gemas.
+**Solución**:
+- Hemos actualizado el `Dockerfile` de `cases/07-rust-to-ruby/dest/` para incluir:
+  ```dockerfile
+  RUN apk add --no-cache build-base
   ```
+- Si creas un nuevo caso basado en Ruby, recuerda incluir siempre `build-base`.
 
-### 2. "Connection Refused" en el Dashboard (localhost:808X)
-**Causa**: El contenedor destino no se ha levantado correctamente.
+---
+
+## 🔗 Problemas de n8n y Flujos
+
+### ❌ Síntoma: El bot dice "Payload sent" pero el Dashboard está vacío
+**Verificaciones**:
+1.  **¿Workflow Activo?**: Abre n8n y verifica que el switch "Active" esté en verde.
+2.  **Webhooks**: n8n por defecto usa URLs dinámicas. Asegúrate de que el path en el nodo Webhook coincida con lo que espera el bot (ej: `social-bot-scheduler-php`).
+3.  **Logs de n8n**: Mira la pestaña "Executions" en n8n para ver si hay errores en el nodo HTTP Request.
+
+---
+
+## 🐍 Problemas de Python y Virtualenvs
+
+### ❌ Error: `ModuleNotFoundError` al ejecutar `bot.py`
+**Causa**: Estás ejecutando el bot con el Python global en lugar del entorno virtual configurado por `setup.py`.
 **Solución**:
-- Verifica los logs:
-  ```bash
-  docker-compose logs dest-php  # o el servicio que estés usando
-  ```
-- Si usas C# (Caso 08) o Rust (Caso 07), asegúrate de haber reconstruido la imagen si cambiaste código:
-  ```bash
-  docker-compose build dest-flask
-  docker-compose up -d dest-flask
-  ```
+- Activa siempre el entorno virtual antes de correr el bot:
+  - **Windows**: `..\..\..\venv\Scripts\activate`
+  - **Linux/Mac**: `source ../../../venv/bin/activate`
+- O usa la ruta directa: `..\..\..\venv\Scripts\python bot.py`.
 
-### 3. El Emisor (Rust/Go/Python) da error de conexión al enviar
-**Causa**: El webhook de n8n no está escuchando o la URL en `.env` es incorrecta.
-**Solución**:
-- Verifica que n8n esté activo en `http://localhost:5678`.
-- Revisa el archivo `.env` en la carpeta `origin` de tu caso. Debe apuntar a `http://localhost:5678/webhook/...`.
+---
 
-### 4. Error al ejecutar `make` en Windows
-**Causa**: Make no está instalado o no está en el PATH.
-**Solución**:
-- Instala Make via Chocolatey: `choco install make`.
-- O usa los comandos de `docker-compose` directamente (mira el `Makefile` para ver qué hacen).
-
-## 🧪 Cómo verificar el estado del sistema
-Ejecuta este comando para ver todos los servicios activos:
+## ⚡ Comandos de Rescate
+Si todo falla, limpia el entorno y empieza de cero:
 ```bash
-docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+# Detener todo y borrar volúmenes (borra datos de n8n)
+docker-compose down -v
+
+# Borrar imágenes antiguas que puedan estar corruptas
+docker system prune -a --volumes
+
+# Reconstruir todo
+docker-compose up -d --build
 ```
-Deberías ver `social-bot-n8n` y tu contenedor destino (ej. `social-bot-dest-ruby`) en estado "Up".

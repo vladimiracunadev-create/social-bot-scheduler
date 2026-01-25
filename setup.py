@@ -87,9 +87,25 @@ def setup():
     ]
     dest_svc = dest_services[int(choice) - 1]
     print(f"   docker-compose up -d n8n {dest_svc}")
-    print(f"\n2. Lanza el emisor ({cases[choice]['name'].split(' -> ')[0]}):")
-    print(f"   Carpeta: cases/{case_folder}/origin")
-    print(f"\n3. Dashboard disponible en:")
+    
+    workflow_path = Path("cases") / case_folder / "n8n" / "workflow.json"
+    print(f"\n2. IMPORTANTE: Configura n8n:")
+    print(f"   - Abre http://localhost:5678")
+    print(f"   - Configura tu cuenta de propietario (si es la primera vez)")
+    print(f"   - Importa el workflow desde: {workflow_path.absolute()}")
+    print(f"   - ACTIVA el workflow switch (arriba a la derecha)")
+
+    print(f"\n3. Lanza el emisor ({cases[choice]['name'].split(' -> ')[0]}):")
+    print(f"   cd cases/{case_folder}/origin")
+    if choice in ["1", "2"]:
+        print(f"   ..\\..\\..\\venv\\Scripts\\activate (Windows) o source ../../../venv/bin/activate (Linux/Mac)")
+        print(f"   python bot.py")
+    elif choice == "4":
+        print(f"   node emisor.js (o el archivo principal)")
+    else:
+        print(f"   Ejecuta el comando correspondiente al lenguaje.")
+
+    print(f"\n4. Dashboard disponible en:")
     print(f"   http://localhost:{8080+int(choice)}")
 
 
