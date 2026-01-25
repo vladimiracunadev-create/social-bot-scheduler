@@ -68,14 +68,14 @@ Tabla de estado actual de los 8 ejes de integración:
 
 | ID | Eje Tecnológico (Origen -> Puente -> Destino) | Dashboard | Estado |
 | :--- | :--- | :--- | :--- |
-| **01** | 🐍 **Python** -> 🔗 n8n -> 🐘 **PHP** | `localhost:8081` | ✅ Operativo |
-| **02** | 🐍 **Python** -> 🔗 n8n -> 🐹 **Go** | `localhost:8082` | ✅ Operativo |
-| **03** | 🐹 **Go** -> 🔗 n8n -> 🍏 **Node.js** | `localhost:8083` | ✅ Operativo |
-| **04** | 🍏 **Node.js** -> 🔗 n8n -> 🐍 **FastAPI** | `localhost:8084` | ✅ Operativo |
-| **05** | 🐘 **Laravel** -> 🔗 n8n -> ⚛️ **React** | `localhost:8085` | ✅ Operativo |
-| **06** | 🐹 **Go** -> 🔗 n8n -> 🐘 **Symfony** | `localhost:8086` | ✅ Operativo |
-| **07** | 🦀 **Rust** -> 🔗 n8n -> 💎 **Ruby** | `localhost:8087` | ✅ Operativo |
-| **08** | ❄️ **C#** -> 🔗 n8n -> 🌶️ **Flask** | `localhost:8088` | ✅ Operativo |
+| [**01**](cases/01-python-to-php/README.md) | 🐍 **Python** -> 🔗 n8n -> 🐘 **PHP** | `localhost:8081` | ✅ Operativo |
+| [**02**](cases/02-python-to-go/README.md) | 🐍 **Python** -> 🔗 n8n -> 🐹 **Go** | `localhost:8082` | ✅ Operativo |
+| [**03**](cases/03-go-to-node/README.md) | 🐹 **Go** -> 🔗 n8n -> 🍏 **Node.js** | `localhost:8083` | ✅ Operativo |
+| [**04**](cases/04-node-to-fastapi/README.md) | 🍏 **Node.js** -> 🔗 n8n -> 🐍 **FastAPI** | `localhost:8084` | ✅ Operativo |
+| [**05**](cases/05-laravel-to-react/README.md) | 🐘 **Laravel** -> 🔗 n8n -> ⚛️ **React** | `localhost:8085` | ✅ Operativo |
+| [**06**](cases/06-go-to-symfony/README.md) | 🐹 **Go** -> 🔗 n8n -> 🐘 **Symfony** | `localhost:8086` | ✅ Operativo |
+| [**07**](cases/07-rust-to-ruby/README.md) | 🦀 **Rust** -> 🔗 n8n -> 💎 **Ruby** | `localhost:8087` | ✅ Operativo |
+| [**08**](cases/08-csharp-to-flask/README.md) | ❄️ **C#** -> 🔗 n8n -> 🌶️ **Flask** | `localhost:8088` | ✅ Operativo |
 
 ---
 
