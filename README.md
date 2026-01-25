@@ -2,7 +2,10 @@
 ### *Automatización avanzada: Orquestación de Python, Go, Node.js y PHP mediante n8n.*
 
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
-[![Ecosystem](https://img.shields.io/badge/Matriz-6_Ejes-blueviolet.svg)]()
+[![Ecosystem](https://img.shields.io/badge/Matriz-8_Ejes-blueviolet.svg)]()
+[![License](https://img.shields.io/github/license/vladimiracunadev-create/social-bot-scheduler)](LICENSE)
+[![Repo Size](https://img.shields.io/github/repo-size/vladimiracunadev-create/social-bot-scheduler)]()
+[![Last Commit](https://img.shields.io/github/last-commit/vladimiracunadev-create/social-bot-scheduler)]()
 [![Documentation](https://img.shields.io/badge/docs-completo-green.svg)]()
 
 ---
@@ -38,7 +41,7 @@ Hemos simplificado la complejidad. No necesitas configurar cada caso a mano.
     ```bash
     python setup.py
     ```
-2.  **Elige tu Eje**: Selecciona del 1 al 6. El script configurará archivos `.env`, instalará dependencias y preparará el terreno para ese caso específico.
+2.  **Elige tu Eje**: Selecciona del 1 al 8. El script configurará archivos `.env`, instalará dependencias y preparará el terreno para ese caso específico.
 3.  **Lanza el Destino**:
     ```bash
     docker-compose up -d n8n [servicio-elegido]
