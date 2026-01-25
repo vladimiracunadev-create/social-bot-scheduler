@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: social-bot-config
+data:
+  # Variables de entorno no sensibles
+  LOG_LEVEL: "INFO"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: social-bot-posts
+data:
+  posts.json: |
+    [
+      {
+        "id": "welcome-post",
+        "text": "¡Hola desde Kubernetes!",
+        "channels": ["twitter", "telegram"],
+        "scheduled_at": "2026-01-25T17:00:00"
+      }
+    ]

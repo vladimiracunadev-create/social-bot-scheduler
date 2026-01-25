@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: social-bot-scheduler
+  labels:
+    app: social-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: social-bot
+  template:
+    metadata:
+      labels:
+        app: social-bot
+    spec:
+      containers:
+      - name: bot
+        image: social-bot-scheduler:latest
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: social-bot-config
+        - secretRef:
+            name: social-bot-secrets
+        volumeMounts:
+        - name: posts-data
+          mountPath: /app/posts.json
+          subPath: posts.json
+      volumes:
+      - name: posts-data
+        configMap:
+          name: social-bot-posts

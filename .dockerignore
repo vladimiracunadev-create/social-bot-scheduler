@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.git
+.gitignore
+.vscode
+Dockerfile
+docker-compose.yml
+README.md
+Makefile
+k8s/
