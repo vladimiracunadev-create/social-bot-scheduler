@@ -23,9 +23,9 @@ class Program
 
         var posts = new List<object>
         {
-            new { id = 1, content = "C# y .NET son robustos para empresas. 🏢", platform = "linkedin" },
-            new { id = 2, content = "Flask es ligero y flexible. 🌶️", platform = "twitter" },
-            new { id = 3, content = "La interoperabilidad es clave en microservicios. 🌐", platform = "facebook" }
+            new { id = 1, text = "C# y .NET son robustos para empresas. 🏢", channel = "linkedin" },
+            new { id = 2, text = "Flask es ligero y flexible. 🌶️", channel = "twitter" },
+            new { id = 3, text = "La interoperabilidad es clave en microservicios. 🌐", channel = "facebook" }
         };
 
         while (true)

@@ -18,7 +18,7 @@
         {
             "parameters": {
                 "requestMethod": "POST",
-                "url": "http://dest-php:80/social_bot_receiver.php",
+                "url": "http://dest-php:80/webhook.php",
                 "jsonParameters": true,
                 "options": {},
                 "bodyParametersJson": "={{JSON.stringify($json.body)}}"

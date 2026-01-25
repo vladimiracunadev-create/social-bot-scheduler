@@ -16,8 +16,8 @@ post '/webhook' do
   
   new_post = {
     'id' => $posts.length + 1,
-    'content' => data['content'],
-    'platform' => data['platform'],
+    'text' => data['text'],
+    'channel' => data['channel'],
     'timestamp' => Time.now.strftime("%Y-%m-%d %H:%M:%S")
   }
   
@@ -26,7 +26,7 @@ post '/webhook' do
     $posts.pop
   end
   
-  puts "📥 New post received: #{new_post['content']}"
+  puts "📥 New post received: #{new_post['text']}"
   { status: 'success', message: 'Post received' }.to_json
 end
 

@@ -18,7 +18,7 @@
         {
             "parameters": {
                 "requestMethod": "POST",
-                "url": "http://dest-symfony:80/webhook",
+                "url": "http://dest-symfony:80/webhook.php",
                 "jsonParameters": true,
                 "options": {},
                 "bodyParametersJson": "={{JSON.stringify($json.body)}}"

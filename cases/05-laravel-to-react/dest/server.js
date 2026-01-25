@@ -12,7 +12,7 @@ app.use(express.json());
 // Servir frontend React (compilado o estático)
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.post('/api/receive', (req, res) => {
+app.post('/webhook', (req, res) => {
     const post = req.body;
     const logLine = `[${new Date().toISOString()}] REACT-DASHBOARD | id=${post.id} | channel=${post.channel} | text=${post.text}\n`;
     fs.appendFileSync(LOG_FILE, logLine);

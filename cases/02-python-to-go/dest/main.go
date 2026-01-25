@@ -70,7 +70,7 @@ func main() {
 		})
 	})
 
-	http.HandleFunc("/social-bot", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/webhook", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
 			return

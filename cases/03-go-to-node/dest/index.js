@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Endpoint para recibir posts
-app.post('/social-bot', (req, res) => {
+app.post('/webhook', (req, res) => {
     const post = req.body;
 
     if (!post.id || !post.text) {

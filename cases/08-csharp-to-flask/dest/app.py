@@ -21,8 +21,8 @@ def webhook():
 
         new_post = {
             "id": len(posts) + 1,
-            "content": data.get("content", "No content"),
-            "platform": data.get("platform", "unknown"),
+            "text": data.get("text", data.get("content", "No content")),
+            "channel": data.get("channel", data.get("platform", "unknown")),
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         }
 
@@ -30,7 +30,7 @@ def webhook():
         if len(posts) > 20:
             posts.pop()
 
-        print(f"📥 New post received: {new_post['content']}")
+        print(f"📥 New post received: {new_post['text']}")
         return jsonify({"status": "success", "message": "Post received"})
     except Exception as e:
         print(f"❌ Error processing webhook: {e}")

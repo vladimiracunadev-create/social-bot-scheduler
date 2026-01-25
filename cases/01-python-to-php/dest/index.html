@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,7 @@
             --card: rgba(30, 41, 59, 0.7);
             --text: #f8fafc;
         }
+
         body {
             font-family: 'Outfit', sans-serif;
             background: var(--bg);
@@ -22,10 +24,12 @@
             flex-direction: column;
             align-items: center;
         }
+
         .container {
             width: 100%;
             max-width: 900px;
         }
+
         h1 {
             font-weight: 600;
             background: linear-gradient(90deg, #818cf8, #c084fc);
@@ -33,29 +37,34 @@
             -webkit-text-fill-color: transparent;
             margin-bottom: 30px;
         }
+
         .card {
             background: var(--card);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
+
         th {
             text-align: left;
             padding: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             color: #94a3b8;
         }
+
         td {
             padding: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
+
         .badge {
             padding: 4px 8px;
             border-radius: 6px;
@@ -63,6 +72,7 @@
             background: rgba(99, 102, 241, 0.2);
             color: #818cf8;
         }
+
         .status-dot {
             height: 8px;
             width: 8px;
@@ -74,14 +84,17 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h1>🚀 Social Bot Receiver <span style="font-size: 0.5em; vertical-align: middle;" class="badge">PHP Case</span></h1>
-        
+        <h1>🚀 Social Bot Receiver <span style="font-size: 0.5em; vertical-align: middle;" class="badge">PHP Case</span>
+        </h1>
+
         <div class="card">
             <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <h2 style="margin:0; font-size: 1.2rem;"><span class="status-dot"></span>Últimos Logs</h2>
-                <button onclick="fetchLogs()" style="background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Refrescar</button>
+                <button onclick="fetchLogs()"
+                    style="background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Refrescar</button>
             </div>
             <table>
                 <thead>
@@ -93,7 +106,9 @@
                     </tr>
                 </thead>
                 <tbody id="log-body">
-                    <tr><td colspan="4" style="text-align:center;">Cargando logs...</td></tr>
+                    <tr>
+                        <td colspan="4" style="text-align:center;">Cargando logs...</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -102,11 +117,11 @@
     <script>
         async function fetchLogs() {
             try {
-                const response = await fetch('social_bot_receiver.php?action=get_logs');
+                const response = await fetch('webhook.php?action=get_logs');
                 const data = await response.json();
                 const tbody = document.getElementById('log-body');
                 tbody.innerHTML = '';
-                
+
                 if (data.logs.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No hay logs disponibles</td></tr>';
                     return;
@@ -133,4 +148,5 @@
         setInterval(fetchLogs, 5000);
     </script>
 </body>
+
 </html>

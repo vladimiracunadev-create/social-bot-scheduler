@@ -485,7 +485,11 @@
 
             await wait(1500);
             log(`✓ INTEGRACIÓN EXITOSA: Los datos fueron procesados por ${dest} correctamente.`, 'success');
-            if (clear) log(`Puedes verificar el dashboard en http://localhost:808${parseInt(id)}`, 'meta');
+            if (clear) {
+                const port = 8080 + parseInt(id);
+                log(`Abriendo dashboard de verificación en http://localhost:${port}`, 'meta');
+                window.open(`http://localhost:${port}`, '_blank');
+            }
         }
 
         function wait(ms) {

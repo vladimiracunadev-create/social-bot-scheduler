@@ -18,7 +18,7 @@
         {
             "parameters": {
                 "requestMethod": "POST",
-                "url": "http://dest-react:4000/api/webhook",
+                "url": "http://dest-react:4000/webhook",
                 "jsonParameters": true,
                 "options": {},
                 "bodyParametersJson": "={{JSON.stringify($json.body)}}"

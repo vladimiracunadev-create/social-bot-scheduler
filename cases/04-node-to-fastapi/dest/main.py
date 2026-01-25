@@ -16,7 +16,7 @@ class Post(BaseModel):
     scheduled_at: str = None
 
 
-@app.post("/social-bot")
+@app.post("/webhook")
 async def receive_post(post: Post):
     log_line = f"[{datetime.now().isoformat()}] FASTAPI-RECEIVER | id={post.id} | channel={post.channel} | text={post.text}\n"
 
