@@ -1,33 +1,27 @@
-# 📖 Índice de Casos Tecnológicos
+# 📔 Índice de la Matriz Tecnológica
 
-Este repositorio ya no es una solución aislada, sino un catálogo de arquitecturas para la automatización de redes sociales. Elige el caso que mejor se adapte a tu infraestructura.
+Descubre por qué hemos elegido estas combinaciones y qué beneficios aporta cada una a tu flujo de trabajo.
 
 ---
 
-## 🏗️ Comparativa de Casos
+## 📊 Comparativa de Emisores (Origen)
+| Tecnología | Caso | Ventaja | Uso Recomendado |
+| :--- | :--- | :--- | :--- |
+| **Python** | 01, 02 | Facilidad de scripting y librerías robustas (Pydantic). | Prototipado rápido y validación de tipos compleja. |
+| **Go** | 03 | Binario único, ultra-rápido y concurrente. | Sistemas embebidos o servidores de alta carga. |
+| **Node.js** | 04 | Manejo asíncrono nativo excelente. | Integración con otros servicios JS existentes. |
 
-| Característica | [Caso 01: Python-n8n-PHP](../cases/01-python-n8n-php/) | [Caso 02: Python-n8n-Go](../cases/02-python-n8n-go/) |
+---
+
+## 🛠️ Comparativa de Receptores (Destino)
+| Tecnología | Dashboard | Por qué elegirlo |
 | :--- | :--- | :--- |
-| **Pila Receptor** | PHP 8.2 (Apache) | Go 1.21 (Alpine) |
-| **Rendimiento** | Estándar / Versátil | Alto / Ligero |
-| **Uso Ideal** | Servidores Web hosting. | Microservicios / Cloud Native. |
-| **Escalabilidad** | Media (PHP-FPM) | Muy Alta (Concurrencia nativa) |
-| **Instalación** | Carga dinámica de archivos. | Ejecutable compilado (Docker). |
+| **PHP** | 0801 | Universalidad. Casi cualquier servidor web lo corre "out of the box". |
+| **Go** | 0802 | Eficiencia extrema. El receptor ocupa menos de 10MB de RAM. |
+| **Node.js** | 0803 | Flexibilidad. Fácil de extender con Express y middlewares. |
+| **FastAPI** | 0804 | Velocidad Python. Rendimiento comparable a Node con sintaxis Python moderna. |
 
 ---
 
-## 🔎 Detalle de Implementación
-
-### Caso 01: El Clásico
-Utiliza un script PHP sencillo para capturar los posts. Es ideal si ya tienes un servidor con Apache o Nginx y PHP. Es fácil de modificar "al vuelo" sin necesidad de recompilar nada.
-
-### Caso 02: La Potencia
-Utiliza un receptor escrito íntegramente en Go. Es extremadamente rápido y consume muy pocos recursos (RAM/CPU) en el contenedor Docker. Ideal si planeas procesar miles de posts por minuto.
-
----
-
-## 🚦 ¿Cómo cambiar entre casos?
-No necesitas borrar nada. El sistema está diseñado para alternar:
-1. Ejecuta `python setup.py`.
-2. Elige el número del caso.
-3. El launcher actualizará tu `.env` y te dirá qué contenedores levantar.
+## 🔄 El Rol de n8n
+En todos los casos, **n8n** actúa como la capa de abstracción. Esto significa que puedes cambiar el Emisor o el Receptor sin que tus flujos de publicación en Facebook, Twitter o Slack se rompan. Es el seguro de vida de tu automatización.

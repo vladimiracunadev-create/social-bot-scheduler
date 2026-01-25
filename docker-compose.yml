@@ -1,20 +1,7 @@
 version: '3.8'
 
 services:
-  # 🐍 El cerebro (Python) - Compartido
-  bot:
-    build: .
-    container_name: social-bot-scheduler
-    volumes:
-      - .:/app
-    env_file:
-      - .env
-    depends_on:
-      - n8n
-    networks:
-      - bot-network
-
-  # 🔗 El puente (n8n) - Compartido
+  # 🔗 El puente (n8n) - Compartido por todos los ejes
   n8n:
     image: n8nio/n8n:latest
     container_name: social-bot-n8n
@@ -27,23 +14,41 @@ services:
     networks:
       - bot-network
 
-  # 🐘 Caso 01: Receptor PHP
-  api-php:
+  # 🐘 Caso 01: Destino PHP
+  dest-php:
     image: php:8.2-apache
-    container_name: social-bot-api-php
+    container_name: social-bot-dest-php
     ports:
       - "8081:80"
     volumes:
-      - ./cases/01-python-n8n-php/api:/var/www/html
+      - ./cases/01-python-to-php/dest:/var/www/html
     networks:
       - bot-network
 
-  # 🐹 Caso 02: Receptor Go
-  api-go:
-    build: ./cases/02-python-n8n-go/api
-    container_name: social-bot-api-go
+  # 🐹 Caso 02: Destino Go
+  dest-go:
+    build: ./cases/02-python-to-go/dest
+    container_name: social-bot-dest-go
     ports:
       - "8082:8080"
+    networks:
+      - bot-network
+
+  # 🍏 Caso 03: Destino Node.js
+  dest-node:
+    build: ./cases/03-go-to-node/dest
+    container_name: social-bot-dest-node
+    ports:
+      - "8083:3000"
+    networks:
+      - bot-network
+
+  # 🐍 Caso 04: Destino FastAPI
+  dest-fastapi:
+    build: ./cases/04-node-to-fastapi/dest
+    container_name: social-bot-dest-fastapi
+    ports:
+      - "8084:8000"
     networks:
       - bot-network
 

@@ -15,7 +15,18 @@ if (!is_dir($logDir)) {
     mkdir($logDir, 0775, true);
 }
 
-// Siempre respondemos JSON
+// --- HANDLE ACTIONS ------------------------------------------------------
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'get_logs') {
+    $logs = array();
+    if (file_exists($logFile)) {
+        $logs = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    }
+    header('Content-Type: application/json');
+    echo json_encode(array('ok' => true, 'logs' => $logs));
+    exit;
+}
+
+// Siempre respondemos JSON para POST
 header('Content-Type: application/json; charset=utf-8');
 
 // --- VALIDAR MÉTODO ------------------------------------------------------

@@ -6,5 +6,6 @@ RUN go build -o receiver main.go
 FROM alpine:latest
 WORKDIR /root/
 COPY --from=builder /app/receiver .
+COPY index.html .
 EXPOSE 8080
 CMD ["./receiver"]

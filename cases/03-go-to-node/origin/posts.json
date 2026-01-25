@@ -1,0 +1,12 @@
+[
+  {
+    "id": "welcome-post",
+    "text": "¡Hola desde el nuevo Bot mejorado!",
+    "channels": [
+      "twitter",
+      "telegram"
+    ],
+    "scheduled_at": "2026-01-24T17:00:00",
+    "published": true
+  }
+]

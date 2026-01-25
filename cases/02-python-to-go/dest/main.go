@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -17,12 +18,57 @@ type Post struct {
 	ScheduledAt string `json:"scheduled_at"`
 }
 
+var (
+	logMutex sync.Mutex
+	logFile  *os.File
+)
+
 func main() {
-	logFile, err := os.OpenFile("social_bot_go.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	var err error
+	logFile, err = os.OpenFile("social_bot_go.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer logFile.Close()
+
+	// Servir DASHBOARD (index.html)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/" {
+			http.NotFound(w, r)
+			return
+		}
+		http.ServeFile(w, r, "index.html")
+	})
+
+	// Endpoint de LOGS para el dashboard
+	http.HandleFunc("/logs", func(w http.ResponseWriter, r *http.Request) {
+		logMutex.Lock()
+		defer logMutex.Unlock()
+		
+		content, err := os.ReadFile("social_bot_go.log")
+		if err != nil {
+			http.Error(w, "Error leyendo logs", http.StatusInternalServerError)
+			return
+		}
+		
+		// Convertir líneas a array
+		lines := []string{}
+		currLine := ""
+		for _, b := range content {
+			if b == '\n' {
+				lines = append(lines, currLine)
+				currLine = ""
+			} else {
+				currLine += string(b)
+			}
+		}
+		
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"ok": true,
+			"logs": lines,
+		})
+	})
 
 	http.HandleFunc("/social-bot", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
@@ -57,9 +103,11 @@ func main() {
 			post.Text,
 		)
 
+		logMutex.Lock()
 		if _, err := logFile.WriteString(logLine); err != nil {
 			log.Printf("Error escribiendo en log: %v", err)
 		}
+		logMutex.Unlock()
 
 		fmt.Printf("Post recibido en Go: %s\n", post.ID)
 
