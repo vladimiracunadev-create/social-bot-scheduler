@@ -17,9 +17,7 @@ class Settings(BaseSettings):
     # Configuración para cargar desde .env
     # Busca .env en el directorio actual o en el padre (para ejecución desde raíz)
     model_config = SettingsConfigDict(
-        env_file=[".env", "../.env"], 
-        env_file_encoding="utf-8", 
-        extra="ignore"
+        env_file=[".env", "../.env"], env_file_encoding="utf-8", extra="ignore"
     )
 
 

@@ -87,7 +87,7 @@ def setup():
     ]
     dest_svc = dest_services[int(choice) - 1]
     print(f"   docker-compose up -d n8n {dest_svc}")
-    
+
     workflow_path = Path("cases") / case_folder / "n8n" / "workflow.json"
     print(f"\n2. IMPORTANTE: Configura n8n:")
     print(f"   - Abre http://localhost:5678")
@@ -98,7 +98,9 @@ def setup():
     print(f"\n3. Lanza el emisor ({cases[choice]['name'].split(' -> ')[0]}):")
     print(f"   cd cases/{case_folder}/origin")
     if choice in ["1", "2"]:
-        print(f"   ..\\..\\..\\venv\\Scripts\\activate (Windows) o source ../../../venv/bin/activate (Linux/Mac)")
+        print(
+            f"   ..\\..\\..\\venv\\Scripts\\activate (Windows) o source ../../../venv/bin/activate (Linux/Mac)"
+        )
         print(f"   python bot.py")
     elif choice == "4":
         print(f"   node emisor.js (o el archivo principal)")
