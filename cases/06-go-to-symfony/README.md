@@ -1,22 +1,23 @@
-# Case 06: Go ➔ n8n ➔ Symfony
-## 🏗️ Architecture
-- **Origin**: Go CLI Application
-- **Bridge**: n8n Webhook
-- **Destination**: Symfony (PHP 8.2 Apache)
+# Caso 06: 🐹 Go -> 🔗 n8n -> 🐘 Symfony
 
-## 🚀 How to Run
-This case is part of the global `docker-compose.yml`.
+Este eje tecnológico muestra la integración entre un emisor de alta velocidad en Go y un potente backend empresarial basado en Symfony.
 
-### Via Master Launcher (Recommended)
-Run `python setup.py` in the root directory and select **Option 6**.
+## 🏗️ Arquitectura del Flujo
+1.  **Origen (Emisor)**: `main.go` (Go 1.21)
+2.  **Puente (Orquestador)**: n8n (Nodo Webhook -> Nodo HTTP Request)
+3.  **Destino (Receptor)**: `webhook.php` (Symfony 7 / PHP 8.2)
 
-### Manual Start
-1. Start Destination:
-   ```bash
-   docker-compose up -d n8n dest-symfony
-   ```
-2. Start Origin:
-   ```bash
-   cd origin
-   go run main.go
-   ```
+## 🐹 Funcionamiento: Origen (Go)
+El emisor en Go gestiona el ciclo de vida de los posts:
+- **Lógica**: Carga un `posts.json`, calcula los tiempos de envío y dispara las peticiones HTTP concurrentemente.
+- **Eficiencia**: Diseñado para consumir menos de 20MB de RAM durante la ejecución.
+
+## 🐘 Funcionamiento: Destino (Symfony)
+El receptor utiliza un controlador estandarizado de Symfony:
+- **Tecnología**: Symfony Lite (simulación de controlador productivo).
+- **Procesamiento**: Recibe el POST en `/webhook.php`, parsea el JSON y añade la entrada a `symfony.log`.
+- **Dashboard**: El mismo controlador sirve una interfaz de administración empresarial para monitorizar el estado de los posts recibidos.
+
+## 🚦 Verificación
+- **URL Dashboard**: [http://localhost:8086](http://localhost:8086)
+- **Endpoint Webhook**: `POST /webhook.php` (Interno: 80)

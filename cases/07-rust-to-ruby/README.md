@@ -1,22 +1,26 @@
-# Case 07: Rust ➔ n8n ➔ Ruby
-## 🏗️ Architecture
-- **Origin**: Rust CLI Application (Reqwest - Blocking)
-- **Bridge**: n8n Webhook
-- **Destination**: Ruby Sinatra Service
+# Caso 07: 🦀 Rust -> 🔗 n8n -> 💎 Ruby
 
-## 🚀 How to Run
-This case is part of the global `docker-compose.yml`.
+Este eje tecnológico combina la robustez y rendimiento de Rust con la elegancia sintáctica de Ruby a través del orquestador n8n.
 
-### Via Master Launcher (Recommended)
-Run `python setup.py` in the root directory and select **Option 7**.
+## 🏗️ Arquitectura del Flujo
+1.  **Origen (Emisor)**: `main.rs` (Rust 1.7x) - Utiliza serialización fuertemente tipada.
+2.  **Puente (Orquestador)**: n8n (Nodo Webhook -> Nodo HTTP Request)
+3.  **Destino (Receptor)**: `app.rb` (Ruby 3.2 / Sinatra)
 
-### Manual Start
-1. Start Destination:
-   ```bash
-   docker-compose up -d n8n dest-ruby
-   ```
-2. Start Origin:
-   ```bash
-   cd origin
-   cargo run (Requires Rust installed)
-   ```
+## 🦀 Funcionamiento: Origen (Rust)
+El emisor en Rust garantiza la integridad de los datos antes del envío:
+- **Lógica**: Utiliza estructuras (`structs`) para definir el esquema del post. Un bucle infinito envía datos de prueba simulando un flujo de producción.
+- **Tecnologías**: 
+    - `serde`: Serialización/Deserialización ultra rápida de JSON.
+    - `reqwest`: Cliente HTTP asíncrono/bloqueante para Rust.
+- **Ejecución**: Se corre con `cargo run` desde la carpeta `origin/`.
+
+## 💎 Funcionamiento: Destino (Ruby)
+El receptor utiliza Sinatra, un micro-framework web DSL para Ruby:
+- **Tecnología**: Sinatra + Puma (servidor web).
+- **Almacenamiento**: Mantiene una lista circular de los últimos 20 posts en una variable global de memoria.
+- **Dashboard**: Utiliza plantillas ERB para generar el dashboard visual en el puerto `4567`.
+
+## 🚦 Verificación
+- **URL Dashboard**: [http://localhost:8087](http://localhost:8087)
+- **Endpoint Webhook**: `POST /webhook` (Interno: 4567)

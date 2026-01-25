@@ -1,22 +1,24 @@
-# Case 02: Python ➔ n8n ➔ Go
-## 🏗️ Architecture
-- **Origin**: Python Script
-- **Bridge**: n8n Webhook
-- **Destination**: Go 1.21 (Gin Gonic)
+# Caso 02: 🐍 Python -> 🔗 n8n -> 🐹 Go
 
-## 🚀 How to Run
-This case is part of the global `docker-compose.yml`.
+Este eje tecnológico integra la facilidad de scripting de Python con la eficiencia de un binario compilado en Go.
 
-### Via Master Launcher (Recommended)
-Run `python setup.py` in the root directory and select **Option 2**.
+## 🏗️ Arquitectura del Flujo
+1.  **Origen (Emisor)**: `bot.py` (Python 3.11) - Utiliza el bus de eventos común de Python.
+2.  **Puente (Orquestador)**: n8n (Nodo Webhook -> Nodo HTTP Request)
+3.  **Destino (Receptor)**: `main.go` (Compilado en imagen Alpine)
 
-### Manual Start
-1. Start Destination:
-   ```bash
-   docker-compose up -d n8n dest-go
-   ```
-2. Start Origin:
-   ```bash
-   cd origin
-   python bot.py
-   ```
+## 🐍 Funcionamiento: Origen (Python)
+El bot comparte la lógica base del Caso 01:
+- **Lógica**: Detecta posts programados en su `posts.json` local.
+- **Envío**: Despacha a n8n vía el webhook específico para Go.
+
+## 🐹 Funcionamiento: Destino (Go)
+El receptor Go destaca por su baja latencia y huella de memoria:
+- **Tecnología**: Servidor HTTP nativo de Go (`net/http`).
+- **Concurrent-Safe**: Utiliza `sync.Mutex` para garantizar que las escrituras en el log sean seguras entre múltiples hilos.
+- **Log**: Almacena en `social_bot_go.log` dentro del contenedor.
+- **Dashboard**: Un servidor simple sirve el archivo `index.html` estático que visualiza los posts recibidos.
+
+## 🚦 Verificación
+- **URL Dashboard**: [http://localhost:8082](http://localhost:8082)
+- **Endpoint Webhook**: `POST /webhook` (Interno: 8080)
