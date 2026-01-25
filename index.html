@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Bot Scheduler | Master Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --glass: rgba(30, 41, 59, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 20%);
+        }
+
+        header {
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--glass);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        main {
+            flex: 1;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .case-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .case-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px -10px var(--accent-glow);
+        }
+
+        .case-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+            opacity: 0.5;
+        }
+
+        .case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .case-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--accent);
+            background: var(--accent-glow);
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .case-status {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .case-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .tech-stack {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-tag {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-test {
+            margin-top: auto;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: filter 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-test:hover {
+            filter: brightness(1.2);
+        }
+
+        .btn-test:active {
+            transform: scale(0.98);
+        }
+
+        #terminal-area {
+            max-width: 1200px;
+            margin: 0 auto 2rem;
+            padding: 0 1rem;
+            width: 100%;
+        }
+
+        .terminal {
+            background: #000;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.5);
+        }
+
+        .term-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red {
+            background: #ff5f56;
+        }
+
+        .dot.yellow {
+            background: #ffbd2e;
+        }
+
+        .dot.green {
+            background: #27c93f;
+        }
+
+        .log-entry {
+            margin-bottom: 0.4rem;
+            line-height: 1.4;
+            color: #d1d5db;
+        }
+
+        .log-entry.info {
+            color: #818cf8;
+        }
+
+        .log-entry.success {
+            color: #22c55e;
+        }
+
+        .log-entry.cmd {
+            color: #f59e0b;
+        }
+
+        .log-entry.meta {
+            color: #64748b;
+            font-style: italic;
+        }
+
+        footer {
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 768px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Social Bot Scheduler: Matriz de Integración</h1>
+        <p>Automatización avanzada: Orquestación Multi-Eje mediante n8n</p>
+    </header>
+
+    <main id="cases-container">
+        <!-- Case 01 -->
+        <div class="case-card" data-case="01">
+            <div class="case-header">
+                <span class="case-id">CASE-01</span>
+                <span class="case-status">ACTIVE</span>
+            </div>
+            <h3 class="case-title">Python ➔ n8n ➔ PHP</h3>
+            <div class="tech-stack">
+                <span class="tech-tag">FastAPI</span>
+                <span class="tech-tag">Pydantic</span>
+                <span class="tech-tag">PHP 8.x</span>
+            </div>
+            <button class="btn-test" onclick="runCase('01', 'Python', 'PHP')">🚀 Probar Integración</button>
+        </div>
+
+        <!-- Case 02 -->
+        <div class="case-card" data-case="02">
+            <div class="case-header">
+                <span class="case-id">CASE-02</span>
+                <span class="case-status">ACTIVE</span>
+            </div>
+            <h3 class="case-title">Python ➔ n8n ➔ Go</h3>
+            <div class="tech-stack">
+                <span class="tech-tag">Requests</span>
+                <span class="tech-tag">Gin Gonic</span>
+                <span class="tech-tag">Go Modules</span>
+            </div>
+            <button class="btn-test" onclick="runCase('02', 'Python', 'Go')">🚀 Probar Integración</button>
+        </div>
+
+        <!-- Case 03 -->
+        <div class="case-card" data-case="03">
+            <div class="case-header">
+                <span class="case-id">CASE-03</span>
+                <span class="case-status">ACTIVE</span>
+            </div>
+            <h3 class="case-title">Go ➔ n8n ➔ Node.js</h3>
+            <div class="tech-stack">
+                <span class="tech-tag">Go Net/Http</span>
+                <span class="tech-tag">Express.js</span>
+                <span class="tech-tag">PM2</span>
+            </div>
+            <button class="btn-test" onclick="runCase('03', 'Go', 'Node.js')">🚀 Probar Integración</button>
+        </div>
+
+        <!-- Case 04 -->
+        <div class="case-card" data-case="04">
+            <div class="case-header">
+                <span class="case-id">CASE-04</span>
+                <span class="case-status">ACTIVE</span>
+            </div>
+            <h3 class="case-title">Node.js ➔ n8n ➔ FastAPI</h3>
+            <div class="tech-stack">
+                <span class="tech-tag">Axios</span>
+                <span class="tech-tag">Uvicorn</span>
+                <span class="tech-tag">Pydantic V2</span>
+            </div>
+            <button class="btn-test" onclick="runCase('04', 'Node.js', 'FastAPI')">🚀 Probar Integración</button>
+        </div>
+
+        <!-- Case 05 -->
+        <div class="case-card" data-case="05">
+            <div class="case-header">
+                <span class="case-id">CASE-05</span>
+                <span class="case-status">ACTIVE</span>
+            </div>
+            <h3 class="case-title">Laravel ➔ n8n ➔ React</h3>
+            <div class="tech-stack">
+                <span class="tech-tag">Artisan CLI</span>
+                <span class="tech-tag">Vite</span>
+                <span class="tech-tag">PostCSS</span>
+            </div>
+            <button class="btn-test" onclick="runCase('05', 'Laravel', 'React')">🚀 Probar Integración</button>
+        </div>
+
+        <!-- Case 06 -->
+        <div class="case-card" data-case="06">
+            <div class="case-header">
+                <span class="case-id">CASE-06</span>
+                <span class="case-status">ACTIVE</span>
+            </div>
+            <h3 class="case-title">Go ➔ n8n ➔ Symfony</h3>
+            <div class="tech-stack">
+                <span class="tech-tag">Go Compiler</span>
+                <span class="tech-tag">Twig</span>
+                <span class="tech-tag">Doctrine</span>
+            </div>
+            <button class="btn-test" onclick="runCase('06', 'Go', 'Symfony')">🚀 Probar Integración</button>
+        </div>
+    </main>
+
+    <div id="terminal-area">
+        <div class="terminal" id="terminal">
+            <div class="term-header">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+                <div style="margin-left: 10px; color: #555">bash — integration-logger</div>
+            </div>
+            <div class="log-entry meta">Esperando acción... Selecciona un caso para probar.</div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Social Bot Scheduler - Laboratorio de Automatización</p>
+    </footer>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+
+        function log(msg, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `log-entry ${type}`;
+            const time = new Date().toLocaleTimeString();
+            div.innerHTML = `<span style="color: #444">[${time}]</span> ${msg}`;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        async function runCase(id, origin, dest) {
+            terminal.innerHTML = `
+                <div class="term-header">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                    <div style="margin-left: 10px; color: #555">bash — testing case ${id}</div>
+                </div>
+            `;
+
+            log(`Iniciando prueba de flujo: <b>CASO-${id}</b>`, 'info');
+            log(`Configuración: ${origin} ➔ n8n ➔ ${dest}`, 'meta');
+
+            // Simular pasos de ejecución
+            await wait(800);
+            log(`Simulando ejecución de emisor en cases/0${id}-.../origin`, 'cmd');
+
+            await wait(1200);
+            log(`Payload enviado a webhook n8n...`, 'success');
+
+            await wait(1000);
+            log(`Recibiendo confirmación desde receptor ${dest}...`, 'info');
+
+            await wait(1500);
+            log(`✓ INTEGRACIÓN EXITOSA: Los datos fueron procesados por ${dest} correctamente.`, 'success');
+            log(`Puedes verificar el dashboard en http://localhost:808${id}`, 'meta');
+        }
+
+        function wait(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+
+</html>

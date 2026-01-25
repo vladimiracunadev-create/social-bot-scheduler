@@ -1,11 +1,14 @@
-# 🤖 Social Bot Scheduler: El Hub de Integración
-### *Explora el poder de la automatización Multi-Eje: Origen -> n8n -> Destino*
+# 🤖 Social Bot Scheduler: Matriz de Integración Multi-Eje
+### *Automatización avanzada: Orquestación de Python, Go, Node.js y PHP mediante n8n.*
 
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
-[![Ecosystem](https://img.shields.io/badge/Matriz-4_Ejes-blueviolet.svg)]()
-[![Docker Stack](https://img.shields.io/badge/stack-Python--Go--Node--PHP--FastAPI-blue.svg)]()
+[![Ecosystem](https://img.shields.io/badge/Matriz-6_Ejes-blueviolet.svg)]()
+[![Documentation](https://img.shields.io/badge/docs-completo-green.svg)]()
 
 ---
+
+## 💡 Sobre el Proyecto
+**Social Bot Scheduler** no es solo un bot; es un **laboratorio de ingeniería de software unificado**. Su propósito es demostrar cómo sistemas independientes (Python, Go, Node, etc.) pueden orquestarse en una matriz coherente. A través de flujos de trabajo en **n8n**, el sistema actúa como un despachador universal de contenido para redes sociales, garantizando que cada pieza tecnológica haga lo que mejor sabe hacer.
 
 ## 🏗️ La Gran Matriz de Integración
 Este repositorio es un laboratorio de ingeniería que demuestra cómo diferentes tecnologías pueden orquestarse para automatizar redes sociales. Cada **Caso** es un eje completo de comunicación.
@@ -16,8 +19,13 @@ Este repositorio es un laboratorio de ingeniería que demuestra cómo diferentes
 | **02** | 🐍 **Python** -> 🔗 n8n -> 🐹 **Go** | `localhost:8082` | ✅ |
 | **03** | 🐹 **Go** -> 🔗 n8n -> 🍏 **Node.js** | `localhost:8083` | ✅ |
 | **04** | 🍏 **Node.js** -> 🔗 n8n -> 🐍 **FastAPI** | `localhost:8084` | ✅ |
-| **05** | 🐘 **Laravel** -> 🔗 n8n -> ⚛️ **React** | `localhost:8085` | 🏦 |
-| **06** | 🐹 **Go** -> 🔗 n8n -> 🐘 **Symfony** | `localhost:8086` | 🏛️ |
+| **05** | 🐘 **Laravel** -> 🔗 n8n -> ⚛️ **React** | `localhost:8085` | ✅ |
+| **06** | 🐹 **Go** -> 🔗 n8n -> 🐘 **Symfony** | `localhost:8086` | ✅ |
+
+---
+
+## 🎮 Panel de Control Maestro (`index.html`)
+Ahora puedes probar todos los casos desde una interfaz unificada. Simplemente abre `index.html` en tu navegador para enviar peticiones de prueba y ver los resultados en tiempo real.
 
 ---
 
@@ -49,6 +57,12 @@ Hemos simplificado la complejidad. No necesitas configurar cada caso a mano.
 - 📗 [**Comparativa de Ejes**](docs/CASES_INDEX.md): ¿Cuál elegir y por qué?
 - 📔 [Arquitectura Profunda](docs/ARCHITECTURE.md): Diagramas de flujo de los 3 ejes.
 - 📘 [Guía de Principiantes](docs/BEGINNERS_GUIDE.md): Conceptos básicos de automatización.
+
+---
+
+## 🤝 Comunidad y Contribución
+- 🚀 [**Guía de Contribución**](CONTRIBUTING.md): ¿Quieres añadir un eje? ¡Mira cómo!
+- ⚖️ [**Código de Conducta**](CODE_OF_CONDUCT.md): Mantengamos la comunidad saludable.
 
 ---
 *Desarrollado para la comunidad de automatizadores – © 2026*
