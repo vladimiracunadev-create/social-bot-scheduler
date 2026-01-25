@@ -43,5 +43,7 @@ No necesitas ser un experto. Sigue estos 3 pasos:
 - **Go** es ultra-rápido.
 - **Node.js** es lo que usa la mayoría de la web actual.
 - **Laravel/Symfony** son como los "tanques" blindados de las empresas.
+- **Rust** para rendimiento crítico y **Ruby** para elegancia.
+- **C# (.NET)** para el mundo corporativo.
 
 ¡Diviértete explorando la interacción entre todos ellos! 🚀

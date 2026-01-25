@@ -30,6 +30,8 @@ Es la **capa de auditoría y visualización**. n8n envía una copia del post fin
 | **04** | Node.js | n8n | Python FastAPI | 8084 |
 | **05** | Laravel | n8n | React / Node | 8085 |
 | **06** | Go | n8n | Symfony | 8086 |
+| **07** | Rust | n8n | Ruby (Sinatra) | 8087 |
+| **08** | C# (.NET) | n8n | Flask | 8088 |
 
 ---
 
