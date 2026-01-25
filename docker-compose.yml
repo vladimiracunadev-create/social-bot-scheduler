@@ -76,6 +76,24 @@ services:
     networks:
       - bot-network
 
+  # 💎 Caso 07: Destino Ruby (Sinatra)
+  dest-ruby:
+    build: ./cases/07-rust-to-ruby/dest
+    container_name: social-bot-dest-ruby
+    ports:
+      - "8087:4567"
+    networks:
+      - bot-network
+
+  # 🌶️ Caso 08: Destino Flask (Python)
+  dest-flask:
+    build: ./cases/08-csharp-to-flask/dest
+    container_name: social-bot-dest-flask
+    ports:
+      - "8088:5000"
+    networks:
+      - bot-network
+
 networks:
   bot-network:
     driver: bridge

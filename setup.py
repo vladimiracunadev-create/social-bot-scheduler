@@ -36,6 +36,8 @@ def setup():
         "4": {"name": "Node.js -> n8n -> FastAPI", "suffix": "-node"},
         "5": {"name": "Laravel -> n8n -> React", "suffix": "-laravel"},
         "6": {"name": "Go -> n8n -> Symfony", "suffix": "-symfony"},
+        "7": {"name": "Rust -> n8n -> Ruby (Sinatra)", "suffix": "-rust"},
+        "8": {"name": "C# (.NET) -> n8n -> Flask", "suffix": "-csharp"},
     }
 
     print("\nSelecciona el Eje Tecnológico a activar:")
@@ -64,6 +66,10 @@ def setup():
         run_cmd("npm install axios", cwd=origin_path)
     elif choice == "5":  # Laravel (PHP)
         print("Asegúrate de tener PHP instalado para ejecutar el comando Artisan.")
+    elif choice == "7":  # Rust
+        print("Asegúrate de tener Rust (cargo) instalado para ejecutar: cargo run")
+    elif choice == "8":  # C#
+        print("Asegúrate de tener .NET SDK instalado para ejecutar: dotnet run")
 
     print("\n" + "=" * 50)
     print("SISTEMA CONFIGURADO EXITOSAMENTE")
@@ -76,6 +82,8 @@ def setup():
         "dest-fastapi",
         "dest-react",
         "dest-symfony",
+        "dest-ruby",
+        "dest-flask",
     ]
     dest_svc = dest_services[int(choice) - 1]
     print(f"   docker-compose up -d n8n {dest_svc}")

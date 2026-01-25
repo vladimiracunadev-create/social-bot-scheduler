@@ -11,6 +11,8 @@ Descubre por qué hemos elegido estas combinaciones y qué beneficios aporta cad
 | **Go** | 03, 06 | Binario único, ultra-rápido y concurrente. | Sistemas embebidos o servidores de alta carga. |
 | **Node.js** | 04 | Manejo asíncrono nativo excelente. | Integración con otros servicios JS existentes. |
 | **Laravel** | 05 | Framework PHP ultra-productivo. | Aplicaciones SaaS empresariales. |
+| **Rust** | 07 | Seguridad de memoria y rendimiento. | Sistemas críticos y de baja latencia. |
+| **C# (.NET)** | 08 | Ecosistema empresarial maduro. | Integraciones corporativas y servicios Windows. |
 
 ---
 
@@ -23,6 +25,8 @@ Descubre por qué hemos elegido estas combinaciones y qué beneficios aporta cad
 | **FastAPI** | 8084 | Velocidad Python. Rendimiento comparable a Node. |
 | **React** | 8085 | Experiencia de usuario (UX) rica y reactiva. |
 | **Symfony** | 8086 | Estabilidad y estándares industriales. |
+| **Ruby (Sinatra)** | 8087 | Elegancia y simplicidad del DSL de Sinatra. |
+| **Flask** | 8088 | Microframework Python ideal para servicios ligeros. |
 
 ---
 

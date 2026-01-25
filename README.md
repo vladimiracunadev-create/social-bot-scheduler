@@ -21,6 +21,8 @@ Este repositorio es un laboratorio de ingeniería que demuestra cómo diferentes
 | **04** | 🍏 **Node.js** -> 🔗 n8n -> 🐍 **FastAPI** | `localhost:8084` | ✅ |
 | **05** | 🐘 **Laravel** -> 🔗 n8n -> ⚛️ **React** | `localhost:8085` | ✅ |
 | **06** | 🐹 **Go** -> 🔗 n8n -> 🐘 **Symfony** | `localhost:8086` | ✅ |
+| **07** | 🦀 **Rust** -> 🔗 n8n -> 💎 **Ruby** | `localhost:8087` | ✅ |
+| **08** | ❄️ **C#** -> 🔗 n8n -> 🌶️ **Flask** | `localhost:8088` | ✅ |
 
 ---
 

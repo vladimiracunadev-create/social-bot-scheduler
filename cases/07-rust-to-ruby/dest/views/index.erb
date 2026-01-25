@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruby Social Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #cc342d; text-align: center; }
+        .card { background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; align-items: center; }
+        .platform { font-weight: bold; margin-right: 15px; padding: 5px 10px; border-radius: 4px; color: white; min-width: 80px; text-align: center; }
+        .twitter { background: #1DA1F2; }
+        .facebook { background: #1877F2; }
+        .instagram { background: #E1306C; }
+        .content { flex-grow: 1; }
+        .time { font-size: 0.8em; color: #666; }
+    </style>
+    <script>
+        function fetchPosts() {
+            fetch('/api/posts')
+                .then(response => response.json())
+                .then(posts => {
+                    const container = document.getElementById('posts-container');
+                    container.innerHTML = posts.map(post => `
+                        <div class="card">
+                            <div class="platform ${post.platform}">${post.platform}</div>
+                            <div class="content">
+                                <div>${post.content}</div>
+                                <div class="time">${post.timestamp}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                });
+        }
+        setInterval(fetchPosts, 2000);
+        window.onload = fetchPosts;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>💎 Ruby Sinatra Dashboard</h1>
+        <div id="posts-container">
+            <p style="text-align: center;">Waiting for posts from Rust...</p>
+        </div>
+    </div>
+</body>
+</html>
