@@ -10,19 +10,15 @@ help: ## Muestra este mensaje de ayuda
 	@echo "Uso: make [comando]"
 	@echo ""
 	@echo "Comandos disponibles:"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-export PYTHONPATH := $(PYTHONPATH):$(PWD)/src
-
-install: ## Instala las dependencias locales de Python
+# --- Python Development ---
+install: ## Instala las dependencias locales de Python (Dev)
 	pip install -r requirements.txt
 	pip install black flake8 pre-commit pytest pytest-cov mypy types-requests
 
 test: ## Ejecuta las pruebas unitarias
 	pytest --cov=src/social_bot tests/
-
-mypy: ## Ejecuta el chequeo de tipos estáticos
-	mypy src/social_bot
 
 lint: ## Ejecuta el linter (flake8 y black)
 	black --check .
@@ -34,23 +30,49 @@ format: ## Formatea el código automáticamente con black
 setup-pc: ## Configura los git hooks de pre-commit
 	pre-commit install
 
-build: ## Construye la imagen de Docker
-	docker build -t $(IMAGE_NAME):$(TAG) .
-
-up: ## Levanta el bot usando Docker Compose
+# --- Docker & Cases ---
+up: ## Levanta todo el entorno (Cuidado: consume mucha memoria)
 	docker-compose up -d
 
-down: ## Detiene los contenedores de Docker Compose
+down: ## Detiene todos los contenedores
 	docker-compose down
 
-logs: ## Muestra los logs del contenedor del bot
-	docker-compose logs -f bot
+up-case-01: ## Levanta Caso 01: Python -> PHP
+	docker-compose up -d n8n dest-php
 
-deploy: build ## Despliega en Kubernetes (requiere kubectl configurado)
+up-case-02: ## Levanta Caso 02: Python -> Go
+	docker-compose up -d n8n dest-go
+
+up-case-03: ## Levanta Caso 03: Go -> Node.js
+	docker-compose up -d n8n dest-node
+
+up-case-04: ## Levanta Caso 04: Node.js -> FastAPI
+	docker-compose up -d n8n dest-fastapi
+
+up-case-05: ## Levanta Caso 05: Laravel -> React
+	docker-compose up -d n8n dest-react
+
+up-case-06: ## Levanta Caso 06: Go -> Symfony
+	docker-compose up -d n8n dest-symfony
+
+up-case-07: ## Levanta Caso 07: Rust -> Ruby
+	docker-compose up -d n8n dest-ruby
+
+up-case-08: ## Levanta Caso 08: C# -> Flask
+	docker-compose up -d n8n dest-flask
+
+logs: ## Muestra logs generales
+	docker-compose logs -f
+
+logs-n8n: ## Muestra logs de n8n
+	docker-compose logs -f n8n
+
+# --- Kubernetes ---
+deploy: build ## Despliega en Kubernetes (requiere kubectl)
 	kubectl apply -f k8s/configmap.yaml
 	@echo "Nota: Asegúrate de haber creado el secret desde k8s/secret.example.yaml"
 	kubectl apply -f k8s/cronjob.yaml
 
-k8s-clean: ## Elimina los recursos de Kubernetes del proyecto
+k8s-clean: ## Elimina los recursos de Kubernetes
 	kubectl delete -f k8s/cronjob.yaml
 	kubectl delete -f k8s/configmap.yaml
