@@ -1,0 +1,76 @@
+{
+    "name": "Social Bot Receiver (Caso 02 - Go)",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "social-bot-go",
+                "responseMode": "onReceived",
+                "options": {}
+            },
+            "id": "webhook-social-bot",
+            "name": "Webhook Social Bot",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2.1,
+            "position": [
+                240,
+                300
+            ],
+            "webhookId": "social-bot-scheduler-go"
+        },
+        {
+            "parameters": {
+                "requestMethod": "POST",
+                "url": "http://api-go:8080/social-bot",
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "id",
+                            "value": "={{$json[\"id\"]}}"
+                        },
+                        {
+                            "name": "text",
+                            "value": "={{$json[\"text\"]}}"
+                        },
+                        {
+                            "name": "channel",
+                            "value": "={{$json[\"channel\"]}}"
+                        },
+                        {
+                            "name": "scheduled_at",
+                            "value": "={{$json[\"scheduled_at\"]}}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "send-to-go-api",
+            "name": "Send to Go API",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 2,
+            "position": [
+                520,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook Social Bot": {
+            "main": [
+                [
+                    {
+                        "node": "Send to Go API",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "active": false,
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "id": "workflow-social-bot-go"
+}

@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # 🐍 El cerebro (Python)
+  # 🐍 El cerebro (Python) - Compartido
   bot:
     build: .
     container_name: social-bot-scheduler
@@ -14,7 +14,7 @@ services:
     networks:
       - bot-network
 
-  # 🔗 El puente (n8n)
+  # 🔗 El puente (n8n) - Compartido
   n8n:
     image: n8nio/n8n:latest
     container_name: social-bot-n8n
@@ -27,14 +27,23 @@ services:
     networks:
       - bot-network
 
-  # 🐘 El receptor (PHP)
-  api:
+  # 🐘 Caso 01: Receptor PHP
+  api-php:
     image: php:8.2-apache
-    container_name: social-bot-api
+    container_name: social-bot-api-php
     ports:
-      - "8080:80"
+      - "8081:80"
     volumes:
-      - ./api:/var/www/html
+      - ./cases/01-python-n8n-php/api:/var/www/html
+    networks:
+      - bot-network
+
+  # 🐹 Caso 02: Receptor Go
+  api-go:
+    build: ./cases/02-python-n8n-go/api
+    container_name: social-bot-api-go
+    ports:
+      - "8082:8080"
     networks:
       - bot-network
 
