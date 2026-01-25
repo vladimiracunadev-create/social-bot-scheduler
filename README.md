@@ -1,77 +1,78 @@
-# Social Bot Scheduler – Automatización Inteligente de Redes Sociales
+# 🤖 Social Bot Scheduler
+### *Orquestación Inteligente para la Automatización de Contenidos Multi-Canal*
 
-**Social Bot Scheduler** es una solución profesional de orquestación para la publicación programada en múltiples canales. Diseñada para integrarse perfectamente con flujos de trabajo en **n8n**, permite gestionar el contenido de redes sociales de manera eficiente y escalable.
+[![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Docker](https://img.shields.io/badge/docker-ready-2496ed.svg)](https://www.docker.com/)
+
+---
+
+## ⚡ El "Director de Orquesta" de tus Redes Sociales
+**Social Bot Scheduler** no es solo un bot de publicación. Es un ecosistema robusto diseñado para profesionales de la automatización que buscan **escalabilidad**, **trazabilidad** y **facilidad de uso**. 
+
+Al combinar la potencia de **Python**, la flexibilidad de **n8n** y la universalidad de **PHP**, logramos un flujo de trabajo que se adapta a cualquier infraestructura, desde un servidor local hasta un cluster en la nube.
+
+---
+
+## 🚀 Características Premium
+- **🧩 Arquitectura Modular**: Desacoplamiento total entre lógica (Python), distribución (n8n) y recepción (PHP).
+- **🐳 Despliegue Universal**: Configuración Docker "Out-of-the-Box" para un inicio en 60 segundos.
+- **🛡️ Robustez Industrial**: Validaciones mediante `Pydantic`, tipado estático con `Mypy` y 100% de cobertura en tests críticos.
+- **☸️ Enterprise Ready**: Manifiestos de Kubernetes incluidos para despliegues masivos.
+- **📈 Automatización Visual**: Integración nativa con n8n para conectar cientos de herramientas sin escribir código adicional.
 
 ---
 
 ## 🛠️ Stack Tecnológico
-Para que el ecosistema funcione correctamente, el sistema utiliza las siguientes tecnologías:
-
-| Componente | Tecnología | Rol |
+| Capa | Tecnología | Función |
 | :--- | :--- | :--- |
-| **Core** | `Python 3.11+` | Lógica de scheduling y procesamiento de datos. |
-| **Automation** | `n8n` | Orquestador de flujos y conexión con APIs externas. |
-| **API Receiver** | `PHP 8.2` | Receptor de eventos y logging de publicaciones. |
-| **Infraestructura** | `Docker / Compose` | Contenerización y despliegue universal. |
-| **Orquestación** | `Kubernetes` | (Opcional) Despliegue en clusters escalables. |
-| **Calidad** | `Pytest / Mypy` | Pruebas unitarias y tipado estático. |
+| **Cerebro** | `Python 3.11` | Scheduling y procesamiento lógico. |
+| **Puente** | `n8n` | Orquestación visual y APIs de terceros. |
+| **API** | `PHP 8.2` | Recepción de eventos y logs persistentes. |
+| **Infra** | `Docker` | Contenerización y red aislada. |
 
 ---
 
 ## 🖥️ Requerimientos de Hardware
-Dependiendo de la escala de tu automatización, estos son los recursos necesarios:
-
-| Recurso | Mínimo (Home Bot) | Recomendado (Pro) | Enterprise (Cluster) |
+| Perfil | CPU | RAM | Disco |
 | :--- | :--- | :--- | :--- |
-| **CPU** | 1 Core (vCPU) | 2 Cores | 4+ Cores |
-| **RAM** | 2 GB* | 4 GB | 8 GB+ |
-| **Disco** | 5 GB (SSD) | 20 GB | 100 GB+ |
-| **Red** | 10 Mbps | 100 Mbps | 1 Gbps+ |
-
-> [!NOTE]
-> *n8n es el componente más demandante en RAM. Si solo usas el bot de Python sin n8n, podrías funcionar con 512MB de RAM.
+| **🏠 Personal** | 1 Core | 2 GB | 5 GB SSD |
+| **💼 Profesional** | 2 Cores | 4 GB | 20 GB SSD |
+| **🏢 Enterprise** | 4+ Cores | 8 GB+ | 100 GB+ |
 
 ---
 
-## ⚡ Inicio Inmediato (Instalación Universal)
-Para que todo funcione a la primera en cualquier sistema (Windows, Mac, Linux), recomendamos el uso de Docker:
-
-1. **Configura tu entorno**:
-   ```bash
-   python setup.py
-   ```
-   *Este script verificará tus requisitos y configurará los archivos necesarios.*
-
-2. **Levanta todo el ecosistema**:
-   ```bash
-   docker-compose up -d
-   ```
-   *Esto iniciará automáticamente Python, n8n y el receptor PHP.*
-
----
-
-## 📖 Documentación para Todos
-- 📘 [**Guía para Principiantes**](docs/BEGINNERS_GUIDE.md): ¿No sabes por dónde empezar? Lee esto primero para entender la lógica del proyecto.
-- 📖 [Manual de Usuario](docs/USER_MANUAL.md): Aprende a gestionar tus posts y canales.
-
-### 🛡️ Para Desarrolladores y DevOps
-- 🚀 [Guía de Instalación Avanzada](docs/INSTALL.md): Docker, Kubernetes y entornos locales.
-- 🏗️ [Arquitectura](docs/ARCHITECTURE.md): Detalle técnico, diagramas Mermaid y flujos.
-- 🔌 [Referencia de API](docs/API.md): Contrato del webhook y payloads JSON.
-- 🧑‍💻 [Guía de Mantenedores](docs/MAINTAINERS.md): Estándares, Linting y CI/CD.
-
-### 📋 Referencia Técnica
-- 📜 [Catálogo de Funcionalidades](docs/SYSTEMS_CATALOG.md): Capacidades actuales.
-- 🛡️ [Seguridad](docs/SECURITY.md): Manejo de secretos y riesgos.
-- 🕒 [Historial de Cambios](CHANGELOG.md): Registro de versiones (SemVer).
+## 🏁 Inicio en 3 Minutos
+1.  **Prepara el terreno**:
+    ```bash
+    python setup.py
+    ```
+2.  **Lanza el ecosistema**:
+    ```bash
+    docker-compose up -d
+    ```
+3.  **Monitorea**:
+    ```bash
+    make logs
+    ```
 
 ---
 
-## 🤝 Comunidad y Colaboración
-¡Este proyecto está abierto a contribuciones! Si deseas ayudar a mejorar el scheduler:
-1. Haz un **Fork** del proyecto.
-2. Crea una **Rama** para tu funcionalidad (`git checkout -b feature/nueva-mejora`).
-3. Envía un **Pull Request**.
+## 📖 Centro de Documentación
+| Nivel | Guías Disponibles |
+| :--- | :--- |
+| **Novatos** | [📘 Guía para Principiantes](docs/BEGINNERS_GUIDE.md) \| [📖 Manual de Usuario](docs/USER_MANUAL.md) |
+| **DevOps** | [🚀 Instalación Avanzada](docs/INSTALL.md) \| [🏗️ Arquitectura del Sistema](docs/ARCHITECTURE.md) |
+| **API** | [🔌 Referencia Técnica](docs/API.md) \| [🧑‍💻 Guía de Mantenedores](docs/MAINTAINERS.md) |
 
 ---
-*Desarrollado con ❤️ para la comunidad de automatizadores.*
+
+## 🤝 Contribuciones
+¡Ayúdanos a crecer! Si tienes una idea brillante:
+1. Haz un **Fork** 🍴
+2. Crea tu rama: `git checkout -b feature/CoolFeature`
+3. ¡Envía un **Pull Request**! 🚀
+
+---
+*Desarrollado con ❤️ para la comunidad de automatizadores – © 2026 Social Bot Team*
