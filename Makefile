@@ -14,6 +14,17 @@ help: ## Muestra este mensaje de ayuda
 
 install: ## Instala las dependencias locales de Python
 	pip install -r requirements.txt
+	pip install black flake8 pre-commit
+
+lint: ## Ejecuta el linter (flake8 y black)
+	black --check .
+	flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+format: ## Formatea el código automáticamente con black
+	black .
+
+setup-pc: ## Configura los git hooks de pre-commit
+	pre-commit install
 
 build: ## Construye la imagen de Docker
 	docker build -t $(IMAGE_NAME):$(TAG) .

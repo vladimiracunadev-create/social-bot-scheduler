@@ -39,8 +39,9 @@ python bot.py
 ## 🚀 Características Principales
 - **🧩 Modularidad**: Fácil integración con webhooks externos (n8n, Make/Integromat).
 - **🐳 Container Ready**: Configuraciones listas para Docker y Docker Compose.
-- **☸️ Enterprise Grade**: Manifiestos de Kubernetes incluidos para despliegues a escala.
-- **🤖 Automatización**: Makefile intuitivo para reducir la fricción en el desarrollo.
+- **☸️ Enterprise Grade**: Manifiestos de Kubernetes (CronJob) para despliegues a escala.
+- **🛠️ Automatización**: Makefile intuitivo y **GitHub Actions** para CI/CD continuo.
+- **🛡️ Calidad**: Linters (`flake8`, `black`) y Hooks de `pre-commit` integrados.
 
 ---
 
