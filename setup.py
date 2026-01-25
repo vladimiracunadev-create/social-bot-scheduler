@@ -30,14 +30,14 @@ def setup():
     print("=== SOCIAL BOT SCHEDULER: MASTER LAUNCHER ===")
 
     cases = {
-        "1": {"name": "Python -> n8n -> PHP", "suffix": ""},
-        "2": {"name": "Python -> n8n -> Go", "suffix": ""},
-        "3": {"name": "Go -> n8n -> Node.js", "suffix": "-go"},
-        "4": {"name": "Node.js -> n8n -> FastAPI", "suffix": "-node"},
-        "5": {"name": "Laravel -> n8n -> React", "suffix": "-laravel"},
+        "1": {"name": "Python -> n8n -> PHP", "suffix": "-php"},
+        "2": {"name": "Python -> n8n -> Go", "suffix": "-go"},
+        "3": {"name": "Go -> n8n -> Node.js", "suffix": "-node-dest"},
+        "4": {"name": "Node.js -> n8n -> FastAPI", "suffix": "-fastapi"},
+        "5": {"name": "Laravel -> n8n -> React", "suffix": "-react"},
         "6": {"name": "Go -> n8n -> Symfony", "suffix": "-symfony"},
-        "7": {"name": "Rust -> n8n -> Ruby (Sinatra)", "suffix": "-rust"},
-        "8": {"name": "C# (.NET) -> n8n -> Flask", "suffix": "-csharp"},
+        "7": {"name": "Rust -> n8n -> Ruby (Sinatra)", "suffix": "-ruby"},
+        "8": {"name": "C# (.NET) -> n8n -> Flask", "suffix": "-flask"},
     }
 
     print("\nSelecciona el Eje Tecnológico a activar:")

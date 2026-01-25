@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {
-        "path": "social-bot-scheduler-rust",
+        "path": "social-bot-scheduler-ruby",
         "responseMode": "lastNode",
         "options": {}
       },

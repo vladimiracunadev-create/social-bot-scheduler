@@ -3,7 +3,7 @@
     "nodes": [
         {
             "parameters": {
-                "path": "social-bot-scheduler-laravel",
+                "path": "social-bot-scheduler-react",
                 "responseMode": "lastNode",
                 "options": {}
             },

@@ -3,7 +3,7 @@
     "nodes": [
         {
             "parameters": {
-                "path": "social-bot-scheduler-csharp",
+                "path": "social-bot-scheduler-flask",
                 "responseMode": "lastNode",
                 "options": {}
             },

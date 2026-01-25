@@ -3,7 +3,7 @@
     "nodes": [
         {
             "parameters": {
-                "path": "social-bot-scheduler",
+                "path": "social-bot-scheduler-php",
                 "responseMode": "lastNode",
                 "options": {}
             },

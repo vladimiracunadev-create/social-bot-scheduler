@@ -3,7 +3,7 @@
     "nodes": [
         {
             "parameters": {
-                "path": "social-bot-scheduler-node",
+                "path": "social-bot-scheduler-fastapi",
                 "responseMode": "lastNode",
                 "options": {}
             },
