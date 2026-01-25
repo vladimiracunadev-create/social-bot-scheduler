@@ -8,18 +8,21 @@ Descubre por qué hemos elegido estas combinaciones y qué beneficios aporta cad
 | Tecnología | Caso | Ventaja | Uso Recomendado |
 | :--- | :--- | :--- | :--- |
 | **Python** | 01, 02 | Facilidad de scripting y librerías robustas (Pydantic). | Prototipado rápido y validación de tipos compleja. |
-| **Go** | 03 | Binario único, ultra-rápido y concurrente. | Sistemas embebidos o servidores de alta carga. |
+| **Go** | 03, 06 | Binario único, ultra-rápido y concurrente. | Sistemas embebidos o servidores de alta carga. |
 | **Node.js** | 04 | Manejo asíncrono nativo excelente. | Integración con otros servicios JS existentes. |
+| **Laravel** | 05 | Framework PHP ultra-productivo. | Aplicaciones SaaS empresariales. |
 
 ---
 
 ## 🛠️ Comparativa de Receptores (Destino)
 | Tecnología | Dashboard | Por qué elegirlo |
 | :--- | :--- | :--- |
-| **PHP** | 0801 | Universalidad. Casi cualquier servidor web lo corre "out of the box". |
-| **Go** | 0802 | Eficiencia extrema. El receptor ocupa menos de 10MB de RAM. |
-| **Node.js** | 0803 | Flexibilidad. Fácil de extender con Express y middlewares. |
-| **FastAPI** | 0804 | Velocidad Python. Rendimiento comparable a Node con sintaxis Python moderna. |
+| **PHP (Vanilla)** | 8081 | Universalidad y simplicidad máxima. |
+| **Go** | 8082 | Eficiencia extrema. El receptor ocupa menos de 10MB de RAM. |
+| **Node.js** | 8083 | Flexibilidad. Fácil de extender con Express y middlewares. |
+| **FastAPI** | 8084 | Velocidad Python. Rendimiento comparable a Node. |
+| **React** | 8085 | Experiencia de usuario (UX) rica y reactiva. |
+| **Symfony** | 8086 | Estabilidad y estándares industriales. |
 
 ---
 

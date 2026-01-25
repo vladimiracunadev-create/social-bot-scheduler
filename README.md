@@ -14,8 +14,10 @@ Este repositorio es un laboratorio de ingeniería que demuestra cómo diferentes
 | :--- | :--- | :--- | :--- |
 | **01** | 🐍 **Python** -> 🔗 n8n -> 🐘 **PHP** | `localhost:8081` | ✅ |
 | **02** | 🐍 **Python** -> 🔗 n8n -> 🐹 **Go** | `localhost:8082` | ✅ |
-| **03** | 🐹 **Go** -> 🔗 n8n -> 🍏 **Node.js** | `localhost:8083` | 🚀 |
-| **04** | 🍏 **Node.js** -> 🔗 n8n -> 🐍 **FastAPI** | `localhost:8084` | 🚀 |
+| **03** | 🐹 **Go** -> 🔗 n8n -> 🍏 **Node.js** | `localhost:8083` | ✅ |
+| **04** | 🍏 **Node.js** -> 🔗 n8n -> 🐍 **FastAPI** | `localhost:8084` | ✅ |
+| **05** | 🐘 **Laravel** -> 🔗 n8n -> ⚛️ **React** | `localhost:8085` | 🏦 |
+| **06** | 🐹 **Go** -> 🔗 n8n -> 🐘 **Symfony** | `localhost:8086` | 🏛️ |
 
 ---
 
@@ -26,7 +28,7 @@ Hemos simplificado la complejidad. No necesitas configurar cada caso a mano.
     ```bash
     python setup.py
     ```
-2.  **Elige tu Eje**: Selecciona del 1 al 4. El script configurará archivos `.env`, instalará dependencias y preparará el terreno para ese caso específico.
+2.  **Elige tu Eje**: Selecciona del 1 al 6. El script configurará archivos `.env`, instalará dependencias y preparará el terreno para ese caso específico.
 3.  **Lanza el Destino**:
     ```bash
     docker-compose up -d n8n [servicio-elegido]
