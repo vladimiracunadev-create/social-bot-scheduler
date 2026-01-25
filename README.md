@@ -13,48 +13,37 @@ Para asegurar un funcionamiento óptimo, se recomienda:
 
 ---
 
-## ⚡ Inicio Inmediato con Makefile
-Este proyecto incluye un `Makefile` para simplificar todas las operaciones comunes.
+## ⚡ Inicio Inmediato (Instalación Universal)
+Para que todo funcione a la primera en cualquier sistema (Windows, Mac, Linux), recomendamos el uso de Docker:
 
-### 🐳 Con Docker (Recomendado)
-Levanta el bot en segundos:
+1. **Configura tu entorno**:
+   ```bash
+   python setup.py
+   ```
+   *Este script verificará tus requisitos y configurará los archivos necesarios.*
 
-```bash
-# Construir y levantar
-make build
-make up
-```
-
-### 🐍 Ejecución Local
-```bash
-# Instalar dependencias
-make install
-# Renombrar .env.example a .env y configurar
-# Ejecutar bot
-python bot.py
-```
+2. **Levanta todo el ecosistema**:
+   ```bash
+   docker-compose up -d
+   ```
+   *Esto iniciará automáticamente Python, n8n y el receptor PHP.*
 
 ---
 
-## 🚀 Características Principales
-- **🧩 Modularidad**: Fácil integración con webhooks externos (n8n, Make/Integromat).
-- **🐳 Container Ready**: Configuraciones listas para Docker y Docker Compose.
-- **☸️ Enterprise Grade**: Manifiestos de Kubernetes (CronJob) para despliegues a escala.
-- **🛠️ Automatización**: Makefile intuitivo y **GitHub Actions** para CI/CD continuo.
-- **🛡️ Calidad**: Linters (`flake8`, `black`) y Hooks de `pre-commit` integrados.
+## 📖 Documentación para Todos
+- 📘 [**Guía para Principiantes**](docs/BEGINNERS_GUIDE.md): ¿No sabes por dónde empezar? Lee esto primero para entender la lógica del proyecto.
+- 📖 [Manual de Usuario](docs/USER_MANUAL.md): Aprende a gestionar tus posts y canales.
 
----
-
-## 📖 Documentación Avanzada
-Explora nuestras guías detalladas para maximizar el uso del bot:
-- 📖 [Guía de Instalación](docs/INSTALL.md): Despliegue en Docker, K8s y servidores locales.
-- 📖 [Manual de Usuario](docs/USER_MANUAL.md): Cómo estructurar tus posts y canales.
-- 🏗️ [Arquitectura](docs/ARCHITECTURE.md): Diagramas Mermaid y flujo de datos.
+### 🛡️ Para Desarrolladores y DevOps
+- 🚀 [Guía de Instalación Avanzada](docs/INSTALL.md): Docker, Kubernetes y entornos locales.
+- 🏗️ [Arquitectura](docs/ARCHITECTURE.md): Detalle técnico, diagramas Mermaid y flujos.
 - 🔌 [Referencia de API](docs/API.md): Contrato del webhook y payloads JSON.
-- 📜 [Catálogo de Funcionalidades](docs/SYSTEMS_CATALOG.md): Detalle técnico de capacidades.
-- 🛡️ [Seguridad](docs/SECURITY.md): Políticas de protección y manejo de secretos.
-- 🧑‍💻 [Guía de Mantenedores](docs/MAINTAINERS.md): Estándares de código y flujos de trabajo.
-- 🕒 [Historial de Cambios](CHANGELOG.md): Registro detallado de versiones y mejoras.
+- 🧑‍💻 [Guía de Mantenedores](docs/MAINTAINERS.md): Estándares, Linting y CI/CD.
+
+### 📋 Referencia Técnica
+- 📜 [Catálogo de Funcionalidades](docs/SYSTEMS_CATALOG.md): Capacidades actuales.
+- 🛡️ [Seguridad](docs/SECURITY.md): Manejo de secretos y riesgos.
+- 🕒 [Historial de Cambios](CHANGELOG.md): Registro de versiones (SemVer).
 
 ---
 
