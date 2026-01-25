@@ -1,14 +1,12 @@
 [
   {
-    "id": "post-001",
-    "text": "🚀 Nuevo microsistema: Conversor de acentos PHP → https://mi-sitio.dev/microsistemas/conversor",
-    "channels": ["linkedin", "twitter"],
-    "scheduled_at": "2025-12-08T18:30:00"
-  },
-  {
-    "id": "post-002",
-    "text": "🧪 Probando mi bot de publicación con n8n + Python. Más info en mi repo de GitHub.",
-    "channels": ["linkedin"],
-    "scheduled_at": "2025-12-08T18:35:00"
+    "id": "welcome-post",
+    "text": "¡Hola desde el nuevo Bot mejorado!",
+    "channels": [
+      "twitter",
+      "telegram"
+    ],
+    "scheduled_at": "2026-01-24T17:00:00",
+    "published": true
   }
 ]

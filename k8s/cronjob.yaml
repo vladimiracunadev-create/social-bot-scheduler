@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: social-bot-scheduler
+spec:
+  schedule: "*/15 * * * *"  # Ejecutar cada 15 minutos
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: bot
+            image: social-bot-scheduler:latest
+            imagePullPolicy: IfNotPresent
+            envFrom:
+            - configMapRef:
+                name: social-bot-config
+            - secretRef:
+                name: social-bot-secrets
+            volumeMounts:
+            - name: posts-data
+              mountPath: /app/posts.json
+              subPath: posts.json
+          restartPolicy: OnFailure
+          volumes:
+          - name: posts-data
+            configMap:
+              name: social-bot-posts

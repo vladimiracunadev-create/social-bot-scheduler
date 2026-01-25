@@ -1,86 +1,118 @@
 import json
 import os
-from dataclasses import dataclass
+import logging
 from datetime import datetime
+import sys
 from pathlib import Path
+from typing import List, Optional
 
 import requests
 from dotenv import load_dotenv
+from pydantic import BaseModel, Field, ValidationError
 
-# Carga variables de entorno desde .env
+# Configuración de Logging profesional
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.StreamHandler(sys.stdout)
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# Carga variables de entorno
 load_dotenv()
 
-WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # Si no está, trabajamos en modo "dry-run"
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 POSTS_FILE = Path("posts.json")
 
-
-@dataclass
-class Post:
+class Post(BaseModel):
     id: str
     text: str
-    channels: list
+    channels: List[str] = []
     scheduled_at: datetime
+    published: bool = False  # Nuevo campo para gestión de estado
 
-
-def load_posts():
+def load_posts() -> List[Post]:
     if not POSTS_FILE.exists():
-        raise FileNotFoundError(f"No se encontró {POSTS_FILE}")
+        logger.error(f"No se encontró el archivo: {POSTS_FILE}")
+        return []
 
-    data = json.loads(POSTS_FILE.read_text(encoding="utf-8"))
-    posts = []
-    for item in data:
-        posts.append(
-            Post(
-                id=item["id"],
-                text=item["text"],
-                channels=item.get("channels", []),
-                scheduled_at=datetime.fromisoformat(item["scheduled_at"]),
-            )
-        )
-    return posts
+    try:
+        content = POSTS_FILE.read_text(encoding="utf-8")
+        data = json.loads(content)
+        posts = [Post(**item) for item in data]
+        return posts
+    except ValidationError as e:
+        logger.error(f"Error de validación en JSON: {e}")
+        return []
+    except Exception as e:
+        logger.error(f"Error al cargar posts: {e}")
+        return []
 
+def save_posts(posts: List[Post]):
+    try:
+        data = [post.model_dump() for post in posts]
+        # Convertimos datetime a string ISO para el JSON
+        for item in data:
+            if isinstance(item["scheduled_at"], datetime):
+                item["scheduled_at"] = item["scheduled_at"].isoformat()
+        
+        POSTS_FILE.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+        logger.info("Estado de posts actualizado en el archivo.")
+    except Exception as e:
+        logger.error(f"Error al guardar posts: {e}")
 
-def get_due_posts(posts, now=None):
+def get_due_posts(posts: List[Post], now: Optional[datetime] = None) -> List[Post]:
     if now is None:
         now = datetime.now()
-    # Aquí podrías marcar un margen (ej: ±5 minutos) si lo quieres más flexible
-    return [p for p in posts if p.scheduled_at <= now]
+    # Solo posts no publicados cuya fecha ya pasó
+    return [p for p in posts if not p.published and p.scheduled_at <= now]
 
-
-def send_to_webhook(post: Post):
+def send_to_webhook(post: Post) -> bool:
     if not WEBHOOK_URL:
-        # Modo prueba: no pegamos a n8n, solo mostramos
-        print(f"[DRY-RUN] Publicaría {post.id} en {post.channels}:")
-        print(f"  {post.text}\n")
-        return
+        logger.info(f"[DRY-RUN] Publicaría {post.id} en {post.channels}: {post.text[:30]}...")
+        return True
 
-    payload = {
-        "id": post.id,
-        "text": post.text,
-        "channels": post.channels,
-        "scheduled_at": post.scheduled_at.isoformat(),
-    }
+    payload = post.model_dump()
+    payload["scheduled_at"] = post.scheduled_at.isoformat()
 
     try:
         resp = requests.post(WEBHOOK_URL, json=payload, timeout=10)
         resp.raise_for_status()
-        print(f"[OK] Enviado {post.id} a n8n. Status: {resp.status_code}")
+        logger.info(f"[OK] Enviado {post.id} a n8n. Status: {resp.status_code}")
+        return True
     except Exception as e:
-        print(f"[ERROR] Fallo al enviar {post.id} al webhook: {e}")
-
+        logger.error(f"[ERROR] Fallo al enviar {post.id} al webhook: {e}")
+        return False
 
 def main():
-    posts = load_posts()
-    due = get_due_posts(posts)
-
-    if not due:
-        print("No hay posts pendientes para publicar.")
+    logger.info("Iniciando Social Bot Scheduler...")
+    all_posts = load_posts()
+    
+    if not all_posts:
+        logger.warning("No se cargaron posts o el archivo está vacío.")
         return
 
-    print(f"Encontrados {len(due)} posts pendientes, enviando...")
-    for post in due:
-        send_to_webhook(post)
+    due_posts = get_due_posts(all_posts)
 
+    if not due_posts:
+        logger.info("No hay posts pendientes para publicar.")
+        return
+
+    logger.info(f"Encontrados {len(due_posts)} posts pendientes.")
+    
+    changes_made = False
+    for post in due_posts:
+        success = send_to_webhook(post)
+        if success:
+            post.published = True
+            changes_made = True
+
+    if changes_made:
+        save_posts(all_posts)
+    
+    logger.info("Proceso finalizado.")
 
 if __name__ == "__main__":
     main()

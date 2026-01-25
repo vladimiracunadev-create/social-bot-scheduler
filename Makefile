@@ -30,8 +30,8 @@ logs: ## Muestra los logs del contenedor del bot
 deploy: build ## Despliega en Kubernetes (requiere kubectl configurado)
 	kubectl apply -f k8s/configmap.yaml
 	@echo "Nota: Asegúrate de haber creado el secret desde k8s/secret.example.yaml"
-	kubectl apply -f k8s/deployment.yaml
+	kubectl apply -f k8s/cronjob.yaml
 
 k8s-clean: ## Elimina los recursos de Kubernetes del proyecto
-	kubectl delete -f k8s/deployment.yaml
+	kubectl delete -f k8s/cronjob.yaml
 	kubectl delete -f k8s/configmap.yaml

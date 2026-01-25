@@ -9,7 +9,9 @@ graph TD
     A[Publicaciones en JSON] --> B(Procesador Python)
     B --> C{¿Pendientes?}
     C -- Sí --> D[Envío a Webhook de n8n]
+    D --> G[Actualizar JSON: published=true]
     C -- No --> E[Finalizar]
+    G --> E
     D --> F[Redes Sociales - Twitter/Telegram/etc]
 ```
 
