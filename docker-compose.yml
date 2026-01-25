@@ -52,6 +52,30 @@ services:
     networks:
       - bot-network
 
+  # ⚛️ Caso 05: Destino React (Node)
+  dest-react:
+    image: node:20-alpine
+    container_name: social-bot-dest-react
+    working_dir: /app
+    ports:
+      - "8085:4000"
+    volumes:
+      - ./cases/05-laravel-to-react/dest:/app
+    command: sh -c "npm install express cors && node server.js"
+    networks:
+      - bot-network
+
+  # 🐘 Caso 06: Destino Symfony (PHP)
+  dest-symfony:
+    image: php:8.2-apache
+    container_name: social-bot-dest-symfony
+    ports:
+      - "8086:80"
+    volumes:
+      - ./cases/06-go-to-symfony/dest:/var/www/html
+    networks:
+      - bot-network
+
 networks:
   bot-network:
     driver: bridge

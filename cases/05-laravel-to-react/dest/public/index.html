@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard React - Laravel Case</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background: #0f172a;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        #root {
+            display: flex;
+            justify-content: center;
+            padding: 50px;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .log-item {
+            border-left: 4px solid #61dafb;
+            padding: 10px 15px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root">
+        <div class="card">
+            <h1 style="color: #61dafb;">⚛️ React Social Dashboard</h1>
+            <p>Conectado a Laravel via n8n</p>
+            <div id="logs-container">Cargando feeds...</div>
+        </div>
+    </div>
+    <script>
+        async function load() {
+            const res = await fetch('/api/logs');
+            const logs = await res.json();
+            const container = document.getElementById('logs-container');
+            container.innerHTML = logs.reverse().map(l => `<div class="log-item">${l}</div>`).join('');
+        }
+        load(); setInterval(load, 5000);
+    </script>
+</body>
+
+</html>

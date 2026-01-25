@@ -30,7 +30,9 @@ def setup():
         "1": {"name": "Python -> n8n -> PHP", "suffix": ""},
         "2": {"name": "Python -> n8n -> Go", "suffix": ""},
         "3": {"name": "Go -> n8n -> Node.js", "suffix": "-go"},
-        "4": {"name": "Node.js -> n8n -> FastAPI", "suffix": "-node"}
+        "4": {"name": "Node.js -> n8n -> FastAPI", "suffix": "-node"},
+        "5": {"name": "Laravel -> n8n -> React", "suffix": "-laravel"},
+        "6": {"name": "Go -> n8n -> Symfony", "suffix": "-symfony"}
     }
 
     print("\nSelecciona el Eje Tecnológico a activar:")
@@ -52,16 +54,19 @@ def setup():
         if not v_dir.exists(): venv.create(v_dir, with_pip=True)
         pip = v_dir / ("Scripts" if os.name == "nt" else "bin") / "pip"
         run_cmd(f"{pip} install -r requirements.txt", cwd=origin_path)
-    elif choice == "3": # Go
+    elif choice in ["3", "6"]: # Go
         print("Asegúrate de tener Go instalado para ejecutar el emisor.")
     elif choice == "4": # Node
         run_cmd("npm install axios", cwd=origin_path)
+    elif choice == "5": # Laravel (PHP)
+        print("Asegúrate de tener PHP instalado para ejecutar el comando Artisan.")
 
     print("\n" + "="*50)
     print("SISTEMA CONFIGURADO EXITOSAMENTE")
     print("="*50)
     print(f"\n1. Inicia el puente y el destino:")
-    dest_svc = ["dest-php", "dest-go", "dest-node", "dest-fastapi"][int(choice)-1]
+    dest_services = ["dest-php", "dest-go", "dest-node", "dest-fastapi", "dest-react", "dest-symfony"]
+    dest_svc = dest_services[int(choice)-1]
     print(f"   docker-compose up -d n8n {dest_svc}")
     print(f"\n2. Lanza el emisor ({cases[choice]['name'].split(' -> ')[0]}):")
     print(f"   Carpeta: cases/{case_folder}/origin")
