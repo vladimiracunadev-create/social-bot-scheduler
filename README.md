@@ -54,7 +54,7 @@ Explora nuestras guías detalladas para maximizar el uso del bot:
 - 📜 [Catálogo de Funcionalidades](docs/SYSTEMS_CATALOG.md): Detalle técnico de capacidades.
 - 🛡️ [Seguridad](docs/SECURITY.md): Políticas de protección y manejo de secretos.
 - 🧑‍💻 [Guía de Mantenedores](docs/MAINTAINERS.md): Estándares de código y flujos de trabajo.
-- 🕒 [Historial de Cambios](ROADMAP.md): Hoja de ruta y evolución del proyecto.
+- 🕒 [Historial de Cambios](CHANGELOG.md): Registro detallado de versiones y mejoras.
 
 ---
 

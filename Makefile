@@ -12,9 +12,17 @@ help: ## Muestra este mensaje de ayuda
 	@echo "Comandos disponibles:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
+export PYTHONPATH := $(PYTHONPATH):$(PWD)/src
+
 install: ## Instala las dependencias locales de Python
 	pip install -r requirements.txt
-	pip install black flake8 pre-commit
+	pip install black flake8 pre-commit pytest pytest-cov mypy types-requests
+
+test: ## Ejecuta las pruebas unitarias
+	pytest --cov=src/social_bot tests/
+
+mypy: ## Ejecuta el chequeo de tipos estáticos
+	mypy src/social_bot
 
 lint: ## Ejecuta el linter (flake8 y black)
 	black --check .
