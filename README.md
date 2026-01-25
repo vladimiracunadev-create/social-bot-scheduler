@@ -4,12 +4,32 @@
 
 ---
 
-## 📋 Requisitos del Sistema
-Para asegurar un funcionamiento óptimo, se recomienda:
-- **Python**: 3.11+
-- **Docker**: Engine 20.10+ y Compose v2
-- **Kubernetes** (Opcional): kubectl configurado para despliegue en cluster.
-- **n8n**: Una instancia con un webhook configurado para recibir los posts.
+## 🛠️ Stack Tecnológico
+Para que el ecosistema funcione correctamente, el sistema utiliza las siguientes tecnologías:
+
+| Componente | Tecnología | Rol |
+| :--- | :--- | :--- |
+| **Core** | `Python 3.11+` | Lógica de scheduling y procesamiento de datos. |
+| **Automation** | `n8n` | Orquestador de flujos y conexión con APIs externas. |
+| **API Receiver** | `PHP 8.2` | Receptor de eventos y logging de publicaciones. |
+| **Infraestructura** | `Docker / Compose` | Contenerización y despliegue universal. |
+| **Orquestación** | `Kubernetes` | (Opcional) Despliegue en clusters escalables. |
+| **Calidad** | `Pytest / Mypy` | Pruebas unitarias y tipado estático. |
+
+---
+
+## 🖥️ Requerimientos de Hardware
+Dependiendo de la escala de tu automatización, estos son los recursos necesarios:
+
+| Recurso | Mínimo (Home Bot) | Recomendado (Pro) | Enterprise (Cluster) |
+| :--- | :--- | :--- | :--- |
+| **CPU** | 1 Core (vCPU) | 2 Cores | 4+ Cores |
+| **RAM** | 2 GB* | 4 GB | 8 GB+ |
+| **Disco** | 5 GB (SSD) | 20 GB | 100 GB+ |
+| **Red** | 10 Mbps | 100 Mbps | 1 Gbps+ |
+
+> [!NOTE]
+> *n8n es el componente más demandante en RAM. Si solo usas el bot de Python sin n8n, podrías funcionar con 512MB de RAM.
 
 ---
 
