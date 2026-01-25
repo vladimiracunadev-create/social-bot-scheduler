@@ -44,6 +44,21 @@ No necesitas ser un experto. Sigue estos 3 pasos:
 - **Node.js** es lo que usa la mayoría de la web actual.
 - **Laravel/Symfony** son como los "tanques" blindados de las empresas.
 - **Rust** para rendimiento crítico y **Ruby** para elegancia.
+- **Rust** para rendimiento crítico y **Ruby** para elegancia.
 - **C# (.NET)** para el mundo corporativo.
 
 ¡Diviértete explorando la interacción entre todos ellos! 🚀
+
+---
+
+## ⚡ Comandos Útiles (Makefile)
+Si tienes `make` instalado, puedes ahorrar tiempo:
+- `make help`: Ver todos los comandos.
+- `make up-case-07`: Levantar el caso de Rust -> Ruby.
+- `make down`: Apagar todo.
+
+---
+
+## 📚 Más Lectura
+- ¿Problemas? Mira la [Solución de Problemas](TROUBLESHOOTING.md).
+- ¿Curiosidades? Lee sobre los [Desafíos y Ventajas del Proyecto](INSIGHTS.md).

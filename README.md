@@ -57,8 +57,11 @@ Hemos simplificado la complejidad. No necesitas configurar cada caso a mano.
 
 ## 📖 Documentación por Niveles
 - 📗 [**Comparativa de Ejes**](docs/CASES_INDEX.md): ¿Cuál elegir y por qué?
-- 📔 [Arquitectura Profunda](docs/ARCHITECTURE.md): Diagramas de flujo de los 3 ejes.
-- 📘 [Guía de Principiantes](docs/BEGINNERS_GUIDE.md): Conceptos básicos de automatización.
+- 📔 [Arquitectura Profunda](docs/ARCHITECTURE.md): Diagramas de flujo de los 8 ejes.
+- 📘 [Guía de Principiantes](docs/BEGINNERS_GUIDE.md): Conceptos básicos y uso de Makefile.
+- 🔧 [Solución de Problemas](docs/TROUBLESHOOTING.md): Guía de errores comunes.
+- 💡 [Visión del Proyecto](docs/INSIGHTS.md): Desafíos, alcance y ventajas.
+- 📜 [Historial de Cambios](CHANGELOG.md): Registro de actualizaciones.
 
 ---
 
