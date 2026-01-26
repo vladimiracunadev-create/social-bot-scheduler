@@ -5,7 +5,7 @@ Este eje tecnológico muestra la integración entre un emisor de alta velocidad 
 ## 🏗️ Arquitectura del Flujo
 1.  **Origen (Emisor)**: `main.go` (Go 1.21)
 2.  **Puente (Orquestador)**: n8n (Nodo Webhook -> Nodo HTTP Request)
-3.  **Destino (Receptor)**: `webhook.php` (Symfony 7 / PHP 8.2)
+3.  **Destino (Receptor)**: `index.php` (Symfony 7 / PHP 8.2)
 
 ## 🐹 Funcionamiento: Origen (Go)
 El emisor en Go gestiona el ciclo de vida de los posts:
@@ -15,7 +15,8 @@ El emisor en Go gestiona el ciclo de vida de los posts:
 ## 🐘 Funcionamiento: Destino (Symfony)
 El receptor utiliza un controlador estandarizado de Symfony:
 - **Tecnología**: Symfony Lite (simulación de controlador productivo).
-- **Procesamiento**: Recibe el POST en `/webhook.php`, parsea el JSON y añade la entrada a `symfony.log`.
+- **Procesamiento**: Recibe el POST en `/index.php`, parsea el JSON y añade la entrada a `symfony.log`.
+
 - **Dashboard**: El mismo controlador sirve una interfaz de administración empresarial para monitorizar el estado de los posts recibidos.
 
 ## 🚦 Verificación
