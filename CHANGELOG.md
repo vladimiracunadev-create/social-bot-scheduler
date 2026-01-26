@@ -1,5 +1,10 @@
 Todos los cambios notables en este proyecto serán documentados en este archivo.
 
+## [2.2.0] - 2026-01-25
+### Añadido
+- **Empaquetado**: Generación de archivo ZIP distribuible para despliegue rápido.
+- **Estabilización**: Revisión de metadatos y documentación para el lanzamiento oficial.
+
 ## [2.1.0] - 2026-01-25
 ### Corregido
 - **Estandarización Sistémica**: Todos los receptores internos (Go, Node, FastAPI, React, Sinatra, Flask) ahora escuchan en `/webhook` (o `/webhook.php`), eliminando errores 404 en n8n.
