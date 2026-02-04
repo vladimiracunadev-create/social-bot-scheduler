@@ -1,5 +1,5 @@
 # Build stage
-FROM python:3.11.7-slim-bookworm@sha256:4002660146059fd503eb8754117b89793540be8d578494f6f71060e294944fd6 AS builder
+FROM python:3.11-slim-bookworm@sha256:1a0157fac73f50ccd20d3c2b3dc2c700a7e23e76d8b4a57898e9bf91a089c773 AS builder
 
 WORKDIR /app
 
@@ -15,7 +15,7 @@ RUN python -m pip install --upgrade pip && \
     pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # Final stage
-FROM python:3.11.7-slim-bookworm@sha256:4002660146059fd503eb8754117b89793540be8d578494f6f71060e294944fd6
+FROM python:3.11-slim-bookworm@sha256:1a0157fac73f50ccd20d3c2b3dc2c700a7e23e76d8b4a57898e9bf91a089c773
 
 WORKDIR /app
 
