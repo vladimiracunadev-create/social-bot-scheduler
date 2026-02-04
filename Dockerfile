@@ -10,9 +10,12 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends gcc python3-dev && \
     rm -rf /var/lib/apt/lists/*
 
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
 COPY requirements.txt .
-RUN python -m pip install --upgrade --prefix=/install pip setuptools wheel && \
-    /install/bin/pip install --no-cache-dir --prefix=/install -r requirements.txt
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Final stage
 FROM python:3.11-slim-bookworm
@@ -23,7 +26,9 @@ WORKDIR /app
 RUN groupadd -r botgroup && useradd -r -g botgroup botuser && \
     chown -R botuser:botgroup /app
 
-COPY --from=builder /install /usr/local
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
 COPY --chown=botuser:botgroup . .
 
 USER botuser
