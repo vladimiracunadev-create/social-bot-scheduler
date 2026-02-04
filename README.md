@@ -4,7 +4,7 @@
 
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
 [![Ecosystem](https://img.shields.io/badge/Matriz-8_Ejes-blueviolet.svg)]()
-[![Documentation](https://img.shields.io/badge/docs-completo-green.svg)]()
+[![Security](https://img.shields.io/badge/Security-Hardened-success.svg)]()
 [![Latest Release](https://img.shields.io/badge/release-v2.2.0-blue.svg)]()
 
 ---
@@ -12,7 +12,12 @@
 ## 💡 Sobre el Proyecto
 **Social Bot Scheduler** es un laboratorio de ingeniería de software diseñado para demostrar la interoperabilidad entre múltiples lenguajes de programación. Utiliza **n8n** como bus de orquestación central para comunicar emisores (bots) escritos en diversos lenguajes con receptores (dashboards) también agnósticos.
 
-El objetivo es demostrar que la arquitectura modular puede superar las barreras del lenguaje.
+### 🛡️ Hardening de Producción
+Este repositorio ha sido auditado y robustecido siguiendo estándares de seguridad industrial:
+- **Seguridad en Contenedores**: Ejecución forzada como usuario no-root y sistema de archivos de solo lectura.
+- **Validación de Entradas**: El HUB CLI protege contra Path Traversal y ejecución remota de código (RCE).
+- **Orquestación Segura**: Manifiestos de Kubernetes con `SecurityContext` restrictivo y `NetworkPolicy` de denegación por defecto.
+- **Escaneo Automático**: Integración de `Gitleaks`, `Trivy` y `pip-audit` en el pipeline de CI/CD.
 
 ---
 

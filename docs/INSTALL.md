@@ -9,18 +9,18 @@ Cualquiera sea el método de instalación, necesitas configurar el webhook:
 2. Define `WEBHOOK_URL` con la dirección de tu webhook de n8n.
 
 ## 2. Instalación con Docker (Recomendado)
-El uso de Docker garantiza que el bot funcione exactamente igual en cualquier máquina.
+El uso de Docker garantiza la portabilidad absoluta y la seguridad mediante el aislamiento. La imagen está configurada para correr como **usuario no-privilegiado**.
 
 ```bash
-# Construir la imagen
-make build
+# Construir la imagen con hardening
+docker build -t social-bot-scheduler .
 
-# Iniciar contenedor
-make up
-
-# Ver logs
-make logs
+# Iniciar contenedor (ejemplo con n8n)
+docker-compose up -d n8n dest-php
 ```
+
+> [!IMPORTANT]
+> Nuestra imagen Docker utiliza `python:3.11-slim` y está robustecida para prevenir escalada de privilegios.
 
 ## 3. Despliegue en Kubernetes (K8s)
 Si tienes un entorno de orquestación, puedes usar los manifiestos incluidos:
