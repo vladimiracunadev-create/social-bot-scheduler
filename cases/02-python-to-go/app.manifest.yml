@@ -1,0 +1,12 @@
+id: "02"
+name: "Python -> n8n -> Go"
+path: "cases/02-python-to-go"
+origin:
+  language: "python"
+  entrypoint: "origin/bot.py"
+destination:
+  language: "go"
+  port: 8082
+  url: "http://localhost:8082"
+stack: ["python", "n8n", "go"]
+description: "Integración de bot Python con dashboard escrito en Go (Gin)"

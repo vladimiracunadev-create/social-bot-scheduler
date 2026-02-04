@@ -1,0 +1,12 @@
+id: "03"
+name: "Go -> n8n -> Node.js"
+path: "cases/03-go-to-node"
+origin:
+  language: "go"
+  entrypoint: "origin/emisor.go"
+destination:
+  language: "nodejs"
+  port: 8083
+  url: "http://localhost:8083"
+stack: ["go", "n8n", "nodejs", "express"]
+description: "Integración de emisor en Go con destino Node.js"

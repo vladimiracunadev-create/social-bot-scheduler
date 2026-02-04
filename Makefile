@@ -32,11 +32,14 @@ audit: ## Realiza auditoría de dependencias y secretos
 	detect-secrets scan
 
 # --- HUB CLI ---
-hub-run: ## Ejecuta un caso via HUB CLI (ej: make hub-run CASE=01-python-to-php)
-	python hub.py run $(CASE)
+hub-ejecutar: ## Ejecuta un caso via HUB CLI (ej: make hub-ejecutar CASE=01-python-to-php)
+	python hub.py ejecutar $(CASE)
 
-hub-list: ## Lista los casos disponibles
-	python hub.py list-cases
+hub-listar: ## Lista los casos disponibles
+	python hub.py listar-casos
+
+hub-doctor: ## Ejecuta diagnósticos del sistema
+	python hub.py doctor
 
 # --- Docker & Development Stack ---
 dev-up: ## Levanta el stack mínimo de desarrollo (n8n + core)

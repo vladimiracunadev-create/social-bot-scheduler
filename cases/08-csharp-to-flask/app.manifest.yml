@@ -1,0 +1,12 @@
+id: "08"
+name: "C# -> n8n -> Flask"
+path: "cases/08-csharp-to-flask"
+origin:
+  language: "csharp"
+  entrypoint: "origin/Program.cs"
+destination:
+  language: "python"
+  port: 8088
+  url: "http://localhost:8088"
+stack: ["csharp", "dotnet", "n8n", "flask", "python"]
+description: "Integración de .NET con microservicio Flask"

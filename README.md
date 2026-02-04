@@ -18,6 +18,7 @@ Este repositorio ha sido auditado y robustecido siguiendo estándares de segurid
 - **Validación de Entradas**: El HUB CLI protege contra Path Traversal y ejecución remota de código (RCE).
 - **Orquestación Segura**: Manifiestos de Kubernetes con `SecurityContext` restrictivo y `NetworkPolicy` de denegación por defecto.
 - **Escaneo Automático**: Integración de `Gitleaks`, `Trivy` y `pip-audit` en el pipeline de CI/CD.
+- **Capa HUB**: Orquestador centralizado con manifiestos YAML, auditoría y diagnósticos integrados.
 
 ---
 
@@ -36,14 +37,26 @@ git clone https://github.com/vladimiracunadev-create/social-bot-scheduler.git
 cd social-bot-scheduler
 ```
 
-### Paso 2: Configuración Automática
-Hemos creado un asistente maestro que configura todo por ti. Ejecútalo:
+### Paso 2: Configuración (Elige tu camino)
+
+#### Opción A: Orquestador HUB (Recomendado)
+Usa el nuevo HUB para listar y diagnosticar:
+```bash
+# Windows
+.\hub.ps1 listar-casos
+.\hub.ps1 doctor
+
+# Linux
+./hub.sh listar-casos
+```
+
+#### Opción B: Asistente Legacy
+Sigue el flujo tradicional con nuestro asistente interactivo:
 ```bash
 python setup.py
 ```
-Sigue las instrucciones en pantalla:
-1.  Selecciona el **Caso 01 (Python -> PHP)** para tu primera prueba.
-2.  El script generará los archivos `.env` y configurará los entornos virtuales necesarios.
+1.  Selecciona el **Caso 01 (Python -> PHP)**.
+2.  El script generará los archivos `.env` y preparará el entorno.
 
 ### Paso 3: Levantar Infraestructura
 El asistente te dará el comando exacto al finalizar. Generalmente será:
