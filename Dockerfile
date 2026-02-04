@@ -11,8 +11,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN python -m pip install --upgrade pip setuptools wheel && \
-    pip install --no-cache-dir --prefix=/install -r requirements.txt
+RUN python -m pip install --upgrade --prefix=/install pip setuptools wheel && \
+    /install/bin/pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # Final stage
 FROM python:3.11-slim-bookworm
