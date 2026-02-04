@@ -1,0 +1,25 @@
+name: Wiki Sync
+
+on:
+  push:
+    paths:
+      - 'docs/wiki/**'
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  publish-wiki:
+    name: Sync to GitHub Wiki
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Sync Wiki Folder
+        uses: Andrew-Chen-Wang/github-wiki-action@v4
+        with:
+          path: docs/wiki/
+          ignore: "" # Sync all files in the folder
