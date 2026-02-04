@@ -109,6 +109,7 @@ Tabla de estado actual de los 8 ejes de integración:
 ---
 
 ## 📖 Documentación Detallada
+- 👔 **[Guía para Reclutadores](docs/RECRUITER.md)**: Evaluación técnica rápida y valor de negocio del proyecto.
 - 🎓 **[Guía Paso a Paso para Principiantes](docs/BEGINNERS_GUIDE.md)**: Manual detallado desde cero.
 - 🔧 **[Solución de Problemas](docs/TROUBLESHOOTING.md)**: Cómo arreglar errores comunes (Docker, n8n, dependencias).
 - 📊 **[Índice de Casos](docs/CASES_INDEX.md)**: Explicación técnica de cada combinación.
