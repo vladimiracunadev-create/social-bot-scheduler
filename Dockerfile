@@ -11,7 +11,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+RUN python -m pip install --upgrade pip && \
+    pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # Final stage
 FROM python:3.11.7-slim-bookworm@sha256:4002660146059fd503eb8754117b89793540be8d578494f6f71060e294944fd6
