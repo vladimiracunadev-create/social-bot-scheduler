@@ -25,8 +25,19 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
-          pip install black flake8 mypy pytest pytest-cov types-requests
+            pip install -r requirements.txt
+            pip install black flake8 mypy pytest pytest-cov types-requests pip-audit
+
+      - name: Dependency Audit (Python)
+        run: pip-audit
+
+      - name: Dependency Audit (Node.js)
+        run: |
+            if [ -f package.json ]; then
+              npm audit --audit-level=high
+            else
+              echo "No package.json found, skipping npm audit."
+            fi
 
       - name: Formato (Black)
         run: black --check .
@@ -45,9 +56,17 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Secret Scan (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@v3
@@ -56,7 +75,25 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          load: true
+
+      - name: Container Scan (Trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .

@@ -8,10 +8,29 @@ spec:
     spec:
       template:
         spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            fsGroup: 2000
           containers:
           - name: bot
-            image: social-bot-scheduler:latest
+            image: social-bot-scheduler:2.2.0
             imagePullPolicy: IfNotPresent
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+              privileged: false
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+            resources:
+              limits:
+                cpu: "500m"
+                memory: "512Mi"
+              requests:
+                cpu: "100m"
+                memory: "128Mi"
             envFrom:
             - configMapRef:
                 name: social-bot-config
@@ -21,6 +40,7 @@ spec:
             - name: posts-data
               mountPath: /app/posts.json
               subPath: posts.json
+              readOnly: false
           restartPolicy: OnFailure
           volumes:
           - name: posts-data

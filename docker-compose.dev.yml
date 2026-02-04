@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=false
+    volumes:
+      - n8n_data:/home/node/.local/share/n8n
+
+  hub:
+    build: .
+    environment:
+      - NO_PUBLIC_POSTING=true
+      - DRY_RUN=true
+    volumes:
+      - .:/app
+
+volumes:
+  n8n_data:

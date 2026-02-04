@@ -1,22 +1,37 @@
-# Usar una imagen base ligera de Python
-FROM python:3.11-slim
+# Build stage
+FROM python:3.11.7-slim-bookworm@sha256:4002660146059fd503eb8754117b89793540be8d578494f6f71060e294944fd6 AS builder
 
-# Establecer el directorio de trabajo
 WORKDIR /app
 
-# Evitar que Python genere archivos .pyc y habilitar el volcado de logs en tiempo real
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Instalar dependencias del sistema si fueran necesarias
-# RUN apt-get update && apt-get install -y --no-install-recommends gcc && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc python3-dev && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copiar el archivo de requerimientos e instalar dependencias
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
-# Copiar el resto del código de la aplicación
-COPY . .
+# Final stage
+FROM python:3.11.7-slim-bookworm@sha256:4002660146059fd503eb8754117b89793540be8d578494f6f71060e294944fd6
 
-# Comando para ejecutar el bot
+WORKDIR /app
+
+# Create a non-root user
+RUN groupadd -r botgroup && useradd -r -g botgroup botuser && \
+    chown -R botuser:botgroup /app
+
+COPY --from=builder /install /usr/local
+COPY --chown=botuser:botgroup . .
+
+USER botuser
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Healthcheck to ensure the bot script is present and potentially runnable
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+  CMD python -c "import os; exit(0 if os.path.exists('bot.py') else 1)"
+
 CMD ["python", "bot.py"]

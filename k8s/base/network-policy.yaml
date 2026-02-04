@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-limit-bot
+spec:
+  podSelector:
+    matchLabels:
+      app: social-bot
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.0/8 # Internal corporate network
+    ports:
+    - protocol: TCP
+      port: 5678 # Allow egress to n8n
+  - to:
+    - dns: api.twitter.com
+    ports:
+    - protocol: TCP
+      port: 443

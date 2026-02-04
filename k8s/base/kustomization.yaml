@@ -1,0 +1,4 @@
+resources:
+- configmap.yaml
+- cronjob.yaml
+- network-policy.yaml
