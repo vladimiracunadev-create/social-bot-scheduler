@@ -11,12 +11,32 @@ Puedes interactuar con el HUB de tres maneras:
 
 ---
 
-## 📋 Comandos del CLI
+## ⚖️ Decisión de Runtime (Obligatoria)
+
+Este repositorio utiliza **Python** como lenguaje principal para el HUB siguiendo estas reglas:
+1. **Detección**: Se detectó `pyproject.toml` / `requirements.txt` en la raíz.
+2. **Prioridad**: Al ser un repositorio Python-first, el HUB se implementa en Python (`hub.py`).
+3. **Alternativas**: Si el repo fuera Node.js, se usaría TS. Si no tuviera runtime claro, se usaría Bash/BS1.
+4. **Opcionalidad**: El HUB es una capa de conveniencia. El "legacy quickstart" (`docker-compose up`) sigue funcionando sin cambios.
+
+---
+
+## 🛠️ Herramientas de Acceso (Detección de Sistema)
+
+El HUB detecta automáticamente tu entorno a través de estos puntos de entrada:
+- **Linux/bash**: `./hub.sh` (Auto-detecta `python3` o `python`).
+- **Windows/powershell**: `.\hub.ps1` (Auto-detecta `python`).
+- **Universal/Makefile**: `make hub-listar`, etc.
+
+---
 
 ### 1. Listar Casos
 Enumera todos los casos de integración registrados mediante archivos `app.manifest.yml`.
 ```bash
-python hub.py listar-casos
+# Recomendado usar los wrappers:
+./hub.sh listar-casos
+# o
+make hub-listar
 ```
 
 ### 2. Ejecutar un Bot

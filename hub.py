@@ -11,20 +11,25 @@ from pathlib import Path
 CASES_DIR = Path("cases").resolve()
 AUDIT_LOG = Path("hub.audit.log").resolve()
 
+
 def safe_print(text):
     """Imprime texto manejando errores de codificación en Windows."""
     try:
         print(text)
     except UnicodeEncodeError:
-        print(text.encode('ascii', 'replace').decode('ascii'))
+        print(text.encode("ascii", "replace").decode("ascii"))
+
 
 def log_audit(comando, estado, detalles=""):
     """Registra una acción en el log de auditoría."""
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    usuario = os.getlogin() if hasattr(os, 'getlogin') else "desconocido"
-    entrada = f"[{timestamp}] USUARIO:{usuario} CMD:{comando} ESTADO:{estado} {detalles}\n"
+    usuario = os.getlogin() if hasattr(os, "getlogin") else "desconocido"
+    entrada = (
+        f"[{timestamp}] USUARIO:{usuario} CMD:{comando} ESTADO:{estado} {detalles}\n"
+    )
     with open(AUDIT_LOG, "a", encoding="utf-8") as f:
         f.write(entrada)
+
 
 def obtener_manifiesto(ruta_caso):
     """Carga el manifiesto app.manifest.yml de un caso."""
@@ -37,6 +42,7 @@ def obtener_manifiesto(ruta_caso):
     except Exception as e:
         safe_print(f"Error cargando manifiesto en {ruta_caso}: {e}")
         return None
+
 
 def listar_casos():
     """Enumera todos los casos disponibles basados en sus manifiestos."""
@@ -52,13 +58,16 @@ def listar_casos():
             manifiesto = obtener_manifiesto(d)
             if manifiesto:
                 encontrados += 1
-                safe_print(f" - [{manifiesto.get('id', '??')}] {manifiesto.get('name', d.name)}")
+                safe_print(
+                    f" - [{manifiesto.get('id', '??')}] {manifiesto.get('name', d.name)}"
+                )
                 safe_print(f"   Tech: {', '.join(manifiesto.get('stack', []))}")
-    
+
     if encontrados == 0:
         safe_print("No se encontraron casos con app.manifest.yml válido.")
-    
+
     log_audit("listar-casos", "EXITO", f"Casos encontrados: {encontrados}")
+
 
 def ejecutar_caso(nombre_caso, dry_run=True):
     """Lanza la ejecución de un caso específico."""
@@ -69,7 +78,7 @@ def ejecutar_caso(nombre_caso, dry_run=True):
         return
 
     ruta_caso = (CASES_DIR / nombre_caso).resolve()
-    
+
     # Validación de Seguridad: Prevent Path Traversal
     if not str(ruta_caso).startswith(str(CASES_DIR)):
         safe_print("Error: Intento de acceso no autorizado detectado.")
@@ -78,7 +87,9 @@ def ejecutar_caso(nombre_caso, dry_run=True):
 
     manifiesto = obtener_manifiesto(ruta_caso)
     if not manifiesto:
-        safe_print(f"Error: El caso '{nombre_caso}' no tiene un app.manifest.yml válido.")
+        safe_print(
+            f"Error: El caso '{nombre_caso}' no tiene un app.manifest.yml válido."
+        )
         log_audit(f"ejecutar {nombre_caso}", "FALLO", "Sin manifiesto")
         return
 
@@ -88,11 +99,11 @@ def ejecutar_caso(nombre_caso, dry_run=True):
 
     origin_info = manifiesto.get("origin", {})
     entrypoint = ruta_caso / origin_info.get("entrypoint", "bot.py")
-    
+
     if entrypoint.exists():
         lenguaje = origin_info.get("language", "python").lower()
         cmd = []
-        
+
         if lenguaje == "python":
             cmd = [sys.executable, entrypoint.name]
         elif lenguaje == "nodejs":
@@ -101,7 +112,9 @@ def ejecutar_caso(nombre_caso, dry_run=True):
             cmd = ["go", "run", entrypoint.name]
         else:
             safe_print(f"Error: Lenguaje '{lenguaje}' no soportado automáticamente.")
-            log_audit(f"ejecutar {nombre_caso}", "FALLO", f"Lenguaje no soportado: {lenguaje}")
+            log_audit(
+                f"ejecutar {nombre_caso}", "FALLO", f"Lenguaje no soportado: {lenguaje}"
+            )
             return
 
         env = os.environ.copy()
@@ -120,13 +133,16 @@ def ejecutar_caso(nombre_caso, dry_run=True):
         safe_print(f"Error: No se encontró el punto de entrada '{entrypoint}'.")
         log_audit(f"ejecutar {nombre_caso}", "FALLO", "Punto de entrada no encontrado")
 
+
 def ejecutar_doctor():
     """Realiza un diagnóstico del sistema de orquestación."""
     safe_print("=== HUB DOCTOR: Informe de Diagnóstico ===")
-    
+
     # 1. Verificar Docker
     try:
-        docker_check = subprocess.run(["docker", "--version"], capture_output=True, text=True)
+        docker_check = subprocess.run(
+            ["docker", "--version"], capture_output=True, text=True
+        )
         if docker_check.returncode == 0:
             safe_print(f"[OK] Docker: {docker_check.stdout.strip()}")
         else:
@@ -136,7 +152,9 @@ def ejecutar_doctor():
 
     # 2. Verificar Docker Compose
     try:
-        dc_check = subprocess.run(["docker-compose", "--version"], capture_output=True, text=True)
+        dc_check = subprocess.run(
+            ["docker-compose", "--version"], capture_output=True, text=True
+        )
         if dc_check.returncode == 0:
             safe_print(f"[OK] Docker Compose: {dc_check.stdout.strip()}")
         else:
@@ -152,7 +170,7 @@ def ejecutar_doctor():
             encontrados += 1
             if (d / "app.manifest.yml").exists():
                 validos += 1
-    
+
     if encontrados > 0:
         safe_print(f"[OK] Casos: {validos}/{encontrados} tienen manifiesto YAML.")
     else:
@@ -166,6 +184,7 @@ def ejecutar_doctor():
 
     log_audit("doctor", "EXITO")
 
+
 def gestionar_stack(accion):
     """Inicia o detiene los servicios definidos en docker-compose."""
     cmd = ["docker-compose", accion]
@@ -177,6 +196,7 @@ def gestionar_stack(accion):
         safe_print(f"Error gestionando el stack: {e}")
         log_audit(f"stack {accion}", "FALLO", str(e))
 
+
 def main():
     parser = argparse.ArgumentParser(description="HUB CLI para Social Bot Scheduler")
     subparsers = parser.add_subparsers(dest="command")
@@ -186,8 +206,15 @@ def main():
 
     # ejecutar
     run_parser = subparsers.add_parser("ejecutar", help="Lanza un caso de integración")
-    run_parser.add_argument("caso", help="Nombre de la carpeta del caso (ej: 01-python-to-php)")
-    run_parser.add_argument("--real", action="store_false", dest="dry_run", help="Desactivar modo simulación")
+    run_parser.add_argument(
+        "caso", help="Nombre de la carpeta del caso (ej: 01-python-to-php)"
+    )
+    run_parser.add_argument(
+        "--real",
+        action="store_false",
+        dest="dry_run",
+        help="Desactivar modo simulación",
+    )
     run_parser.set_defaults(dry_run=True)
 
     # doctor
@@ -212,10 +239,12 @@ def main():
     else:
         parser.print_help()
 
+
 if __name__ == "__main__":
     # Asegurar soporte para caracteres en consola Windows
-    if os.name == 'nt':
+    if os.name == "nt":
         import ctypes
+
         ctypes.windll.kernel32.SetConsoleOutputCP(65001)
-    
+
     main()
