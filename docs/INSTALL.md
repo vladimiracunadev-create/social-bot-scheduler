@@ -20,7 +20,10 @@ docker-compose up -d n8n dest-php
 ```
 
 > [!IMPORTANT]
-> Nuestra imagen Docker utiliza `python:3.11-slim` y está robustecida para prevenir escalada de privilegios.
+> Nuestra imagen Docker utiliza una estrategia de **Dual-Layer Patching**:
+> 1. Aísla la aplicación en un entorno virtual (`venv`).
+> 2. Parchea proactivamente las dependencias del sistema en la imagen base `slim-bookworm`.
+> 3. Se ejecuta como usuario no-privilegiado `botuser`.
 
 ## 3. Despliegue en Kubernetes (K8s)
 Si tienes un entorno de orquestación, puedes usar los manifiestos incluidos:

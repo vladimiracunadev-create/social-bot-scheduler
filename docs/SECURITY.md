@@ -18,3 +18,6 @@ El bot realiza una validación básica de tipos, pero se recomienda:
 
 ## Reporte de Vulnerabilidades
 Si encuentras un problema de seguridad, por favor abre un **Issue** con la etiqueta `security` o contacta al mantenedor directamente.
+
+## Hardening Técnico
+Para detalles sobre nuestra estrategia de imágenes Docker no-root, aislamiento con `venv` y el pipeline de escaneo continuo, consulta el archivo principal de [Seguridad](../SECURITY.md).

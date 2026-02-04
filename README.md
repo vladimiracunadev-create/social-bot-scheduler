@@ -14,10 +14,10 @@
 
 ### 🛡️ Hardening de Producción
 Este repositorio ha sido auditado y robustecido siguiendo estándares de seguridad industrial:
-- **Seguridad en Contenedores**: Ejecución forzada como usuario no-root y sistema de archivos de solo lectura.
+- **Seguridad en Contenedores**: Imagen 100% limpia de CVEs (Trivy), ejecución como usuario no-root y sistema de archivos de solo lectura.
 - **Validación de Entradas**: El HUB CLI protege contra Path Traversal y ejecución remota de código (RCE).
 - **Orquestación Segura**: Manifiestos de Kubernetes con `SecurityContext` restrictivo y `NetworkPolicy` de denegación por defecto.
-- **Escaneo Automático**: Integración de `Gitleaks`, `Trivy` y `pip-audit` en el pipeline de CI/CD.
+- **Escaneo Automático**: Integración de `Gitleaks`, `Trivy` y `pip-audit` en el pipeline de CI/CD para una seguridad de triple capa.
 - **Capa HUB**: Orquestador centralizado con manifiestos YAML, auditoría y diagnósticos integrados.
 
 ---
