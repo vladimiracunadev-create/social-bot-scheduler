@@ -22,6 +22,9 @@ FROM python:3.11-slim-bookworm
 
 WORKDIR /app
 
+# Upgrade system-level core packages to resolve vulnerabilities in the base image
+RUN python -m pip install --upgrade --no-cache-dir pip setuptools wheel
+
 # Create a non-root user
 RUN groupadd -r botgroup && useradd -r -g botgroup botuser && \
     chown -R botuser:botgroup /app
