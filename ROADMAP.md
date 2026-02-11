@@ -1,29 +1,36 @@
 # Roadmap — Social Bot Scheduler
 
-Este documento describe la hoja de ruta propuesta. Es un plan vivo y se actualizará según prioridades y contribuciones.
+Este documento describe la evolución y el futuro del proyecto.
 
-## Objetivos a corto plazo (v0.x)
-- v0.1 — Estructura básica: `bot.py`, `posts.json`, webhook a n8n. (Completado)
-- v0.2 — Añadir tests unitarios y documentación adicional.
-- v0.3 — Mejoras en el parser de fechas y reglas de scheduling.
+## ✅ Hitos Completados
 
-## Objetivos a medio plazo (v1.0)
-- v1.0 — Soporte multi-canal estable (LinkedIn, Twitter, etc.) y manejo de errores robusto.
-- Integración con servicios reales (APIs de social media a través de nodos n8n o adaptadores).
-- Añadir integración continua y despliegues automatizados.
+### v2.3.0 — "Resiliencia Industrial" (Actual)
+- [x] Matriz de 8 casos interoperables (Python, Go, Node, PHP, Rust, Ruby, C#, Laravel).
+- [x] Sistema de Resiliencia Global: Circuit Breaker, Idempotencia (SQLite), DLQ.
+- [x] Hub CLI centralizado para diagnósticos (`make doctor`).
+- [x] Hardening de Seguridad (Trivy scan, User permissions).
 
-## Objetivos a largo plazo (v2.0+)
-- v2.0 — Interfaz web para gestionar posts y ver historial de envíos.
-- Integración con bases de datos y panel de administración.
-- Políticas de seguridad y parcheo automatizado.
-
-## Ideas y wishlist
-- Soporte para plantillas y variantes de publicaciones por canal.
-- Programación avanzada (reglas recurrentes, ventanas de publicación).
-
-## Cómo priorizar
-Si quieres contribuir a la roadmap, abre un *issue* con una propuesta y etiqueta `roadmap`.
+### v1.0 - v2.0
+- [x] Orquestación base con n8n.
+- [x] Dashboard unificado.
+- [x] Dockerización completa.
 
 ---
 
-(Se aceptan mejoras en el formato y contenido.)
+## 🔮 Futuro (v3.0+)
+
+### Observabilidad Avanzada
+- [ ] **Prometheus Exporter**: Exponer métricas de n8n y contenedores.
+- [ ] **Grafana Dashboard**: Visualización de latencia, tasa de errores y volumen de mensajes.
+
+### Infraestructura Cloud
+- [ ] **Terraform**: IaC para despliegue en AWS (ECS Fargate).
+- [ ] **HTTPS/TLS**: Certificados automáticos con Traefik o Cert Manager.
+
+### Funcionalidad Extendida
+- [ ] **APIs Reales**: Adaptadores opcionales para conectar con APIs (Sandbox) de Twitter/LinkedIn.
+- [ ] **Auth Centralizada**: Keycloak o gestión de usuarios simple.
+
+## Cómo contribuir
+Si quieres contribuir, revisa `CONTRIBUTING.md` y busca issues etiquetados como `roadmap`.
+
