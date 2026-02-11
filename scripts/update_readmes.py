@@ -26,30 +26,29 @@ cases = [
     "05-laravel-to-react",
     "06-go-to-symfony",
     "07-rust-to-ruby",
-    "08-csharp-to-flask"
+    "08-csharp-to-flask",
 ]
 
 for case in cases:
     readme_path = f"cases/{case}/README.md"
-    
+
     if not os.path.exists(readme_path):
         print(f"[SKIP] {readme_path} no encontrado")
         continue
-    
-    with open(readme_path, 'r', encoding='utf-8') as f:
+
+    with open(readme_path, "r", encoding="utf-8") as f:
         content = f.read()
-    
+
     # Buscar la sección de Verificación
     if "## 🚦 Verificación" in content:
         # Insertar la sección de Guardrails antes de Verificación
         updated_content = content.replace(
-            "## 🚦 Verificación",
-            guardrails_template + "## 🚦 Verificación"
+            "## 🚦 Verificación", guardrails_template + "## 🚦 Verificación"
         )
-        
-        with open(readme_path, 'w', encoding='utf-8') as f:
+
+        with open(readme_path, "w", encoding="utf-8") as f:
             f.write(updated_content)
-        
+
         print(f"[OK] {readme_path} actualizado")
     else:
         print(f"[WARNING] {readme_path} no tiene sección de Verificación")
