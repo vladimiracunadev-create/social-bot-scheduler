@@ -139,8 +139,6 @@ Verifica el Dashboard del Caso 01: [http://localhost:8081](http://localhost:8081
 
 ## 📈 Observabilidad Avanzada (v3.0)
 
-## 📈 Observabilidad Avanzada (v3.0)
-
 Este proyecto implementa un **stack de monitoreo industrial** para eliminar la "caja negra" típica de las integraciones.
 
 ### ¿Qué componentes usamos?
