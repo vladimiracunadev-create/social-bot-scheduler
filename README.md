@@ -10,11 +10,13 @@
 ---
 
 ## 💡 Sobre el Proyecto
+> **[AVISO DE COMPLIANCE](docs/COMPLIANCE.md)**: Este es un laboratorio educativo. Favor de leer nuestra política de uso responsable.
+
 **Social Bot Scheduler** es un laboratorio de ingeniería de software diseñado para demostrar la interoperabilidad entre múltiples lenguajes de programación. Utiliza **n8n** como bus de orquestación central para comunicar emisores (bots) escritos en diversos lenguajes con receptores (dashboards) también agnósticos.
 
 ### 🛡️ Hardening de Producción
 Este repositorio ha sido auditado y robustecido siguiendo estándares de seguridad industrial:
-- **Seguridad en Contenedores**: Imagen 100% limpia de CVEs (Trivy), ejecución como usuario no-root y sistema de archivos de solo lectura.
+- **Seguridad en Contenedores**: Imagen sin vulnerabilidades críticas detectadas en build (Trivy Scan), ejecución como usuario no-root y sistema de archivos de solo lectura.
 - **Validación de Entradas**: El HUB CLI protege contra Path Traversal y ejecución remota de código (RCE).
 - **Orquestación Segura**: Manifiestos de Kubernetes con `SecurityContext` restrictivo y `NetworkPolicy` de denegación por defecto.
 - **Escaneo Automático**: Integración de `Gitleaks`, `Trivy` y `pip-audit` en el pipeline de CI/CD para una seguridad de triple capa.

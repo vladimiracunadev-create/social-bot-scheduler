@@ -1,64 +1,32 @@
-# Social Bot Scheduler Makefile
+# Makefile Centralizado - Social Bot Scheduler
 
-# Variables
-IMAGE_NAME = social-bot-scheduler
-TAG = latest
-
-.PHONY: help install build up down logs deploy k8s-clean dev-up dev-down hub-run lint test k8s-apply k8s-delete audit
+.PHONY: help doctor up down logs logs-n8n scan
 
 help: ## Muestra este mensaje de ayuda
-	@echo "Uso: make [comando]"
-	@echo ""
-	@echo "Comandos disponibles:"
-	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+	@echo "🤖 Social Bot Scheduler - Comandos Disponibles"
+	@echo "---------------------------------------------"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
-# --- Development ---
-install: ## Instala las dependencias locales de Python (Dev)
-	pip install -r requirements.txt
-	pip install black flake8 pre-commit pytest pytest-cov mypy types-requests detect-secrets pip-audit
+doctor: ## Diagnostica el estado del sistema (contenedores, red, archivos)
+	python3 hub.py doctor
 
-setup-pc: ## Configura los git hooks de pre-commit
-	pre-commit install
-
-lint: ## Ejecuta el linter (flake8 y black)
-	black --check .
-	flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-
-test: ## Ejecuta las pruebas unitarias
-	pytest --cov=. tests/ || echo "No tests found yet"
-
-audit: ## Realiza auditoría de dependencias y secretos
-	pip-audit
-	detect-secrets scan
-
-# --- HUB CLI ---
-hub-ejecutar: ## Ejecuta un caso via HUB CLI (ej: make hub-ejecutar CASE=01-python-to-php)
-	./hub.sh ejecutar $(CASE)
-
-hub-listar: ## Lista los casos disponibles
-	./hub.sh listar-casos
-
-hub-doctor: ## Ejecuta diagnósticos del sistema
-	./hub.sh doctor
-
-# --- Docker & Development Stack ---
-dev-up: ## Levanta el stack mínimo de desarrollo (n8n + core)
-	docker-compose -f docker-compose.dev.yml up -d
-
-dev-down: ## Detiene el stack de desarrollo
-	docker-compose -f docker-compose.dev.yml down
-
-up: ## Levanta todo el entorno legacy
+up: ## Levanta toda la infraestructura (Docker Compose)
 	docker-compose up -d
 
-down: ## Detiene todos los contenedores legacy
+down: ## Detiene y elimina contenedores
 	docker-compose down
 
-# --- Kubernetes (Kustomize) ---
-k8s-apply: ## Despliega en K8s usando Kustomize (dev overlay)
-	kubectl apply -k k8s/overlays/dev
+logs: ## Muestra logs de todos los contenedores en tiempo real
+	docker-compose logs -f
 
-k8s-delete: ## Elimina los recursos de K8s usando Kustomize
-	kubectl delete -k k8s/overlays/dev
+logs-n8n: ## Muestra solo los logs de n8n
+	docker-compose logs -f n8n
 
-deploy: k8s-apply ## Alias para despliegue
+stop: ## Detiene los contenedores sin eliminarlos
+	docker-compose stop
+
+restart: ## Reinicia los contenedores
+	docker-compose restart
+
+scan: ## Escanea vulnerabilidades en la imagen Docker (requiere Trivy)
+	trivy image social-bot-scheduler:2.3.0
