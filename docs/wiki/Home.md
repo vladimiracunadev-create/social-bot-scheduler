@@ -1,28 +1,44 @@
 # 🤖 Social Bot Scheduler: Wiki
 
+[![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
+[![Ecosystem](https://img.shields.io/badge/Matriz-8_Ejes-blueviolet.svg)]()
+[![Security](https://img.shields.io/badge/Security-Hardened-success.svg)]()
+[![Latest Release](https://img.shields.io/badge/release-v2.3.0-blue.svg)]()
+
 Bienvenido a la Wiki oficial de **Social Bot Scheduler**. Este es un laboratorio de ingeniería diseñado para demostrar la interoperabilidad entre múltiples lenguajes de programación mediante un bus de orquestación central (**n8n**).
 
-## 🚀 Inicio Rápido
+---
 
-1.  **Clonar y Configurar**:
-    ```bash
-    git clone https://github.com/vladimiracunadev-create/social-bot-scheduler.git
-    cd social-bot-scheduler
-    ```
-2.  **Preparar el Entorno**:
-    Usa el HUB dinámico para verificar tu sistema:
-    ```bash
-    # En Windows
-    .\hub.ps1 doctor
-    # En Linux
-    ./hub.sh doctor
-    ```
-3.  **Lanzar Infraestructura**:
-    ```bash
-    .\hub.ps1 up
-    ```
+## 🧭 Mapa de Navegación
 
-## 📚 Navegación
-- [Guía de Uso Detallada](Usage-Guide)
-- [Hardening de Seguridad](Security-Hardening)
-- [Índice de Casos de Integración](Cases-Index)
+### 🚀 Primeros Pasos
+- **[Inicio Rápido](Usage-Guide.md)**: Cómo instalar y ejecutar el proyecto.
+- **[Guía de Uso Detallada](Usage-Guide.md)**: Comandos del HUB y configuración.
+
+### 🛡️ Seguridad y Resiliencia
+- **[Hardening de Seguridad](Security-Hardening.md)**: Estrategia de contenedores y escaneo.
+- **[Resiliencia y Guardrails](Resilience.md)**: Circuit Breakers, Idempotencia y DLQ.
+
+### 🏗️ Arquitectura y Casos
+- **[Índice de Casos](Cases-Index.md)**: Detalle de los 8 casos de integración.
+- **[Arquitectura](https://github.com/vladimiracunadev-create/social-bot-scheduler/blob/main/docs/ARCHITECTURE.md)**: Diagramas y flujos de datos.
+
+---
+
+## 📊 Matriz de Integración (Estado Actual)
+
+| ID | Eje Tecnológico (Origen -> Puente -> Destino) | Estado |
+| :--- | :--- | :--- |
+| **01** | 🐍 **Python** -> 🔗 n8n -> 🐘 **PHP** | ✅ Operativo |
+| **02** | 🐍 **Python** -> 🔗 n8n -> 🐹 **Go** | ✅ Operativo |
+| **03** | 🐹 **Go** -> 🔗 n8n -> 🍏 **Node.js** | ✅ Operativo |
+| **04** | 🍏 **Node.js** -> 🔗 n8n -> 🐍 **FastAPI** | ✅ Operativo |
+| **05** | 🐘 **Laravel** -> 🔗 n8n -> ⚛️ **React** | ✅ Operativo |
+| **06** | 🐹 **Go** -> 🔗 n8n -> 🐘 **Symfony** | ✅ Operativo |
+| **07** | 🦀 **Rust** -> 🔗 n8n -> 💎 **Ruby** | ✅ Operativo |
+| **08** | ❄️ **C#** -> 🔗 n8n -> 🌶️ **Flask** | ✅ Operativo |
+
+---
+
+## ❓ Ayuda
+Si encuentras problemas, consulta la [Guía de Solución de Problemas](https://github.com/vladimiracunadev-create/social-bot-scheduler/blob/main/docs/TROUBLESHOOTING.md).

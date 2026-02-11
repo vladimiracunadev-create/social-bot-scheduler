@@ -52,7 +52,7 @@
 ## 🔍 Tour Guiado: Casos de Evaluación Rápida
 
 ### 📌 Caso 01: Python → PHP (Integración Clásica)
-**Ubicación**: [`cases/01-python-to-php/`](file:///c:/dev/social-bot-scheduler/cases/01-python-to-php)
+**Ubicación**: [`cases/01-python-to-php/`](../cases/01-python-to-php)
 
 **Qué evaluar**:
 - **Emisor Python**: Uso de Pydantic para validación de datos, manejo de fechas, HTTP requests
@@ -65,7 +65,7 @@
 ```
 
 ### 📌 Caso 04: Node.js → FastAPI (Stack Moderno)
-**Ubicación**: [`cases/04-node-to-fastapi/`](file:///c:/dev/social-bot-scheduler/cases/04-node-to-fastapi)
+**Ubicación**: [`cases/04-node-to-fastapi/`](../cases/04-node-to-fastapi)
 
 **Qué evaluar**:
 - **Emisor Node.js**: Async/await, Axios, manejo de errores
@@ -73,7 +73,7 @@
 - **Dashboard**: Visualización en tiempo real en `localhost:8084`
 
 ### 📌 Caso 07: Rust → Ruby (Lenguajes Especializados)
-**Ubicación**: [`cases/07-rust-to-ruby/`](file:///c:/dev/social-bot-scheduler/cases/07-rust-to-ruby)
+**Ubicación**: [`cases/07-rust-to-ruby/`](../cases/07-rust-to-ruby)
 
 **Qué evaluar**:
 - **Emisor Rust**: Manejo de memoria seguro, concurrencia, HTTP client
@@ -107,13 +107,13 @@
 ## 🚦 Guía de Evaluación en 15 Minutos
 
 ### Paso 1: Revisión de Arquitectura (5 min)
-1. Leer [`docs/ARCHITECTURE.md`](file:///c:/dev/social-bot-scheduler/docs/ARCHITECTURE.md) para entender el patrón de 3 capas
+1. Leer [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) para entender el patrón de 3 capas
 2. Revisar diagrama Mermaid de flujo de datos
 3. Examinar la matriz de casos implementados
 
 ### Paso 2: Inspección de Código (5 min)
-1. **Seguridad**: Revisar [`SECURITY.md`](file:///c:/dev/social-bot-scheduler/SECURITY.md) y [`Dockerfile`](file:///c:/dev/social-bot-scheduler/Dockerfile)
-2. **Calidad**: Examinar [`.pre-commit-config.yaml`](file:///c:/dev/social-bot-scheduler/.pre-commit-config.yaml) y [`.github/workflows/ci-cd.yml`](file:///c:/dev/social-bot-scheduler/.github/workflows/ci-cd.yml)
+1. **Seguridad**: Revisar [`SECURITY.md`](../SECURITY.md) y [`Dockerfile`](../Dockerfile)
+2. **Calidad**: Examinar [`.pre-commit-config.yaml`](../.pre-commit-config.yaml) y [`.github/workflows/ci-cd.yml`](../.github/workflows/ci-cd.yml)
 3. **Código**: Revisar un caso completo (recomendado: Caso 01 o 04)
 
 ### Paso 3: Ejecución Práctica (5 min)
@@ -166,11 +166,11 @@ La estandarización de seguridad en contenedores (eliminar CVEs) y la creación 
 
 | Documento | Propósito |
 |-----------|-----------|
-| [`README.md`](file:///c:/dev/social-bot-scheduler/README.md) | Guía de inicio rápido |
-| [`docs/ARCHITECTURE.md`](file:///c:/dev/social-bot-scheduler/docs/ARCHITECTURE.md) | Diseño del sistema |
-| [`SECURITY.md`](file:///c:/dev/social-bot-scheduler/SECURITY.md) | Estrategia de seguridad |
-| [`docs/HUB.md`](file:///c:/dev/social-bot-scheduler/docs/HUB.md) | Documentación del CLI |
-| [`CHANGELOG.md`](file:///c:/dev/social-bot-scheduler/CHANGELOG.md) | Historial de versiones |
+| [`README.md`](../README.md) | Guía de inicio rápido |
+| [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) | Diseño del sistema |
+| [`SECURITY.md`](../SECURITY.md) | Estrategia de seguridad |
+| [`docs/HUB.md`](HUB.md) | Documentación del CLI |
+| [`CHANGELOG.md`](../CHANGELOG.md) | Historial de versiones |
 
 ---
 

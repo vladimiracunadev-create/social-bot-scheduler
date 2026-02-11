@@ -18,3 +18,12 @@ El pipeline de CI/CD realiza tres auditorías automáticas en cada push:
 ### 3. Principio de Menor Privilegio
 - El contenedor nunca corre como root (usuario `botuser`).
 - Políticas de red (**NetworkPolicies**) Zero Trust que bloquean todo el tráfico entrante por defecto.
+
+## 🛡️ Resiliencia Industrial
+
+Además de la seguridad, el sistema implementa **Guardrails** para tolerancia a fallos:
+- **Idempotencia**: Prevención de duplicados.
+- **Circuit Breaker**: Protección contra caídas.
+- **DLQ**: Manejo de errores irrecuperables.
+
+Consulta la guía completa de [Resiliencia y Guardrails](Resilience.md).

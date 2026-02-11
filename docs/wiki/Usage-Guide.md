@@ -29,3 +29,10 @@ Cada bot de origen lee las tareas pendientes desde un archivo JSON.
 1. Accede a `http://localhost:5678`.
 2. Importa el archivo `workflow.json` del caso que estés probando.
 3. El bot emisor enviará el JSON al webhook de n8n, y n8n se encargará de distribuirlo al destino.
+
+## 4. Recuperación de Fallos
+
+Si algo sale mal, el sistema tiene mecanismos de auto-protección.
+- Si un servicio destino falla, se reintentará 3 veces.
+- Si persiste, se enviará al **DLQ** (`errors.log` en el destino).
+- Para más detalles, ver [Resiliencia](Resilience.md).
