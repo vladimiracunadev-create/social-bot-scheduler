@@ -29,6 +29,26 @@ class SocialBotController
     }
 }
 
+// Endpoint de ERRORES (DLQ)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && strpos($_SERVER['REQUEST_URI'], '/errors') !== false) {
+    $rawBody = file_get_contents('php://input');
+    $errorData = json_decode($rawBody, true);
+
+    $errorLine = sprintf(
+        "[%s] CASE=%s | ERROR=%s | PAYLOAD=%s\n",
+        date('Y-m-d H:i:s'),
+        $errorData['case'] ?? 'unknown',
+        json_encode($errorData['error'] ?? 'no error info'),
+        json_encode($errorData['payload'] ?? 'no payload')
+    );
+
+    file_put_contents('errors.log', $errorLine, FILE_APPEND);
+
+    header('Content-Type: application/json');
+    echo json_encode(['ok' => true, 'message' => 'Error logged to DLQ']);
+    exit;
+}
+
 // Simulación de receptor Symfony Lite
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = file_get_contents('php://input');

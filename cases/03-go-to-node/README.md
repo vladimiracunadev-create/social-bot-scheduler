@@ -21,6 +21,21 @@ El receptor utiliza Express para gestionar las peticiones entrantes:
 - **Log**: Los posts se añaden a `social_bot_node.log` en formato legible.
 - **Dashboard**: Sirve una interfaz moderna en el puerto `3000` que permite "refrescar" y ver los posts recibidos en tiempo real.
 
+
+## 🛡️ Guardrails Implementados
+
+Este caso incluye mecanismos de resiliencia en la capa de n8n:
+
+### Reintentos Automáticos
+- El nodo HTTP Request está configurado con **3 reintentos** (backoff de 1 segundo).
+- Si el servicio de destino está caído, n8n intentará 3 veces antes de marcar el envío como fallido.
+
+### Dead Letter Queue (DLQ)
+- Si todos los reintentos fallan, el payload se envía a un endpoint `/errors` del servicio de destino.
+- Los errores se registran con timestamp, caso, error y payload completo.
+
+Para más detalles, consulta la guía de [Guardrails](../../docs/GUARDRAILS.md).
+
 ## 🚦 Verificación
 - **URL Dashboard**: [http://localhost:8083](http://localhost:8083)
 - **Endpoint Webhook**: `POST /webhook` (Interno: 3000)

@@ -19,6 +19,20 @@ El receptor Go destaca por su baja latencia y huella de memoria:
 - **Log**: Almacena en `social_bot_go.log` dentro del contenedor.
 - **Dashboard**: Un servidor simple sirve el archivo `index.html` estático que visualiza los posts recibidos.
 
+## 🛡️ Guardrails Implementados
+
+Este caso incluye mecanismos de resiliencia en la capa de n8n:
+
+### Reintentos Automáticos
+- El nodo HTTP Request está configurado con **3 reintentos** (backoff de 1 segundo).
+- Si el servicio Go está caído, n8n intentará 3 veces antes de marcar el envío como fallido.
+
+### Dead Letter Queue (DLQ)
+- Si todos los reintentos fallan, el payload se envía a un endpoint `/errors` del servicio Go.
+- Los errores se registran con timestamp, caso, error y payload completo.
+
+Para más detalles, consulta la guía de [Guardrails](../../docs/GUARDRAILS.md).
+
 ## 🚦 Verificación
 - **URL Dashboard**: [http://localhost:8082](http://localhost:8082)
 - **Endpoint Webhook**: `POST /webhook` (Interno: 8080)

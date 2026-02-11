@@ -10,9 +10,10 @@ El **Social Bot Scheduler** ha evolucionado hacia una infraestructura de **Matri
 Es el componente que posee la **lógica de programación**. Revisa el archivo `posts.json`, valida las fechas y "dispara" el evento hacia el puente.
 - **Implementaciones**: Python (Pydantic), Go (Native), Node.js (Axios), Laravel (Artisan).
 
-### 2. Eje del Puente (n8n)
-Es la **capa de abstracción**. Recibe un Webhook genérico y lo transforma en acciones reales sobre redes sociales (X, Facebook, Slack, etc.). 
-- **Ventaja**: El emisor no necesita conocer las APIs de las redes sociales, solo sabe hablar con n8n.
+### 2. Eje del Puente (n8n + Guardrails)
+Es la **capa de abstracción y resiliencia**. Recibe un Webhook genérico y asegura que la entrega a redes sociales sea segura.
+- **Ventaja**: El emisor no necesita conocer las APIs de las redes sociales.
+- **Guardrails**: Implementa **Idempotencia** (evita duplicados), **Circuit Breakers** (protección contra caídas de proveedores) y **DLQ** (cola de errores para reintentos).
 
 ### 3. Eje de Destino (Receptores + Dashboards)
 Es la **capa de auditoría y visualización**. n8n envía una copia del post finalizado a estos servicios para que el usuario pueda ver el historial en un navegador.
@@ -44,10 +45,15 @@ graph LR
         B -- POST --> C((n8n Webhook))
     end
 
-    subgraph "BRIDGE (n8n)"
-        C --> D[Workflow Logic]
-        D --> E[Social API 1]
-        D --> F[Social API 2]
+    subgraph "BRIDGE (n8n + Guardrails)"
+        C --> CM{Idempotency Check}
+        CM -- New --> D[Workflow Logic]
+        CM -- Duplicate --> C1[Discard / 200 OK]
+        D --> CB{Circuit Breaker}
+        CB -- Closed --> E[Social API 1]
+        CB -- Closed --> F[Social API 2]
+        CB -- Open --> DLQ[Dead Letter Queue]
+        E & F -- Error --> DLQ
         D -- Mirror POST --> G((Dest API))
     end
 

@@ -21,6 +21,21 @@ El receptor utiliza Sinatra, un micro-framework web DSL para Ruby:
 - **Almacenamiento**: Mantiene una lista circular de los últimos 20 posts en una variable global de memoria.
 - **Dashboard**: Utiliza plantillas ERB para generar el dashboard visual en el puerto `4567`.
 
+
+## 🛡️ Guardrails Implementados
+
+Este caso incluye mecanismos de resiliencia en la capa de n8n:
+
+### Reintentos Automáticos
+- El nodo HTTP Request está configurado con **3 reintentos** (backoff de 1 segundo).
+- Si el servicio de destino está caído, n8n intentará 3 veces antes de marcar el envío como fallido.
+
+### Dead Letter Queue (DLQ)
+- Si todos los reintentos fallan, el payload se envía a un endpoint `/errors` del servicio de destino.
+- Los errores se registran con timestamp, caso, error y payload completo.
+
+Para más detalles, consulta la guía de [Guardrails](../../docs/GUARDRAILS.md).
+
 ## 🚦 Verificación
 - **URL Dashboard**: [http://localhost:8087](http://localhost:8087)
 - **Endpoint Webhook**: `POST /webhook` (Interno: 4567)

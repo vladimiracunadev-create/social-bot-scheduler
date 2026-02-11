@@ -36,6 +36,8 @@ Si encuentras problemas al levantar los contenedores o ejecutar los bots, consul
 1.  **¿Workflow Activo?**: Abre n8n y verifica que el switch "Active" esté en verde.
 2.  **Webhooks**: n8n por defecto usa URLs dinámicas. Asegúrate de que el path en el nodo Webhook coincida con lo que espera el bot (ej: `social-bot-scheduler-php`).
 3.  **Logs de n8n**: Mira la pestaña "Executions" en n8n para ver si hay errores en el nodo HTTP Request.
+4.  **Guardrails - Idempotencia**: Si el payload ha sido enviado antes, n8n lo ignorará silenciosamente. Verifica si estás enviando el mismo contenido exacto en poco tiempo.
+5.  **Guardrails - Circuit Breaker**: Si el proveedor (X, Facebook, etc.) está caído, el mensaje se moverá al **DLQ**. Revisa los logs de errores.
 
 ---
 

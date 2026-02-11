@@ -119,6 +119,52 @@ func main() {
 		})
 	})
 
+	// Endpoint de ERRORES (DLQ)
+	http.HandleFunc("/errors", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
+			return
+		}
+
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, "Error leyendo cuerpo", http.StatusBadRequest)
+			return
+		}
+
+		var errorData map[string]interface{}
+		if err := json.Unmarshal(body, &errorData); err != nil {
+			http.Error(w, "Error parseando JSON", http.StatusBadRequest)
+			return
+		}
+
+		errorLogFile, err := os.OpenFile("errors.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		if err != nil {
+			http.Error(w, "Error abriendo archivo de errores", http.StatusInternalServerError)
+			return
+		}
+		defer errorLogFile.Close()
+
+		errorLine := fmt.Sprintf("[%s] CASE=%v | ERROR=%v | PAYLOAD=%v\n",
+			time.Now().Format("2006-01-02 15:04:05"),
+			errorData["case"],
+			errorData["error"],
+			errorData["payload"],
+		)
+
+		logMutex.Lock()
+		if _, err := errorLogFile.WriteString(errorLine); err != nil {
+			log.Printf("Error escribiendo en errors.log: %v", err)
+		}
+		logMutex.Unlock()
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"ok":      true,
+			"message": "Error logged to DLQ",
+		})
+	})
+
 	fmt.Println("Servidor Go escuchando en :8080...")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)

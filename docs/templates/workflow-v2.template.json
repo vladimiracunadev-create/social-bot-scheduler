@@ -1,0 +1,154 @@
+{
+  "name": "Reference Workflow V2 - Guardrails",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "social-bot-scheduler-v2-template",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "fingerprint",
+              "value": "={{$json.body.post_id}}_{{$json.body.target}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Fingerprint",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT hash FROM idempotency WHERE hash = :fingerprint",
+        "additionalFields": {
+          "queryParams": "fingerprint={{$node[\"Set Fingerprint\"].json[\"fingerprint\"]}}"
+        }
+      },
+      "name": "Check Idempotency",
+      "type": "n8n-nodes-base.sqlite",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Check Idempotency\"].json.hash ? true : false}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Is Duplicate?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        850,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "retryOnFail": true,
+          "maxRetries": 3,
+          "waitBetweenRetries": 1000
+        }
+      },
+      "name": "Social API Logic",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        200
+      ],
+      "onError": "oErrorNode"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "failed_posts",
+        "columns": "payload, error, timestamp",
+        "values": "={{JSON.stringify($json.body)}}, {{$json.error}}, {{Date.now()}}"
+      },
+      "name": "Dead Letter Queue (DLQ)",
+      "type": "n8n-nodes-base.sqlite",
+      "typeVersion": 1,
+      "position": [
+        1350,
+        450
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set Fingerprint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Fingerprint": {
+      "main": [
+        [
+          {
+            "node": "Check Idempotency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Idempotency": {
+      "main": [
+        [
+          {
+            "node": "Is Duplicate?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Duplicate?": {
+      "main": [
+        null,
+        [
+          {
+            "node": "Social API Logic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "description": "Conceptual workflow template illustrating Idempotency (SQLite) and DLQ logic."
+}

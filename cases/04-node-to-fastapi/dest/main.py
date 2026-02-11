@@ -40,6 +40,20 @@ async def get_logs():
     return {"ok": True, "logs": [line.strip() for line in logs]}
 
 
+@app.post("/errors")
+async def receive_error(request: Request):
+    error_data = await request.json()
+    ERROR_LOG_FILE = "errors.log"
+    
+    log_line = f"[{datetime.now().isoformat()}] CASE={error_data.get('case', 'unknown')} | ERROR={error_data.get('error', 'no error info')} | PAYLOAD={error_data.get('payload', 'no payload')}\n"
+    
+    with open(ERROR_LOG_FILE, "a", encoding="utf-8") as f:
+        f.write(log_line)
+    
+    print(f"Error logged to DLQ: {error_data.get('case')}")
+    return {"ok": True, "message": "Error logged to DLQ"}
+
+
 @app.get("/", response_class=HTMLResponse)
 async def dashboard():
     with open("index.html", "r", encoding="utf-8") as f:

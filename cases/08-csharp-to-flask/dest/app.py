@@ -37,6 +37,23 @@ def webhook():
         return jsonify({"status": "error", "message": str(e)}), 400
 
 
+@app.route("/errors", methods=["POST"])
+def errors():
+    try:
+        error_data = request.json
+        
+        error_line = f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] CASE={error_data.get('case', 'unknown')} | ERROR={error_data.get('error', 'no error info')} | PAYLOAD={error_data.get('payload', 'no payload')}\n"
+        
+        with open("errors.log", "a", encoding="utf-8") as f:
+            f.write(error_line)
+        
+        print(f"🚨 Error logged to DLQ: {error_data.get('case')}")
+        return jsonify({"status": "success", "message": "Error logged to DLQ"})
+    except Exception as e:
+        print(f"❌ Error processing DLQ: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 400
+
+
 @app.route("/api/posts")
 def get_posts():
     return jsonify(posts)

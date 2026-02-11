@@ -19,6 +19,21 @@ El receptor utiliza un controlador estandarizado de Symfony:
 
 - **Dashboard**: El mismo controlador sirve una interfaz de administración empresarial para monitorizar el estado de los posts recibidos.
 
+
+## 🛡️ Guardrails Implementados
+
+Este caso incluye mecanismos de resiliencia en la capa de n8n:
+
+### Reintentos Automáticos
+- El nodo HTTP Request está configurado con **3 reintentos** (backoff de 1 segundo).
+- Si el servicio de destino está caído, n8n intentará 3 veces antes de marcar el envío como fallido.
+
+### Dead Letter Queue (DLQ)
+- Si todos los reintentos fallan, el payload se envía a un endpoint `/errors` del servicio de destino.
+- Los errores se registran con timestamp, caso, error y payload completo.
+
+Para más detalles, consulta la guía de [Guardrails](../../docs/GUARDRAILS.md).
+
 ## 🚦 Verificación
 - **URL Dashboard**: [http://localhost:8086](http://localhost:8086)
 - **Endpoint Webhook**: `POST /index.php` (Interno: 80)

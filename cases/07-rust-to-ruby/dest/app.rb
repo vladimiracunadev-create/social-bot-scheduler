@@ -30,6 +30,20 @@ post '/webhook' do
   { status: 'success', message: 'Post received' }.to_json
 end
 
+post '/errors' do
+  content_type :json
+  data = JSON.parse(request.body.read)
+  
+  error_line = "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] CASE=#{data['case'] || 'unknown'} | ERROR=#{data['error'].to_json} | PAYLOAD=#{data['payload'].to_json}\n"
+  
+  File.open('errors.log', 'a') do |f|
+    f.write(error_line)
+  end
+  
+  puts "🚨 Error logged to DLQ: #{data['case']}"
+  { status: 'success', message: 'Error logged to DLQ' }.to_json
+end
+
 get '/api/posts' do
   content_type :json
   $posts.to_json

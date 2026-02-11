@@ -22,7 +22,29 @@ Este repositorio ha sido auditado y robustecido siguiendo estándares de segurid
 
 ---
 
-## 🚀 Guía de Inicio Rápido
+## 🛡️ Resiliencia y Fiabilidad (Guardrails) - 100% de Cobertura
+
+La capa de n8n actúa como un cortafuegos inteligente entre tus bots y las redes sociales. **TODOS los casos (01-08)** implementan:
+
+| Mecanismo | Descripción | Cobertura |
+|-----------|-------------|-----------|
+| **Reintentos Automáticos** | 3 intentos con 1s de espera | ✅ 8/8 casos |
+| **Dead Letter Queue (DLQ)** | Registro de errores irrecuperables | ✅ 8/8 casos |
+| **Idempotencia** | Prevención de duplicados con SQLite | ✅ 8/8 casos |
+| **Circuit Breaker** | Protección contra servicios caídos | ✅ 8/8 casos |
+
+**Scripts Compartidos:**
+- `scripts/check_idempotency.py` - Gestión de fingerprints con SQLite
+- `scripts/circuit_breaker.py` - Estados CLOSED/OPEN/HALF_OPEN
+- `scripts/generate_workflows.py` - Generador automatizado de workflows
+
+**Documentación:**
+- [Guardrails](docs/GUARDRAILS.md) - Conceptos y teoría
+- [Guía de Resiliencia](docs/RESILIENCE_GUIDE.md) - Implementación completa y pruebas
+
+---
+
+## 🚀 Despliegue y Escalabilidad
 
 ### Prerrequisitos
 Antes de comenzar, asegúrate de tener instalado:
@@ -81,10 +103,18 @@ python bot.py
 
 ### 📊 ¿Dónde están mis Logs?
 Si los logs aparecen vacíos, sigue estos pasos:
-1.  **Dashboard Maestro (Global)**: Entra en [http://localhost:8080](http://localhost:8080) para ver el estado de todos los casos.
-2.  **Logs en Tiempo Real**: Ejecuta `make logs` en la raíz para ver la actividad de todos los contenedores Docker.
-3.  **Logs de n8n**: Ejecuta `make logs-n8n` para ver si el puente está recibiendo datos.
-4.  **Logs persistentes (Archivos)**: Revisa carpetas como `cases/01-python-to-php/dest/logs/`. Estos archivos solo se crean si el `WEBHOOK_URL` en tu `.env` es correcto y el post llega al destino.
+### ❌ Síntoma: El bot dice "Payload sent" pero el Dashboard está vacío
+**Verificaciones**:
+1.  **¿Workflow Activo?**: Abre n8n y verifica que el switch "Active" esté en verde.
+2.  **Webhooks**: n8n por defecto usa URLs dinámicas. Asegúrate de que el path en el nodo Webhook coincida con lo que espera el bot (ej: `social-bot-scheduler-php`).
+3.  **Logs de n8n**: Mira la pestaña "Executions" en n8n para ver si hay errores en el nodo HTTP Request.
+4.  **Guardrails - Idempotencia**: Si el payload ha sido enviado antes, el sistema lo ignorará silenciosamente para evitar spam. Revisa si el hash ya existe en tu DB de control.
+5.  **Guardrails - Circuit Breaker**: Si un proveedor ha fallado mucho, el flujo se desviará al **DLQ**. Revisa la tabla/archivo de fallos (`failed_posts`).
+
+---
+6.  **Dashboard Maestro (Global)**: Entra en [http://localhost:8080](http://localhost:8080) para ver el estado de todos los casos.
+7.  **Logs en Tiempo Real**: Ejecuta `make logs` en la raíz para ver la actividad de todos los contenedores Docker.
+8.  **Logs persistentes (Archivos)**: Revisa carpetas como `cases/01-python-to-php/dest/logs/`. Estos archivos solo se crean si el `WEBHOOK_URL` en tu `.env` es correcto y el post llega al destino.
 
 Verifica el Dashboard del Caso 01: [http://localhost:8081](http://localhost:8081)
 

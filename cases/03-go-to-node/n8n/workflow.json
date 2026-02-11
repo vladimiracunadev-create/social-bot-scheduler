@@ -1,48 +1,285 @@
 {
-    "name": "Case 03 Workflow",
-    "nodes": [
-        {
-            "parameters": {
-                "path": "social-bot-scheduler-node-dest",
-                "responseMode": "lastNode",
-                "options": {}
+  "name": "Case 03 - Go to Node (Complete Resilience)",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "social-bot-scheduler-case-03",
+        "responseMode": "lastNode"
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "fingerprint",
+              "value": "={{$json.body.id}}_{{$json.body.channel}}"
             },
-            "name": "Webhook",
-            "type": "n8n-nodes-base.webhook",
-            "typeVersion": 1,
-            "position": [
-                460,
-                300
-            ]
+            {
+              "name": "case_id",
+              "value": "03"
+            }
+          ]
+        }
+      },
+      "name": "Set Fingerprint",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        450,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "command": "=python3 /data/scripts/circuit_breaker.py check {{$json.case_id}}"
+      },
+      "name": "Check Circuit Breaker",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        650,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{JSON.parse($json.stdout).can_proceed}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Can Proceed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        850,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "command": "=python3 /data/scripts/check_idempotency.py check {{$node['Set Fingerprint'].json.fingerprint}} {{$node['Set Fingerprint'].json.case_id}}"
+      },
+      "name": "Check Idempotency",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{JSON.parse($json.stdout).exists}}",
+              "value2": false
+            }
+          ]
+        }
+      },
+      "name": "Is New Post?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "command": "=python3 /data/scripts/check_idempotency.py add {{$node['Set Fingerprint'].json.fingerprint}} {{$node['Set Fingerprint'].json.case_id}}"
+      },
+      "name": "Add Fingerprint",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1450,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "http://dest-node:3000/webhook",
+        "jsonParameters": true,
+        "options": {
+          "retryOnFail": true,
+          "maxRetries": 3,
+          "waitBetweenRetries": 1000
         },
-        {
-            "parameters": {
-                "requestMethod": "POST",
-                "url": "http://dest-node:3000/webhook",
-                "jsonParameters": true,
-                "options": {},
-                "bodyParametersJson": "={{JSON.stringify($json.body)}}"
-            },
-            "name": "HTTP Request",
-            "type": "n8n-nodes-base.httpRequest",
-            "typeVersion": 1,
-            "position": [
-                680,
-                300
-            ]
-        }
-    ],
-    "connections": {
-        "Webhook": {
-            "main": [
-                [
-                    {
-                        "node": "HTTP Request",
-                        "type": "main",
-                        "index": 0
-                    }
-                ]
-            ]
-        }
+        "bodyParametersJson": "={{JSON.stringify($node['Set Fingerprint'].json.body)}}"
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1650,
+        200
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "command": "=python3 /data/scripts/circuit_breaker.py record_success {{$node['Set Fingerprint'].json.case_id}}"
+      },
+      "name": "Record Success",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1850,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "command": "=python3 /data/scripts/circuit_breaker.py record_failure {{$node['Set Fingerprint'].json.case_id}}"
+      },
+      "name": "Record Failure",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1850,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "http://dest-node:3000/errors",
+        "jsonParameters": true,
+        "bodyParametersJson": "={{JSON.stringify({ error: $json.error, payload: $node['Set Fingerprint'].json.body, case: '03', fingerprint: $node['Set Fingerprint'].json.fingerprint })}}"
+      },
+      "name": "Dead Letter Queue (DLQ)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2050,
+        400
+      ]
     }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set Fingerprint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Fingerprint": {
+      "main": [
+        [
+          {
+            "node": "Check Circuit Breaker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Circuit Breaker": {
+      "main": [
+        [
+          {
+            "node": "Can Proceed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Can Proceed?": {
+      "main": [
+        [
+          {
+            "node": "Check Idempotency",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Check Idempotency": {
+      "main": [
+        [
+          {
+            "node": "Is New Post?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is New Post?": {
+      "main": [
+        [
+          {
+            "node": "Add Fingerprint",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Add Fingerprint": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Record Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Record Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record Failure": {
+      "main": [
+        [
+          {
+            "node": "Dead Letter Queue (DLQ)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
 }

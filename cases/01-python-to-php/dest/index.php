@@ -9,10 +9,31 @@
 // --- CONFIG LOG ----------------------------------------------------------
 $logDir = __DIR__ . '/logs';
 $logFile = $logDir . '/social_bot.log';
+$errorLogFile = $logDir . '/errors.log';
 
 if (!is_dir($logDir)) {
     // Crear carpeta logs si no existe
     mkdir($logDir, 0775, true);
+}
+
+// --- HANDLE ERROR ENDPOINT (DLQ) -----------------------------------------
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && strpos($_SERVER['REQUEST_URI'], '/errors') !== false) {
+    $rawBody = file_get_contents('php://input');
+    $errorData = json_decode($rawBody, true);
+    
+    $errorLine = sprintf(
+        "[%s] CASE=%s | ERROR=%s | PAYLOAD=%s\n",
+        date('Y-m-d H:i:s'),
+        isset($errorData['case']) ? $errorData['case'] : 'unknown',
+        isset($errorData['error']) ? json_encode($errorData['error']) : 'no error info',
+        isset($errorData['payload']) ? json_encode($errorData['payload']) : 'no payload'
+    );
+    
+    file_put_contents($errorLogFile, $errorLine, FILE_APPEND);
+    
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(array('ok' => true, 'message' => 'Error logged to DLQ'));
+    exit;
 }
 
 // --- HANDLE ACTIONS ------------------------------------------------------

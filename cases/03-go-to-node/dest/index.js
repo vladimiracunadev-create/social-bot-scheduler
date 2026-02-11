@@ -37,6 +37,22 @@ app.get('/logs', (req, res) => {
     res.json({ ok: true, logs });
 });
 
+// Endpoint de ERRORES (DLQ)
+app.post('/errors', (req, res) => {
+    const errorData = req.body;
+    const ERROR_LOG_FILE = path.join(__dirname, 'errors.log');
+
+    const errorLine = `[${new Date().toISOString()}] CASE=${errorData.case || 'unknown'} | ERROR=${JSON.stringify(errorData.error || 'no error info')} | PAYLOAD=${JSON.stringify(errorData.payload || 'no payload')}\n`;
+
+    fs.appendFileSync(ERROR_LOG_FILE, errorLine);
+    console.log(`Error logged to DLQ: ${errorData.case}`);
+
+    res.json({
+        ok: true,
+        message: 'Error logged to DLQ'
+    });
+});
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
