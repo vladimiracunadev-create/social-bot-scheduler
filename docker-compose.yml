@@ -9,7 +9,7 @@ services:
       - "5678:5678"
     environment:
       - WEBHOOK_URL=http://localhost:5678/
-      - N8N_METRICS_ENABLED=true
+      - N8N_METRICS=true
     volumes:
       - n8n_data:/home/node/.n8n
     networks:
@@ -106,8 +106,7 @@ services:
     networks:
       - bot-network
 
-    networks:
-      - bot-network
+
 
   # 📊 Prometheus (Métricas)
   prometheus:
