@@ -9,6 +9,7 @@ services:
       - "5678:5678"
     environment:
       - WEBHOOK_URL=http://localhost:5678/
+      - N8N_METRICS_ENABLED=true
     volumes:
       - n8n_data:/home/node/.n8n
     networks:
@@ -105,9 +106,40 @@ services:
     networks:
       - bot-network
 
+    networks:
+      - bot-network
+
+  # 📊 Prometheus (Métricas)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: social-bot-prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - bot-network
+
+  # 📈 Grafana (Visualización)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: social-bot-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - bot-network
+    depends_on:
+      - prometheus
+
 networks:
   bot-network:
     driver: bridge
 
 volumes:
   n8n_data:
+  grafana_data:

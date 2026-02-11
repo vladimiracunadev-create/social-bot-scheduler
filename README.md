@@ -137,6 +137,21 @@ Verifica el Dashboard del Caso 01: [http://localhost:8081](http://localhost:8081
 
 ---
 
+## 📈 Observabilidad Avanzada (v3.0)
+
+El proyecto incluye un stack de monitoreo completo con **Prometheus** y **Grafana**:
+
+| Servicio | URL | Credenciales | Descripción |
+|----------|-----|--------------|-------------|
+| **Grafana** | [http://localhost:3000](http://localhost:3000) | `admin` / `admin` | Dashboards visuales de n8n y contenedores. |
+| **Prometheus** | [http://localhost:9090](http://localhost:9090) | (Sin auth) | Recolección de métricas y explorador de queries. |
+
+### Métricas Disponibles
+- **n8n**: Workflows activos, ejecuciones fallidas, tiempo de respuesta.
+- **Contenedores**: Uso de CPU/RAM (vía cAdvisor si se habilita).
+
+---
+
 ## 🏗️ La Gran Matriz de Integración
 Tabla de estado actual de los 8 ejes de integración:
 
