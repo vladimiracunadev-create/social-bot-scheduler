@@ -12,15 +12,15 @@ Bienvenido a la Wiki oficial de **Social Bot Scheduler**. Este es un laboratorio
 ## 🧭 Mapa de Navegación
 
 ### 🚀 Primeros Pasos
-- **[Inicio Rápido](Usage-Guide.md)**: Cómo instalar y ejecutar el proyecto.
-- **[Guía de Uso Detallada](Usage-Guide.md)**: Comandos del HUB y configuración.
+- **[Inicio Rápido](Usage-Guide)**: Cómo instalar y ejecutar el proyecto.
+- **[Guía de Uso Detallada](Usage-Guide)**: Comandos del HUB y configuración.
 
 ### 🛡️ Seguridad y Resiliencia
-- **[Hardening de Seguridad](Security-Hardening.md)**: Estrategia de contenedores y escaneo.
-- **[Resiliencia y Guardrails](Resilience.md)**: Circuit Breakers, Idempotencia y DLQ.
+- **[Hardening de Seguridad](Security-Hardening)**: Estrategia de contenedores y escaneo.
+- **[Resiliencia y Guardrails](Resilience)**: Circuit Breakers, Idempotencia y DLQ.
 
 ### 🏗️ Arquitectura y Casos
-- **[Índice de Casos](Cases-Index.md)**: Detalle de los 8 casos de integración.
+- **[Índice de Casos](Cases-Index)**: Detalle de los 8 casos de integración.
 - **[Arquitectura](https://github.com/vladimiracunadev-create/social-bot-scheduler/blob/main/docs/ARCHITECTURE.md)**: Diagramas y flujos de datos.
 
 ---

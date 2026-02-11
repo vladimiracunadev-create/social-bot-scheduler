@@ -3,7 +3,7 @@
 [![Security](https://img.shields.io/badge/Security-Hardened-success.svg)]()
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
 
-[← Volver al Inicio](Home.md)
+[← Volver al Inicio](Home)
 
 ---
 

@@ -3,7 +3,7 @@
 [![Ecosystem](https://img.shields.io/badge/Matriz-8_Ejes-blueviolet.svg)]()
 [![Security](https://img.shields.io/badge/Security-Hardened-success.svg)]()
 
-[← Volver al Inicio](Home.md)
+[← Volver al Inicio](Home)
 
 ---
 
