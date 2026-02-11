@@ -30,3 +30,8 @@ restart: ## Reinicia los contenedores
 
 scan: ## Escanea vulnerabilidades en la imagen Docker (requiere Trivy)
 	trivy image social-bot-scheduler:2.3.0
+
+demo: ## Ejecuta una demostración rápida (Caso 01)
+	@echo "🚀 Iniciando Demo Caso 01 (Python -> PHP)..."
+	python3 hub.py ejecutar 01-python-to-php
+

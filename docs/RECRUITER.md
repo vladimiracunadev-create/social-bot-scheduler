@@ -86,7 +86,7 @@
 
 ### ✅ Calidad de Código
 - **CI/CD Verde**: Pipeline automatizado con 100% de tests pasando
-- **Cobertura de Seguridad**: Escaneo de CVEs limpio en build (verificado con Trivy)
+- **Cobertura de Seguridad**: Sin vulnerabilidades CRITICAL/HIGH en build (verificado con Trivy)
 - **Linting Automático**: Pre-commit hooks con Black, Flake8, isort
 - **Documentación Completa**: 16 archivos de documentación técnica
 

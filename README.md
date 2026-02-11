@@ -9,6 +9,16 @@
 
 ---
 
+## ⚡ Quickstart: Demo en 60 Segundos
+
+**Objetivo**: Ver la interoperabilidad Python -> PHP en acción ahora mismo.
+
+1. **Levanta todo**: `make up` (o `docker-compose up -d`)
+2. **Dispara**: `make demo` (o `python3 hub.py ejecutar 01-python-to-php`)
+3. **Verifica**: Abre [http://localhost:8081](http://localhost:8081) para ver el dashboard PHP actualizado.
+
+---
+
 ## 💡 Sobre el Proyecto
 > **[AVISO DE COMPLIANCE](docs/COMPLIANCE.md)**: Este es un laboratorio educativo. Favor de leer nuestra política de uso responsable.
 
@@ -16,7 +26,7 @@
 
 ### 🛡️ Hardening de Producción
 Este repositorio ha sido auditado y robustecido siguiendo estándares de seguridad industrial:
-- **Seguridad en Contenedores**: Imagen sin vulnerabilidades críticas detectadas en build (Trivy Scan), ejecución como usuario no-root y sistema de archivos de solo lectura.
+- **Seguridad en Contenedores**: Imagen escaneada en CI (Trivy), sin vulnerabilidades CRITICAL/HIGH detectadas al build. Ejecución no-root.
 - **Validación de Entradas**: El HUB CLI protege contra Path Traversal y ejecución remota de código (RCE).
 - **Orquestación Segura**: Manifiestos de Kubernetes con `SecurityContext` restrictivo y `NetworkPolicy` de denegación por defecto.
 - **Escaneo Automático**: Integración de `Gitleaks`, `Trivy` y `pip-audit` en el pipeline de CI/CD para una seguridad de triple capa.
@@ -65,11 +75,14 @@ cd social-bot-scheduler
 
 #### Opción A: Orquestador HUB (Recomendado)
 Usa el nuevo HUB para listar y diagnosticar:
-```bash
+
+```powershell
 # Windows
 .\hub.ps1 listar-casos
 .\hub.ps1 doctor
+```
 
+```bash
 # Linux
 ./hub.sh listar-casos
 ```
