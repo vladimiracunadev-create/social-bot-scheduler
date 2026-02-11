@@ -1,5 +1,13 @@
 # 🛡️ Hardening de Seguridad
 
+[![Security](https://img.shields.io/badge/Security-Hardened-success.svg)]()
+[![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
+
+[← Volver al Inicio](Home.md)
+
+---
+
+
 Este proyecto ha sido robustecido para cumplir con estándares de seguridad industrial y garantizar imágenes de contenedor libres de vulnerabilidades.
 
 ## Estrategia de Triple Capa

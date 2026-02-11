@@ -1,5 +1,13 @@
 # 📖 Guía de Uso Detallada
 
+[![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
+[![Ecosystem](https://img.shields.io/badge/Matriz-8_Ejes-blueviolet.svg)]()
+
+[← Volver al Inicio](Home.md)
+
+---
+
+
 El proyecto se puede utilizar a través de tres capas principales:
 
 ## 1. HUB CLI (Recomendado)

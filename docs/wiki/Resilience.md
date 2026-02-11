@@ -1,5 +1,13 @@
 # 🛡️ Guía Completa de Resiliencia
 
+[![Ecosystem](https://img.shields.io/badge/Matriz-8_Ejes-blueviolet.svg)]()
+[![Security](https://img.shields.io/badge/Security-Hardened-success.svg)]()
+
+[← Volver al Inicio](Home.md)
+
+---
+
+
 Esta guía detalla la implementación completa de resiliencia en el Social Bot Scheduler.
 
 ---

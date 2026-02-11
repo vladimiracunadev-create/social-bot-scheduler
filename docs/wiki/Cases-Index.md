@@ -1,5 +1,13 @@
 # 📔 Índice de la Matriz Tecnológica
 
+[![Ecosystem](https://img.shields.io/badge/Matriz-8_Ejes-blueviolet.svg)]()
+[![Latest Release](https://img.shields.io/badge/release-v2.3.0-blue.svg)]()
+
+[← Volver al Inicio](Home.md)
+
+---
+
+
 Descubre por qué hemos elegido estas combinaciones y qué beneficios aporta cada una a tu flujo de trabajo.
 
 ---
