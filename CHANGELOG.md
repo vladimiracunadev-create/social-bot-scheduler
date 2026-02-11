@@ -1,5 +1,13 @@
 Todos los cambios notables en este proyecto serán documentados en este archivo.
 
+## [2.3.0] - 2026-02-11
+### Añadido
+- **Resiliencia Global (100%)**: Implementación de **Idempotencia (SQLite)** y **Circuit Breaker** en los 8 casos de integración.
+- **Dead Letter Queue (DLQ)**: Sistema de captura de errores irrecuperables en todos los receptores.
+- **Scripts Compartidos**: Nueva librería en `scripts/` para lógica reutilizable de resiliencia.
+- **Generador de Workflows**: Script `generate_workflows.py` para estandarizar flujos de n8n.
+- **Documentación Técnica**: Nuevas guías `GUARDRAILS.md` y `RESILIENCE_GUIDE.md`.
+
 ## [2.2.0] - 2026-01-25
 ### Añadido
 - **Empaquetado**: Generación de archivo ZIP distribuible para despliegue rápido.

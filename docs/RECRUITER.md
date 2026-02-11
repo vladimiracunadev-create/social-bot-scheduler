@@ -30,6 +30,7 @@
 - **Triple Capa de Auditoría**: Gitleaks + Trivy + pip-audit en CI/CD
 - **Zero Trust Networking**: NetworkPolicies de Kubernetes con denegación por defecto
 - **Validación de Entradas**: Protección contra Path Traversal y RCE en CLI
+- **Resiliencia Industrial**: Implementación de Idempotencia y Circuit Breaker para tolerancia a fallos
 
 ### 🛠️ Stack Tecnológico Polivalente
 | Categoría | Tecnologías |

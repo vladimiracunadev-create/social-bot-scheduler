@@ -112,6 +112,18 @@ Abre el destino en tu navegador: [http://localhost:8081](http://localhost:8081)
 
 ---
 
+## 🛡️ Fase 7: ¿Qué pasa si algo falla? (Resiliencia)
+
+Este sistema es "inteligente". Si intentas enviar el mismo mensaje dos veces, o si el servidor destino se cae, el sistema te protegerá:
+
+1.  **Anti-Duplicados (Idempotencia)**: Si envías el mismo ID de post dos veces, el sistema dirá "OK" pero no lo procesará de nuevo.
+2.  **Protección de Caídas (Circuit Breaker)**: Si el destino falla 5 veces seguidas, el sistema dejará de intentarlo por 5 minutos para "dejarlo descansar".
+3.  **Buzón de Errores (DLQ)**: Si un mensaje falla definitivamente, se guarda en un log especial (`errors.log`) para que no se pierda.
+
+Puedes probar esto apagando el contenedor destino (`docker stop social-bot-dest-php`) y viendo cómo n8n maneja el error.
+
+---
+
 ## 🔄 ¿Cómo pruebo otros casos?
 
 Repite el proceso:
