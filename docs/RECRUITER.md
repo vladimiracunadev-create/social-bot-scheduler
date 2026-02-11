@@ -152,7 +152,7 @@ Este proyecto fue desarrollado como un **laboratorio de experimentación técnic
 Demuestra versatilidad y capacidad de trabajar en equipos heterogéneos. En empresas grandes, es común que diferentes equipos usen diferentes stacks.
 
 ### ¿Es escalable a producción?
-Sí. Incluye manifiestos de Kubernetes, health checks, logs estructurados y seguridad hardened. Faltan métricas de observabilidad (Prometheus/Grafana) que se agregarían en un entorno real.
+Sí. Incluye manifiestos de Kubernetes, health checks, logs estructurados, seguridad hardened y stack de observabilidad completo (Prometheus/Grafana).
 
 ### ¿Cuánto tiempo tomó desarrollar esto?
 El proyecto evolucionó iterativamente. La versión actual (v2.3.0) representa aproximadamente 3-4 semanas de desarrollo activo, incluyendo refactorización y documentación.

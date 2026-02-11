@@ -19,9 +19,9 @@ Este documento describe la evolución y el futuro del proyecto.
 
 ## 🔮 Futuro (v3.0+)
 
-### Observabilidad Avanzada
-- [ ] **Prometheus Exporter**: Exponer métricas de n8n y contenedores.
-- [ ] **Grafana Dashboard**: Visualización de latencia, tasa de errores y volumen de mensajes.
+### Observabilidad Avanzada (v3.0)
+- [x] **Prometheus Exporter**: Exponer métricas de n8n y contenedores.
+- [x] **Grafana Dashboard**: Visualización de latencia, tasa de errores y volumen de mensajes.
 
 ### Infraestructura Cloud
 - [ ] **Terraform**: IaC para despliegue en AWS (ECS Fargate).
