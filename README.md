@@ -139,16 +139,29 @@ Verifica el Dashboard del Caso 01: [http://localhost:8081](http://localhost:8081
 
 ## 📈 Observabilidad Avanzada (v3.0)
 
-El proyecto incluye un stack de monitoreo completo con **Prometheus** y **Grafana**:
+## 📈 Observabilidad Avanzada (v3.0)
+
+Este proyecto implementa un **stack de monitoreo industrial** para eliminar la "caja negra" típica de las integraciones.
+
+### ¿Qué componentes usamos?
+1.  **Prometheus (`:9090`)**: Es el "recolector". Viaja cada 15 segundos a n8n y a los contenedores para preguntar "¿Cómo estás?" (CPU, RAM, Workflows activos, Errores).
+2.  **Grafana (`:3000`)**: Es el "visualizador". Toma los datos matemáticos de Prometheus y los convierte en gráficos hermosos y útiles para tomar decisiones.
+
+### ¿Para qué sirve esto?
+-   **Detección de Cuellos de Botella**: ¿n8n está lento porque le falta CPU o porque la red falla? Grafana te lo dice.
+-   **Alertas Tempranas**: Ver si la tasa de errores sube antes de que los usuarios se quejen.
+-   **Capacidad**: Saber cuándo es hora de escalar la infraestructura.
 
 | Servicio | URL | Credenciales | Descripción |
 |----------|-----|--------------|-------------|
-| **Grafana** | [http://localhost:3000](http://localhost:3000) | `admin` / `admin` | Dashboards visuales de n8n y contenedores. |
-| **Prometheus** | [http://localhost:9090](http://localhost:9090) | (Sin auth) | Recolección de métricas y explorador de queries. |
+| **Grafana** | [http://localhost:3000](http://localhost:3000) | `admin` / `admin` | Dashboards visuales. Configura Datasource `http://prometheus:9090`. |
+| **Prometheus** | [http://localhost:9090](http://localhost:9090) | (Sin auth) | Explorador de métricas crudas (`n8n_workflow_executions_total`). |
 
-### Métricas Disponibles
-- **n8n**: Workflows activos, ejecuciones fallidas, tiempo de respuesta.
-- **Contenedores**: Uso de CPU/RAM (vía cAdvisor si se habilita).
+### Métricas Clave a Observar
+-   `n8n_workflow_executions_total`: Tráfico total del sistema.
+-   `n8n_workflow_failed_executions_total`: Salud de las integraciones.
+-   `n8n_nodejs_eventloop_lag_seconds`: "Estrés" interno de n8n (si es alto, n8n está sufriendo).
+
 
 ---
 

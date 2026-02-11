@@ -29,9 +29,26 @@ Si encuentras problemas al levantar los contenedores o ejecutar los bots, consul
 
 ---
 
+## 📈 Problemas de Observabilidad (v3.0)
+
+### ❌ Error: Prometheus muestra n8n como `DOWN` o 404
+**Síntoma**: En `http://localhost:9090` -> Status -> Targets, el job de n8n sale en rojo o con error 404.
+**Causa**: La variable de entorno en `docker-compose.yml` está ausente o es incorrecta (ej: `N8N_METRICS` vs `N8N_METRICS_ENABLED`).
+**Solución**:
+- Verifica que `N8N_METRICS=true` esté en el servicio `n8n`.
+- Reinicia el contenedor: `docker-compose up -d n8n`.
+
+### ❌ Error: Grafana dice `Database is locked`
+**Síntoma**: Errores en los logs de `social-bot-grafana`.
+**Causa**: Problema común en Windows/Docker Desktop con el bloqueo de archivos SQLite en volúmenes montados.
+**Solución**: Reinicia el stack completo: `docker-compose down && docker-compose up -d`.
+
+---
+
 ## 🔗 Problemas de n8n y Flujos
 
 ### ❌ Síntoma: El bot dice "Payload sent" pero el Dashboard está vacío
+
 **Verificaciones**:
 1.  **¿Workflow Activo?**: Abre n8n y verifica que el switch "Active" esté en verde.
 2.  **Webhooks**: n8n por defecto usa URLs dinámicas. Asegúrate de que el path en el nodo Webhook coincida con lo que espera el bot (ej: `social-bot-scheduler-php`).

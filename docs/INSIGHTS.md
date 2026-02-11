@@ -26,3 +26,9 @@ Durante el desarrollo de los 8 casos, enfrentamos retos significativos:
 Planeamos explorar:
 - **Kubernetes**: Desplegar la matriz completa en un clúster K8s.
 - **Testing E2E**: Pruebas automatizadas con Cypress para validar los 8 dashboards.
+
+## 📈 Valor del Negocio: Observabilidad
+"No se puede mejorar lo que no se mide". La incorporación de **Prometheus y Grafana** (v3.0) transforma este proyecto de un "demo" a una solución "product-ready".
+- **Visibilidad Real**: Pasamos de "¿El bot está corriendo?" a "El bot procesó 50 mensajes en el último minuto con una latencia de 20ms".
+- **Confianza**: Los dashboards permiten a los stakeholders (o reclutadores) ver la "salud" del sistema de un vistazo, sin entrar a la consola.
+

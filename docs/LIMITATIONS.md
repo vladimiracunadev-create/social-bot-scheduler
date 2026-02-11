@@ -19,3 +19,7 @@ Este proyecto es un **laboratorio de ingeniería** y, como tal, tiene ciertas de
 
 ---
 *Estas limitaciones son intencionales para mantener el proyecto portable y educativo.*
+
+## 5. Alcance de Observabilidad (v3.0)
+-   **Métricas Técnicas vs de Negocio**: Actualmente exponemos métricas de plataforma (CPU, RAM, Event Loop, Conteo de Workflows). Métricas de negocio específicas (ej. "ROI de posts en LinkedIn") requerirían nodos de n8n personalizados enviando a Pushgateway, lo cual está fuera del alcance actual.
+

@@ -67,3 +67,22 @@ graph LR
 
 ## 🚀 Despliegue y Escalabilidad
 Cada caso es independiente pero comparte el mismo "Puente" (n8n). El **Master Launcher** (`setup.py`) orquesta la configuración de variables de entorno para asegurar que el emisor de un caso hable con el receptor del mismo caso sin conflictos de red.
+
+## 📡 Capa de Observabilidad
+
+El sistema no opera a ciegas. Hemos integrado un pipeline de telemetría estándar de la industria.
+
+### Flujo de Datos
+1.  **Generación**: n8n (y contenedores) exponen métricas en formato texto plano en `/metrics`.
+2.  **Scraping (Pull)**: Prometheus "hala" (scrapes) estos datos cada 15 segundos.
+3.  **Almacenamiento**: Prometheus guarda las series temporales en su TSDB local.
+4.  **Visualización**: Grafana consulta a Prometheus (vía PromQL) para pintar los gráficos.
+
+```mermaid
+graph LR
+    A[n8n] -- /metrics --> B(Prometheus)
+    C[Contenedores] -- cAdvisor --> B
+    B -- PromQL --> D[Grafana Dashboard]
+    E[Admin] -- HTTP :3000 --> D
+```
+
