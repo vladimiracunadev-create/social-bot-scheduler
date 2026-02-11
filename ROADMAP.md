@@ -15,13 +15,11 @@ Este documento describe la evolución y el futuro del proyecto.
 - [x] Dashboard unificado.
 - [x] Dockerización completa.
 
----
-
-## 🔮 Futuro (v3.0+)
-
-### Observabilidad Avanzada (v3.0)
+### v3.0
 - [x] **Prometheus Exporter**: Exponer métricas de n8n y contenedores.
 - [x] **Grafana Dashboard**: Visualización de latencia, tasa de errores y volumen de mensajes.
+
+## 🔮 Futuro (v4.0+)
 
 ### Infraestructura Cloud
 - [ ] **Terraform**: IaC para despliegue en AWS (ECS Fargate).
