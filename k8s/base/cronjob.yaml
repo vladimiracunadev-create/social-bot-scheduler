@@ -14,7 +14,7 @@ spec:
             fsGroup: 2000
           containers:
           - name: bot
-            image: social-bot-scheduler:2.3.0
+            image: social-bot-scheduler:3.0.0
             imagePullPolicy: IfNotPresent
             securityContext:
               allowPrivilegeEscalation: false

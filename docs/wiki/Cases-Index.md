@@ -1,7 +1,7 @@
 # 📔 Índice de la Matriz Tecnológica
 
 [![Ecosystem](https://img.shields.io/badge/Matriz-8_Ejes-blueviolet.svg)]()
-[![Latest Release](https://img.shields.io/badge/release-v2.3.0-blue.svg)]()
+[![Latest Release](https://img.shields.io/badge/release-v3.0.0-blue.svg)]()
 
 [← Volver al Inicio](Home)
 

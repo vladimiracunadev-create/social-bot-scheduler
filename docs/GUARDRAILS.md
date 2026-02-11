@@ -4,7 +4,7 @@ Esta guía detalla los "Guardrails" implementados en la capa de **Bridge (n8n)**
 
 ---
 
-## 🏗️ Arquitectura de Resiliencia (v2.3.0)
+## 🏗️ Arquitectura de Resiliencia (v3.0.0)
 
 El sistema implementa una defensa en profundidad con 4 capas de protección:
 
@@ -104,4 +104,4 @@ Para validar que estos sistemas funcionan, hemos creado un script de prueba end-
 ---
 
 > [!NOTE]
-> Esta documentación refleja la implementación actual (v2.3.0) basada en scripts Python compartidos y SQLite, reemplazando las implementaciones anteriores basadas en JSON y caso único.
+> Esta documentación refleja la implementación actual (v3.0.0) basada en scripts Python compartidos y SQLite, reemplazando las implementaciones anteriores basadas en JSON y caso único.

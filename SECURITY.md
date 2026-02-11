@@ -6,7 +6,7 @@ Gracias por tomar en cuenta la seguridad de este proyecto.
 
 | Versión | Soportado |
 | ------- | --------- |
-| 2.3.x   | ✅ |
+| 3.0.x   | ✅ |
 | 2.1.x   | ❌ |
 | < 2.0   | ❌ |
 

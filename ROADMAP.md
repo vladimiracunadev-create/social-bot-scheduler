@@ -4,7 +4,7 @@ Este documento describe la evolución y el futuro del proyecto.
 
 ## ✅ Hitos Completados
 
-### v2.3.0 — "Resiliencia Industrial" (Actual)
+### v3.0.0 — "Observabilidad Industrial" (Actual)
 - [x] Matriz de 8 casos interoperables (Python, Go, Node, PHP, Rust, Ruby, C#, Laravel).
 - [x] Sistema de Resiliencia Global: Circuit Breaker, Idempotencia (SQLite), DLQ.
 - [x] Hub CLI centralizado para diagnósticos (`make doctor`).

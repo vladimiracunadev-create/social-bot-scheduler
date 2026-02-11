@@ -5,7 +5,7 @@
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
 [![Ecosystem](https://img.shields.io/badge/Matriz-8_Ejes-blueviolet.svg)]()
 [![Security](https://img.shields.io/badge/Security-Hardened-success.svg)]()
-[![Latest Release](https://img.shields.io/badge/release-v2.3.0-blue.svg)]()
+[![Latest Release](https://img.shields.io/badge/release-v3.0.0-blue.svg)]()
 
 ---
 

@@ -1,6 +1,6 @@
 Todos los cambios notables en este proyecto serán documentados en este archivo.
 
-## [2.3.0] - 2026-02-11
+## [3.0.0] - 2026-02-11
 ### Añadido
 - **Resiliencia Global (100%)**: Implementación de **Idempotencia (SQLite)** y **Circuit Breaker** en los 8 casos de integración.
 - **Dead Letter Queue (DLQ)**: Sistema de captura de errores irrecuperables en todos los receptores.

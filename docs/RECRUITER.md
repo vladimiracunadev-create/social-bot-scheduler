@@ -155,7 +155,7 @@ Demuestra versatilidad y capacidad de trabajar en equipos heterogéneos. En empr
 Sí. Incluye manifiestos de Kubernetes, health checks, logs estructurados, seguridad hardened y stack de observabilidad completo (Prometheus/Grafana).
 
 ### ¿Cuánto tiempo tomó desarrollar esto?
-El proyecto evolucionó iterativamente. La versión actual (v2.3.0) representa aproximadamente 3-4 semanas de desarrollo activo, incluyendo refactorización y documentación.
+El proyecto evolucionó iterativamente. La versión actual (v3.0.0) representa aproximadamente 3-4 semanas de desarrollo activo, incluyendo refactorización y documentación.
 
 ### ¿Qué parte fue más desafiante?
 La estandarización de seguridad en contenedores (eliminar CVEs) y la creación del HUB CLI con validación robusta de entradas.
@@ -175,5 +175,5 @@ La estandarización de seguridad en contenedores (eliminar CVEs) y la creación 
 ---
 
 **Última actualización**: Febrero 2026  
-**Versión del proyecto**: v2.3.0  
+**Versión del proyecto**: v3.0.0  
 **Repositorio**: [github.com/vladimiracunadev-create/social-bot-scheduler](https://github.com/vladimiracunadev-create/social-bot-scheduler)

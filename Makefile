@@ -29,7 +29,7 @@ restart: ## Reinicia los contenedores
 	docker-compose restart
 
 scan: ## Escanea vulnerabilidades en la imagen Docker (requiere Trivy)
-	trivy image social-bot-scheduler:2.3.0
+	trivy image social-bot-scheduler:3.0.0
 
 demo: ## Ejecuta una demostración rápida (Caso 01)
 	@echo "🚀 Iniciando Demo Caso 01 (Python -> PHP)..."
