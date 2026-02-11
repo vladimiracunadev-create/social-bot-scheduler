@@ -49,6 +49,11 @@ jobs:
       - name: Tests & Cobertura
         run: pytest --cov=cases/01-python-to-php/origin/src/social_bot cases/01-python-to-php/origin/tests/
 
+      - name: Validar Scripts Compartidos
+        run: |
+          chmod +x scripts/test_shared_scripts.sh
+          ./scripts/test_shared_scripts.sh
+
   build-and-push:
     name: Build & Push to GHCR
     needs: test-and-lint

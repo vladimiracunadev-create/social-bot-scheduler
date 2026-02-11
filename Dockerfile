@@ -41,6 +41,6 @@ ENV PYTHONUNBUFFERED=1
 
 # Healthcheck to ensure the bot script is present and potentially runnable
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-  CMD python -c "import os; exit(0 if os.path.exists('bot.py') else 1)"
+  CMD python -c "import os; exit(0 if os.path.exists('hub.py') else 1)"
 
-CMD ["python", "bot.py"]
+CMD ["python", "hub.py"]
