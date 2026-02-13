@@ -5,7 +5,19 @@ from pydantic import BaseModel, Field
 
 class Post(BaseModel):
     """
-    Representa una publicación programada en el sistema.
+    Modelo de Dominio: Publicación Social.
+    
+    Responsabilidad:
+        Estandarizar la estructura de datos entre el origen (Python) y el destino (Go).
+        Go es estáticamente tipado, por lo que este modelo debe coincidir exactamente
+        con el `struct Post` definido en `main.go`.
+
+    Atributos:
+        id (str): UUID.
+        text (str): Mensaje.
+        channels (List[str]): Destinos.
+        scheduled_at (datetime): Fecha de publicación.
+        published (bool): Estado de sincronización.
     """
 
     id: str = Field(..., description="Identificador único del post")
@@ -20,6 +32,7 @@ class Post(BaseModel):
 
     def should_publish(self, now: datetime) -> bool:
         """
-        Determina si el post debe ser publicado en el momento dado.
+        Regla de Negocio: Validación de Vencimiento.
+        Retorna True si la fecha actual supera la programada y no ha sido publicado.
         """
         return not self.published and self.scheduled_at <= now

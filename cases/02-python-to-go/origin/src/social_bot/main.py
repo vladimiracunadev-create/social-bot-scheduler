@@ -2,6 +2,10 @@ from .service import BotService
 
 
 def main():
+    """
+    Función Bootstrap.
+    Inicializa el servicio y comienza el procesamiento.
+    """
     service = BotService()
     service.run()
 

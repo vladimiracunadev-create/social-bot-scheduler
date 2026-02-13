@@ -2,6 +2,17 @@
 
 namespace App\Controller;
 
+/**
+ * Clase SocialBotController (Ilustrativa)
+ * 
+ * Contexto:
+ *   Esta clase representa cómo se vería el controlador en una aplicación Symfony Full-Stack real.
+ *   En este entorno "Lite" de demostración, no estamos arrancando el Kernel de Symfony completo,
+ *   sino simulando su comportamiento mediante el script procedural más abajo.
+ * 
+ * Equivalencia:
+ *   En Symfony real: `Route("/webhook", methods={"POST"})`
+ */
 class SocialBotController
 {
     private $logFile = __DIR__ . '/../../var/log/social_bot_symfony.log';
@@ -9,6 +20,8 @@ class SocialBotController
     public function receive(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
+
+        // Validación Symfony Style
         if (!$data || !isset($data['id'])) {
             return new JsonResponse(['ok' => false], 400);
         }
@@ -21,6 +34,7 @@ class SocialBotController
 
     public function dashboard(): Response
     {
+        // Motor de Plantillas Twig (Simulado)
         $logs = file_exists($this->logFile) ? file($this->logFile) : [];
         return $this->render('dashboard.html.twig', [
             'logs' => array_reverse($logs),
@@ -29,7 +43,13 @@ class SocialBotController
     }
 }
 
-// Endpoint de ERRORES (DLQ)
+// =================================================================================================
+// SIMULACIÓN DE MIDDLEWARE Y ENRUTAMIENTO
+// =================================================================================================
+// Dado que no tenemos servidor web (Nginx/Apache) ni Kernel de Symfony en este contenedor ligero,
+// manejamos las rutas manualmente usando $_SERVER.
+
+// 1. Endpoint Dead Letter Queue (DLQ)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && strpos($_SERVER['REQUEST_URI'], '/errors') !== false) {
     $rawBody = file_get_contents('php://input');
     $errorData = json_decode($rawBody, true);
@@ -49,14 +69,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && strpos($_SERVER['REQUEST_URI'], '/e
     exit;
 }
 
-// Simulación de receptor Symfony Lite
+// 2. Front Controller Simplificado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Simula la acción `receive()` del controlador
     $input = file_get_contents('php://input');
     $log = "[" . date('Y-m-d H:i:s') . "] SYMFONY-LITE | " . $input . "\n";
     file_put_contents('symfony.log', $log, FILE_APPEND);
+
     header('Content-Type: application/json');
     echo json_encode(['ok' => true]);
 } else {
+    // Simula la acción `dashboard()`
     $logs = file_exists('symfony.log') ? file('symfony.log') : [];
     ?>
     <!DOCTYPE html>

@@ -8,7 +8,9 @@ import requests
 from .config import settings
 from .models import Post
 
-# Configuración de Logging
+# ==================================================================================================
+# LOGGING
+# ==================================================================================================
 logging.basicConfig(
     level=settings.LOG_LEVEL,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
@@ -19,7 +21,11 @@ logger = logging.getLogger(__name__)
 
 class BotService:
     """
-    Servicio principal que coordina la carga, envío y actualización de posts.
+    Servicio de Aplicación: Cliente HTTP para el Backend en Go.
+
+    Diferencias con Caso 01:
+        Aunque la lógica en Python es casi idéntica, el receptor es un binario compilado en Go.
+        Esto exige que el payload JSON sea estrictamente conforme a lo que espera `json.Unmarshal` en Go.
     """
 
     def __init__(self):
@@ -27,7 +33,7 @@ class BotService:
         self.webhook_url = str(settings.WEBHOOK_URL) if settings.WEBHOOK_URL else None
 
     def load_posts(self) -> List[Post]:
-        """Carga y valida los posts desde el archivo JSON."""
+        """Recupera el estado persistente desde JSON."""
         if not self.posts_path.exists():
             logger.error(f"Archivo no encontrado: {self.posts_path}")
             return []
@@ -40,7 +46,7 @@ class BotService:
             return []
 
     def save_posts(self, posts: List[Post]) -> None:
-        """Guarda el estado actual de los posts en el disco."""
+        """Atomic Save: Persiste cambios en disco."""
         try:
             data = [post.model_dump(mode="json") for post in posts]
             self.posts_path.write_text(
@@ -51,7 +57,13 @@ class BotService:
             logger.error(f"Error guardando posts: {e}")
 
     def send_post(self, post: Post) -> bool:
-        """Envía un post individual al webhook configurado."""
+        """
+        Despacha el post al microservicio Go.
+        
+        Detalle Técnico:
+            Go es muy eficiente manejando concurrencia, por lo que este servicio podría 
+            escalar a enviar miles de requests por segundo sin saturar al receptor.
+        """
         if not self.webhook_url:
             logger.info(f"[DRY-RUN] Post {post.id} -> {post.channels}")
             return True
@@ -67,8 +79,8 @@ class BotService:
             return False
 
     def run(self):
-        """Ejecuta el ciclo principal del bot."""
-        logger.info("Iniciando Social Bot Service...")
+        """Ciclo de vida principal."""
+        logger.info("Iniciando Social Bot Service (Python Client -> Go Server)...")
         all_posts = self.load_posts()
         now = datetime.now()
 

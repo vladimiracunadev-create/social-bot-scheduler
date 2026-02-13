@@ -7,32 +7,86 @@ import datetime
 import yaml
 from pathlib import Path
 
-# Configuración de Rutas
-CASES_DIR = Path("cases").resolve()
-AUDIT_LOG = Path("hub.audit.log").resolve()
+# ==================================================================================================
+# CONFIGURACIÓN DE RUTAS
+# ==================================================================================================
+# Se utilizan rutas absolutas resueltas para evitar ambigüedades al ejecutar desde diferentes directorios.
+# `Path.resolve()` convierte rutas relativas en rutas absolutas del sistema operativo.
+CASES_DIR = Path("cases").resolve()  # Directorio donde se almacenan los casos de migración/integración
+AUDIT_LOG = Path("hub.audit.log").resolve()  # Archivo de registro para auditoría de acciones
 
+# ==================================================================================================
+# UTILIDADES DEL SISTEMA
+# ==================================================================================================
 
 def safe_print(text):
-    """Imprime texto manejando errores de codificación en Windows."""
+    """
+    Imprime texto en la consola manejando posibles errores de codificación en Windows.
+    
+    Contexto:
+        En entornos Windows heredados (cmd.exe, PowerShell antiguo), la salida estándar puede no
+        soportar caracteres Unicode (como tildes o emojis), lanzando `UnicodeEncodeError`.
+    
+    Mecanismo:
+        Intenta imprimir normalmente. Si falla por codificación, codifica el texto a ASCII
+        reemplazando los caracteres problemáticos co '?' (modo "replace") y luego lo decodifica
+        para imprimirlo sin causar un crash.
+
+    Args:
+        text (str): El texto que se desea imprimir.
+    """
     try:
         print(text)
     except UnicodeEncodeError:
+        # Fallback para consolas que no soportan UTF-8 completo
         print(text.encode("ascii", "replace").decode("ascii"))
 
 
 def log_audit(comando, estado, detalles=""):
-    """Registra una acción en el log de auditoría."""
+    """
+    Registra una acción operativa en el archivo de log de auditoría.
+
+    Contexto:
+        Es crucial mantener un rastro de auditoría (audit trail) de quién ejecutó qué comando,
+        cuándo y cuál fue el resultado, para propósitos de seguridad y depuración.
+
+    Mecanismo:
+        1. Obtiene el timestamp actual y el usuario del sistema operativo.
+        2. Formatea una entrada de log estructurada.
+        3. Añade (append) la entrada al archivo `hub.audit.log`.
+
+    Args:
+        comando (str): El nombre del comando ejecutado (ej: "ejecutar 01-python-to-php").
+        estado (str): El resultado de la operación ("EXITO" o "FALLO").
+        detalles (str, optional): Información adicional sobre el error o el resultado. Defaults to "".
+    """
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # `os.getlogin()` puede fallar en ciertos entornos no interactivos (ej: CI/CD, cron),
+    # por lo que se comprueba su existencia.
     usuario = os.getlogin() if hasattr(os, "getlogin") else "desconocido"
     entrada = (
         f"[{timestamp}] USUARIO:{usuario} CMD:{comando} ESTADO:{estado} {detalles}\n"
     )
+    # Se utiliza codificación utf-8 explícita para evitar problemas al leer el log en otros sistemas
     with open(AUDIT_LOG, "a", encoding="utf-8") as f:
         f.write(entrada)
 
 
 def obtener_manifiesto(ruta_caso):
-    """Carga el manifiesto app.manifest.yml de un caso."""
+    """
+    Carga y parsea el archivo de configuración `app.manifest.yml` de un directorio de caso dado.
+
+    Contexto:
+        Cada "caso" es una aplicación autocontenida descrita por un manifiesto YAML. Este manifiesto
+        contiene metadatos vitales como el nombre, lenguaje, stack tecnológico y puntos de entrada.
+
+    Args:
+        ruta_caso (Path): Objeto Path apuntando al directorio raíz del caso.
+
+    Returns:
+        dict | None: Diccionario con los datos del manifiesto si la carga es exitosa,
+                     o None si el archivo no existe o es inválido.
+    """
     ruta_manifiesto = ruta_caso / "app.manifest.yml"
     if not ruta_manifiesto.exists():
         return None
@@ -44,8 +98,20 @@ def obtener_manifiesto(ruta_caso):
         return None
 
 
+# ==================================================================================================
+# COMANDOS CLI
+# ==================================================================================================
+
 def listar_casos():
-    """Enumera todos los casos disponibles basados en sus manifiestos."""
+    """
+    Enumera y muestra en consola todos los casos registrados en el directorio `cases/`.
+
+    Mecanismo:
+        1. Valida la existencia del directorio `cases/`.
+        2. Itera sobre cada subdirectorio.
+        3. Intenta cargar el `app.manifest.yml` de cada uno.
+        4. Si el manifiesto es válido, imprime la información formateada (ID, nombre, tecnologías).
+    """
     if not CASES_DIR.exists():
         safe_print(f"Error: Directorio de casos {CASES_DIR} no encontrado.")
         log_audit("listar-casos", "FALLO", "Directorio no encontrado")
@@ -53,6 +119,7 @@ def listar_casos():
 
     safe_print("Casos Disponibles (Matriz de Integración):")
     encontrados = 0
+    # Se ordena la lista para mantener una salida determinista y ordenada alfabéticamente
     for d in sorted(CASES_DIR.iterdir()):
         if d.is_dir():
             manifiesto = obtener_manifiesto(d)
@@ -70,8 +137,26 @@ def listar_casos():
 
 
 def ejecutar_caso(nombre_caso, dry_run=True):
-    """Lanza la ejecución de un caso específico."""
-    # Validación de Seguridad: Formato de nombre
+    """
+    Orquesta la ejecución de un caso de integración específico.
+
+    Contexto:
+        El objetivo principal del Hub es ejecutar bots/workers en diferentes lenguajes de forma unificada.
+        Esta función actúa como un despachador políglota, preparando el entorno y lanzando el proceso adecuado.
+
+    Mecanismo:
+        1. **Validación de Seguridad**: Verifica que el nombre del caso sea seguro y previene ataques de
+           Path Traversal (intentar salir del directorio `cases/`).
+        2. **Carga de Configuración**: Lee el manifiesto para saber qué ejecutar.
+        3. **Resolución del Runtime**: Determina si usar `python`, `node`, `go`, etc., basándose en el manifiesto.
+        4. **Inyección de Entorno**: Prepara variables de entorno (como `DRY_RUN`) para controlar el comportamiento del bot.
+        5. **Ejecución**: Lanza el subproceso y espera su terminación.
+
+    Args:
+        nombre_caso (str): Nombre del directorio del caso a ejecutar (ej: "01-python-to-php").
+        dry_run (bool): Si es True (por defecto), indica al bot que NO realice acciones persistentes (ej: postear en redes).
+    """
+    # Validación de Seguridad: Whitelist de caracteres permitidos para evitar inyección de comandos
     if not re.match(r"^[a-zA-Z0-9_\-]+$", nombre_caso):
         safe_print(f"Error: Nombre de caso '{nombre_caso}' no válido.")
         log_audit(f"ejecutar {nombre_caso}", "FALLO", "Formato inválido")
@@ -80,6 +165,7 @@ def ejecutar_caso(nombre_caso, dry_run=True):
     ruta_caso = (CASES_DIR / nombre_caso).resolve()
 
     # Validación de Seguridad: Prevent Path Traversal
+    # Asegura que la ruta resuelta siga estando dentro de CASES_DIR
     if not str(ruta_caso).startswith(str(CASES_DIR)):
         safe_print("Error: Intento de acceso no autorizado detectado.")
         log_audit(f"ejecutar {nombre_caso}", "FALLO", "Path traversal detectado")
@@ -104,6 +190,7 @@ def ejecutar_caso(nombre_caso, dry_run=True):
         lenguaje = origin_info.get("language", "python").lower()
         cmd = []
 
+        # Despachador de Runtimes: Construye el comando según el lenguaje
         if lenguaje == "python":
             cmd = [sys.executable, entrypoint.name]
         elif lenguaje == "nodejs":
@@ -117,6 +204,7 @@ def ejecutar_caso(nombre_caso, dry_run=True):
             )
             return
 
+        # Preparación del entorno de simulación
         env = os.environ.copy()
         if dry_run:
             env["DRY_RUN"] = "True"
@@ -124,6 +212,8 @@ def ejecutar_caso(nombre_caso, dry_run=True):
 
         safe_print(f"Ejecutando: {' '.join(cmd)}")
         try:
+            # `cwd=entrypoint.parent` es crítico: el bot se ejecuta "dentro" de su propia carpeta
+            # para que pueda encontrar sus propios archivos locales (configs, assets, etc.)
             subprocess.run(cmd, cwd=entrypoint.parent, env=env, check=True)
             log_audit(f"ejecutar {nombre_caso}", "EXITO", f"Simulación: {dry_run}")
         except subprocess.CalledProcessError as e:
@@ -135,7 +225,13 @@ def ejecutar_caso(nombre_caso, dry_run=True):
 
 
 def ejecutar_doctor():
-    """Realiza un diagnóstico del sistema de orquestación."""
+    """
+    Realiza un diagnóstico de salud (Health Check) del entorno de ejecución.
+    
+    Contexto:
+        Ayuda a los usuarios a depurar problemas comunes de configuración verificando
+        que las dependencias externas (Docker) y la estructura interna (manifiestos) estén correctas.
+    """
     safe_print("=== HUB DOCTOR: Informe de Diagnóstico ===")
 
     # 1. Verificar Docker
@@ -146,7 +242,7 @@ def ejecutar_doctor():
         if docker_check.returncode == 0:
             safe_print(f"[OK] Docker: {docker_check.stdout.strip()}")
         else:
-            safe_print("[ERROR] Docker: Instalado pero no responde.")
+            safe_print("[ERROR] Docker: Instalado pero no responde (¿Daemon apagado?).")
     except FileNotFoundError:
         safe_print("[ERROR] Docker: No encontrado en el PATH.")
 
@@ -158,37 +254,45 @@ def ejecutar_doctor():
         if dc_check.returncode == 0:
             safe_print(f"[OK] Docker Compose: {dc_check.stdout.strip()}")
         else:
-            safe_print("[ERROR] Docker Compose: No responde.")
+            safe_print("[ERROR] Docker Compose: El comando falló.")
     except FileNotFoundError:
-        safe_print("[ERROR] Docker Compose: No encontrado.")
+        safe_print("[ERROR] Docker Compose: No encontrado en el PATH.")
 
     # 3. Integridad de Manifiestos
     encontrados = 0
     validos = 0
-    for d in CASES_DIR.iterdir():
-        if d.is_dir():
-            encontrados += 1
-            if (d / "app.manifest.yml").exists():
-                validos += 1
-
-    if encontrados > 0:
-        safe_print(f"[OK] Casos: {validos}/{encontrados} tienen manifiesto YAML.")
+    if CASES_DIR.exists():
+        for d in CASES_DIR.iterdir():
+            if d.is_dir():
+                encontrados += 1
+                if (d / "app.manifest.yml").exists():
+                    validos += 1
+        
+        if encontrados > 0:
+            safe_print(f"[OK] Casos: {validos}/{encontrados} tienen manifiesto YAML válido.")
+        else:
+            safe_print("[AVISO] No se encontraron subdirectorios en 'cases/'.")
     else:
-        safe_print("[ERROR] Directorio 'cases/' vacío o no encontrado.")
+        safe_print("[ERROR] Directorio 'cases/' no encontrado.")
 
     # 4. Log de Auditoría
     if AUDIT_LOG.exists():
         safe_print(f"[OK] Log de Auditoría: Activo ({AUDIT_LOG.stat().st_size} bytes)")
     else:
-        safe_print("[AVISO] Log de Auditoría: Aún no creado.")
+        safe_print("[AVISO] Log de Auditoría: Aún no creado (se creará con la primera acción).")
 
     log_audit("doctor", "EXITO")
 
 
 def gestionar_stack(accion):
-    """Inicia o detiene los servicios definidos en docker-compose."""
+    """
+    Wrapper para controlar `docker-compose` desde el Hub.
+
+    Args:
+        accion (str): "up" para levantar servicios, "down" para detenerlos.
+    """
     cmd = ["docker-compose", accion]
-    safe_print(f"Ejecutando: {' '.join(cmd)}")
+    safe_print(f"Ejecutando infraestructura: {' '.join(cmd)}")
     try:
         subprocess.run(cmd, check=True)
         log_audit(f"stack {accion}", "EXITO")
@@ -198,34 +302,40 @@ def gestionar_stack(accion):
 
 
 def main():
+    """
+    Punto de entrada principal del CLI.
+    Configura el parser de argumentos y despacha el comando correspondiente.
+    """
     parser = argparse.ArgumentParser(description="HUB CLI para Social Bot Scheduler")
     subparsers = parser.add_subparsers(dest="command")
 
-    # listar-casos
-    subparsers.add_parser("listar-casos", help="Enumera los casos de la matriz")
+    # Comando: listar-casos
+    subparsers.add_parser("listar-casos", help="Enumera los casos de la matriz de integración disponibles")
 
-    # ejecutar
-    run_parser = subparsers.add_parser("ejecutar", help="Lanza un caso de integración")
+    # Comando: ejecutar
+    run_parser = subparsers.add_parser("ejecutar", help="Lanza un caso de integración específico")
     run_parser.add_argument(
-        "caso", help="Nombre de la carpeta del caso (ej: 01-python-to-php)"
+        "caso", help="Nombre de la carpeta del caso a ejecutar (ej: 01-python-to-php)"
     )
     run_parser.add_argument(
         "--real",
         action="store_false",
         dest="dry_run",
-        help="Desactivar modo simulación",
+        help="Ejecuta en modo real (permitiendo efectos secundarios como posts reales). Por defecto es simulación.",
     )
+    # Por seguridad, el valor por defecto es dry_run=True (Simulación activada)
     run_parser.set_defaults(dry_run=True)
 
-    # doctor
-    subparsers.add_parser("doctor", help="Ejecuta diagnósticos del sistema")
+    # Comando: doctor
+    subparsers.add_parser("doctor", help="Ejecuta diagnósticos del sistema y verifica dependencias")
 
-    # up / down
-    subparsers.add_parser("up", help="Levanta la infraestructura Docker")
-    subparsers.add_parser("down", help="Detiene la infraestructura Docker")
+    # Comandos: Infraestructura (up / down)
+    subparsers.add_parser("up", help="Levanta la infraestructura Docker (docker-compose up)")
+    subparsers.add_parser("down", help="Detiene y elimina la infraestructura Docker (docker-compose down)")
 
     args = parser.parse_args()
 
+    # Despacho de comandos
     if args.command == "listar-casos":
         listar_casos()
     elif args.command == "ejecutar":
@@ -237,14 +347,18 @@ def main():
     elif args.command == "down":
         gestionar_stack("down")
     else:
+        # Si no se pasa comando, mostrar ayuda
         parser.print_help()
 
 
 if __name__ == "__main__":
-    # Asegurar soporte para caracteres en consola Windows
+    # Configuración específica para Windows:
+    # Fuerza la página de códigos de la consola a UTF-8 (CP 65001) para soportar emojis y tildes correctamente.
     if os.name == "nt":
         import ctypes
-
-        ctypes.windll.kernel32.SetConsoleOutputCP(65001)
+        try:
+            ctypes.windll.kernel32.SetConsoleOutputCP(65001)
+        except Exception:
+            pass # Ignoramos errores si no se puede establecer (ej: entornos restringidos)
 
     main()
