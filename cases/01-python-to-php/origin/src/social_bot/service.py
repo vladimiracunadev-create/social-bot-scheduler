@@ -29,7 +29,7 @@ class BotService:
         1. Persistencia: Leer y escribir el estado de los posts (patrón Repository simplificado).
         2. Lógica de Negocio: Filtrar posts vencidos (`due_posts`).
         3. Integración Externa: Comunicarse con el webhook de destino (Gateway).
-    
+
     Diseño:
         Sigue un flujo lineal: Load -> Filter -> Process -> Save.
         Diseñado para ser ejecutado periódicamente (cron job) o como un worker de ciclo largo.
@@ -43,7 +43,7 @@ class BotService:
     def load_posts(self) -> List[Post]:
         """
         Carga la 'base de datos' de posts desde el sistema de archivos.
-        
+
         Mecanismo de Tolerancia a Fallos:
         Si el archivo no existe o está corrupto, loguea el error y retorna una lista vacía
         para permitir que el servicio siga corriendo (Graceful Degradation), aunque sin procesar nada.
@@ -64,7 +64,7 @@ class BotService:
     def save_posts(self, posts: List[Post]) -> None:
         """
         Persiste el estado actualizado de los posts.
-        
+
         Contexto:
         Se llama solo si hubo cambios (`published=True`). Esto minimiza escrituras en disco.
         """
@@ -102,8 +102,8 @@ class BotService:
             payload = post.model_dump(mode="json")
             # Timeout explícito de 10s para evitar colgar el proceso indefinidamente
             resp = requests.post(self.webhook_url, json=payload, timeout=10)
-            resp.raise_for_status() # Lanza error si status != 200
-            
+            resp.raise_for_status()  # Lanza error si status != 200
+
             logger.info(f"[OK] Post {post.id} enviado exitosamente.")
             return True
         except Exception as e:
@@ -113,7 +113,7 @@ class BotService:
     def run(self):
         """
         Método principal de ejecución (Entry Point del Servicio).
-        
+
         Flujo:
             1. Cargar estado.
             2. Identificar trabajo pendiente (`should_publish`).

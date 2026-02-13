@@ -7,7 +7,7 @@ from pathlib import Path
 class Settings(BaseSettings):
     """
     Configuración global de la aplicación gestionada por Pydantic Settings.
-    
+
     Contexto:
         Centraliza todas las variables de entorno y constantes del sistema.
         Utiliza `pydantic-settings` para validar tipos automáticamente al inicio (Fail Fast).
@@ -27,9 +27,7 @@ class Settings(BaseSettings):
     # - env_file: Busca un archivo .env para cargar secretos en desarrollo local.
     # - extra="ignore": Permite que existan variables extra en el environment sin lanzar error.
     model_config = SettingsConfigDict(
-        env_file=[".env", "../.env"], 
-        env_file_encoding="utf-8", 
-        extra="ignore"
+        env_file=[".env", "../.env"], env_file_encoding="utf-8", extra="ignore"
     )
 
 

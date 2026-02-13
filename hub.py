@@ -12,21 +12,26 @@ from pathlib import Path
 # ==================================================================================================
 # Se utilizan rutas absolutas resueltas para evitar ambigüedades al ejecutar desde diferentes directorios.
 # `Path.resolve()` convierte rutas relativas en rutas absolutas del sistema operativo.
-CASES_DIR = Path("cases").resolve()  # Directorio donde se almacenan los casos de migración/integración
-AUDIT_LOG = Path("hub.audit.log").resolve()  # Archivo de registro para auditoría de acciones
+CASES_DIR = Path(
+    "cases"
+).resolve()  # Directorio donde se almacenan los casos de migración/integración
+AUDIT_LOG = Path(
+    "hub.audit.log"
+).resolve()  # Archivo de registro para auditoría de acciones
 
 # ==================================================================================================
 # UTILIDADES DEL SISTEMA
 # ==================================================================================================
 
+
 def safe_print(text):
     """
     Imprime texto en la consola manejando posibles errores de codificación en Windows.
-    
+
     Contexto:
         En entornos Windows heredados (cmd.exe, PowerShell antiguo), la salida estándar puede no
         soportar caracteres Unicode (como tildes o emojis), lanzando `UnicodeEncodeError`.
-    
+
     Mecanismo:
         Intenta imprimir normalmente. Si falla por codificación, codifica el texto a ASCII
         reemplazando los caracteres problemáticos co '?' (modo "replace") y luego lo decodifica
@@ -101,6 +106,7 @@ def obtener_manifiesto(ruta_caso):
 # ==================================================================================================
 # COMANDOS CLI
 # ==================================================================================================
+
 
 def listar_casos():
     """
@@ -227,7 +233,7 @@ def ejecutar_caso(nombre_caso, dry_run=True):
 def ejecutar_doctor():
     """
     Realiza un diagnóstico de salud (Health Check) del entorno de ejecución.
-    
+
     Contexto:
         Ayuda a los usuarios a depurar problemas comunes de configuración verificando
         que las dependencias externas (Docker) y la estructura interna (manifiestos) estén correctas.
@@ -267,9 +273,11 @@ def ejecutar_doctor():
                 encontrados += 1
                 if (d / "app.manifest.yml").exists():
                     validos += 1
-        
+
         if encontrados > 0:
-            safe_print(f"[OK] Casos: {validos}/{encontrados} tienen manifiesto YAML válido.")
+            safe_print(
+                f"[OK] Casos: {validos}/{encontrados} tienen manifiesto YAML válido."
+            )
         else:
             safe_print("[AVISO] No se encontraron subdirectorios en 'cases/'.")
     else:
@@ -279,7 +287,9 @@ def ejecutar_doctor():
     if AUDIT_LOG.exists():
         safe_print(f"[OK] Log de Auditoría: Activo ({AUDIT_LOG.stat().st_size} bytes)")
     else:
-        safe_print("[AVISO] Log de Auditoría: Aún no creado (se creará con la primera acción).")
+        safe_print(
+            "[AVISO] Log de Auditoría: Aún no creado (se creará con la primera acción)."
+        )
 
     log_audit("doctor", "EXITO")
 
@@ -310,10 +320,14 @@ def main():
     subparsers = parser.add_subparsers(dest="command")
 
     # Comando: listar-casos
-    subparsers.add_parser("listar-casos", help="Enumera los casos de la matriz de integración disponibles")
+    subparsers.add_parser(
+        "listar-casos", help="Enumera los casos de la matriz de integración disponibles"
+    )
 
     # Comando: ejecutar
-    run_parser = subparsers.add_parser("ejecutar", help="Lanza un caso de integración específico")
+    run_parser = subparsers.add_parser(
+        "ejecutar", help="Lanza un caso de integración específico"
+    )
     run_parser.add_argument(
         "caso", help="Nombre de la carpeta del caso a ejecutar (ej: 01-python-to-php)"
     )
@@ -327,11 +341,17 @@ def main():
     run_parser.set_defaults(dry_run=True)
 
     # Comando: doctor
-    subparsers.add_parser("doctor", help="Ejecuta diagnósticos del sistema y verifica dependencias")
+    subparsers.add_parser(
+        "doctor", help="Ejecuta diagnósticos del sistema y verifica dependencias"
+    )
 
     # Comandos: Infraestructura (up / down)
-    subparsers.add_parser("up", help="Levanta la infraestructura Docker (docker-compose up)")
-    subparsers.add_parser("down", help="Detiene y elimina la infraestructura Docker (docker-compose down)")
+    subparsers.add_parser(
+        "up", help="Levanta la infraestructura Docker (docker-compose up)"
+    )
+    subparsers.add_parser(
+        "down", help="Detiene y elimina la infraestructura Docker (docker-compose down)"
+    )
 
     args = parser.parse_args()
 
@@ -356,9 +376,10 @@ if __name__ == "__main__":
     # Fuerza la página de códigos de la consola a UTF-8 (CP 65001) para soportar emojis y tildes correctamente.
     if os.name == "nt":
         import ctypes
+
         try:
             ctypes.windll.kernel32.SetConsoleOutputCP(65001)
         except Exception:
-            pass # Ignoramos errores si no se puede establecer (ej: entornos restringidos)
+            pass  # Ignoramos errores si no se puede establecer (ej: entornos restringidos)
 
     main()

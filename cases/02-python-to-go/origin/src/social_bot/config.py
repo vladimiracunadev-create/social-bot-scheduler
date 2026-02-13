@@ -7,9 +7,9 @@ from pathlib import Path
 class Settings(BaseSettings):
     """
     Configuración global de la aplicación (Caso 02).
-    
+
     Contexto:
-        Define parámetros operativos críticos. 
+        Define parámetros operativos críticos.
         En este caso, la carga de .env es más estricta (solo busca ".env" local).
 
     Atributos:
@@ -24,9 +24,9 @@ class Settings(BaseSettings):
 
     # Configuración pydantic-settings
     model_config = SettingsConfigDict(
-        env_file=".env",            # Solo busca .env en el CWD
-        env_file_encoding="utf-8", 
-        extra="ignore"
+        env_file=".env",  # Solo busca .env en el CWD
+        env_file_encoding="utf-8",
+        extra="ignore",
     )
 
 

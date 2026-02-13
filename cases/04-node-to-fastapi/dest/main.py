@@ -11,7 +11,7 @@ import os
 app = FastAPI(
     title="Social Bot Receiver - FastAPI",
     description="Microservicio receptor de posts migrado a Python asíncrono.",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 LOG_FILE = "social_bot_fastapi.log"
@@ -25,6 +25,7 @@ class Post(BaseModel):
     Data Transfer Object (DTO) para la validación automática del payload JSON.
     FastAPI usa Pydantic para validar tipos y requerimientos (id y text obligatorios).
     """
+
     id: str
     text: str
     channel: str = "default"  # Valor por defecto si no se envía
@@ -35,11 +36,12 @@ class Post(BaseModel):
 # ENDPOINTS
 # ==================================================================================================
 
+
 @app.post("/webhook")
 async def receive_post(post: Post):
     """
     Webhook Principal: Recibe y procesa los posts entrantes.
-    
+
     Flujo:
         1. FastAPI valida el JSON contra el esquema `Post`. Si falla, retorna 422 automáticamente.
         2. Se construye la línea de log.
@@ -69,11 +71,11 @@ async def get_logs():
     """
     if not os.path.exists(LOG_FILE):
         return {"ok": True, "logs": []}
-    
+
     # Lectura completa en memoria. Cuidado con logs de gran tamaño.
     with open(LOG_FILE, "r", encoding="utf-8") as f:
         logs = f.readlines()
-        
+
     return {"ok": True, "logs": [line.strip() for line in logs]}
 
 

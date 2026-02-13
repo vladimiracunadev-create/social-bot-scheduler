@@ -89,11 +89,10 @@ def setup():
     print(f"   docker-compose up -d n8n {dest_svc}")
 
     workflow_path = Path("cases") / case_folder / "n8n" / "workflow.json"
-    print(f"\n2. IMPORTANTE: Configura n8n:")
-    print(f"   - Abre http://localhost:5678")
-    print(f"   - Configura tu cuenta de propietario (si es la primera vez)")
-    print(f"   - Importa el workflow desde: {workflow_path.absolute()}")
-    print(f"   - ACTIVA el workflow switch (arriba a la derecha)")
+    print(f"\n2. n8n se auto-configura al arrancar:")
+    print(f"   - Los workflows se importan automáticamente")
+    print(f"   - Credenciales: admin@social-bot.local / SocialBot2026!")
+    print(f"   - Verifica en http://localhost:5678 (espera ~30s)")
 
     print(f"\n3. Lanza el emisor ({cases[choice]['name'].split(' -> ')[0]}):")
     print(f"   cd cases/{case_folder}/origin")

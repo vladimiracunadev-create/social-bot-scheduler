@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 class Post(BaseModel):
     """
     Modelo de Dominio: Publicación Social.
-    
+
     Responsabilidad:
         Estandarizar la estructura de datos entre el origen (Python) y el destino (Go).
         Go es estáticamente tipado, por lo que este modelo debe coincidir exactamente

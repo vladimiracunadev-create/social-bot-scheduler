@@ -59,9 +59,9 @@ class BotService:
     def send_post(self, post: Post) -> bool:
         """
         Despacha el post al microservicio Go.
-        
+
         Detalle Técnico:
-            Go es muy eficiente manejando concurrencia, por lo que este servicio podría 
+            Go es muy eficiente manejando concurrencia, por lo que este servicio podría
             escalar a enviar miles de requests por segundo sin saturar al receptor.
         """
         if not self.webhook_url:

@@ -66,17 +66,21 @@ Deberías ver una lista con `social-bot-n8n` y `social-bot-dest-php` en estado *
 
 ---
 
-## 🧠 Fase 4: Conectar el Cerebro (n8n)
+## 🧠 Fase 4: El Cerebro ya está listo (n8n - Automático)
 
-Esta es la única parte manual. n8n necesita saber qué hacer con los mensajes.
+A diferencia de antes, **ya no necesitas configurar n8n manualmente**. El sistema se auto-configura al arrancar:
+
+-   ✅ Los 8 workflows se importan automáticamente
+-   ✅ Se activan solos (webhooks listos para recibir)
+-   ✅ Se crea un usuario admin automáticamente
+
+**Solo verifica** que n8n arrancó bien:
 
 1.  Abre tu navegador en: [http://localhost:5678](http://localhost:5678)
-2.  Configura tu cuenta de admin (solo te lo pide la primera vez).
-3.  Busca el botón **Menu** > **Workflows** > **Import from File**.
-4.  Navega a la carpeta de tu caso:
-    `social-bot-scheduler\cases\01-python-to-php\n8n\workflow.json`
-    (Selecciona ese archivo json).
-5.  **CRUCIAL**: Una vez importado, verás un botón **Inactive** (rojo) arriba a la derecha. **Cámbialo a Active (verde)**.
+2.  Deberías ver la interfaz de n8n con los workflows ya importados.
+3.  Si te pide login, usa: `admin@social-bot.local` / `SocialBot2026!`
+
+> **Nota**: Si es la primera vez que arrancas n8n, espera unos 30 segundos para que termine la auto-configuración.
 
 ---
 
@@ -127,8 +131,9 @@ Puedes probar esto apagando el contenedor destino (`docker stop social-bot-dest-
 ## 🔄 ¿Cómo pruebo otros casos?
 
 Repite el proceso:
+
 1.  Vuelve a la raíz: `cd ../../..`
 2.  Corre `python setup.py` y elige otro número (ej. 7 para Ruby).
 3.  Levanta el nuevo contenedor: `docker-compose up -d dest-ruby`.
-4.  Importa el nuevo workflow en n8n y actívalo.
+4.  **No necesitas importar workflows manualmente** — todos ya están activos en n8n.
 5.  Corre el nuevo bot desde su carpeta `origin`.

@@ -13,9 +13,12 @@
 
 **Objetivo**: Ver la interoperabilidad Python -> PHP en acción ahora mismo.
 
-1. **Levanta todo**: `make up` (o `docker-compose up -d`)
-2. **Dispara**: `make demo` (o `python3 hub.py ejecutar 01-python-to-php`)
-3. **Verifica**: Abre [http://localhost:8081](http://localhost:8081) para ver el dashboard PHP actualizado.
+1. **Levanta todo**: `make up` (o `docker-compose up -d`) — n8n se auto-configura con los 8 workflows ✅
+2. **Espera ~30s**: Los workflows se importan y activan automáticamente
+3. **Dispara**: `make demo` (o `python3 hub.py ejecutar 01-python-to-php`)
+4. **Verifica**: Abre [http://localhost:8081](http://localhost:8081) para ver el dashboard PHP actualizado
+
+> **Zero configuración manual**: No necesitas crear cuentas ni importar workflows en n8n. Todo es automático.
 
 ---
 
@@ -102,12 +105,13 @@ docker-compose up -d n8n dest-php
 ```
 *Nota: Esto descargará las imágenes y levantará los servicios en segundo plano.*
 
-### Paso 4: Conectar n8n (El Cerebro)
-Esta es la única parte manual e importante:
+### Paso 4: Verificar n8n (Automático)
+n8n se auto-configura al arrancar. Solo verifica:
 1.  Abre [http://localhost:5678](http://localhost:5678).
-2.  Configura tu usuario admin (si es la primera vez).
-3.  Importa el flujo (Workflow) desde el archivo JSON ubicado en `cases/0X-.../n8n/workflow.json`.
-4.  **ACTIVA** el workflow (switch arriba a la derecha).
+2.  Deberías ver los workflows ya importados y activos.
+3.  Si pide login: `admin@social-bot.local` / `SocialBot2026!`
+
+> **Nota**: La primera vez, espera ~30 segundos para la auto-configuración. Los 8 workflows se importan desde `n8n/workflows/`.
 
 ### Paso 5: ¡Disparar y Monitorear!
 Ejecuta el bot emisor desde su carpeta `origin`:

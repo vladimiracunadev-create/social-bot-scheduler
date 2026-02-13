@@ -94,6 +94,7 @@
 - **8 Lenguajes de Programación**: Dominio de múltiples paradigmas y ecosistemas
 - **8 Casos de Integración**: Cada uno con su propio stack completo
 - **Arquitectura Unificada**: Todos los casos comparten el mismo patrón de diseño
+- **Zero-Touch Setup**: n8n se auto-configura con workflows pre-importados
 - **Portabilidad Total**: Funciona en Windows, Linux y macOS
 
 ### 🔧 Operaciones y Mantenimiento
@@ -122,15 +123,20 @@
 git clone https://github.com/vladimiracunadev-create/social-bot-scheduler.git
 cd social-bot-scheduler
 
-# Diagnóstico del sistema
-.\hub.ps1 doctor
+# Levantar todo (n8n se auto-configura con los 8 workflows)
+docker-compose up -d
 
-# Listar casos disponibles
-.\hub.ps1 listar-casos
+# Esperar ~30s y verificar
+make smoke
 
-# Ejecutar caso demo (requiere Docker)
-.\hub.ps1 ejecutar-caso 01-python-to-php
+# Ejecutar caso demo
+make demo
+
+# Verificar resultado en http://localhost:8081
 ```
+
+> **Zero configuración manual**: No necesitas crear cuentas en n8n ni importar workflows.
+> Credenciales de lab: `admin@social-bot.local` / `SocialBot2026!`
 
 ---
 

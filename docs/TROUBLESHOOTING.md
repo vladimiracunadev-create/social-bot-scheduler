@@ -47,6 +47,28 @@ Si encuentras problemas al levantar los contenedores o ejecutar los bots, consul
 
 ## 🔗 Problemas de n8n y Flujos
 
+### ❌ Síntoma: n8n arranca pero los workflows no se importaron
+
+**Causa**: El script de auto-setup (`n8n_auto_setup.sh`) puede fallar si n8n tarda más de lo esperado en arrancar.
+**Solución**:
+1.  Fuerza la re-importación:
+    ```bash
+    make reset-n8n
+    ```
+2.  O manualmente:
+    ```bash
+    docker-compose exec n8n rm -f /home/node/.n8n/.workflows_imported
+    docker-compose restart n8n
+    ```
+3.  Espera ~30 segundos y verifica en [http://localhost:5678](http://localhost:5678).
+
+### ❌ Síntoma: n8n pide crear cuenta de owner
+
+**Causa**: El auto-setup no pudo crear la cuenta en el primer arranque.
+**Solución**:
+-   Usa estas credenciales de laboratorio: `admin@social-bot.local` / `SocialBot2026!`
+-   Si no funcionan, crea una cuenta manualmente — los workflows ya estarán importados.
+
 ### ❌ Síntoma: El bot dice "Payload sent" pero el Dashboard está vacío
 
 **Verificaciones**:
@@ -79,6 +101,9 @@ docker-compose down -v
 # Borrar imágenes antiguas que puedan estar corruptas
 docker system prune -a --volumes
 
-# Reconstruir todo
+# Reconstruir todo (n8n se auto-configura de nuevo)
 docker-compose up -d --build
 ```
+
+> **Tip**: Después de `docker-compose down -v`, n8n re-importará los 8 workflows automáticamente al arrancar.
+

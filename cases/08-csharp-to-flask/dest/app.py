@@ -25,7 +25,7 @@ def index():
 def webhook():
     """
     Webhook Receptor
-    
+
     Procesa los posts enviados por el bot C#.
     """
     try:
@@ -43,14 +43,14 @@ def webhook():
 
         # Inserción en cabeza (LIFO visual)
         posts.insert(0, new_post)
-        
+
         # Rotación de logs (Mantiene solo los últimos 20)
         if len(posts) > 20:
             posts.pop()
 
         print(f"📥 New post received: {new_post['text']}")
         return jsonify({"status": "success", "message": "Post received"})
-        
+
     except Exception as e:
         print(f"❌ Error processing webhook: {e}")
         return jsonify({"status": "error", "message": str(e)}), 400

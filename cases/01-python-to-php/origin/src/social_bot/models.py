@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 class Post(BaseModel):
     """
     Modelo de Dominio que representa una publicación social.
-    
+
     Contexto:
         Define la estructura de datos para los posts almacenados en `posts.json` y
         los payloads enviados al webhook. Utiliza Pydantic para garantizar la integridad de los datos.

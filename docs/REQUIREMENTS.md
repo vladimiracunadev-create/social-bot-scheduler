@@ -25,6 +25,15 @@ Para ejecutar **Social Bot Scheduler** y toda su matriz de integración (Hub + n
 -   **Make**: Si deseas usar el `Makefile` en lugar de los scripts directos.
 -   **VS Code**: Con extensiones recomendadas (Docker, Python).
 
+## ⚙️ Configuración Automática
+
+**n8n se auto-configura al arrancar** con Docker Compose:
+-   Los 8 workflows se importan y activan automáticamente
+-   Se crea un usuario admin de laboratorio: `admin@social-bot.local` / `SocialBot2026!`
+-   No se requiere configuración manual en la UI de n8n
+
 ## Notas de Rendimiento
 -   Si tienes poca RAM, intenta levantar solo los casos que necesitas (ej. `docker-compose up -d n8n dest-php` en lugar de todo).
 -   El primer despliegue ("pull" de imágenes) puede tardar 10-20 minutos dependiendo de tu internet.
+-   La primera vez que arranca n8n, la auto-configuración tarda ~30 segundos adicionales.
+
