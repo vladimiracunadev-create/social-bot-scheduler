@@ -8,52 +8,65 @@ from pathlib import Path
 
 # Configuración de casos
 CASES = {
+    "01": {
+        "name": "Python to PHP",
+        "webhook_path": "social-bot-scheduler-php",
+        "dest_url": "http://dest-php:80/index.php",
+        "error_url": "http://dest-php:80/errors.php",
+    },
     "02": {
         "name": "Python to Go",
+        "webhook_path": "social-bot-scheduler-go",
         "dest_url": "http://dest-go:8080/webhook",
         "error_url": "http://dest-go:8080/errors",
     },
     "03": {
         "name": "Go to Node",
+        "webhook_path": "social-bot-scheduler-node",
         "dest_url": "http://dest-node:3000/webhook",
         "error_url": "http://dest-node:3000/errors",
     },
     "04": {
         "name": "Node to FastAPI",
+        "webhook_path": "social-bot-scheduler-fastapi",
         "dest_url": "http://dest-fastapi:8000/webhook",
         "error_url": "http://dest-fastapi:8000/errors",
     },
     "05": {
         "name": "Laravel to React",
+        "webhook_path": "social-bot-scheduler-react",
         "dest_url": "http://dest-react:4000/webhook",
         "error_url": "http://dest-react:4000/errors",
     },
     "06": {
         "name": "Go to Symfony",
+        "webhook_path": "social-bot-scheduler-symfony",
         "dest_url": "http://dest-symfony:80/index.php",
         "error_url": "http://dest-symfony:80/errors",
     },
     "07": {
         "name": "Rust to Ruby",
+        "webhook_path": "social-bot-scheduler-ruby",
         "dest_url": "http://dest-ruby:4567/webhook",
         "error_url": "http://dest-ruby:4567/errors",
     },
     "08": {
         "name": "C# to Flask",
+        "webhook_path": "social-bot-scheduler-flask",
         "dest_url": "http://dest-flask:5000/webhook",
         "error_url": "http://dest-flask:5000/errors",
     },
 }
 
 
-def generate_workflow(case_id, case_name, dest_url, error_url):
+def generate_workflow(case_id, case_name, webhook_path, dest_url, error_url):
     """Genera un workflow completo con resiliencia para un caso específico."""
     return {
-        "name": f"Case {case_id} - {case_name} (Complete Resilience)",
+        "name": f"Case {case_id} - {case_name} (Resilience v3.0)",
         "nodes": [
             {
                 "parameters": {
-                    "path": f"social-bot-scheduler-case-{case_id}",
+                    "path": webhook_path,
                     "responseMode": "lastNode",
                 },
                 "name": "Webhook",
@@ -70,6 +83,7 @@ def generate_workflow(case_id, case_name, dest_url, error_url):
                                 "value": "={{$json.body.id}}_{{$json.body.channel}}",
                             },
                             {"name": "case_id", "value": case_id},
+                            {"name": "body", "value": "={{JSON.stringify($json.body)}}"},
                         ]
                     }
                 },
@@ -147,7 +161,7 @@ def generate_workflow(case_id, case_name, dest_url, error_url):
                         "maxRetries": 3,
                         "waitBetweenRetries": 1000,
                     },
-                    "bodyParametersJson": "={{JSON.stringify($node['Set Fingerprint'].json.body)}}",
+                    "bodyParametersJson": "={{$node['Set Fingerprint'].json.body}}",
                 },
                 "name": "HTTP Request",
                 "type": "n8n-nodes-base.httpRequest",
@@ -178,7 +192,7 @@ def generate_workflow(case_id, case_name, dest_url, error_url):
                     "requestMethod": "POST",
                     "url": error_url,
                     "jsonParameters": True,
-                    "bodyParametersJson": f"={{{{JSON.stringify({{ error: $json.error, payload: $node['Set Fingerprint'].json.body, case: '{case_id}', fingerprint: $node['Set Fingerprint'].json.fingerprint }})}}}}",
+                    "bodyParametersJson": f"={{{{JSON.stringify({{ error: $json.error, payload: JSON.parse($node['Set Fingerprint'].json.body), case: '{case_id}', fingerprint: $node['Set Fingerprint'].json.fingerprint }})}}}}",
                 },
                 "name": "Dead Letter Queue (DLQ)",
                 "type": "n8n-nodes-base.httpRequest",
@@ -229,33 +243,44 @@ def generate_workflow(case_id, case_name, dest_url, error_url):
 
 
 def main():
-    base_path = Path("cases")
+    output_base = Path("n8n/workflows")
+    output_base.mkdir(parents=True, exist_ok=True)
+
+    # Mapeo de nombres de archivos existentes para mantener consistencia
+    FILE_NAMES = {
+        "01": "case-01-python-to-php.json",
+        "02": "case-02-python-to-go.json",
+        "03": "case-03-go-to-node.json",
+        "04": "case-04-node-to-fastapi.json",
+        "05": "case-05-laravel-to-react.json",
+        "06": "case-06-go-to-symfony.json",
+        "07": "case-07-rust-to-ruby.json",
+        "08": "case-08-csharp-to-flask.json",
+    }
 
     for case_id, config in CASES.items():
-        case_dir = base_path / f"{case_id}-*"
-        # Buscar directorio que coincida con el patrón
-        matching_dirs = list(base_path.glob(f"*{case_id}*"))
-
-        if not matching_dirs:
-            print(f"[ERROR] No se encontro directorio para caso {case_id}")
-            continue
-
-        case_dir = matching_dirs[0]
-        workflow_file = case_dir / "n8n" / "workflow.json"
+        workflow_file = output_base / FILE_NAMES[case_id]
 
         # Generar workflow
         workflow = generate_workflow(
-            case_id, config["name"], config["dest_url"], config["error_url"]
+            case_id,
+            config["name"],
+            config["webhook_path"],
+            config["dest_url"],
+            config["error_url"],
         )
 
         # Guardar
-        workflow_file.parent.mkdir(parents=True, exist_ok=True)
         with open(workflow_file, "w") as f:
             json.dump(workflow, f, indent=2)
 
-        print(f"[OK] Caso {case_id}: {workflow_file}")
+        print(f"[OK] Generado: {workflow_file}")
 
-    print("\n[OK] Todos los workflows generados exitosamente!")
+    print("\n[OK] Todos los workflows regenerados exitosamente en n8n/workflows/")
+
+
+if __name__ == "__main__":
+    main()
 
 
 if __name__ == "__main__":

@@ -169,6 +169,23 @@ services:
     depends_on:
       - prometheus
 
+  # 🐳 cAdvisor (Métricas de Contenedores)
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: social-bot-cadvisor
+    ports:
+      - "8089:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    networks:
+      - bot-network
+
 networks:
   bot-network:
     driver: bridge
