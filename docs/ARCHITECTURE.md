@@ -86,3 +86,30 @@ graph LR
     E[Admin] -- HTTP :3000 --> D
 ```
 
+## ⚙️ Automatización Zero-Touch (n8n Auto-Setup)
+
+Para facilitar el despliegue, el contenedor de n8n utiliza un entrypoint personalizado (`scripts/n8n_auto_setup.sh`) que realiza las siguientes acciones al primer arranque:
+
+1.  **Polling de Salud**: Espera a que la API de n8n esté disponible.
+2.  **Configuración de Admin**: Crea automáticamente la cuenta `admin@social-bot.local`.
+3.  **Importación REST**: Autentica y utiliza la API de n8n para importar los 8 archivos JSON desde `n8n/workflows/`.
+4.  **Activación Forzada**: Activa cada flujo individualmente para que los Webhooks queden registrados.
+
+Este proceso elimina la necesidad de configuración manual de la UI, permitiendo un flujo de trabajo "Infrastructure as Code" para las automatizaciones visuales.
+
+```mermaid
+sequenceDiagram
+    participant D as Docker Compose
+    participant S as Setup Script
+    participant N as n8n API
+    D->>S: Launch Container
+    S->>N: Health Check (Loop)
+    N-->>S: 200 OK
+    S->>N: Create Owner Account
+    S->>N: POST /login (Get Cookie)
+    loop Every Workflow JSON
+        S->>N: POST /workflows (Import)
+        S->>N: PATCH /workflows/:id (Activate)
+    end
+    S->>D: Signal Ready
+```

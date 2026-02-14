@@ -55,3 +55,8 @@ reset-n8n: ## Fuerza re-importación de workflows en el próximo arranque
 	docker-compose restart n8n
 	@echo "✅ n8n re-importará workflows al arrancar"
 
+deploy: ## Despliega los manifiestos en el clúster de Kubernetes activo
+	@echo "☸️ Desplegando en Kubernetes..."
+	kubectl apply -k k8s/overlays/prod/ || kubectl apply -f k8s/base/
+	@echo "✅ Despliegue solicitado."
+

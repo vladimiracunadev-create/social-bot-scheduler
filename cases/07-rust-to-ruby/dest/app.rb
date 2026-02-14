@@ -8,9 +8,10 @@ require 'json'
 set :bind, '0.0.0.0'
 set :port, 4567
 
-# Desactivar protección de host para permitir requests desde n8n en Docker
-# En producción, esto debería configurarse con hosts permitidos específicos
-set :protection, except: [:host_authorization]
+# Desactivar explícitamente el HostAuthorization de Rack::Protection
+# En entornos n8n/Docker, esto bloquea peticiones de hostnames internos.
+set :protection, :except => [:host_authorization, :json_csrf] # json_csrf también puede dar problemas
+set :host_authorization, { permitted_hosts: [] } # Permitir todos los hosts
 
 # Estado Global en Memoria (No persistente)
 # Simula una base de datos. En producción, esto sería Redis o PostgreSQL.

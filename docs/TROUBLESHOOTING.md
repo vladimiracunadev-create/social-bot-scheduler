@@ -27,6 +27,17 @@ Si encuentras problemas al levantar los contenedores o ejecutar los bots, consul
   ```
 - Si creas un nuevo caso basado en Ruby, recuerda incluir siempre `build-base`.
 
+### ❌ Error: `403 Forbidden` (Caso 07: Ruby/Sinatra)
+**Síntoma**: n8n falla con "Error in workflow" al intentar enviar datos al contenedor Ruby. Los logs de `social-bot-dest-ruby` muestran `attack prevented by Rack::Protection::HostAuthorization`.
+**Causa**: Sinatra (Rack) bloquea peticiones cuyo encabezado `Host` no coincide con los permitidos (n8n usa el nombre de red interno).
+**Solución**:
+- Desactiva el HostAuthorization en `app.rb` para el entorno de simulación:
+  ```ruby
+  set :protection, :except => [:host_authorization, :json_csrf]
+  set :host_authorization, { permitted_hosts: [] }
+  ```
+- Recuerda reconstruir la imagen: `docker-compose build dest-ruby`.
+
 ---
 
 ## 📈 Problemas de Observabilidad (v3.0)
