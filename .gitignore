@@ -12,4 +12,24 @@ logs/
 __pycache__/
 *.pyc
 
+# n8n data (runtime generated files)
+n8n/data/*.sqlite*
+n8n/data/crash.journal
+n8n/data/.workflows_imported
+n8n/data/config
 
+# IDE y herramientas
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporales y tests
+cookies.txt
+test_node_type.json
+.coverage
+.pytest_cache/
+.mypy_cache/
+
+# Dependencias de Node.js
+node_modules/
