@@ -289,9 +289,20 @@
             color: #f59e0b;
         }
 
-        .status-pass { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
-        .status-fail { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
-        .status-testing { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+        .status-pass {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+
+        .status-fail {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .status-testing {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
 
         .summary-bar {
             max-width: 1200px;
@@ -354,7 +365,7 @@
                 <span class="tech-tag">Pydantic</span>
                 <span class="tech-tag">PHP 8.x</span>
             </div>
-            <button class="btn-test" id="btn-01">🚀 Probar Integración</button>
+            <button class="btn-test" id="btn-01">🔗 Probar Integración</button>
             <div class="case-result" id="result-01"></div>
         </div>
 
@@ -370,7 +381,7 @@
                 <span class="tech-tag">Gin Gonic</span>
                 <span class="tech-tag">Go Modules</span>
             </div>
-            <button class="btn-test" id="btn-02">🚀 Probar Integración</button>
+            <button class="btn-test" id="btn-02">🔗 Probar Integración</button>
             <div class="case-result" id="result-02"></div>
         </div>
 
@@ -386,7 +397,7 @@
                 <span class="tech-tag">Express.js</span>
                 <span class="tech-tag">PM2</span>
             </div>
-            <button class="btn-test" id="btn-03">🚀 Probar Integración</button>
+            <button class="btn-test" id="btn-03">🔗 Probar Integración</button>
             <div class="case-result" id="result-03"></div>
         </div>
 
@@ -402,7 +413,7 @@
                 <span class="tech-tag">Uvicorn</span>
                 <span class="tech-tag">Pydantic V2</span>
             </div>
-            <button class="btn-test" id="btn-04">🚀 Probar Integración</button>
+            <button class="btn-test" id="btn-04">🔗 Probar Integración</button>
             <div class="case-result" id="result-04"></div>
         </div>
 
@@ -418,7 +429,7 @@
                 <span class="tech-tag">Vite</span>
                 <span class="tech-tag">PostCSS</span>
             </div>
-            <button class="btn-test" id="btn-05">🚀 Probar Integración</button>
+            <button class="btn-test" id="btn-05">🔗 Probar Integración</button>
             <div class="case-result" id="result-05"></div>
         </div>
 
@@ -434,7 +445,7 @@
                 <span class="tech-tag">Twig</span>
                 <span class="tech-tag">Doctrine</span>
             </div>
-            <button class="btn-test" id="btn-06">🚀 Probar Integración</button>
+            <button class="btn-test" id="btn-06">🔗 Probar Integración</button>
             <div class="case-result" id="result-06"></div>
         </div>
 
@@ -450,7 +461,7 @@
                 <span class="tech-tag">Sinatra</span>
                 <span class="tech-tag">Cargo</span>
             </div>
-            <button class="btn-test" id="btn-07">🚀 Probar Integración</button>
+            <button class="btn-test" id="btn-07">🔗 Probar Integración</button>
             <div class="case-result" id="result-07"></div>
         </div>
 
@@ -466,7 +477,7 @@
                 <span class="tech-tag">Flask</span>
                 <span class="tech-tag">Jinja2</span>
             </div>
-            <button class="btn-test" id="btn-08">🚀 Probar Integración</button>
+            <button class="btn-test" id="btn-08">🔗 Probar Integración</button>
             <div class="case-result" id="result-08"></div>
         </div>
     </main>
@@ -495,13 +506,13 @@
         // El flujo real es: POST → n8n webhook → n8n procesa → n8n envía al destino.
         const CASES = {
             '01': { webhook: 'social-bot-scheduler-php', port: 8081, origin: 'Python', dest: 'PHP' },
-            '02': { webhook: 'social-bot-scheduler-case-02', port: 8082, origin: 'Python', dest: 'Go' },
-            '03': { webhook: 'social-bot-scheduler-case-03', port: 8083, origin: 'Go', dest: 'Node.js' },
-            '04': { webhook: 'social-bot-scheduler-case-04', port: 8084, origin: 'Node.js', dest: 'FastAPI' },
-            '05': { webhook: 'social-bot-scheduler-case-05', port: 8085, origin: 'Laravel', dest: 'React' },
-            '06': { webhook: 'social-bot-scheduler-case-06', port: 8086, origin: 'Go', dest: 'Symfony' },
-            '07': { webhook: 'social-bot-scheduler-case-07', port: 8087, origin: 'Rust', dest: 'Ruby' },
-            '08': { webhook: 'social-bot-scheduler-case-08', port: 8088, origin: 'C#', dest: 'Flask' }
+            '02': { webhook: 'social-bot-scheduler-go', port: 8082, origin: 'Python', dest: 'Go' },
+            '03': { webhook: 'social-bot-scheduler-node', port: 8083, origin: 'Go', dest: 'Node.js' },
+            '04': { webhook: 'social-bot-scheduler-fastapi', port: 8084, origin: 'Node.js', dest: 'FastAPI' },
+            '05': { webhook: 'social-bot-scheduler-react', port: 8085, origin: 'Laravel', dest: 'React' },
+            '06': { webhook: 'social-bot-scheduler-symfony', port: 8086, origin: 'Go', dest: 'Symfony' },
+            '07': { webhook: 'social-bot-scheduler-ruby', port: 8087, origin: 'Rust', dest: 'Ruby' },
+            '08': { webhook: 'social-bot-scheduler-flask', port: 8088, origin: 'C#', dest: 'Flask' }
         };
 
         const N8N_BASE = 'http://localhost:5678';
