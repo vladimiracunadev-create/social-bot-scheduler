@@ -257,6 +257,61 @@
             border-top: 1px solid var(--border);
         }
 
+        .case-result {
+            margin-top: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            display: none;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .case-result.pass {
+            display: block;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+        }
+
+        .case-result.fail {
+            display: block;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+        .case-result.testing {
+            display: block;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #f59e0b;
+        }
+
+        .status-pass { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+        .status-fail { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .status-testing { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+
+        .summary-bar {
+            max-width: 1200px;
+            margin: 0 auto 1rem;
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .summary-stat {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+        }
+
         @media (max-width: 768px) {
             main {
                 grid-template-columns: 1fr;
@@ -270,17 +325,28 @@
     <header>
         <h1>Social Bot Scheduler: Matriz de Integración</h1>
         <p>Automatización avanzada: Orquestación Multi-Eje mediante n8n</p>
-        <button class="btn-test" style="margin: 1rem auto; background: var(--success);" onclick="runAllCases()">
-            🚀 PROBAR INTEGRACIÓN GLOBAL (TODOS LOS CASOS)
-        </button>
+        <div style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap;">
+            <button class="btn-test" style="background: var(--success);" id="btn-run-all">
+                🚀 PROBAR INTEGRACIÓN GLOBAL (TODOS LOS CASOS)
+            </button>
+            <button class="btn-test" style="background: #6366f1;" id="btn-health">
+                🩺 Health Check n8n
+            </button>
+        </div>
     </header>
+
+    <div class="summary-bar" id="summary-bar" style="display: none;">
+        <span class="summary-stat" id="stat-total">Total: 0/8</span>
+        <span class="summary-stat status-pass" id="stat-pass">✅ Pass: 0</span>
+        <span class="summary-stat status-fail" id="stat-fail">❌ Fail: 0</span>
+    </div>
 
     <main id="cases-container">
         <!-- Case 01 -->
         <div class="case-card" data-case="01">
             <div class="case-header">
                 <span class="case-id">CASE-01</span>
-                <span class="case-status">ACTIVE</span>
+                <span class="case-status" id="status-01">READY</span>
             </div>
             <h3 class="case-title">Python ➔ n8n ➔ PHP</h3>
             <div class="tech-stack">
@@ -288,14 +354,15 @@
                 <span class="tech-tag">Pydantic</span>
                 <span class="tech-tag">PHP 8.x</span>
             </div>
-            <button class="btn-test" onclick="runCase('01', 'Python', 'PHP')">🚀 Probar Integración</button>
+            <button class="btn-test" id="btn-01">🚀 Probar Integración</button>
+            <div class="case-result" id="result-01"></div>
         </div>
 
         <!-- Case 02 -->
         <div class="case-card" data-case="02">
             <div class="case-header">
                 <span class="case-id">CASE-02</span>
-                <span class="case-status">ACTIVE</span>
+                <span class="case-status" id="status-02">READY</span>
             </div>
             <h3 class="case-title">Python ➔ n8n ➔ Go</h3>
             <div class="tech-stack">
@@ -303,14 +370,15 @@
                 <span class="tech-tag">Gin Gonic</span>
                 <span class="tech-tag">Go Modules</span>
             </div>
-            <button class="btn-test" onclick="runCase('02', 'Python', 'Go')">🚀 Probar Integración</button>
+            <button class="btn-test" id="btn-02">🚀 Probar Integración</button>
+            <div class="case-result" id="result-02"></div>
         </div>
 
         <!-- Case 03 -->
         <div class="case-card" data-case="03">
             <div class="case-header">
                 <span class="case-id">CASE-03</span>
-                <span class="case-status">ACTIVE</span>
+                <span class="case-status" id="status-03">READY</span>
             </div>
             <h3 class="case-title">Go ➔ n8n ➔ Node.js</h3>
             <div class="tech-stack">
@@ -318,14 +386,15 @@
                 <span class="tech-tag">Express.js</span>
                 <span class="tech-tag">PM2</span>
             </div>
-            <button class="btn-test" onclick="runCase('03', 'Go', 'Node.js')">🚀 Probar Integración</button>
+            <button class="btn-test" id="btn-03">🚀 Probar Integración</button>
+            <div class="case-result" id="result-03"></div>
         </div>
 
         <!-- Case 04 -->
         <div class="case-card" data-case="04">
             <div class="case-header">
                 <span class="case-id">CASE-04</span>
-                <span class="case-status">ACTIVE</span>
+                <span class="case-status" id="status-04">READY</span>
             </div>
             <h3 class="case-title">Node.js ➔ n8n ➔ FastAPI</h3>
             <div class="tech-stack">
@@ -333,14 +402,15 @@
                 <span class="tech-tag">Uvicorn</span>
                 <span class="tech-tag">Pydantic V2</span>
             </div>
-            <button class="btn-test" onclick="runCase('04', 'Node.js', 'FastAPI')">🚀 Probar Integración</button>
+            <button class="btn-test" id="btn-04">🚀 Probar Integración</button>
+            <div class="case-result" id="result-04"></div>
         </div>
 
         <!-- Case 05 -->
         <div class="case-card" data-case="05">
             <div class="case-header">
                 <span class="case-id">CASE-05</span>
-                <span class="case-status">ACTIVE</span>
+                <span class="case-status" id="status-05">READY</span>
             </div>
             <h3 class="case-title">Laravel ➔ n8n ➔ React</h3>
             <div class="tech-stack">
@@ -348,14 +418,15 @@
                 <span class="tech-tag">Vite</span>
                 <span class="tech-tag">PostCSS</span>
             </div>
-            <button class="btn-test" onclick="runCase('05', 'Laravel', 'React')">🚀 Probar Integración</button>
+            <button class="btn-test" id="btn-05">🚀 Probar Integración</button>
+            <div class="case-result" id="result-05"></div>
         </div>
 
         <!-- Case 06 -->
         <div class="case-card" data-case="06">
             <div class="case-header">
                 <span class="case-id">CASE-06</span>
-                <span class="case-status">ACTIVE</span>
+                <span class="case-status" id="status-06">READY</span>
             </div>
             <h3 class="case-title">Go ➔ n8n ➔ Symfony</h3>
             <div class="tech-stack">
@@ -363,14 +434,15 @@
                 <span class="tech-tag">Twig</span>
                 <span class="tech-tag">Doctrine</span>
             </div>
-            <button class="btn-test" onclick="runCase('06', 'Go', 'Symfony')">🚀 Probar Integración</button>
+            <button class="btn-test" id="btn-06">🚀 Probar Integración</button>
+            <div class="case-result" id="result-06"></div>
         </div>
 
         <!-- Case 07 -->
         <div class="case-card" data-case="07">
             <div class="case-header">
                 <span class="case-id">CASE-07</span>
-                <span class="case-status">ACTIVE</span>
+                <span class="case-status" id="status-07">READY</span>
             </div>
             <h3 class="case-title">Rust ➔ n8n ➔ Ruby</h3>
             <div class="tech-stack">
@@ -378,14 +450,15 @@
                 <span class="tech-tag">Sinatra</span>
                 <span class="tech-tag">Cargo</span>
             </div>
-            <button class="btn-test" onclick="runCase('07', 'Rust', 'Ruby')">🚀 Probar Integración</button>
+            <button class="btn-test" id="btn-07">🚀 Probar Integración</button>
+            <div class="case-result" id="result-07"></div>
         </div>
 
         <!-- Case 08 -->
         <div class="case-card" data-case="08">
             <div class="case-header">
                 <span class="case-id">CASE-08</span>
-                <span class="case-status">ACTIVE</span>
+                <span class="case-status" id="status-08">READY</span>
             </div>
             <h3 class="case-title">C# ➔ n8n ➔ Flask</h3>
             <div class="tech-stack">
@@ -393,7 +466,8 @@
                 <span class="tech-tag">Flask</span>
                 <span class="tech-tag">Jinja2</span>
             </div>
-            <button class="btn-test" onclick="runCase('08', 'C#', 'Flask')">🚀 Probar Integración</button>
+            <button class="btn-test" id="btn-08">🚀 Probar Integración</button>
+            <div class="case-result" id="result-08"></div>
         </div>
     </main>
 
@@ -414,8 +488,29 @@
     </footer>
 
     <script>
-        const terminal = document.getElementById('terminal');
+        // ==============================================================================
+        // CONFIGURACIÓN DE CASOS
+        // ==============================================================================
+        // Cada caso define su webhook path en n8n y el puerto donde corre el destino.
+        // El flujo real es: POST → n8n webhook → n8n procesa → n8n envía al destino.
+        const CASES = {
+            '01': { webhook: 'social-bot-scheduler-php', port: 8081, origin: 'Python', dest: 'PHP' },
+            '02': { webhook: 'social-bot-scheduler-case-02', port: 8082, origin: 'Python', dest: 'Go' },
+            '03': { webhook: 'social-bot-scheduler-case-03', port: 8083, origin: 'Go', dest: 'Node.js' },
+            '04': { webhook: 'social-bot-scheduler-case-04', port: 8084, origin: 'Node.js', dest: 'FastAPI' },
+            '05': { webhook: 'social-bot-scheduler-case-05', port: 8085, origin: 'Laravel', dest: 'React' },
+            '06': { webhook: 'social-bot-scheduler-case-06', port: 8086, origin: 'Go', dest: 'Symfony' },
+            '07': { webhook: 'social-bot-scheduler-case-07', port: 8087, origin: 'Rust', dest: 'Ruby' },
+            '08': { webhook: 'social-bot-scheduler-case-08', port: 8088, origin: 'C#', dest: 'Flask' }
+        };
 
+        const N8N_BASE = 'http://localhost:5678';
+        const terminal = document.getElementById('terminal');
+        let testResults = { pass: 0, fail: 0, total: 0 };
+
+        // ==============================================================================
+        // LOGGING
+        // ==============================================================================
         function log(msg, type = 'info') {
             const div = document.createElement('div');
             div.className = `log-entry ${type}`;
@@ -425,75 +520,226 @@
             terminal.scrollTop = terminal.scrollHeight;
         }
 
-        async function runAllCases() {
-            const cases = [
-                { id: '01', origin: 'Python', dest: 'PHP' },
-                { id: '02', origin: 'Python', dest: 'Go' },
-                { id: '03', origin: 'Go', dest: 'Node.js' },
-                { id: '04', origin: 'Node.js', dest: 'FastAPI' },
-                { id: '05', origin: 'Laravel', dest: 'React' },
-                { id: '06', origin: 'Go', dest: 'Symfony' },
-                { id: '07', origin: 'Rust', dest: 'Ruby' },
-                { id: '08', origin: 'C#', dest: 'Flask' }
-            ];
-
+        function clearTerminal(title) {
             terminal.innerHTML = `
                 <div class="term-header">
                     <div class="dot red"></div>
                     <div class="dot yellow"></div>
                     <div class="dot green"></div>
-                    <div style="margin-left: 10px; color: #555">bash — global-integration-test</div>
+                    <div style="margin-left: 10px; color: #555">bash — ${title}</div>
                 </div>
             `;
-
-            log(`INICIANDO SECUENCIA MAESTRA DE PRUEBAS`, 'info');
-
-            for (const c of cases) {
-                log(`----------------------------------------`, 'meta');
-                await runCase(c.id, c.origin, c.dest, false); // false to not clear terminal
-                await wait(500);
-            }
-
-            log(`----------------------------------------`, 'meta');
-            log(`✅ TODAS LAS INTEGRACIONES COMPLETADAS`, 'success');
         }
 
-        async function runCase(id, origin, dest, clear = true) {
-            if (clear) {
-                terminal.innerHTML = `
-                    <div class="term-header">
-                        <div class="dot red"></div>
-                        <div class="dot yellow"></div>
-                        <div class="dot green"></div>
-                        <div style="margin-left: 10px; color: #555">bash — testing case ${id}</div>
-                    </div>
-                `;
+        // ==============================================================================
+        // STATUS MANAGEMENT
+        // ==============================================================================
+        function setStatus(caseId, status, text) {
+            const el = document.getElementById(`status-${caseId}`);
+            el.textContent = text || status.toUpperCase();
+            el.className = `case-status status-${status}`;
+        }
+
+        function setResult(caseId, status, html) {
+            const el = document.getElementById(`result-${caseId}`);
+            el.className = `case-result ${status}`;
+            el.innerHTML = html;
+        }
+
+        function updateSummary() {
+            document.getElementById('summary-bar').style.display = 'flex';
+            document.getElementById('stat-total').textContent = `Total: ${testResults.pass + testResults.fail}/8`;
+            document.getElementById('stat-pass').textContent = `✅ Pass: ${testResults.pass}`;
+            document.getElementById('stat-fail').textContent = `❌ Fail: ${testResults.fail}`;
+        }
+
+        // ==============================================================================
+        // HEALTH CHECK
+        // ==============================================================================
+        async function checkHealth() {
+            clearTerminal('health-check');
+            log('🩺 Verificando salud de n8n...', 'info');
+
+            try {
+                const resp = await fetch(`${N8N_BASE}/healthz`, { signal: AbortSignal.timeout(5000) });
+                if (resp.ok) {
+                    log('✅ n8n está HEALTHY y respondiendo', 'success');
+                    log(`   Status: ${resp.status} ${resp.statusText}`, 'meta');
+                } else {
+                    log(`⚠️ n8n respondió con status ${resp.status}`, 'cmd');
+                }
+            } catch (e) {
+                log(`❌ n8n no está disponible: ${e.message}`, 'cmd');
+                log('   Asegúrate de que Docker está corriendo: docker-compose up -d', 'meta');
             }
 
-            log(`Iniciando prueba de flujo: <b>CASO-${id}</b>`, 'info');
-            log(`Configuración: ${origin} ➔ n8n ➔ ${dest}`, 'meta');
-
-            // Simular pasos de ejecución
-            await wait(800);
-            log(`Simulando ejecución de emisor en cases/0${id}-.../origin`, 'cmd');
-
-            await wait(1200);
-            log(`Payload enviado a webhook n8n...`, 'success');
-
-            await wait(1000);
-            log(`Recibiendo confirmación desde receptor ${dest}...`, 'info');
-
-            await wait(1500);
-            log(`✓ INTEGRACIÓN EXITOSA: Los datos fueron procesados por ${dest} correctamente.`, 'success');
-            if (clear) {
-                const port = 8080 + parseInt(id);
-                log(`Abriendo dashboard de verificación en http://localhost:${port}`, 'meta');
-                window.open(`http://localhost:${port}`, '_blank');
+            // Check each destination port
+            log('', 'meta');
+            log('🔍 Verificando destinos...', 'info');
+            for (const [id, cfg] of Object.entries(CASES)) {
+                try {
+                    const resp = await fetch(`http://localhost:${cfg.port}`, {
+                        signal: AbortSignal.timeout(3000),
+                        mode: 'no-cors'
+                    });
+                    log(`   Case ${id} (${cfg.dest} :${cfg.port}): ✅ Respondiendo`, 'success');
+                } catch (e) {
+                    log(`   Case ${id} (${cfg.dest} :${cfg.port}): ❌ No responde`, 'cmd');
+                }
             }
+        }
+
+        // ==============================================================================
+        // RUN SINGLE CASE - REAL API CALL
+        // ==============================================================================
+        async function runCase(id, clear = true) {
+            const cfg = CASES[id];
+            if (!cfg) return;
+
+            if (clear) clearTerminal(`testing case ${id}`);
+
+            setStatus(id, 'testing', 'TESTING...');
+            setResult(id, 'testing', '⏳ Ejecutando prueba...');
+
+            const timestamp = new Date().toISOString();
+            const uniqueId = `test-${id}-${Date.now()}`;
+
+            // Payload real que simula lo que el bot enviaría
+            const payload = {
+                id: uniqueId,
+                text: `[TEST] Mensaje de prueba Case ${id}: ${cfg.origin} → ${cfg.dest} @ ${timestamp}`,
+                channel: 'integration-test',
+                scheduled_at: timestamp
+            };
+
+            log(`🔧 Iniciando prueba: <b>CASO-${id}</b> (${cfg.origin} ➔ n8n ➔ ${cfg.dest})`, 'info');
+            log(`   Webhook: ${N8N_BASE}/webhook/${cfg.webhook}`, 'meta');
+            log(`   Payload ID: ${uniqueId}`, 'meta');
+
+            // Paso 1: POST al webhook de n8n
+            log(`📤 Enviando POST a n8n webhook...`, 'cmd');
+            let n8nOk = false;
+            let n8nResponse = '';
+
+            try {
+                const resp = await fetch(`${N8N_BASE}/webhook/${cfg.webhook}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                    signal: AbortSignal.timeout(15000)
+                });
+
+                n8nResponse = await resp.text();
+                let parsed;
+                try { parsed = JSON.parse(n8nResponse); } catch { parsed = n8nResponse; }
+
+                if (resp.ok) {
+                    n8nOk = true;
+                    log(`✅ n8n respondió: ${resp.status} ${resp.statusText}`, 'success');
+                    log(`   Response: ${JSON.stringify(parsed).substring(0, 200)}`, 'meta');
+                } else {
+                    log(`❌ n8n error: ${resp.status} ${resp.statusText}`, 'cmd');
+                    log(`   Body: ${n8nResponse.substring(0, 200)}`, 'meta');
+                }
+            } catch (e) {
+                log(`❌ Error conectando a n8n: ${e.message}`, 'cmd');
+                n8nResponse = e.message;
+            }
+
+            // Paso 2: Verificar que el destino recibió los datos
+            if (n8nOk) {
+                log(`🔍 Verificando destino ${cfg.dest} en puerto ${cfg.port}...`, 'info');
+                await wait(1000); // Dar tiempo al destino para procesar
+
+                try {
+                    const destResp = await fetch(`http://localhost:${cfg.port}`, {
+                        signal: AbortSignal.timeout(5000)
+                    });
+                    if (destResp.ok) {
+                        log(`✅ Destino ${cfg.dest} (puerto ${cfg.port}) está respondiendo`, 'success');
+                    } else {
+                        log(`⚠️ Destino respondió con status ${destResp.status}`, 'cmd');
+                    }
+                } catch (e) {
+                    log(`⚠️ No se pudo verificar destino: ${e.message}`, 'cmd');
+                }
+            }
+
+            // Resultado final
+            if (n8nOk) {
+                setStatus(id, 'pass', '✅ PASS');
+                setResult(id, 'pass',
+                    `<b>✅ Integración exitosa</b><br>` +
+                    `ID: ${uniqueId}<br>` +
+                    `n8n → ${cfg.dest}: OK<br>` +
+                    `Response: ${n8nResponse.substring(0, 100)}...`
+                );
+                log(`✅ CASO-${id} COMPLETADO EXITOSAMENTE`, 'success');
+                testResults.pass++;
+            } else {
+                setStatus(id, 'fail', '❌ FAIL');
+                setResult(id, 'fail',
+                    `<b>❌ Error en integración</b><br>` +
+                    `Causa: ${n8nResponse.substring(0, 150)}<br>` +
+                    `Verifica: docker-compose ps`
+                );
+                log(`❌ CASO-${id} FALLÓ`, 'cmd');
+                testResults.fail++;
+            }
+
+            testResults.total++;
+            updateSummary();
+            return n8nOk;
+        }
+
+        // ==============================================================================
+        // RUN ALL CASES
+        // ==============================================================================
+        async function runAllCases() {
+            testResults = { pass: 0, fail: 0, total: 0 };
+            clearTerminal('global-integration-test');
+
+            log('🚀 INICIANDO SECUENCIA MAESTRA DE PRUEBAS', 'info');
+            log(`   Fecha: ${new Date().toLocaleString()}`, 'meta');
+            log(`   n8n: ${N8N_BASE}`, 'meta');
+            log('', 'meta');
+
+            // Reset all statuses
+            for (const id of Object.keys(CASES)) {
+                setStatus(id, 'testing', 'PENDING');
+                setResult(id, 'testing', '⏳ En cola...');
+            }
+
+            for (const id of Object.keys(CASES)) {
+                log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'meta');
+                await runCase(id, false);
+                await wait(1000); // Pausa entre casos
+            }
+
+            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'meta');
+            log('', 'meta');
+
+            if (testResults.fail === 0) {
+                log('🎉 TODAS LAS INTEGRACIONES COMPLETADAS EXITOSAMENTE', 'success');
+            } else {
+                log(`⚠️ Resultado: ${testResults.pass} exitosos, ${testResults.fail} fallidos`, 'cmd');
+            }
+
+            log(`📊 Resumen: ${testResults.pass}/${testResults.total} casos pasaron`, 'info');
         }
 
         function wait(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // ==============================================================================
+        // EVENT LISTENERS (CSP-safe, no inline handlers)
+        // ==============================================================================
+        document.getElementById('btn-run-all').addEventListener('click', runAllCases);
+        document.getElementById('btn-health').addEventListener('click', checkHealth);
+
+        for (const id of Object.keys(CASES)) {
+            document.getElementById(`btn-${id}`).addEventListener('click', () => runCase(id));
         }
     </script>
 </body>

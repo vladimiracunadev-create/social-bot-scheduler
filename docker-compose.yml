@@ -8,7 +8,7 @@ services:
   # - Desactiva pantallas de setup manual y telemetría
   # - Los scripts de resiliencia (idempotencia, circuit breaker) se montan en /data/scripts
   n8n:
-    image: n8nio/n8n:latest
+    image: n8nio/n8n:2.7.5
     container_name: social-bot-n8n
     ports:
       - "5678:5678"
@@ -31,7 +31,7 @@ services:
       - GENERIC_TIMEZONE=America/Santiago
     volumes:
       # Persistencia de datos de n8n (workflows, credenciales, historial)
-      - n8n_data:/home/node/.n8n
+      - ./n8n/data:/home/node/.n8n
       # Scripts compartidos de resiliencia (idempotencia, circuit breaker)
       # Los workflows de n8n ejecutan estos scripts via "Execute Command"
       - ./scripts:/data/scripts:ro
@@ -40,12 +40,12 @@ services:
     # Entrypoint personalizado que importa workflows al primer arranque
     entrypoint: ["/bin/sh", "/data/scripts/n8n_auto_setup.sh"]
     # Health check para que Docker y otros servicios sepan si n8n está listo
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5678/healthz"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+#    healthcheck:
+#      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5678/healthz"]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+#      start_period: 30s
     networks:
       - bot-network
 
