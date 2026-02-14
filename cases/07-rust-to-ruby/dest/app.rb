@@ -8,6 +8,10 @@ require 'json'
 set :bind, '0.0.0.0'
 set :port, 4567
 
+# Desactivar protección de host para permitir requests desde n8n en Docker
+# En producción, esto debería configurarse con hosts permitidos específicos
+set :protection, except: [:host_authorization]
+
 # Estado Global en Memoria (No persistente)
 # Simula una base de datos. En producción, esto sería Redis o PostgreSQL.
 # Ruby maneja la memoria automáticamente (GC).
