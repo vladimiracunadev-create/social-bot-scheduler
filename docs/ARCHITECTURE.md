@@ -46,7 +46,7 @@ graph LR
     end
 
     subgraph "BRIDGE (n8n + Guardrails)"
-        C --> CM{Idempotency Check}
+        C((n8n Webhook)) --> CM{Idempotency Check}
         CM -- New --> D[Workflow Logic]
         CM -- Duplicate --> C1[Discard / 200 OK]
         D --> CB{Circuit Breaker}

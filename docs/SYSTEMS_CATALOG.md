@@ -11,6 +11,9 @@ Este documento detalla todas las capacidades actuales del bot y su impacto técn
 | **Aprovisionamiento K8s** | Despliegue automatizado como **CronJob** en Kubernetes. | ✅ Estable |
 | **Logs en Tiempo Real** | Salida estandarizada con `logging` para monitoreo. | ✅ Estable |
 | **Validación Pydantic** | Validación estricta de esquemas antes de procesar archivos. | ✅ Estable |
+| **Resiliencia Global** | Idempotencia (SQLite), Circuit Breaker y Reintentos en todos los casos. | ✅ v3.0 |
+| **Observabilidad** | Stack completo con Prometheus, Grafana y cAdvisor para telemetría. | ✅ v3.0 |
+| **Zero-Touch Config** | Auto-importación y activación de workflows n8n al primer arranque. | ✅ v3.0 |
 
 ## Próximas Incorporaciones
 - Validación de archivos JSON mediante JSON Schema mejorado.

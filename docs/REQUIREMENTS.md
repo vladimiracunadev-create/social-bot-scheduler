@@ -15,6 +15,7 @@ Para ejecutar **Social Bot Scheduler** y toda su matriz de integración (Hub + n
 ### Obligatorio
 1.  **Docker Desktop (o Engine + Compose)**
     -   Versión: 24.0+
+    -   *Específicos*: Soporte para `cgroup` v2 (necesario para cAdvisor en Linux/WSL).
     -   *Nota*: En Windows, se recomienda usar WSL 2 backend para mejor rendimiento.
 2.  **Python 3.10+**
     -   Necesario para el CLI `hub.py` y los scripts de los bots.
