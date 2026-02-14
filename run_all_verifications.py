@@ -12,13 +12,14 @@ CASES = [
     {"id": "08", "path": "social-bot-scheduler-case-08", "port": 5678},
 ]
 
+
 def trigger_case(case):
     url = f"http://localhost:{case['port']}/webhook/{case['path']}"
     payload = {
         "id": f"verify-case-{case['id']}",
         "text": f"End-to-end verification for Case {case['id']}",
         "channel": "automated-verification-script",
-        "scheduled_at": "2026-02-13T19:10:00"
+        "scheduled_at": "2026-02-13T19:10:00",
     }
     headers = {"Content-Type": "application/json"}
     try:
@@ -32,9 +33,10 @@ def trigger_case(case):
         print(f"Exception Case {case['id']}: {e}")
         return False
 
+
 results = {}
 for case in CASES:
-    results[case['id']] = trigger_case(case)
+    results[case["id"]] = trigger_case(case)
 
 print("\n--- Summary ---")
 for cid, success in results.items():

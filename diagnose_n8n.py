@@ -1,8 +1,10 @@
 """Verificador avanzado de n8n que muestra el estado completo"""
+
 import requests
 import json
 
 N8N_URL = "http://localhost:5678"
+
 
 def check_health():
     try:
@@ -12,6 +14,7 @@ def check_health():
     except:
         print("[!] n8n no está respondiendo")
         return False
+
 
 def check_setup():
     """Verificar si n8n necesita setup inicial"""
@@ -26,6 +29,7 @@ def check_setup():
     except:
         return None
 
+
 def do_setup():
     """Configurar owner via API"""
     try:
@@ -35,9 +39,9 @@ def do_setup():
                 "email": "admin@social-bot.local",
                 "firstName": "Admin",
                 "lastName": "SocialBot",
-                "password": "SocialBot2026!"
+                "password": "SocialBot2026!",
             },
-            timeout=5
+            timeout=5,
         )
         if r.status_code in [200, 201]:
             print("[+] Owner creado via API")
@@ -49,21 +53,23 @@ def do_setup():
         print(f"[!] Error: {e}")
         return False
 
+
 def main():
-    print("="*60)
+    print("=" * 60)
     print("[*] Diagnostico de n8n")
-    print("="*60)
-    
+    print("=" * 60)
+
     if not check_health():
         return
-    
+
     setup_status = check_setup()
     if setup_status is False:
         print("[*] Configurando owner...")
         do_setup()
-    
+
     print("\n[INFO] Accede a http://localhost:5678 manualmente")
     print("[INFO] Credenciales: admin@social-bot.local / SocialBot2026!")
+
 
 if __name__ == "__main__":
     main()

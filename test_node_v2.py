@@ -5,7 +5,10 @@ with open(FPATH, "r", encoding="utf-8") as f:
     data = json.load(f)
 
 for node in data["nodes"]:
-    if node["type"] == "n8n-nodes-base.set" or node["type"] == "n8n-nodes-base.executeCommand":
+    if (
+        node["type"] == "n8n-nodes-base.set"
+        or node["type"] == "n8n-nodes-base.executeCommand"
+    ):
         node["type"] = "n8n-nodes-base.executeCommand"
         node["typeVersion"] = 2
         node["parameters"] = {"command": "echo success"}
