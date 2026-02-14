@@ -89,13 +89,13 @@ python3 scripts/check_idempotency.py cleanup
 
 ```bash
 # Enviar mismo post 2 veces
-curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-case-01" \
+curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-php" \
   -H "Content-Type: application/json" \
   -d '{"id":"test-001","text":"Test","channel":"twitter"}'
 
 sleep 2
 
-curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-case-01" \
+curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-php" \
   -H "Content-Type: application/json" \
   -d '{"id":"test-001","text":"Test","channel":"twitter"}'
 
@@ -155,7 +155,7 @@ docker-compose stop dest-php
 
 # Enviar 5 posts para abrir circuito
 for i in {1..5}; do
-  curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-case-01" \
+  curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-php" \
     -H "Content-Type: application/json" \
     -d "{\"id\":\"test-$i\",\"text\":\"Test\",\"channel\":\"twitter\"}"
   sleep 2
@@ -165,7 +165,7 @@ done
 python3 scripts/circuit_breaker.py check "01"
 
 # Enviar 6to post (debería rechazarse inmediatamente sin reintentos)
-curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-case-01" \
+curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-php" \
   -H "Content-Type: application/json" \
   -d '{"id":"test-6","text":"Test","channel":"twitter"}'
 ```
@@ -178,7 +178,7 @@ curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-case-01" \
 
 Todos los servicios de destino tienen endpoint `/errors`:
 
-- **Caso 01 (PHP):** `http://dest-php:80/errors`
+- **Caso 01 (PHP):** `http://dest-php:80/errors.php`
 - **Caso 02 (Go):** `http://dest-go:8080/errors`
 - **Caso 03 (Node):** `http://dest-node:3000/errors`
 - **Caso 04 (FastAPI):** `http://dest-fastapi:8000/errors`
@@ -200,7 +200,7 @@ Todos los servicios de destino tienen endpoint `/errors`:
 docker-compose stop dest-php
 
 # Enviar post (fallará después de 3 reintentos)
-curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-case-01" \
+curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-php" \
   -H "Content-Type: application/json" \
   -d '{"id":"test-dlq","text":"Test DLQ","channel":"twitter"}'
 
@@ -272,12 +272,12 @@ Este script prueba:
 docker-compose up -d
 
 # 2. Probar idempotencia
-curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-case-01" \
+curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-php" \
   -H "Content-Type: application/json" \
   -d '{"id":"e2e-001","text":"Test E2E","channel":"twitter"}'
 
 # Enviar duplicado (debería rechazarse)
-curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-case-01" \
+curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-php" \
   -H "Content-Type: application/json" \
   -d '{"id":"e2e-001","text":"Test E2E","channel":"twitter"}'
 
@@ -285,7 +285,7 @@ curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-case-01" \
 docker-compose stop dest-php
 
 for i in {1..5}; do
-  curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-case-01" \
+  curl -X POST "http://localhost:5678/webhook/social-bot-scheduler-php" \
     -H "Content-Type: application/json" \
     -d "{\"id\":\"cb-$i\",\"text\":\"Test CB\",\"channel\":\"twitter\"}"
   sleep 2
