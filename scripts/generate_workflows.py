@@ -83,7 +83,10 @@ def generate_workflow(case_id, case_name, webhook_path, dest_url, error_url):
                                 "value": "={{$json.body.id}}_{{$json.body.channel}}",
                             },
                             {"name": "case_id", "value": case_id},
-                            {"name": "body", "value": "={{JSON.stringify($json.body)}}"},
+                            {
+                                "name": "body",
+                                "value": "={{JSON.stringify($json.body)}}",
+                            },
                         ]
                     }
                 },
