@@ -10,6 +10,9 @@ Para ejecutar **Social Bot Scheduler** y toda su matriz de integración (Hub + n
 | **CPU** | 2 Cores | **4 Cores+** | La orquestación y el levantamiento simultáneo de contenedores requiere potencia. |
 | **Espacio** | 10 GB | **20 GB** | Imágenes Docker de múltiples lenguajes (PHP, Go, Rust, etc.). |
 
+> [!TIP]
+> Puedes consultar el [Reporte de Recursos Docker](DOCKER_REPORT.md) para ver el consumo real actual de tu entorno.
+
 ## Software Necesario
 
 ### Obligatorio
