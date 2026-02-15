@@ -17,6 +17,9 @@ Antes de proponer un cambio, asegúrate de:
 - Verificar el build de Docker: `make build`.
 - Probar el bot en modo "Dry-run" (sin `WEBHOOK_URL` en el `.env`) para asegurar que la lógica de carga de posts sigue funcionando.
 
+## Infraestructura
+- **Docker**: Consulta el [Reporte de Recursos](DOCKER_REPORT.md) para ver el estado actual del entorno.
+
 ## Versionado
 Seguimos [SemVer](https://semver.org/lang/es/).
 - **Major**: Cambios en el contrato de API o ruptura de compatibilidad.

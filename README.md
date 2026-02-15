@@ -191,6 +191,8 @@ Tabla de estado actual de los 8 ejes de integración:
 - 🏗️ **[Arquitectura](docs/ARCHITECTURE.md)**: Diagramas del sistema.
 - 💻 **[Requisitos del Sistema](docs/REQUIREMENTS.md)**: Hardware y software necesario.
 - ⚠️ **[Limitaciones](docs/LIMITATIONS.md)**: Trade-offs y decisiones de diseño.
+- 📊 **[Reporte de Recursos Docker](docs/DOCKER_REPORT.md)**: Análisis de uso de disco, imágenes y volúmenes.
+- 🧑‍💻 **[Guía de Mantenedores](docs/MAINTAINERS.md)**: Información crítica para la evolución del sistema.
 - 🗺️ **[Roadmap](ROADMAP.md)**: Evolución y futuro del proyecto.
 
 ---
