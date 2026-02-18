@@ -1,0 +1,44 @@
+# Social Bot Scheduler
+
+A multi-language integration laboratory demonstrating interoperability between Python, Go, Node.js, and PHP using n8n as the central orchestration bus.
+
+> [!IMPORTANT]
+> This is an educational lab. Read the [COMPLIANCE.md](docs/COMPLIANCE.md) before use.
+
+## Core Features
+- **Zero-Touch Setup**: Automagic infrastructure and workflow configuration.
+- **Multi-Axis Matrix**: 8 integration cases covering 8 different language combinations.
+- **Production Hardening**: Container security (Trivy), input validation (HUB CLI), and K8s hardening.
+- **Observability (v3.0)**: Integrated Prometheus, Grafana, and cAdvisor stack.
+- **Guardrails**: 100% coverage for Retries, DLQ, Idempotency, and Circuit Breaker.
+
+## Tech Stack
+- **Orchestration**: [n8n](https://n8n.io) (v2.7.5)
+- **Languages**: Python, Go, Node.js, PHP, Rust, Ruby, C#, FastAPI, Flask, Laravel, Symfony, React.
+- **Infrastructure**: Docker Compose, Kubernetes.
+- **Monitoring**: Prometheus, Grafana.
+
+## Integration Matrix (8 Ejes)
+| ID | Eje Tecnológico (Origen -> Puente -> Destino) | Endpoint |
+|:---|:---|:---|
+| 01 | Python -> n8n -> PHP (Apache) | :8081 |
+| 02 | Python -> n8n -> Go | :8082 |
+| 03 | Go -> n8n -> Node.js | :8083 |
+| 04 | Node.js -> n8n -> FastAPI | :8084 |
+| 05 | Laravel -> n8n -> React | :8085 |
+| 06 | Go -> n8n -> Symfony | :8086 |
+| 07 | Rust -> n8n -> Ruby (Sinatra) | :8087 |
+| 08 | C# -> n8n -> Flask | :8088 |
+
+## Key Documentation
+- [Architecture](docs/ARCHITECTURE.md): System diagrams and data flow.
+- [HUB CLI](hub.py): Central management tool for cases and diagnostics.
+- [Guardrails](docs/GUARDRAILS.md): Reliability patterns used across all cases.
+- [Resilience Guide](docs/RESILIENCE_GUIDE.md): Implementation details for error handling.
+- [Recruiter Guide](docs/RECRUITER.md): High-level business and technical value.
+
+## Operational Commands
+- `make up`: Start the entire infrastructure.
+- `python hub.py listar-casos`: List available integration cases.
+- `python hub.py doctor`: Run system health checks.
+- `python hub.py ejecutar <case-id>`: Run a specific bot emisor.
