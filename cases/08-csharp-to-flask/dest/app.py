@@ -6,26 +6,30 @@ import time
 # ==================================================================================================
 # CONFIGURACIÓN DE BASE DE DATOS (SQL Server)
 # ==================================================================================================
-DB_HOST = os.getenv('DB_HOST', 'db-mssql')
-DB_PASS = os.getenv('DB_PASS', 'Bot-Secret-2026!')
-DB_NAME = 'social_bot'
+DB_HOST = os.getenv("DB_HOST", "db-mssql")
+DB_PASS = os.getenv("DB_PASS", "Bot-Secret-2026!")
+DB_NAME = "social_bot"
+
 
 def get_db_connection():
     # Cadena de conexión usando el driver oficial de MS
-    conn_str = f'DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={DB_HOST};DATABASE=master;UID=sa;PWD={DB_PASS};TrustServerCertificate=yes'
+    conn_str = f"DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={DB_HOST};DATABASE=master;UID=sa;PWD={DB_PASS};TrustServerCertificate=yes"
     conn = pyodbc.connect(conn_str, autocommit=True)
     return conn
 
+
 def init_db():
-    for i in range(15): # Dar tiempo a SQL Server para arrancar
+    for i in range(15):  # Dar tiempo a SQL Server para arrancar
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
             # Crear DB si no existe
-            cursor.execute(f"IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = '{DB_NAME}') CREATE DATABASE {DB_NAME}")
+            cursor.execute(
+                f"IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = '{DB_NAME}') CREATE DATABASE {DB_NAME}"
+            )
             cursor.execute(f"USE {DB_NAME}")
             # Crear Tabla
-            cursor.execute('''
+            cursor.execute("""
                 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='social_posts' AND xtype='U')
                 CREATE TABLE social_posts (
                     id VARCHAR(50) PRIMARY KEY,
@@ -34,13 +38,14 @@ def init_db():
                     scheduled_at DATETIME,
                     created_at DATETIME DEFAULT GETDATE()
                 )
-            ''')
+            """)
             conn.close()
             print("[INFO] SQL Server initialized.")
             break
         except Exception as e:
             print(f"Esperando a SQL Server... ({i+1}/15) {e}")
             time.Sleep(3)
+
 
 init_db()
 
@@ -92,10 +97,10 @@ def webhook():
             posts.pop()
 
         print(f"📥 New post received: {new_post['text']}")
-        
+
         # Persistencia en SQL Server
         try:
-            conn_str = f'DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={DB_HOST};DATABASE={DB_NAME};UID=sa;PWD={DB_PASS};TrustServerCertificate=yes'
+            conn_str = f"DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={DB_HOST};DATABASE={DB_NAME};UID=sa;PWD={DB_PASS};TrustServerCertificate=yes"
             conn = pyodbc.connect(conn_str)
             cursor = conn.cursor()
             query = """
@@ -104,8 +109,20 @@ def webhook():
                 ELSE
                     INSERT INTO social_posts (id, text, channel, scheduled_at) VALUES (?, ?, ?, ?)
             """
-            cursor.execute(query, (data.get('id'), new_post['text'], new_post['channel'], data.get('scheduled_at'), data.get('id'),
-                                 data.get('id'), new_post['text'], new_post['channel'], data.get('scheduled_at')))
+            cursor.execute(
+                query,
+                (
+                    data.get("id"),
+                    new_post["text"],
+                    new_post["channel"],
+                    data.get("scheduled_at"),
+                    data.get("id"),
+                    data.get("id"),
+                    new_post["text"],
+                    new_post["channel"],
+                    data.get("scheduled_at"),
+                ),
+            )
             conn.commit()
             conn.close()
         except Exception as e:

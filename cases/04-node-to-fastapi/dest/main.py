@@ -11,13 +11,17 @@ import sqlite3
 # ==================================================================================================
 DB_FILE = "social_bot.db"
 
+
 def init_db():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS social_posts
-                 (id TEXT PRIMARY KEY, text TEXT, channel TEXT, scheduled_at TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+    c.execute(
+        """CREATE TABLE IF NOT EXISTS social_posts
+                 (id TEXT PRIMARY KEY, text TEXT, channel TEXT, scheduled_at TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"""
+    )
     conn.commit()
     conn.close()
+
 
 init_db()
 
@@ -74,8 +78,10 @@ async def receive_post(post: Post):
     try:
         conn = sqlite3.connect(DB_FILE)
         c = conn.cursor()
-        c.execute("INSERT OR REPLACE INTO social_posts (id, text, channel, scheduled_at) VALUES (?, ?, ?, ?)",
-                  (post.id, post.text, post.channel, post.scheduled_at))
+        c.execute(
+            "INSERT OR REPLACE INTO social_posts (id, text, channel, scheduled_at) VALUES (?, ?, ?, ?)",
+            (post.id, post.text, post.channel, post.scheduled_at),
+        )
         conn.commit()
         conn.close()
     except Exception as e:
