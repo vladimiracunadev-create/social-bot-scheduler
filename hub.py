@@ -328,12 +328,13 @@ def limpiar_todo():
         log_audit("limpiar-todo", "FALLO", str(e))
 
 
-def gestionar_stack(accion):
+def gestionar_stack(accion, full=False):
     """
     Wrapper para controlar `docker-compose` desde el Hub.
 
     Args:
         accion (str): "up" para levantar servicios, "down" para detenerlos.
+        full (bool): Si es True, activa el perfil 'full' para levantar todos los casos.
     """
     if accion == "up":
         # Ejecutar verificación de recursos antes de subir
@@ -343,7 +344,12 @@ def gestionar_stack(accion):
         except:
             pass
 
-    cmd = ["docker-compose", accion]
+    cmd = ["docker-compose"]
+    if full and accion == "up":
+        cmd.extend(["--profile", "full"])
+    
+    cmd.append(accion)
+    
     if accion == "up":
         cmd.append("-d")
 
@@ -391,8 +397,11 @@ def main():
     )
 
     # Comandos: Infraestructura (up / down)
-    subparsers.add_parser(
+    up_parser = subparsers.add_parser(
         "up", help="Levanta la infraestructura Docker (docker-compose up)"
+    )
+    up_parser.add_argument(
+        "--full", action="store_true", help="Levanta TODOS los servicios (Perfil Full)"
     )
     subparsers.add_parser(
         "down", help="Detiene y mantiene los contenedores (docker-compose down)"
@@ -412,7 +421,7 @@ def main():
     elif args.command == "doctor":
         ejecutar_doctor()
     elif args.command == "up":
-        gestionar_stack("up")
+        gestionar_stack("up", args.full)
     elif args.command == "down":
         gestionar_stack("down")
     elif args.command == "clean":

@@ -4,8 +4,8 @@ clean: ## Limpieza total de Docker (contenedores, volúmenes, imágenes e imáge
 check: ## Verifica recursos físicos de la máquina (CPU, RAM, Disco)
 	python3 check_resources.py
 
-up: ## Levanta la infraestructura con verificación de recursos
-	python3 hub.py up
+up: ## Levanta la infraestructura con verificación de recursos y todos los servicios (Full)
+	python3 hub.py up --full
 
 # ... rest of the file ...
 
