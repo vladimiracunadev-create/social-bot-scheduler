@@ -159,6 +159,20 @@ Verifica el Dashboard Maestro para ver los registros en cada DB: [http://localho
 
 ---
 
+## 🩺 Salud y Verificación del Repositorio
+
+Para asegurar que el entorno sea correcto y esté listo para operar:
+
+1.  **Diagnóstico de Salud**: `make doctor` (Verifica Docker, YAMLs y **recursos de hardware**).
+2.  **Prueba de Integración (E2E)**: Abre [http://localhost:8080](http://localhost:8080) y pulsa **"🚀 PROBAR INTEGRACIÓN GLOBAL"**.
+3.  **Calidad y Seguridad**: 
+    - `black --check .` (Formato)
+    - `pip-audit --ignore-vuln CVE-2026-1703` (Vulnerabilidades)
+
+> **Guía Detallada**: Consulta [VERIFICATION_GUIDE.md](docs/VERIFICATION_GUIDE.md) para un manual completo de pruebas.
+
+---
+
 ## 📈 Observabilidad Avanzada y Multi-DB (v4.0)
 
 Este proyecto implementa un **stack de monitoreo industrial** para eliminar la "caja negra" típica de las integraciones.
@@ -207,6 +221,7 @@ Tabla de estado actual de los 8 ejes de integración:
 - 🔧 **[Solución de Problemas](docs/TROUBLESHOOTING.md)**: Cómo arreglar errores comunes (Docker, n8n, dependencias).
 - 📊 **[Índice de Casos](docs/CASES_INDEX.md)**: Explicación técnica de cada combinación.
 - 🏗️ **[Arquitectura](docs/ARCHITECTURE.md)**: Diagramas del sistema.
+- 🧪 **[Guía de Verificación](docs/VERIFICATION_GUIDE.md)**: Cómo probar el correcto funcionamiento del repo.
 - 💻 **[Requisitos del Sistema](docs/REQUIREMENTS.md)**: Hardware y software necesario.
 - ⚠️ **[Limitaciones](docs/LIMITATIONS.md)**: Trade-offs y decisiones de diseño.
 - 📊 **[Reporte de Recursos Docker](docs/DOCKER_REPORT.md)**: Análisis de uso de disco, imágenes y volúmenes.
