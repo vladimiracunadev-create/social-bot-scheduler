@@ -1,43 +1,43 @@
-# 💻 Requisitos del Sistema
+# System Requirements
 
-Para ejecutar **Social Bot Scheduler** y toda su matriz de integración (Hub + n8n + 8 casos), tu equipo debe cumplir con los siguientes requisitos.
+This document outlines the minimum and optimal hardware/software requirements for running the **Social Bot Scheduler** laboratory.
 
-## hardware Mínimo y Recomendado
+## 💻 Hardware Requirements
 
-| Componente | Mínimo (Pruebas básicas) | Recomendado (Matriz completa) | Razón |
-|------------|--------------------------|-------------------------------|-------|
-| **RAM** | 4 GB | **8 GB+** | n8n consume ~500MB + cada contenedor destino (x8). |
-| **CPU** | 2 Cores | **4 Cores+** | La orquestación y el levantamiento simultáneo de contenedores requiere potencia. |
-| **Espacio** | 10 GB | **20 GB** | Imágenes Docker de múltiples lenguajes (PHP, Go, Rust, etc.). |
+Running 20 containers simultaneously (including 8 different database engines) is a resource-intensive task.
 
-> [!TIP]
-> Puedes consultar el [Reporte de Recursos Docker](DOCKER_REPORT.md) para ver el consumo real actual de tu entorno.
+| Component | Minimum (Selective) | Minimum (Full Stack) | Optimal (Performance) |
+| :--- | :--- | :--- | :--- |
+| **CPU** | 2 Cores | 4 Cores | 8 Cores+ |
+| **RAM** | 4 GB | 8 GB | 16 GB+ |
+| **Disk** | 5 GB | 10 GB | 20 GB (SSD recommended) |
 
-## Software Necesario
+### ⚠️ Resource Management Notes
+- **MSSQL & Cassandra**: These are the heaviest consumers. In our optimized `docker-compose.yml`, they are capped at 2GB each.
+- **Selective Loading**: Use `docker-compose --profile case01 up` to run with only 4GB of RAM.
+- **Background Tasks**: Close heavy applications (Chrome, IDs) before running the `full` profile on 8GB machines.
 
-### Obligatorio
-1.  **Docker Desktop (o Engine + Compose)**
-    -   Versión: 24.0+
-    -   *Específicos*: Soporte para `cgroup` v2 (necesario para cAdvisor en Linux/WSL).
-    -   *Nota*: En Windows, se recomienda usar WSL 2 backend para mejor rendimiento.
-2.  **Python 3.10+**
-    -   Necesario para el CLI `hub.py` y los scripts de los bots.
-3.  **Git**
-    -   Para clonar el repositorio.
+## 🛠️ Software Requirements
 
-### Opcional (Pero útil)
--   **Make**: Si deseas usar el `Makefile` en lugar de los scripts directos.
--   **VS Code**: Con extensiones recomendadas (Docker, Python).
+### Core Dependencies
+- **[Docker Desktop](https://www.docker.com/products/docker-desktop/)**: Mandatory (v24.0+ recommended).
+- **[Python 3.10+](https://www.python.org/downloads/)**: Required for the HUB CLI and Emisores.
+- **[Git](https://git-scm.com/downloads)**: To clone and manage the repository.
 
-## ⚙️ Configuración Automática
+### Optional Tools
+- **Make**: To use the `Makefile` shortcuts (`make up`, `make clean`, `make doctor`).
+- **Web Browser**: Chrome/Edge/Firefox for the Dashboard.
 
-**n8n se auto-configura al arrancar** con Docker Compose:
--   Los 8 workflows se importan y activan automáticamente
--   Se crea un usuario admin de laboratorio: `admin@social-bot.local` / `SocialBot2026!`
--   No se requiere configuración manual en la UI de n8n
+## 🧹 Maintenance & Optimization
 
-## Notas de Rendimiento
--   Si tienes poca RAM, intenta levantar solo los casos que necesitas (ej. `docker-compose up -d n8n dest-php` en lugar de todo).
--   El primer despliegue ("pull" de imágenes) puede tardar 10-20 minutos dependiendo de tu internet.
--   La primera vez que arranca n8n, la auto-configuración tarda ~30 segundos adicionales.
+To guarantee optimal performance, it is recommended to run the cleanup command periodically:
 
+```bash
+# Via Makefile
+make clean
+
+# Via HUB CLI
+python hub.py clean
+```
+
+This will remove all containers, volumes, and images to reclaim disk space and ensure a fresh start.

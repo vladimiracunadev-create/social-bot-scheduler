@@ -1,20 +1,13 @@
-# Makefile Centralizado - Social Bot Scheduler
+clean: ## Limpieza total de Docker (contenedores, volúmenes, imágenes e imágenes huérfanas)
+	python3 hub.py clean
 
-.PHONY: help doctor up down logs logs-n8n scan demo setup-n8n smoke reset-n8n
+check: ## Verifica recursos físicos de la máquina (CPU, RAM, Disco)
+	python3 check_resources.py
 
-help: ## Muestra este mensaje de ayuda
-	@echo "🤖 Social Bot Scheduler - Comandos Disponibles"
-	@echo "---------------------------------------------"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
+up: ## Levanta la infraestructura con verificación de recursos
+	python3 hub.py up
 
-doctor: ## Diagnostica el estado del sistema (contenedores, red, archivos)
-	python3 hub.py doctor
-
-up: ## Levanta toda la infraestructura (Docker Compose)
-	docker-compose up -d
-
-down: ## Detiene y elimina contenedores
-	docker-compose down
+# ... rest of the file ...
 
 logs: ## Muestra logs de todos los contenedores en tiempo real
 	docker-compose logs -f

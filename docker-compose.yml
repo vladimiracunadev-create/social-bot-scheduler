@@ -2,68 +2,61 @@ version: '3.8'
 
 services:
   # 🔗 El puente (n8n) - Compartido por todos los ejes
-  # CONFIGURACIÓN ZERO-TOUCH: n8n se auto-configura al arrancar.
-  # - Importa automáticamente los 8 workflows desde n8n/workflows/
-  # - Crea cuenta admin: admin@social-bot.local / SocialBot2026!
-  # - Desactiva pantallas de setup manual y telemetría
-  # - Los scripts de resiliencia (idempotencia, circuit breaker) se montan en /data/scripts
   n8n:
     image: n8nio/n8n:2.7.5
     container_name: social-bot-n8n
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.50'
+        reservations:
+          memory: 512M
     ports:
       - "5678:5678"
     environment:
-      # --- Core ---
       - WEBHOOK_URL=http://localhost:5678/
       - N8N_METRICS=true
-      # --- Auto-Setup: Desactivar pantallas manuales ---
-      # N8N_USER_MANAGEMENT_DISABLED: Permite acceso sin login obligatorio
-      # durante la fase de auto-setup. Una vez configurado el owner, el
-      # login se maneja con las credenciales creadas automáticamente.
       - N8N_BASIC_AUTH_ACTIVE=false
-      # --- Desactivar telemetría y personalización (modo laboratorio) ---
-      # En un entorno de demo/laboratorio, no necesitamos enviar datos
-      # a n8n ni mostrar wizards de personalización al usuario.
       - N8N_DIAGNOSTICS_ENABLED=false
       - N8N_PERSONALIZATION_ENABLED=false
       - N8N_TEMPLATES_ENABLED=false
-      # --- Zona horaria ---
       - GENERIC_TIMEZONE=America/Santiago
     volumes:
-      # Persistencia de datos de n8n (workflows, credenciales, historial)
       - ./n8n/data:/home/node/.n8n
-      # Scripts compartidos de resiliencia (idempotencia, circuit breaker)
-      # Los workflows de n8n ejecutan estos scripts via "Execute Command"
       - ./scripts:/data/scripts:ro
-      # Workflows pre-configurados para auto-importación
       - ./n8n/workflows:/data/workflows:ro
-    # Entrypoint personalizado que importa workflows al primer arranque
     entrypoint: ["/bin/sh", "/data/scripts/n8n_auto_setup.sh"]
-    # Health check para que Docker y otros servicios sepan si n8n está listo
-#    healthcheck:
-#      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5678/healthz"]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 5
-#      start_period: 30s
     networks:
       - bot-network
 
   # 🏠 Dashboard Maestro
   master-dashboard:
-    image: php:8.2-apache
+    image: php:8.2-apache-alpine
     container_name: social-bot-master
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.10'
     ports:
       - "8080:80"
     volumes:
       - ./index.html:/var/www/html/index.html
+      - ./resources.json:/var/www/html/resources.json
     networks:
       - bot-network
 
   # 🐘 Caso 01: Destino PHP
   dest-php:
-    image: php:8.2-apache
+    image: php:8.2-apache-alpine
     container_name: social-bot-dest-php
+    profiles: ["case01", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.10'
     ports:
       - "8081:80"
     volumes:
@@ -80,6 +73,12 @@ services:
   dest-go:
     build: ./cases/02-python-to-go/dest
     container_name: social-bot-dest-go
+    profiles: ["case02", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+          cpus: '0.05'
     ports:
       - "8082:8080"
     networks:
@@ -94,6 +93,12 @@ services:
   dest-node:
     build: ./cases/03-go-to-node/dest
     container_name: social-bot-dest-node
+    profiles: ["case03", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.10'
     ports:
       - "8083:3000"
     networks:
@@ -108,6 +113,12 @@ services:
   dest-fastapi:
     build: ./cases/04-node-to-fastapi/dest
     container_name: social-bot-dest-fastapi
+    profiles: ["case04", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.10'
     ports:
       - "8084:8000"
     networks:
@@ -117,7 +128,13 @@ services:
   dest-react:
     image: node:20-alpine
     container_name: social-bot-dest-react
+    profiles: ["case05", "full"]
     working_dir: /app
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.10'
     ports:
       - "8085:4000"
     volumes:
@@ -131,8 +148,14 @@ services:
 
   # 🐘 Caso 06: Destino Symfony (PHP)
   dest-symfony:
-    image: php:8.2-apache
+    image: php:8.2-apache-alpine
     container_name: social-bot-dest-symfony
+    profiles: ["case06", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.10'
     ports:
       - "8086:80"
     volumes:
@@ -146,6 +169,12 @@ services:
   dest-ruby:
     build: ./cases/07-rust-to-ruby/dest
     container_name: social-bot-dest-ruby
+    profiles: ["case07", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.10'
     ports:
       - "8087:4567"
     networks:
@@ -157,6 +186,12 @@ services:
   dest-flask:
     build: ./cases/08-csharp-to-flask/dest
     container_name: social-bot-dest-flask
+    profiles: ["case08", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.10'
     ports:
       - "8088:5000"
     networks:
@@ -165,12 +200,15 @@ services:
       - DB_HOST=db-mssql
       - DB_PASS=Bot-Secret-2026!
 
-
-
   # 📊 Prometheus (Métricas)
   prometheus:
     image: prom/prometheus:latest
     container_name: social-bot-prometheus
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
@@ -182,6 +220,11 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: social-bot-grafana
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.25'
     ports:
       - "3000:3000"
     environment:
@@ -198,6 +241,11 @@ services:
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     container_name: social-bot-cadvisor
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.10'
     ports:
       - "8089:8080"
     volumes:
@@ -215,8 +263,14 @@ services:
 
   # 🐬 MySQL (Case 01)
   db-mysql:
-    image: mysql:8.0
+    image: mysql:8.0-oracle
     container_name: social-bot-db-mysql
+    profiles: ["case01", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.25'
     environment:
       - MYSQL_ROOT_PASSWORD=bot-secret
       - MYSQL_DATABASE=social_bot
@@ -227,6 +281,12 @@ services:
   db-mariadb:
     image: mariadb:10.11
     container_name: social-bot-db-mariadb
+    profiles: ["case02", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
     environment:
       - MARIADB_ROOT_PASSWORD=bot-secret
       - MARIADB_DATABASE=social_bot
@@ -237,6 +297,12 @@ services:
   db-postgres:
     image: postgres:15-alpine
     container_name: social-bot-db-postgres
+    profiles: ["case03", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
     environment:
       - POSTGRES_PASSWORD=bot-secret
       - POSTGRES_DB=social_bot
@@ -247,6 +313,12 @@ services:
   db-mongodb:
     image: mongo:6.0
     container_name: social-bot-db-mongodb
+    profiles: ["case05", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
     environment:
       - MONGO_INITDB_DATABASE=social_bot
     networks:
@@ -256,20 +328,42 @@ services:
   db-redis:
     image: redis:7-alpine
     container_name: social-bot-db-redis
+    profiles: ["case06", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+          cpus: '0.05'
     networks:
       - bot-network
 
-  # 👁️ Cassandra (Case 07)
+  # 👁️ Cassandra (Case 07) - REDUCED
   db-cassandra:
     image: cassandra:4.1
     container_name: social-bot-db-cassandra
+    profiles: ["case07", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '0.50'
+        reservations:
+          memory: 1G
     networks:
       - bot-network
 
-  # 🏢 SQL Server (Case 08)
+  # 🏢 SQL Server (Case 08) - REDUCED
   db-mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: social-bot-db-mssql
+    profiles: ["case08", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '0.50'
+        reservations:
+          memory: 1G
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=Bot-Secret-2026!

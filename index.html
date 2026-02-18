@@ -370,9 +370,36 @@
     <header>
         <h1>Social Bot Scheduler: Matriz de Integración</h1>
         <p>Automatización avanzada: Orquestación Multi-Eje mediante n8n</p>
-        <div style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap;">
+
+        <!-- System Readiness Indicator -->
+        <div id="system-readiness"
+            style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 1rem; align-items: center; flex-wrap: wrap; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 1rem; border: 1px solid var(--border);">
+            <div style="text-align: left;">
+                <span style="font-size: 0.8rem; color: var(--text-secondary); display: block;">ESTADO DEL ENTORNO</span>
+                <span id="ready-badge" class="case-status"
+                    style="font-size: 1.1rem; padding: 0.3rem 1rem;">VERIFICANDO...</span>
+            </div>
+            <div class="summary-stat" style="border-left: 1px solid #333; padding-left: 1rem;">
+                <span style="font-size: 0.7rem; color: var(--text-secondary);">RAM LIBRE</span>
+                <div id="ram-indicator" style="font-weight: bold; font-family: 'JetBrains Mono';">-- GB</div>
+            </div>
+            <div class="summary-stat">
+                <span style="font-size: 0.7rem; color: var(--text-secondary);">DISCO LIBRE</span>
+                <div id="disk-indicator" style="font-weight: bold; font-family: 'JetBrains Mono';">-- GB</div>
+            </div>
+            <div class="summary-stat">
+                <span style="font-size: 0.7rem; color: var(--text-secondary);">CORES CPU</span>
+                <div id="cpu-indicator" style="font-weight: bold; font-family: 'JetBrains Mono';">--</div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap;">
             <button class="btn-test" style="background: var(--success);" id="btn-run-all">
-                🚀 PROBAR INTEGRACIÓN GLOBAL (TODOS LOS CASOS)
+                🚀 PROBAR INTEGRACIÓN GLOBAL
+            </button>
+            <button class="btn-test" style="background: #ef4444;" id="btn-clean"
+                onclick="alert('Usa make clean desde terminal para una limpieza segura')">
+                🧹 Limpiar Todo
             </button>
             <button class="btn-test" style="background: #6366f1;" id="btn-health">
                 🩺 Health Check n8n
@@ -826,13 +853,41 @@
         }
 
         // ==============================================================================
+        // SYSTEM RESOURCES
+        // ==============================================================================
+        async function updateSystemResources() {
+            try {
+                // Since resources.json is in the root, it might be accessible via /resources.json
+                // if indexed by Apache (standard setup in our docker-compose)
+                const resp = await fetch('/resources.json');
+                if (resp.ok) {
+                    const data = await resp.json();
+                    document.getElementById('ram-indicator').textContent = `${data.ram.free_gb} GB`;
+                    document.getElementById('disk-indicator').textContent = `${data.disk.free_gb} GB`;
+                    document.getElementById('cpu-indicator').textContent = data.cpu_cores;
+
+                    const badge = document.getElementById('ready-badge');
+                    badge.textContent = data.status === 'READY' ? '🟢 OPERATIVO' : '🔴 RECURSOS BAJOS';
+                    badge.className = `case-status status-${data.status === 'READY' ? 'pass' : 'fail'}`;
+                }
+            } catch (e) {
+                console.log("No se pudo cargar resources.json");
+            }
+        }
+
+        // Initial update and periodic polling
+        updateSystemResources();
+        setInterval(updateSystemResources, 30000);
+
+        // ==============================================================================
         // EVENT LISTENERS (CSP-safe, no inline handlers)
         // ==============================================================================
         document.getElementById('btn-run-all').addEventListener('click', runAllCases);
         document.getElementById('btn-health').addEventListener('click', checkHealth);
 
         for (const id of Object.keys(CASES)) {
-            document.getElementById(`btn-${id}`).addEventListener('click', () => runCase(id));
+            const btn = document.getElementById(`btn-${id}`);
+            if (btn) btn.addEventListener('click', () => runCase(id));
         }
     </script>
 </body>

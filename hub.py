@@ -5,6 +5,7 @@ import subprocess
 import re
 import datetime
 import yaml
+import json
 from pathlib import Path
 
 # ==================================================================================================
@@ -291,7 +292,38 @@ def ejecutar_doctor():
             "[AVISO] Log de Auditoría: Aún no creado (se creará con la primera acción)."
         )
 
+    # 5. Host Resources
+    safe_print("\n--- Recursos del Sistema ---")
+    try:
+        subprocess.run([sys.executable, "check_resources.py"], check=True)
+        if os.path.exists("resources.json"):
+            with open("resources.json", "r") as f:
+                res = json.load(f)
+                safe_print(f"CPU: {res['cpu_cores']} cores")
+                safe_print(f"RAM: {res['ram']['free_gb']}GB libres de {res['ram']['total_gb']}GB")
+                safe_print(f"Disk: {res['disk']['free_gb']}GB libres")
+                safe_print(f"Estado de Lanzamiento: {res['status']}")
+    except:
+        safe_print("[AVISO] No se pudo verificar recursos del sistema.")
+
     log_audit("doctor", "EXITO")
+
+
+def limpiar_todo():
+    """
+    Realiza una limpieza profunda del entorno Docker para garantizar el uso óptimo.
+    """
+    safe_print("🧹 Iniciando limpieza profunda del entorno Docker...")
+    try:
+        # 1. Detener y eliminar contenedores, redes y volúmenes
+        subprocess.run(["docker-compose", "down", "-v", "--rmi", "all"], check=True)
+        # 2. Prune total (imágenes huérfanas, caches, etc.)
+        subprocess.run(["docker", "system", "prune", "-f"], check=True)
+        safe_print("✅ Limpieza completada exitosamente.")
+        log_audit("limpiar-todo", "EXITO")
+    except subprocess.CalledProcessError as e:
+        safe_print(f"❌ Error durante la limpieza: {e}")
+        log_audit("limpiar-todo", "FALLO", str(e))
 
 
 def gestionar_stack(accion):
@@ -301,7 +333,18 @@ def gestionar_stack(accion):
     Args:
         accion (str): "up" para levantar servicios, "down" para detenerlos.
     """
+    if accion == "up":
+        # Ejecutar verificación de recursos antes de subir
+        safe_print("🔍 Verificando recursos antes de subir el stack...")
+        try:
+            subprocess.run([sys.executable, "check_resources.py"], check=True)
+        except:
+            pass
+
     cmd = ["docker-compose", accion]
+    if accion == "up":
+        cmd.append("-d")
+
     safe_print(f"Ejecutando infraestructura: {' '.join(cmd)}")
     try:
         subprocess.run(cmd, check=True)
@@ -350,7 +393,10 @@ def main():
         "up", help="Levanta la infraestructura Docker (docker-compose up)"
     )
     subparsers.add_parser(
-        "down", help="Detiene y elimina la infraestructura Docker (docker-compose down)"
+        "down", help="Detiene y mantiene los contenedores (docker-compose down)"
+    )
+    subparsers.add_parser(
+        "clean", help="Limpieza total: elimina contenedores, volúmenes e imágenes (PRUNE)"
     )
 
     args = parser.parse_args()
@@ -366,6 +412,8 @@ def main():
         gestionar_stack("up")
     elif args.command == "down":
         gestionar_stack("down")
+    elif args.command == "clean":
+        limpiar_todo()
     else:
         # Si no se pasa comando, mostrar ayuda
         parser.print_help()
