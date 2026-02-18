@@ -7,5 +7,6 @@ pytest-cov
 mypy
 types-requests
 PyYAML
+werkzeug>=3.1.5
 wheel==0.46.2
 jaraco.context==6.1.0

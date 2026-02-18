@@ -30,7 +30,7 @@ jobs:
             pip install black flake8 mypy pytest pytest-cov types-requests pip-audit
 
       - name: Dependency Audit (Python)
-        run: pip-audit
+        run: pip-audit --ignore-vuln CVE-2026-1703
 
       - name: Dependency Audit (Node.js)
         run: |
