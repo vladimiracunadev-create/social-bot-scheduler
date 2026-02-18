@@ -1,5 +1,13 @@
 Todos los cambios notables en este proyecto serán documentados en este archivo.
 
+## [4.0.0] - 2026-02-18
+### Añadido
+- **Persistencia Multi-Motor (Políglota)**: Integración de 8 bases de datos distintas (MySQL, MariaDB, PostgreSQL, SQLite, MongoDB, Redis, Cassandra y SQL Server) en los 8 casos de integración.
+- **Dashboard Dinámico v2**: El Dashboard Maestro ahora visualiza el estado de la base de datos y previsualiza los últimos registros persistidos en tiempo real.
+- **Auto-Provisionamiento de Datos**: Lógica de creación automática de bases de datos, colecciones y tablas en todos los servicios receptores.
+- **Nuevas Dependencias**: Soporte para `pyodbc` (Python), `cassandra-driver` (Ruby), `pg` (Node), `mongodb` (Node) y extensiones de Redis en PHP.
+- **Infraestructura Expandida**: Nueve servicios de bases de datos añadidos al orquestador `docker-compose`.
+
 ## [3.0.0] - 2026-02-11
 ### Añadido
 - **Resiliencia Global (100%)**: Implementación de **Idempotencia (SQLite)** y **Circuit Breaker** en los 8 casos de integración.

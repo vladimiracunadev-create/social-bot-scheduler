@@ -50,12 +50,12 @@ Usamos Python para nuestros asistentes automáticos.
 Ahora vamos a encender los servidores. El asistente te dio un comando al final, pero aquí te lo explicamos.
 
 En tu terminal (dentro de la carpeta del proyecto):
-```bash
 docker-compose up -d n8n dest-php
 ```
 -   `up -d`: Significa "levántate en segundo plano" (detached).
 -   `n8n`: Es el servicio "puente".
--   `dest-php`: Es el servidor destino donde veremos los resultados.
+-   `dest-php`: Es el servidor destino.
+-   **Nota**: Docker también descargará automáticamente el motor de base de datos necesario (ej: MySQL para el Caso 01).
 
 **¿Cómo sé que funcionó?**
 Ejecuta:
@@ -128,12 +128,19 @@ Puedes probar esto apagando el contenedor destino (`docker stop social-bot-dest-
 
 ---
 
+---
+
+## 🗄️ Fase 8: Persistencia Real (Bases de Datos)
+En esta v4.0, tus mensajes no solo se "muestran" en pantalla, sino que se guardan para siempre en una base de datos. Cada lenguaje usa una distinta:
+- Si usas el **Caso 01**, revisa el motor **MySQL**.
+- Si usas el **Caso 05**, tus posts viven en **MongoDB**.
+- Si usas el **Caso 08**, se guardan en **SQL Server**.
+
+Puedes ver el estado de estas bases de datos y los registros guardados directamente en el **Dashboard Maestro**: [http://localhost:8080](http://localhost:8080).
+
 ## 🔄 ¿Cómo pruebo otros casos?
-
 Repite el proceso:
-
 1.  Vuelve a la raíz: `cd ../../..`
 2.  Corre `python setup.py` y elige otro número (ej. 7 para Ruby).
-3.  Levanta el nuevo contenedor: `docker-compose up -d dest-ruby`.
-4.  **No necesitas importar workflows manualmente** — todos ya están activos en n8n.
-5.  Corre el nuevo bot desde su carpeta `origin`.
+3.  Levanta el nuevo contenedor: `docker-compose up -d dest-ruby`. Docker levantará también la base de datos (Cassandra en este caso).
+4.  Entra en la carpeta `origin` del nuevo caso y ejecuta el bot.

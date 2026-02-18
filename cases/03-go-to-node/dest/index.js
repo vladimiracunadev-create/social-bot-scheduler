@@ -1,6 +1,37 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const { Pool } = require('pg');
+
+// =================================================================================================
+// CONFIGURACIÓN DE BASE DE DATOS (PostgreSQL)
+// =================================================================================================
+const pool = new Pool({
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASS || 'bot-secret',
+    database: process.env.DB_NAME || 'social_bot',
+    port: 5432,
+});
+
+// Inicialización de la Tabla
+async function initDB() {
+    try {
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS social_posts (
+                id VARCHAR(50) PRIMARY KEY,
+                text TEXT NOT NULL,
+                channel VARCHAR(50) NOT NULL,
+                scheduled_at TIMESTAMP,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log("[INFO] PostgreSQL table ready.");
+    } catch (err) {
+        console.error("[ERROR] Failed to init Postgres:", err.message);
+    }
+}
+initDB();
 
 // =================================================================================================
 // CONFIGURACIÓN DE LA APP EXPRESS
@@ -50,6 +81,12 @@ app.post('/webhook', (req, res) => {
             message: 'Post recibido correctamente por Node/Express',
             case: '03-go-to-node'
         });
+
+        // Persistencia asíncrona en PostgreSQL
+        pool.query(
+            'INSERT INTO social_posts (id, text, channel, scheduled_at) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO UPDATE SET text=$2, channel=$3, scheduled_at=$4',
+            [post.id, post.text, post.channel || 'default', post.scheduled_at || null]
+        ).catch(err => console.error("[ERROR] DB Insert failed:", err.message));
     } catch (err) {
         console.error("Error escribiendo log:", err);
         res.status(500).json({ ok: false, error: 'Error interno guardando log' });

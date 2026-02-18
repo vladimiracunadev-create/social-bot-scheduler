@@ -15,6 +15,36 @@
  */
 
 // =================================================================================================
+// CONFIGURACIÓN DE BASE DE DATOS (MySQL)
+// =================================================================================================
+$dbHost = getenv('DB_HOST') ?: 'localhost';
+$dbName = getenv('DB_NAME') ?: 'social_bot';
+$dbUser = getenv('DB_USER') ?: 'root';
+$dbPass = getenv('DB_PASS') ?: 'bot-secret';
+
+try {
+    $pdo = new PDO("mysql:host=$dbHost;charset=utf8mb4", $dbUser, $dbPass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    // Crear base de datos si no existe
+    $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbName` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+    $pdo->exec("USE `$dbName`");
+    
+    // Crear tabla si no existe
+    $createTable = "CREATE TABLE IF NOT EXISTS social_posts (
+        id VARCHAR(50) PRIMARY KEY,
+        text TEXT NOT NULL,
+        channel VARCHAR(50) NOT NULL,
+        scheduled_at DATETIME,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )";
+    $pdo->exec($createTable);
+} catch (PDOException $e) {
+    // Si falla la DB, seguimos con logs pero registramos el error
+    error_log("DB Connection Error: " . $e->getMessage());
+}
+
+// =================================================================================================
 // CONFIGURACIÓN DE LOGS E INFRAESTRUCTURA
 // =================================================================================================
 $logDir = __DIR__ . '/logs';
@@ -160,7 +190,14 @@ $logLine = sprintf(
 file_put_contents($logFile, $logLine, FILE_APPEND);
 
 // (Punto de Extensión): Aquí se conectaría con la base de datos real (MySQL/PostgreSQL)
-// $db->query("INSERT INTO posts ...");
+if (isset($pdo)) {
+    try {
+        $stmt = $pdo->prepare("INSERT INTO social_posts (id, text, channel, scheduled_at) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE text=?, channel=?, scheduled_at=?");
+        $stmt->execute([$id, $text, $channel, $scheduledAt, $text, $channel, $scheduledAt]);
+    } catch (PDOException $e) {
+        error_log("DB Insert Error: " . $e->getMessage());
+    }
+}
 
 // Responder éxito al cliente
 echo json_encode(array(

@@ -2,9 +2,31 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const { MongoClient } = require('mongodb');
+
 const app = express();
 const PORT = 4000;
 const LOG_FILE = 'posts_react.log';
+
+// =================================================================================================
+// CONFIGURACIÓN DE BASE DE DATOS (MongoDB)
+// =================================================================================================
+const dbHost = process.env.DB_HOST || 'db-mongodb';
+const dbName = process.env.DB_NAME || 'social_bot';
+const mongoUrl = `mongodb://${dbHost}:27017`;
+const client = new MongoClient(mongoUrl);
+
+let db;
+async function initDB() {
+    try {
+        await client.connect();
+        db = client.db(dbName);
+        console.log("[INFO] MongoDB connected.");
+    } catch (err) {
+        console.error("[ERROR] MongoDB connection failed:", err.message);
+    }
+}
+initDB();
 
 // =================================================================================================
 // MIDDLEWARES
@@ -33,6 +55,15 @@ app.post('/webhook', (req, res) => {
     try {
         fs.appendFileSync(LOG_FILE, logLine);
         res.json({ ok: true, message: 'Recibido por React API' });
+
+        // Persistencia asíncrona en MongoDB
+        if (db) {
+            db.collection('social_posts').updateOne(
+                { id: post.id },
+                { $set: { ...post, updated_at: new Date() } },
+                { upsert: true }
+            ).catch(err => console.error("[ERROR] MongoDB Insert failed:", err.message));
+        }
     } catch (err) {
         console.error("Error escribiendo log:", err);
         res.status(500).json({ ok: false, error: "Internal Server Error" });

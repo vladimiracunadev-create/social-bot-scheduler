@@ -156,6 +156,40 @@
             border: 1px solid var(--border);
         }
 
+        .db-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(99, 102, 241, 0.1);
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .db-records {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        .db-record-item {
+            padding: 0.25rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-family: 'JetBrains Mono', monospace;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .db-record-item:last-child {
+            border-bottom: none;
+        }
+
         .btn-test {
             margin-top: auto;
             background: var(--accent);
@@ -360,12 +394,14 @@
                 <span class="case-status" id="status-01">READY</span>
             </div>
             <h3 class="case-title">Python ➔ n8n ➔ PHP</h3>
+            <div class="db-tag">🗄️ Database: MySQL</div>
             <div class="tech-stack">
                 <span class="tech-tag">FastAPI</span>
                 <span class="tech-tag">Pydantic</span>
                 <span class="tech-tag">PHP 8.x</span>
             </div>
             <button class="btn-test" id="btn-01">🔗 Probar Integración</button>
+            <div class="db-records" id="db-records-01" style="display:none"></div>
             <div class="case-result" id="result-01"></div>
         </div>
 
@@ -376,12 +412,14 @@
                 <span class="case-status" id="status-02">READY</span>
             </div>
             <h3 class="case-title">Python ➔ n8n ➔ Go</h3>
+            <div class="db-tag">🗄️ Database: MariaDB</div>
             <div class="tech-stack">
                 <span class="tech-tag">Requests</span>
                 <span class="tech-tag">Gin Gonic</span>
                 <span class="tech-tag">Go Modules</span>
             </div>
             <button class="btn-test" id="btn-02">🔗 Probar Integración</button>
+            <div class="db-records" id="db-records-02" style="display:none"></div>
             <div class="case-result" id="result-02"></div>
         </div>
 
@@ -392,12 +430,14 @@
                 <span class="case-status" id="status-03">READY</span>
             </div>
             <h3 class="case-title">Go ➔ n8n ➔ Node.js</h3>
+            <div class="db-tag">🗄️ Database: PostgreSQL</div>
             <div class="tech-stack">
                 <span class="tech-tag">Go Net/Http</span>
                 <span class="tech-tag">Express.js</span>
                 <span class="tech-tag">PM2</span>
             </div>
             <button class="btn-test" id="btn-03">🔗 Probar Integración</button>
+            <div class="db-records" id="db-records-03" style="display:none"></div>
             <div class="case-result" id="result-03"></div>
         </div>
 
@@ -408,12 +448,14 @@
                 <span class="case-status" id="status-04">READY</span>
             </div>
             <h3 class="case-title">Node.js ➔ n8n ➔ FastAPI</h3>
+            <div class="db-tag">🗄️ Database: SQLite</div>
             <div class="tech-stack">
                 <span class="tech-tag">Axios</span>
                 <span class="tech-tag">Uvicorn</span>
                 <span class="tech-tag">Pydantic V2</span>
             </div>
             <button class="btn-test" id="btn-04">🔗 Probar Integración</button>
+            <div class="db-records" id="db-records-04" style="display:none"></div>
             <div class="case-result" id="result-04"></div>
         </div>
 
@@ -424,12 +466,14 @@
                 <span class="case-status" id="status-05">READY</span>
             </div>
             <h3 class="case-title">Laravel ➔ n8n ➔ React</h3>
+            <div class="db-tag">🗄️ Database: MongoDB</div>
             <div class="tech-stack">
                 <span class="tech-tag">Artisan CLI</span>
                 <span class="tech-tag">Vite</span>
                 <span class="tech-tag">PostCSS</span>
             </div>
             <button class="btn-test" id="btn-05">🔗 Probar Integración</button>
+            <div class="db-records" id="db-records-05" style="display:none"></div>
             <div class="case-result" id="result-05"></div>
         </div>
 
@@ -440,12 +484,14 @@
                 <span class="case-status" id="status-06">READY</span>
             </div>
             <h3 class="case-title">Go ➔ n8n ➔ Symfony</h3>
+            <div class="db-tag">🗄️ Database: Redis</div>
             <div class="tech-stack">
                 <span class="tech-tag">Go Compiler</span>
                 <span class="tech-tag">Twig</span>
                 <span class="tech-tag">Doctrine</span>
             </div>
             <button class="btn-test" id="btn-06">🔗 Probar Integración</button>
+            <div class="db-records" id="db-records-06" style="display:none"></div>
             <div class="case-result" id="result-06"></div>
         </div>
 
@@ -456,12 +502,14 @@
                 <span class="case-status" id="status-07">READY</span>
             </div>
             <h3 class="case-title">Rust ➔ n8n ➔ Ruby</h3>
+            <div class="db-tag">🗄️ Database: Cassandra</div>
             <div class="tech-stack">
                 <span class="tech-tag">Reqwest</span>
                 <span class="tech-tag">Sinatra</span>
                 <span class="tech-tag">Cargo</span>
             </div>
             <button class="btn-test" id="btn-07">🔗 Probar Integración</button>
+            <div class="db-records" id="db-records-07" style="display:none"></div>
             <div class="case-result" id="result-07"></div>
         </div>
 
@@ -472,12 +520,14 @@
                 <span class="case-status" id="status-08">READY</span>
             </div>
             <h3 class="case-title">C# ➔ n8n ➔ Flask</h3>
+            <div class="db-tag">🗄️ Database: SQL Server</div>
             <div class="tech-stack">
                 <span class="tech-tag">.NET 6.0</span>
                 <span class="tech-tag">Flask</span>
                 <span class="tech-tag">Jinja2</span>
             </div>
             <button class="btn-test" id="btn-08">🔗 Probar Integración</button>
+            <div class="db-records" id="db-records-08" style="display:none"></div>
             <div class="case-result" id="result-08"></div>
         </div>
     </main>
@@ -586,7 +636,7 @@
 
             // Check each destination port
             log('', 'meta');
-            log('🔍 Verificando destinos...', 'info');
+            log('🔍 Verificando destinos y bases de datos...', 'info');
             for (const [id, cfg] of Object.entries(CASES)) {
                 try {
                     const resp = await fetch(`http://localhost:${cfg.port}`, {
@@ -594,9 +644,40 @@
                         mode: 'no-cors'
                     });
                     log(`   Case ${id} (${cfg.dest} :${cfg.port}): ✅ Respondiendo`, 'success');
+                    // Intentar fetching records
+                    setTimeout(() => fetchRecords(id), 500);
                 } catch (e) {
                     log(`   Case ${id} (${cfg.dest} :${cfg.port}): ❌ No responde`, 'cmd');
                 }
+            }
+        }
+
+        // ==============================================================================
+        // DB FETCH RECORDS
+        // ==============================================================================
+        async function fetchRecords(id) {
+            const cfg = CASES[id];
+            const el = document.getElementById(`db-records-${id}`);
+            try {
+                // Adaptar ruta de consulta si es necesario (asumimos ?action=get_logs o /logs por simplicidad)
+                const url = id === '05' ? `http://localhost:${cfg.port}/api/logs` :
+                    (id === '07' || id === '08' ? `http://localhost:${cfg.port}/api/posts` :
+                        `http://localhost:${cfg.port}/logs?action=get_logs`);
+
+                const resp = await fetch(url);
+                const data = await resp.json();
+
+                let records = [];
+                if (Array.isArray(data)) records = data;
+                else if (data.logs) records = data.logs;
+
+                if (records.length > 0) {
+                    el.style.display = 'block';
+                    el.innerHTML = '<strong>Últimos registros en DB:</strong><br>' +
+                        records.slice(-3).map(r => `<div class="db-record-item">${typeof r === 'string' ? r.substring(0, 40) : JSON.stringify(r).substring(0, 40)}...</div>`).join('');
+                }
+            } catch (e) {
+                console.log(`Error fetching records for ${id}:`, e);
             }
         }
 
@@ -660,7 +741,7 @@
             // Paso 2: Verificar que el destino recibió los datos
             if (n8nOk) {
                 log(`🔍 Verificando destino ${cfg.dest} en puerto ${cfg.port}...`, 'info');
-                await wait(1000); // Dar tiempo al destino para procesar
+                await wait(2000); // Dar tiempo al destino para procesar e insertar en DB
 
                 try {
                     const destResp = await fetch(`http://localhost:${cfg.port}`, {
@@ -668,6 +749,7 @@
                     });
                     if (destResp.ok) {
                         log(`✅ Destino ${cfg.dest} (puerto ${cfg.port}) está respondiendo`, 'success');
+                        fetchRecords(id); // Actualizar records en UI
                     } else {
                         log(`⚠️ Destino respondió con status ${destResp.status}`, 'cmd');
                     }

@@ -4,20 +4,21 @@ Este documento describe la evolución y el futuro del proyecto.
 
 ## ✅ Hitos Completados
 
-### v3.0.0 — "Observabilidad Industrial" (Actual)
+### v4.0.0 — "Persistencia Políglota" (Actual)
+- [x] Integración de 8 motores de bases de datos (SQL, NoSQL, KV).
+- [x] Dashboard dinámico con previsualización de datos en tiempo real.
+- [x] Auto-provisionamiento de esquemas en 8 lenguajes.
+
+### v3.0.0 — "Observabilidad Industrial"
 - [x] Matriz de 8 casos interoperables (Python, Go, Node, PHP, Rust, Ruby, C#, Laravel).
 - [x] Sistema de Resiliencia Global: Circuit Breaker, Idempotencia (SQLite), DLQ.
 - [x] Hub CLI centralizado para diagnósticos (`make doctor`).
-- [x] Hardening de Seguridad (Trivy scan, User permissions).
+- [x] Infrastructure Monitoring: Prometheus + Grafana.
 
 ### v1.0 - v2.0
 - [x] Orquestación base con n8n.
-- [x] Dashboard unificado.
+- [x] Dashboard unaificado.
 - [x] Dockerización completa.
-
-### v3.0
-- [x] **Prometheus Exporter**: Exponer métricas de n8n y contenedores.
-- [x] **Grafana Dashboard**: Visualización de latencia, tasa de errores y volumen de mensajes.
 
 ## 🔮 Futuro (v4.0+)
 
@@ -26,7 +27,7 @@ Este documento describe la evolución y el futuro del proyecto.
 - [ ] **HTTPS/TLS**: Certificados automáticos con Traefik o Cert Manager.
 
 ### Funcionalidad Extendida
-- [ ] **APIs Reales**: Adaptadores opcionales para conectar con APIs (Sandbox) de Twitter/LinkedIn.
+- [ ] **K8s Advanced**: Despliegue con Helm Charts y Auto-scaling.
 - [ ] **Auth Centralizada**: Keycloak o gestión de usuarios simple.
 
 ## Cómo contribuir

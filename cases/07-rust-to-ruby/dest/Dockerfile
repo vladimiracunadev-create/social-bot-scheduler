@@ -4,7 +4,8 @@ WORKDIR /app
 
 
 RUN apk add --no-cache build-base
-RUN gem install sinatra rackup puma
+RUN apk add --no-cache build-base openssl-dev zlib-dev && \
+    gem install sinatra thin cassandra-driver rackup puma
 
 COPY . .
 

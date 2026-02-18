@@ -15,24 +15,25 @@ Es la **capa de abstracción y resiliencia**. Recibe un Webhook genérico y aseg
 - **Ventaja**: El emisor no necesita conocer las APIs de las redes sociales.
 - **Guardrails**: Implementa **Idempotencia** (evita duplicados), **Circuit Breakers** (protección contra caídas de proveedores) y **DLQ** (cola de errores para reintentos).
 
-### 3. Eje de Destino (Receptores + Dashboards)
+### 3. Eje de Destino (Receptores + Dashboards + Persistencia Políglota)
 Es la **capa de auditoría y visualización**. n8n envía una copia del post finalizado a estos servicios para que el usuario pueda ver el historial en un navegador.
 - **Implementaciones**: PHP (Apache), Go, Node.js (Express), FastAPI, React (Node API), Symfony.
+- **Persistencia**: Cada destino orquesta su propio motor de base de datos (MySQL, PostgreSQL, MongoDB, Cassandra, etc.), demostrando la capacidad de manejar diversos paradigmas de datos.
 
 ---
 
 ## 📊 Matriz de Casos Implementados
 
-| Caso | Origen | Puente | Destino | Dashboard Port |
-| :--- | :--- | :--- | :--- | :--- |
-| **01** | Python | n8n | PHP Vanilla | 8081 |
-| **02** | Python | n8n | Go | 8082 |
-| **03** | Go | n8n | Node / Express | 8083 |
-| **04** | Node.js | n8n | Python FastAPI | 8084 |
-| **05** | Laravel | n8n | React / Node | 8085 |
-| **06** | Go | n8n | Symfony | 8086 |
-| **07** | Rust | n8n | Ruby (Sinatra) | 8087 |
-| **08** | C# (.NET) | n8n | Flask | 8088 |
+| Caso | Origen | Puente | Destino | Base de Datos | Puerto |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **01** | Python | n8n | PHP Vanilla | **MySQL** | 8081 |
+| **02** | Python | n8n | Go | **MariaDB** | 8082 |
+| **03** | Go | n8n | Node / Express | **PostgreSQL** | 8083 |
+| **04** | Node.js | n8n | Python FastAPI | **SQLite** | 8084 |
+| **05** | Laravel | n8n | React / Node | **MongoDB** | 8085 |
+| **06** | Go | n8n | Symfony | **Redis** | 8086 |
+| **07** | Rust | n8n | Ruby (Sinatra) | **Cassandra** | 8087 |
+| **08** | C# (.NET) | n8n | Flask | **SQL Server** | 8088 |
 
 ---
 
@@ -57,9 +58,11 @@ graph LR
         D -- Mirror POST --> G((Dest API))
     end
 
-    subgraph "DESTINATION (Visualizer)"
-        G --> H[Log File / DB]
-        H -- Serve --> I[Web Dashboard]
+    subgraph "DESTINATION (Visualizer & Multi-DB)"
+        G --> H1[MySQL/MariaDB/PSQL]
+        G --> H2[Mongo/Cassandra]
+        G --> H3[Redis/SQLite/MSSQL]
+        H1 & H2 & H3 -- Serve --> I[Web Dashboard]
     end
 ```
 

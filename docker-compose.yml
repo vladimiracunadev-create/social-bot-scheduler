@@ -70,6 +70,11 @@ services:
       - ./cases/01-python-to-php/dest:/var/www/html
     networks:
       - bot-network
+    environment:
+      - DB_HOST=db-mysql
+      - DB_NAME=social_bot
+      - DB_USER=root
+      - DB_PASS=bot-secret
 
   # 🐹 Caso 02: Destino Go
   dest-go:
@@ -79,6 +84,11 @@ services:
       - "8082:8080"
     networks:
       - bot-network
+    environment:
+      - DB_HOST=db-mariadb
+      - DB_NAME=social_bot
+      - DB_USER=root
+      - DB_PASS=bot-secret
 
   # 🍏 Caso 03: Destino Node.js
   dest-node:
@@ -88,6 +98,11 @@ services:
       - "8083:3000"
     networks:
       - bot-network
+    environment:
+      - DB_HOST=db-postgres
+      - DB_NAME=social_bot
+      - DB_USER=postgres
+      - DB_PASS=bot-secret
 
   # 🐍 Caso 04: Destino FastAPI
   dest-fastapi:
@@ -110,6 +125,9 @@ services:
     command: sh -c "npm install express cors && node server.js"
     networks:
       - bot-network
+    environment:
+      - DB_HOST=db-mongodb
+      - DB_NAME=social_bot
 
   # 🐘 Caso 06: Destino Symfony (PHP)
   dest-symfony:
@@ -121,6 +139,8 @@ services:
       - ./cases/06-go-to-symfony/dest:/var/www/html
     networks:
       - bot-network
+    environment:
+      - DB_HOST=db-redis
 
   # 💎 Caso 07: Destino Ruby (Sinatra)
   dest-ruby:
@@ -130,6 +150,8 @@ services:
       - "8087:4567"
     networks:
       - bot-network
+    environment:
+      - DB_HOST=db-cassandra
 
   # 🌶️ Caso 08: Destino Flask (Python)
   dest-flask:
@@ -139,6 +161,9 @@ services:
       - "8088:5000"
     networks:
       - bot-network
+    environment:
+      - DB_HOST=db-mssql
+      - DB_PASS=Bot-Secret-2026!
 
 
 
@@ -183,6 +208,71 @@ services:
       - /dev/disk/:/dev/disk:ro
     devices:
       - /dev/kmsg
+    networks:
+      - bot-network
+
+  # --- DATABASES FOR DESTINATIONS ---
+
+  # 🐬 MySQL (Case 01)
+  db-mysql:
+    image: mysql:8.0
+    container_name: social-bot-db-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=bot-secret
+      - MYSQL_DATABASE=social_bot
+    networks:
+      - bot-network
+
+  # 🦭 MariaDB (Case 02)
+  db-mariadb:
+    image: mariadb:10.11
+    container_name: social-bot-db-mariadb
+    environment:
+      - MARIADB_ROOT_PASSWORD=bot-secret
+      - MARIADB_DATABASE=social_bot
+    networks:
+      - bot-network
+
+  # 🐘 PostgreSQL (Case 03)
+  db-postgres:
+    image: postgres:15-alpine
+    container_name: social-bot-db-postgres
+    environment:
+      - POSTGRES_PASSWORD=bot-secret
+      - POSTGRES_DB=social_bot
+    networks:
+      - bot-network
+
+  # 🍃 MongoDB (Case 05)
+  db-mongodb:
+    image: mongo:6.0
+    container_name: social-bot-db-mongodb
+    environment:
+      - MONGO_INITDB_DATABASE=social_bot
+    networks:
+      - bot-network
+
+  # 🔴 Redis (Case 06)
+  db-redis:
+    image: redis:7-alpine
+    container_name: social-bot-db-redis
+    networks:
+      - bot-network
+
+  # 👁️ Cassandra (Case 07)
+  db-cassandra:
+    image: cassandra:4.1
+    container_name: social-bot-db-cassandra
+    networks:
+      - bot-network
+
+  # 🏢 SQL Server (Case 08)
+  db-mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: social-bot-db-mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Bot-Secret-2026!
     networks:
       - bot-network
 

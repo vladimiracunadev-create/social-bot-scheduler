@@ -6,7 +6,7 @@
 
 ## 🎯 Resumen Ejecutivo
 
-**Social Bot Scheduler** es un laboratorio de ingeniería de software que demuestra **interoperabilidad multi-lenguaje a escala empresarial**. El proyecto implementa una matriz de 8 ejes de integración donde diferentes lenguajes de programación (Python, Go, Node.js, PHP, Rust, Ruby, C#) se comunican entre sí mediante un bus de orquestación centralizado (n8n).
+**Social Bot Scheduler** es un laboratorio de ingeniería de software que demuestra **interoperabilidad multi-lenguaje y políglota de datos a escala empresarial**. El proyecto implementa una matriz de 8 ejes de integración donde diferentes lenguajes de programación (Python, Go, Node.js, PHP, Rust, Ruby, C#) se comunican entre sí y persisten datos en 8 motores de bases de datos diferentes.
 
 ### Valor de Negocio
 - **Reducción de silos tecnológicos**: Permite que equipos con diferentes stacks trabajen juntos sin fricciones
@@ -22,6 +22,7 @@
 - **Arquitectura de Microservicios**: Diseño de sistemas distribuidos con comunicación asíncrona
 - **Patrón Pub/Sub**: Implementación de bus de eventos mediante webhooks y n8n
 - **Separación de Responsabilidades**: Arquitectura de 3 capas (Origen → Puente → Destino)
+- **Persistencia Políglota**: Integración de 8 motores de base de datos (SQL, NoSQL, KV, Documental)
 - **Diseño Modular**: 8 casos de integración independientes pero cohesivos
 
 ### 🔐 Seguridad y DevSecOps
@@ -36,6 +37,7 @@
 | Categoría | Tecnologías |
 |-----------|-------------|
 | **Lenguajes** | Python, Go, Node.js, PHP, Rust, Ruby, C# |
+| **Bases de Datos** | MySQL, MariaDB, PostgreSQL, SQLite, MongoDB, Redis, Cassandra, SQL Server |
 | **Frameworks** | FastAPI, Express, Laravel, Symfony, Flask, Sinatra, .NET |
 | **Orquestación** | n8n, Docker Compose, Kubernetes (Kustomize) |
 | **CI/CD** | GitHub Actions, Pre-commit hooks, Automated testing |
@@ -56,7 +58,7 @@
 
 **Qué evaluar**:
 - **Emisor Python**: Uso de Pydantic para validación de datos, manejo de fechas, HTTP requests
-- **Receptor PHP**: API REST vanilla, persistencia de logs, dashboard web
+- **Receptor PHP**: API REST vanilla, persistencia en **MySQL**, dashboard web
 - **Integración**: Comunicación asíncrona mediante webhooks de n8n
 
 **Comando de prueba rápida**:
@@ -69,7 +71,7 @@
 
 **Qué evaluar**:
 - **Emisor Node.js**: Async/await, Axios, manejo de errores
-- **Receptor FastAPI**: API moderna con validación automática, documentación OpenAPI
+- **Receptor FastAPI**: API con validación automática, persistencia en **SQLite**
 - **Dashboard**: Visualización en tiempo real en `localhost:8084`
 
 ### 📌 Caso 07: Rust → Ruby (Lenguajes Especializados)
@@ -77,7 +79,7 @@
 
 **Qué evaluar**:
 - **Emisor Rust**: Manejo de memoria seguro, concurrencia, HTTP client
-- **Receptor Ruby/Sinatra**: Framework minimalista, DSL expresivo
+- **Receptor Ruby/Sinatra**: Framework minimalista, persistencia en **Cassandra**
 - **Versatilidad**: Capacidad de trabajar con lenguajes de nicho
 
 ---
@@ -92,6 +94,7 @@
 
 ### 🏆 Complejidad Técnica
 - **8 Lenguajes de Programación**: Dominio de múltiples paradigmas y ecosistemas
+- **8 Bases de Datos**: Integración de motores SQL, NoSQL y In-Memory
 - **8 Casos de Integración**: Cada uno con su propio stack completo
 - **Arquitectura Unificada**: Todos los casos comparten el mismo patrón de diseño
 - **Zero-Touch Setup**: n8n se auto-configura con workflows pre-importados
@@ -161,7 +164,7 @@ Demuestra versatilidad y capacidad de trabajar en equipos heterogéneos. En empr
 Sí. Incluye manifiestos de Kubernetes, health checks, logs estructurados, seguridad hardened y stack de observabilidad completo (Prometheus/Grafana).
 
 ### ¿Cuánto tiempo tomó desarrollar esto?
-El proyecto evolucionó iterativamente. La versión actual (v3.0.0) representa aproximadamente 3-4 semanas de desarrollo activo, incluyendo refactorización y documentación.
+El proyecto evolucionó iterativamente. La **v4.0.0** representa un salto hacia la persistencia políglota, añadiendo 8 bases de datos en una sola fase de expansión.
 
 ### ¿Qué parte fue más desafiante?
 La estandarización de seguridad en contenedores (eliminar CVEs) y la creación del HUB CLI con validación robusta de entradas.
@@ -181,5 +184,5 @@ La estandarización de seguridad en contenedores (eliminar CVEs) y la creación 
 ---
 
 **Última actualización**: Febrero 2026  
-**Versión del proyecto**: v3.0.0  
+**Versión del proyecto**: v4.0.0  
 **Repositorio**: [github.com/vladimiracunadev-create/social-bot-scheduler](https://github.com/vladimiracunadev-create/social-bot-scheduler)

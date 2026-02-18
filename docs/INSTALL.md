@@ -16,8 +16,10 @@ El uso de Docker garantiza la portabilidad absoluta y la seguridad mediante el a
 docker build -t social-bot-scheduler .
 
 # Iniciar contenedor (ejemplo con n8n)
-docker-compose up -d n8n dest-php
+docker-compose up -d n8n dest-php db-mysql
 ```
+
+> **Ecosistema Multi-DB**: Al levantar un servicio de destino, asegúrate de levantar también su base de datos asociada (ej: `db-mysql`, `db-mongodb`, etc.) para habilitar la persistencia.
 
 > [!IMPORTANT]
 > Nuestra imagen Docker utiliza una estrategia de **Dual-Layer Patching**:

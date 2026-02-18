@@ -4,6 +4,22 @@ from pydantic import BaseModel
 from datetime import datetime
 import uvicorn
 import os
+import sqlite3
+
+# ==================================================================================================
+# CONFIGURACIÓN DE BASE DE DATOS (SQLite)
+# ==================================================================================================
+DB_FILE = "social_bot.db"
+
+def init_db():
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS social_posts
+                 (id TEXT PRIMARY KEY, text TEXT, channel TEXT, scheduled_at TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+    conn.commit()
+    conn.close()
+
+init_db()
 
 # ==================================================================================================
 # CONFIGURACIÓN APP FASTAPI
@@ -51,10 +67,19 @@ async def receive_post(post: Post):
     log_line = f"[{datetime.now().isoformat()}] FASTAPI-RECEIVER | id={post.id} | channel={post.channel} | text={post.text}\n"
 
     # Escritura de archivo
-    # Nota: `open()` es una operación bloqueante (I/O síncrono). En casos de carga extrema,
-    # esto podría bloquear el Event Loop de Python. Se recomienda usar `aiofiles` en producción.
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(log_line)
+
+    # Persistencia en SQLite
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute("INSERT OR REPLACE INTO social_posts (id, text, channel, scheduled_at) VALUES (?, ?, ?, ?)",
+                  (post.id, post.text, post.channel, post.scheduled_at))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Error guardando en SQLite: {e}")
 
     print(f"Post recibido en FastAPI: {post.id}")
     return {

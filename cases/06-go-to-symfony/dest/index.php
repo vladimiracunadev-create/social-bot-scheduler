@@ -15,7 +15,34 @@ namespace App\Controller;
  */
 class SocialBotController
 {
-    private $logFile = __DIR__ . '/../../var/log/social_bot_symfony.log';
+    private $logFile = __DIR__ . '/symfony.log';
+    private $errorLogFile = __DIR__ . '/errors.log';
+
+    // =================================================================================================
+    // CONFIGURACIÓN DE REDIS (Case 06)
+    // =================================================================================================
+    private $redisHost;
+
+    public function __construct()
+    {
+        $this->redisHost = getenv('DB_HOST') ?: 'db-redis';
+    }
+
+    private function saveToRedis($id, $data)
+    {
+        try {
+            // Asumimos que phpredis está disponible en la imagen php:8.2-apache
+            $redis = new \Redis(); // Use \Redis for global namespace
+            if (@$redis->connect($this->redisHost, 6379, 1.0)) {
+                $redis->set("post:$id", json_encode($data));
+                $redis->expire("post:$id", 3600 * 24); // 24h retention
+                return true;
+            }
+        } catch (\Exception $e) { // Use \Exception for global namespace
+            error_log("Redis Error: " . $e->getMessage());
+        }
+        return false;
+    }
 
     public function receive(Request $request): Response
     {
@@ -27,7 +54,11 @@ class SocialBotController
         }
 
         $logLine = "[" . date('Y-m-d H:i:s') . "] SYMFONY-DEST | id={$data['id']} | text={$data['text']}\n";
+        // Escritura atómica
         file_put_contents($this->logFile, $logLine, FILE_APPEND);
+
+        // Persistencia en Redis
+        $this->saveToRedis($data['id'], $data);
 
         return new JsonResponse(['ok' => true, 'message' => 'Symfony ha recibido el post']);
     }
@@ -73,8 +104,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && strpos($_SERVER['REQUEST_URI'], '/e
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Simula la acción `receive()` del controlador
     $input = file_get_contents('php://input');
+    $data = json_decode($input, true);
     $log = "[" . date('Y-m-d H:i:s') . "] SYMFONY-LITE | " . $input . "\n";
     file_put_contents('symfony.log', $log, FILE_APPEND);
+
+    // Persistencia en Redis (Procedural fallback)
+    $redisHost = getenv('DB_HOST') ?: 'db-redis';
+    try {
+        $redis = new \Redis();
+        if (@$redis->connect($redisHost, 6379, 1.0)) {
+            $redis->set("post:" . ($data['id'] ?? 'unknown'), $input);
+        }
+    } catch (\Exception $e) {
+    }
 
     header('Content-Type: application/json');
     echo json_encode(['ok' => true]);

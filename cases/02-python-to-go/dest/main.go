@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -9,6 +10,8 @@ import (
 	"os"
 	"sync"
 	"time"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 // =================================================================================================
@@ -34,6 +37,7 @@ type Post struct {
 var (
 	logMutex sync.Mutex // Semáforo para exclusión mutua en escritura de logs
 	logFile  *os.File   // Descriptor de archivo abierto
+	db       *sql.DB    // Conexión a MariaDB
 )
 
 // =================================================================================================
@@ -51,6 +55,45 @@ func main() {
 	}
 	// Asegurar que el archivo se cierre correctamente al terminar main (aunque sea un servidor persistente)
 	defer logFile.Close()
+
+	// --- DATABASE SETUP (MariaDB) ----------------------------------------------------------------
+	dbHost := os.Getenv("DB_HOST")
+	dbName := os.Getenv("DB_NAME")
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASS")
+
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:3306)/?charset=utf8mb4&parseTime=True&loc=Local", dbUser, dbPass, dbHost)
+	
+	// Reintento de conexión (esperar a que MariaDB esté lista)
+	for i := 0; i < 10; i++ {
+		db, err = sql.Open("mysql", dsn)
+		if err == nil {
+			err = db.Ping()
+		}
+		if err == nil {
+			break
+		}
+		log.Printf("Esperando a MariaDB... %v", err)
+		time.Sleep(2 * time.Second)
+	}
+	
+	if err != nil {
+		log.Printf("Error conectando a MariaDB: %v. Continuando solo con logs.", err)
+	} else {
+		defer db.Close()
+		_, _ = db.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s", dbName))
+		_, _ = db.Exec(fmt.Sprintf("USE %s", dbName))
+		_, err = db.Exec(`CREATE TABLE IF NOT EXISTS social_posts (
+			id VARCHAR(50) PRIMARY KEY,
+			text TEXT NOT NULL,
+			channel VARCHAR(50) NOT NULL,
+			scheduled_at DATETIME,
+			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+		)`)
+		if err != nil {
+			log.Printf("Error creando tabla: %v", err)
+		}
+	}
 
 	// --- ROUTING HTTP ----------------------------------------------------------------------------
 	
@@ -142,6 +185,17 @@ func main() {
 			log.Printf("Error escribiendo en log: %v", err)
 		}
 		logMutex.Unlock()
+
+		// Persistencia en DB
+		if db != nil {
+			query := `INSERT INTO social_posts (id, text, channel, scheduled_at) 
+					  VALUES (?, ?, ?, ?) 
+					  ON DUPLICATE KEY UPDATE text=?, channel=?, scheduled_at=?`
+			_, err = db.Exec(query, post.ID, post.Text, post.Channel, post.ScheduledAt, post.Text, post.Channel, post.ScheduledAt)
+			if err != nil {
+				log.Printf("Error guardando en MariaDB: %v", err)
+			}
+		}
 
 		fmt.Printf("Post recibido en Go: %s\n", post.ID)
 

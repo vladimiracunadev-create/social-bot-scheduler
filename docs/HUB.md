@@ -62,6 +62,8 @@ python hub.py up
 python hub.py down
 ```
 
+> **Soporte Multi-DB**: El HUB heredará la orquestación de las 8 bases de datos definidas en `docker-compose.yml`, asegurando que la infraestructura de persistencia esté lista antes de ejecutar los bots.
+
 ---
 
 ## 📄 Archivos de Configuración

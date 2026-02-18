@@ -5,7 +5,7 @@
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
 [![Ecosystem](https://img.shields.io/badge/Matriz-8_Ejes-blueviolet.svg)]()
 [![Security](https://img.shields.io/badge/Security-Hardened-success.svg)]()
-[![Latest Release](https://img.shields.io/badge/release-v3.0.0-blue.svg)]()
+[![Latest Release](https://img.shields.io/badge/release-v4.0.0-blue.svg)]()
 
 ---
 
@@ -56,6 +56,25 @@ La capa de n8n actúa como un cortafuegos inteligente entre tus bots y las redes
 **Documentación:**
 - [Guardrails](docs/GUARDRAILS.md) - Conceptos y teoría
 - [Guía de Resiliencia](docs/RESILIENCE_GUIDE.md) - Implementación completa y pruebas
+
+---
+
+## 🗄️ Persistencia Multi-Motor (Políglota - v4.0)
+
+Para hacer el laboratorio aún más robusto y realista, cada eje de integración ahora cuenta con su propio motor de base de datos dedicado. El sistema no solo orquesta lenguajes, sino también paradigmas de persistencia:
+
+| Caso | Motor | Tipo | Uso en el Sistema |
+| :--- | :--- | :--- | :--- |
+| **01** | **MySQL** | Relacional | Almacenamiento Estándar PHP |
+| **02** | **MariaDB** | Relacional | Almacenamiento Estándar Go |
+| **03** | **PostgreSQL** | Relacional | JSONB y Transacciones Node.js |
+| **04** | **SQLite** | Embebido | Persistencia Local Ligera FastAPI |
+| **05** | **MongoDB** | NoSQL Documental | Esquemas Flexibles React/Express |
+| **06** | **Redis** | In-Memory / KV | Caché y Estados Symfony |
+| **07** | **Cassandra** | NoSQL Wide-Column | Alta disponibilidad Ruby |
+| **08** | **SQL Server** | Relacional Enterprise | Datos Estructurados Flask |
+
+> **Auto-Migración**: Cada servicio receptor está programado para verificar la conexión, crear la base de datos y generar las tablas/colecciones automáticamente al arrancar.
 
 ---
 
@@ -136,12 +155,11 @@ Si los logs aparecen vacíos, sigue estos pasos:
 8.  **Logs persistentes (Archivos)**: Revisa carpetas como `cases/01-python-to-php/dest/logs/`. Estos archivos solo se crean si el `WEBHOOK_URL` en tu `.env` es correcto y el post llega al destino.
 
 Verifica el Dashboard del Caso 01: [http://localhost:8081](http://localhost:8081)
-
-
+Verifica el Dashboard Maestro para ver los registros en cada DB: [http://localhost:8080](http://localhost:8080)
 
 ---
 
-## 📈 Observabilidad Avanzada (v3.0)
+## 📈 Observabilidad Avanzada y Multi-DB (v4.0)
 
 Este proyecto implementa un **stack de monitoreo industrial** para eliminar la "caja negra" típica de las integraciones.
 
@@ -170,16 +188,14 @@ Este proyecto implementa un **stack de monitoreo industrial** para eliminar la "
 ## 🏗️ La Gran Matriz de Integración
 Tabla de estado actual de los 8 ejes de integración:
 
-| ID | Eje Tecnológico (Origen -> Puente -> Destino) | Dashboard | Estado |
-| :--- | :--- | :--- | :--- |
-| [**01**](cases/01-python-to-php/README.md) | 🐍 **Python** -> 🔗 n8n -> 🐘 **PHP** | `localhost:8081` | ✅ Operativo |
-| [**02**](cases/02-python-to-go/README.md) | 🐍 **Python** -> 🔗 n8n -> 🐹 **Go** | `localhost:8082` | ✅ Operativo |
-| [**03**](cases/03-go-to-node/README.md) | 🐹 **Go** -> 🔗 n8n -> 🍏 **Node.js** | `localhost:8083` | ✅ Operativo |
-| [**04**](cases/04-node-to-fastapi/README.md) | 🍏 **Node.js** -> 🔗 n8n -> 🐍 **FastAPI** | `localhost:8084` | ✅ Operativo |
-| [**05**](cases/05-laravel-to-react/README.md) | 🐘 **Laravel** -> 🔗 n8n -> ⚛️ **React** | `localhost:8085` | ✅ Operativo |
-| [**06**](cases/06-go-to-symfony/README.md) | 🐹 **Go** -> 🔗 n8n -> 🐘 **Symfony** | `localhost:8086` | ✅ Operativo |
-| [**07**](cases/07-rust-to-ruby/README.md) | 🦀 **Rust** -> 🔗 n8n -> 💎 **Ruby** | `localhost:8087` | ✅ Operativo |
-| [**08**](cases/08-csharp-to-flask/README.md) | ❄️ **C#** -> 🔗 n8n -> 🌶️ **Flask** | `localhost:8088` | ✅ Operativo |
+| [**01**](cases/01-python-to-php/README.md) | 🐍 **Python** -> 🔗 n8n -> 🐘 **PHP** | `MySQL` | ✅ Operativo |
+| [**02**](cases/02-python-to-go/README.md) | 🐍 **Python** -> 🔗 n8n -> 🐹 **Go** | `MariaDB` | ✅ Operativo |
+| [**03**](cases/03-go-to-node/README.md) | 🐹 **Go** -> 🔗 n8n -> 🍏 **Node.js** | `PostgreSQL` | ✅ Operativo |
+| [**04**](cases/04-node-to-fastapi/README.md) | 🍏 **Node.js** -> 🔗 n8n -> 🐍 **FastAPI** | `SQLite` | ✅ Operativo |
+| [**05**](cases/05-laravel-to-react/README.md) | 🐘 **Laravel** -> 🔗 n8n -> ⚛️ **React** | `MongoDB` | ✅ Operativo |
+| [**06**](cases/06-go-to-symfony/README.md) | 🐹 **Go** -> 🔗 n8n -> 🐘 **Symfony** | `Redis` | ✅ Operativo |
+| [**07**](cases/07-rust-to-ruby/README.md) | 🦀 **Rust** -> 🔗 n8n -> 💎 **Ruby** | `Cassandra` | ✅ Operativo |
+| [**08**](cases/08-csharp-to-flask/README.md) | ❄️ **C#** -> 🔗 n8n -> 🌶️ **Flask** | `SQL Server` | ✅ Operativo |
 
 ---
 
