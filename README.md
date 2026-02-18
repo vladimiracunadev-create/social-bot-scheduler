@@ -188,6 +188,8 @@ Este proyecto implementa un **stack de monitoreo industrial** para eliminar la "
 ## 🏗️ La Gran Matriz de Integración
 Tabla de estado actual de los 8 ejes de integración:
 
+| ID | Eje Tecnológico (Origen -> Puente -> Destino) | Persistencia | Estado |
+| :--- | :--- | :--- | :--- |
 | [**01**](cases/01-python-to-php/README.md) | 🐍 **Python** -> 🔗 n8n -> 🐘 **PHP** | `MySQL` | ✅ Operativo |
 | [**02**](cases/02-python-to-go/README.md) | 🐍 **Python** -> 🔗 n8n -> 🐹 **Go** | `MariaDB` | ✅ Operativo |
 | [**03**](cases/03-go-to-node/README.md) | 🐹 **Go** -> 🔗 n8n -> 🍏 **Node.js** | `PostgreSQL` | ✅ Operativo |
