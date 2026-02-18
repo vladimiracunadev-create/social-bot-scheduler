@@ -216,19 +216,21 @@ Tabla de estado actual de los 8 ejes de integración:
 ---
 
 ## 📖 Documentación Detallada
+
+Accede a las guías específicas para profundizar en cada área del sistema:
+
 - 👔 **[Guía para Reclutadores](docs/RECRUITER.md)**: Evaluación técnica rápida y valor de negocio del proyecto.
-- 🎓 **[Guía Paso a Paso para Principiantes](docs/BEGINNERS_GUIDE.md)**: Manual detallado desde cero.
-- 🔧 **[Solución de Problemas](docs/TROUBLESHOOTING.md)**: Cómo arreglar errores comunes (Docker, n8n, dependencias).
-- 📊 **[Índice de Casos](docs/CASES_INDEX.md)**: Explicación técnica de cada combinación.
-- 🏗️ **[Arquitectura](docs/ARCHITECTURE.md)**: Diagramas del sistema.
-- [Análisis de Recursos Docker](docs/DOCKER_RESOURCES.md)
-- [Activación de Workflows](COMO_ACTIVAR_WORKFLOWS.md)
-- 🧪 **[Guía de Verificación](docs/VERIFICATION_GUIDE.md)**: Cómo probar el correcto funcionamiento del repo.
-- 💻 **[Requisitos del Sistema](docs/REQUIREMENTS.md)**: Hardware y software necesario.
-- ⚠️ **[Limitaciones](docs/LIMITATIONS.md)**: Trade-offs y decisiones de diseño.
-- 📊 **[Reporte de Recursos Docker](docs/DOCKER_REPORT.md)**: Análisis de uso de disco, imágenes y volúmenes.
-- 🧑‍💻 **[Guía de Mantenedores](docs/MAINTAINERS.md)**: Información crítica para la evolución del sistema.
-- 🗺️ **[Roadmap](ROADMAP.md)**: Evolución y futuro del proyecto.
+- 🎓 **[Guía para Principiantes](docs/BEGINNERS_GUIDE.md)**: Manual detallado para empezar desde cero.
+- 🐳 **[Análisis de Recursos Docker](docs/DOCKER_RESOURCES.md)**: Informe detallado de uso de RAM y Disco (Total vs Parcial).
+- 🔗 **[Activación de Workflows](COMO_ACTIVAR_WORKFLOWS.md)**: Cómo importar y activar la lógica en n8n automáticamente.
+- 🔧 **[Solución de Problemas](docs/TROUBLESHOOTING.md)**: Resolución de errores comunes de Docker, n8n y dependencias.
+- 📊 **[Índice de Casos](docs/CASES_INDEX.md)**: Matriz técnica detallada de cada flujo de integración.
+- 🏗️ **[Arquitectura](docs/ARCHITECTURE.md)**: Diagramas del sistema y decisiones de diseño.
+- 🧪 **[Guía de Verificación](docs/VERIFICATION_GUIDE.md)**: Manual de pruebas para asegurar la salud del repositorio.
+- 💻 **[Requisitos del Sistema](docs/REQUIREMENTS.md)**: Especificaciones de hardware y software recomendadas.
+- ⚠️ **[Limitaciones](docs/LIMITATIONS.md)**: Trade-offs y decisiones técnicas de diseño.
+- 🧑‍💻 **[Guía de Mantenedores](docs/MAINTAINERS.md)**: Información crítica para la evolución y extensión del sistema.
+- 🗺️ **[Roadmap](ROADMAP.md)**: Planificación, hitos y futuro del proyecto.
 
 ---
 
