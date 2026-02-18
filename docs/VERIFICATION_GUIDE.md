@@ -1,62 +1,78 @@
-# 🧪 Guía de Pruebas Manuales: Verificación de Guardrails
+# Guía de Verificación del Repositorio
 
-Esta guía permite al usuario verificar que la lógica implementada en los flujos de n8n funciona correctamente ante escenarios de estrés y fallos reales.
+Esta guía detalla los pasos necesarios para asegurar que el entorno de **Social Bot Scheduler** sea correcto, seguro y esté listo para operar.
 
----
+## 1. Verificación de Salud Local (Diagnóstico)
 
-## 1. Prueba de Idempotencia (Evitar Duplicados)
-
-**Escenario**: Se envía el mismo post dos veces en un intervalo corto.
-**Acción**: Ejecuta el bot de un caso (ej. Caso 01) dos veces seguidas con el mismo ID de post.
-
-```powershell
-# Intento 1
-cd cases/01-python-to-php/origin
-python bot.py  # Debería mostrar "Payload sent" y verse en el dashboard.
-
-# Intento 2 (Inmediato)
-python bot.py  # Debería mostrar "Payload sent", pero en n8n verás "Duplicate Ignored".
-```
-
-**Resultado Esperado**:
-- El segundo post **no** aparece en el Dashboard de destino.
-- En la pestaña "Executions" de n8n, el flujo termina en el nodo "Check Idempotency" ramificando hacia el final sin hacer el posteo.
-
----
-
-## 2. Prueba de Reintentos (Circuit Breaker Simulado)
-
-**Escenario**: El servicio de destino está caído o responde lento.
-**Acción**: Detén el contenedor de destino del caso que estés probando.
+El primer paso es usar las herramientas de autodiagnóstico integradas en el HUB.
 
 ```bash
-docker-compose stop dest-php
+# Opción A: Usando el Makefile
+make doctor
+
+# Opción B: Usando el HUB directamente
+python hub.py doctor
 ```
 
-**Acción**: Envía un post desde el bot.
-**Resultado Esperado**:
-- En n8n, verás que el nodo "HTTP Request" se pone en estado "Retrying" (reintentando).
-- Intentará 3 veces antes de fallar definitivamente.
+**¿Qué verifica este comando?**
+- Versión de Docker y Docker Compose.
+- Validez de los manifiestos YAML de cada caso.
+- Estado de los logs de auditoría.
+- **Recursos del Host**: Verifica si tienes suficiente RAM y Disco para el stack completo.
 
----
+## 2. Verificación de Infraestructura
 
-## 3. Prueba de Dead Letter Queue (DLQ)
+Una vez confirmado el diagnóstico, levanta el stack y verifica que los contenedores estén operativos.
 
-**Escenario**: El post falla después de todos los reintentos.
-**Acción**: Con el contenedor detenido, deja que pasen los 3 reintentos.
+```bash
+# Levanta todo el stack (Perfil Full)
+make up
 
-**Resultado Esperado**:
-- El flujo activa el nodo "Dead Letter Queue (DLQ)".
-- En el servidor de logs (o dashboard de errores), debe aparecer una entrada con el JSON original y el detalle del error (ej: `ECONNREFUSED`).
-
----
-
-## 4. Validación Estructural Automática
-
-He proporcionado un script para verificar que todos los casos mantengan los estándares de seguridad.
-
-```powershell
-python scripts/validate_workflows.py
+# Verifica el estado de los contenedores
+docker-compose ps
 ```
 
-Deberías ver: `[OK] cases\XX-xx\n8n\workflow.json: Estructura de Guardrails correcta.` para los 8 casos.
+## 3. Verificación de Integración (End-to-End)
+
+Para confirmar que el "circuito" (Chatbot -> n8n -> Dashboard) funciona, tienes dos niveles de prueba:
+
+### A. Prueba Global (Dashboard)
+1. Abre [http://localhost:8080](http://localhost:8080) en tu navegador.
+2. Observa el indicador de **"Estado del Entorno"**.
+3. Haz clic en **"🚀 PROBAR INTEGRACIÓN GLOBAL"**. El Dashboard ejecutará secuencialmente los 8 casos y mostrará los resultados en tiempo real.
+
+### B. Prueba Individual (CLI)
+Si prefieres la terminal, puedes ejecutar casos específicos:
+
+```bash
+# Ejecutar Caso 01 (Modo Simulación por defecto)
+python hub.py ejecutar 01-python-to-php
+
+# Ejecutar Caso 01 (Modo Real)
+python hub.py ejecutar 01-python-to-php --real
+```
+
+## 4. Verificación de Calidad y Seguridad
+
+Si planeas contribuir o validar el cumplimiento de estándares, ejecuta la suite de tests y auditoría:
+
+```bash
+# Verificar formato de código
+black --check .
+
+# Auditoría de seguridad de dependencias
+pip-audit --ignore-vuln CVE-2026-1703
+
+# Tests unitarios y de tipado
+mypy cases/01-python-to-php/origin/src/social_bot
+pytest cases/01-python-to-php/origin/tests/
+```
+
+## 5. Limpieza y Reseteo
+
+Si el sistema presenta comportamientos erráticos, realiza una limpieza profunda:
+
+```bash
+make clean
+```
+esto eliminará volúmenes y redes, permitiendo una reinstalación "desde cero" limpia.
