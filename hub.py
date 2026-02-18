@@ -347,9 +347,9 @@ def gestionar_stack(accion, full=False):
     cmd = ["docker-compose"]
     if full and accion == "up":
         cmd.extend(["--profile", "full"])
-    
+
     cmd.append(accion)
-    
+
     if accion == "up":
         cmd.append("-d")
 
