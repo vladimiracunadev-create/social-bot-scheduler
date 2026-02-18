@@ -6,11 +6,14 @@ This document outlines the minimum and optimal hardware/software requirements fo
 
 Running 20 containers simultaneously (including 8 different database engines) is a resource-intensive task.
 
-| Component | Minimum (Selective) | Minimum (Full Stack) | Optimal (Performance) |
+| Component | Mínimo (Por caso) | Óptimo (Estándar) | Máximo (Todo el Repo) |
 | :--- | :--- | :--- | :--- |
-| **CPU** | 2 Cores | 4 Cores | 8 Cores+ |
-| **RAM** | 4 GB | 8 GB | 16 GB+ |
-| **Disk** | 5 GB | 10 GB | 20 GB (SSD recommended) |
+| **CPU** | 2 Cores | 4 Cores | 4-8 Cores |
+| **RAM** | 4 GB | 8 GB | **16 GB** |
+| **Disco** | 2 GB | 5 GB | **8-10 GB** |
+
+> [!TIP]
+> Para un desglose detallado de cada servicio, consulta el [Análisis de Recursos Docker](DOCKER_RESOURCES.md).
 
 ### ⚠️ Resource Management Notes
 - **MSSQL & Cassandra**: These are the heaviest consumers. In our optimized `docker-compose.yml`, they are capped at 2GB each.

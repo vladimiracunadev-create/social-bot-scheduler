@@ -143,6 +143,20 @@ make demo
 
 ---
 
+## 💻 Requisitos de Hardware y Recursos
+
+Para una evaluación fluida, elige el perfil que mejor se adapte a tu máquina. Consulta el [Análisis de Recursos Docker](DOCKER_RESOURCES.md) para más detalle.
+
+| Perfil | Escenario | RAM | Disco |
+|--------|-----------|-----|-------|
+| **Mínimo** | Caso a caso (`profile caseXX`) | 4 GB | 2 GB* |
+| **Óptimo** | Estándar (Casos 01-06) | 8 GB | 5 GB |
+| **Experto** | **Repositorio TOTAL (8 Casos + Obs)** | **16 GB** | **8-10 GB** |
+
+*\* El tamaño de disco del perfil Mínimo depende del caso seleccionado.*
+
+---
+
 ## 🎓 Contexto de Aprendizaje
 
 Este proyecto fue desarrollado como un **laboratorio de experimentación técnica** para:
@@ -179,6 +193,7 @@ La estandarización de seguridad en contenedores (eliminar CVEs) y la creación 
 | [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) | Diseño del sistema |
 | [`SECURITY.md`](../SECURITY.md) | Estrategia de seguridad |
 | [`docs/HUB.md`](HUB.md) | Documentación del CLI |
+| [`docs/DOCKER_RESOURCES.md`](DOCKER_RESOURCES.md) | Análisis de RAM y Disco |
 | [`CHANGELOG.md`](../CHANGELOG.md) | Historial de versiones |
 
 ---

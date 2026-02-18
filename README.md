@@ -221,6 +221,8 @@ Tabla de estado actual de los 8 ejes de integración:
 - 🔧 **[Solución de Problemas](docs/TROUBLESHOOTING.md)**: Cómo arreglar errores comunes (Docker, n8n, dependencias).
 - 📊 **[Índice de Casos](docs/CASES_INDEX.md)**: Explicación técnica de cada combinación.
 - 🏗️ **[Arquitectura](docs/ARCHITECTURE.md)**: Diagramas del sistema.
+- [Análisis de Recursos Docker](docs/DOCKER_RESOURCES.md)
+- [Activación de Workflows](COMO_ACTIVAR_WORKFLOWS.md)
 - 🧪 **[Guía de Verificación](docs/VERIFICATION_GUIDE.md)**: Cómo probar el correcto funcionamiento del repo.
 - 💻 **[Requisitos del Sistema](docs/REQUIREMENTS.md)**: Hardware y software necesario.
 - ⚠️ **[Limitaciones](docs/LIMITATIONS.md)**: Trade-offs y decisiones de diseño.
