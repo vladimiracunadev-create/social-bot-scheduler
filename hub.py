@@ -300,7 +300,9 @@ def ejecutar_doctor():
             with open("resources.json", "r") as f:
                 res = json.load(f)
                 safe_print(f"CPU: {res['cpu_cores']} cores")
-                safe_print(f"RAM: {res['ram']['free_gb']}GB libres de {res['ram']['total_gb']}GB")
+                safe_print(
+                    f"RAM: {res['ram']['free_gb']}GB libres de {res['ram']['total_gb']}GB"
+                )
                 safe_print(f"Disk: {res['disk']['free_gb']}GB libres")
                 safe_print(f"Estado de Lanzamiento: {res['status']}")
     except:
@@ -396,7 +398,8 @@ def main():
         "down", help="Detiene y mantiene los contenedores (docker-compose down)"
     )
     subparsers.add_parser(
-        "clean", help="Limpieza total: elimina contenedores, volúmenes e imágenes (PRUNE)"
+        "clean",
+        help="Limpieza total: elimina contenedores, volúmenes e imágenes (PRUNE)",
     )
 
     args = parser.parse_args()
