@@ -32,7 +32,7 @@ services:
 
   # 🏠 Dashboard Maestro
   master-dashboard:
-    image: php:8.2-apache-alpine
+    image: php:8.2-apache
     container_name: social-bot-master
     deploy:
       resources:
@@ -49,7 +49,7 @@ services:
 
   # 🐘 Caso 01: Destino PHP
   dest-php:
-    image: php:8.2-apache-alpine
+    image: php:8.2-apache
     container_name: social-bot-dest-php
     profiles: ["case01", "full"]
     deploy:
@@ -148,7 +148,7 @@ services:
 
   # 🐘 Caso 06: Destino Symfony (PHP)
   dest-symfony:
-    image: php:8.2-apache-alpine
+    image: php:8.2-apache
     container_name: social-bot-dest-symfony
     profiles: ["case06", "full"]
     deploy:

@@ -1,18 +1,18 @@
-FROM python:3.9-alpine
+FROM python:3.9-slim
 
 WORKDIR /app
 
-# Instalar dependencias de sistema para pyodbc y el driver de SQL Server
-RUN apk add --no-cache \
+# Instalar dependencias de sistema para pyodbc y el driver de SQL Server (Debian)
+RUN apt-get update && apt-get install -y \
     curl \
-    gnupg \
+    gnupg2 \
+    build-essential \
     unixodbc-dev \
-    g++ \
-    make \
-    unixodbc \
-    && curl -O https://download.microsoft.com/download/e/4/e/e4e67866-d358-4cd7-82ad-6033d64a1d9a/msodbcsql18_18.3.2.1-1_amd64.apk \
-    && apk add --allow-untrusted msodbcsql18_18.3.2.1-1_amd64.apk \
-    && rm msodbcsql18_18.3.2.1-1_amd64.apk
+    && curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-archive-keyring.gpg \
+    && echo "deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/microsoft-archive-keyring.gpg] https://packages.microsoft.com/debian/11/prod bullseye main" > /etc/apt/sources.list.d/mssql-release.list \
+    && apt-get update \
+    && ACCEPT_EULA=Y apt-get install -y msodbcsql18 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
