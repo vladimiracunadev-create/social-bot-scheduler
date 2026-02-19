@@ -3,8 +3,8 @@
 RECEPTOR WSGI CON BRIDGE ODBC (Case 08: C# -> n8n -> Flask + SQL Server)
 ==================================================================================================
 ¿Por qué Flask para el receptor?
-Flask es el micro-framework WSGI de Python, ideal para construir APIs ligeras. A diferencia de 
-FastAPI (Case 04), Flask usa el modelo síncrono tradicional (WSGI), lo cual es más simple 
+Flask es el micro-framework WSGI de Python, ideal para construir APIs ligeras. A diferencia de
+FastAPI (Case 04), Flask usa el modelo síncrono tradicional (WSGI), lo cual es más simple
 de depurar y compatible con un mayor número de extensiones del ecosistema Python.
 
 Persistencia en Microsoft SQL Server:

@@ -2,7 +2,7 @@
 ==================================================================================================
 PUNTO DE ENTRADA ARQUITECTÓNICO (Case 01: Python -> n8n -> PHP)
 ==================================================================================================
-Este servicio actúa como el "Emisor Políglota" inicial del ecosistema. 
+Este servicio actúa como el "Emisor Políglota" inicial del ecosistema.
 Representa una aplicación moderna en Python que necesita delegar su salida a un
 sistema legado en PHP a través de un bus de eventos (n8n).
 

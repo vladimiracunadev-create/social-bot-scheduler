@@ -3,14 +3,14 @@
 RECEPTOR ASGI DE ALTA VELOCIDAD (Case 04: Node.js -> n8n -> FastAPI + SQLite)
 ==================================================================================================
 ¿Por qué FastAPI para este rol?
-FastAPI es uno de los frameworks más rápidos para Python gracias al uso de ASGI (Asynchronous 
-Server Gateway Interface) y Tipado Estático vía Pydantic. En este caso, aprovechamos la 
-validación automática de esquemas: si el bot de Node.js envía datos mal formados, FastAPI 
+FastAPI es uno de los frameworks más rápidos para Python gracias al uso de ASGI (Asynchronous
+Server Gateway Interface) y Tipado Estático vía Pydantic. En este caso, aprovechamos la
+validación automática de esquemas: si el bot de Node.js envía datos mal formados, FastAPI
 devuelve un error 422 sin que el desarrollador escriba una sola línea de validación manual.
 
 Persistencia en SQLite:
-SQLite es la elección ideal para este microservicio por su naturaleza "Zero-Config". 
-Almacena los datos en un solo archivo local (.db), eliminando la necesidad de un servidor 
+SQLite es la elección ideal para este microservicio por su naturaleza "Zero-Config".
+Almacena los datos en un solo archivo local (.db), eliminando la necesidad de un servidor
 de base de datos externo y simplificando drásticamente el despliegue en contenedores.
 
 Patrones aplicados:

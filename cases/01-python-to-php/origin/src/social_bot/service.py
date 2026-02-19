@@ -25,7 +25,7 @@ class BotService:
     """
     SERVICIO DE DOMINIO: Core de Orquestación del Emisor
     -------------------------------------------------
-    Este servicio implementa el flujo de vida de un post desde su estado "pendiente" 
+    Este servicio implementa el flujo de vida de un post desde su estado "pendiente"
     hasta su "publicación" (envío al bus de eventos).
 
     Patrones aplicados:
