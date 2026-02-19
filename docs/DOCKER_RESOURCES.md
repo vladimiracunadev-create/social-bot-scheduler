@@ -47,6 +47,38 @@ Para usuarios con recursos limitados, recomendamos la **Activación por Perfiles
 
 ---
 
-## 💡 Recomendaciones para Reclutadores
-*   **Si solo quieres ver la lógica**: Evalúa el **Caso 01 (Python/PHP/MySQL)** o **Caso 04 (Node/FastAPI/SQLite)**. Son los más ligeros y rápidos de desplegar.
-*   **Si quieres ver robustez**: Activa el **Caso 07 (Cassandra)** o **08 (MSSQL)** para observar cómo el sistema maneja bases de datos de alta demanda.
+## 🏁 Reporte de Prueba de Estrés (Stress Test - Feb 2026)
+
+Se realizó una ejecución del stack completo (`--profile full`) en el hardware actual, resultando en los siguientes hallazgos críticos:
+
+| Hallazgo | Impacto | Causa Raíz |
+| :--- | :--- | :--- |
+| **Estabilidad General** | **17/20 Servicios OK** | Los servicios clave (n8n, Dashboard, DBs ligeras) operan sin problemas. |
+| **Falla en Cassandra** | **Cerrado Forzoso (OOM)** | Alcanzó el límite de 2GB de RAM configurado, provocando un exit (137). |
+| **Falla en Case 07/08** | **Inestabilidad en Ruby/Flask** | Al caer Cassandra y subir el consumo general, los emisores/receptores dependientes fallaron. |
+| **Consumo de Disco** | **~8.5 GB** | Incluye imágenes descargadas y capas de construcción de Dockerfiles. |
+
+> [!IMPORTANT]
+> **Conclusión**: El hardware actual es ideal para el **Perfil Óptimo** (Casos 01-06). Para el **Perfil Experto** (Todo el repo), se recomienda una máquina con al menos 16-24 GB de RAM (ej: Mac Mini con Silicon) para evitar la caída de servicios pesados como Cassandra.
+
+---
+
+## 🧹 Limpieza y Liberación de Recursos
+
+Antes de apagar el sistema o migrar de máquina, es fundamental limpiar los recursos para devolver el disco y la memoria al sistema operativo.
+
+### Opción 1: Vía Makefile (Recomendado)
+```bash
+make clean
+```
+
+### Opción 2: Vía HUB CLI
+```bash
+python hub.py clean
+```
+
+### ¿Qué hace este proceso?
+1.  **Detiene y elimina** todos los contenedores del proyecto.
+2.  **Elimina los volúmenes** (borrando todos los datos de las bases de datos).
+3.  **Limpia imágenes huérfanas** y redes temporales.
+4.  **Opcional**: Para una limpieza total incluyendo imágenes base, usa `docker system prune -a`.
