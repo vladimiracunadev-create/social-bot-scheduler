@@ -18,12 +18,23 @@
 
 ## 💼 Habilidades Técnicas Demostradas
 
-### 🏗️ Arquitectura y Diseño
-- **Arquitectura de Microservicios**: Diseño de sistemas distribuidos con comunicación asíncrona
-- **Patrón Pub/Sub**: Implementación de bus de eventos mediante webhooks y n8n
-- **Separación de Responsabilidades**: Arquitectura de 3 capas (Origen → Puente → Destino)
-- **Persistencia Políglota**: Integración de 8 motores de base de datos (SQL, NoSQL, KV, Documental)
-- **Diseño Modular**: 8 casos de integración independientes pero cohesivos
+### 🏗️ Arquitectura y Diseño — 11 Patrones Identificados
+
+El proyecto implementa **11 patrones arquitectónicos** documentados en detalle en [`docs/ARCHITECTURE.md`](ARCHITECTURE.md):
+
+| # | Patrón | Qué demuestra |
+|---|--------|---------------|
+| 1 | **Microservices** | 20+ servicios Docker independientes |
+| 2 | **Event-Driven / Webhooks** | Comunicación asíncrona desacoplada |
+| 3 | **Mediator / Hub-and-Spoke** | n8n como broker central + CLI Facade |
+| 4 | **Three-Tier Pipeline** | Origen → Puente → Destino |
+| 5 | **Polyglot Persistence** | 8 motores de BD (SQL, NoSQL, KV, Columnar) |
+| 6 | **Resilience Patterns** | Circuit Breaker, Idempotencia, DLQ |
+| 7 | **Observability Stack** | Prometheus + Grafana + cAdvisor (CNCF) |
+| 8 | **Infrastructure as Code** | Docker Compose + Kubernetes + auto-setup |
+| 9 | **Multi-Stage Build + Hardening** | Non-root, slim images, healthchecks |
+| 10 | **CLI Facade** | `hub.py` con audit trail y validación |
+| 11 | **CI/CD Pipeline** | GitHub Actions + pre-commit + Trivy |
 
 ### 🔐 Seguridad y DevSecOps
 - **Hardening de Contenedores**: Imágenes Docker sin vulnerabilidades (Trivy scan)
@@ -111,9 +122,9 @@
 ## 🚦 Guía de Evaluación en 15 Minutos
 
 ### Paso 1: Revisión de Arquitectura (5 min)
-1. Leer [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) para entender el patrón de 3 capas
-2. Revisar diagrama Mermaid de flujo de datos
-3. Examinar la matriz de casos implementados
+1. Leer [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) para explorar los **11 patrones arquitectónicos** implementados
+2. Revisar los diagramas Mermaid de flujo de datos y arquitectura completa
+3. Examinar la matriz de casos implementados y la tabla resumen de patrones
 
 ### Paso 2: Inspección de Código (5 min)
 1. **Seguridad**: Revisar [`SECURITY.md`](../SECURITY.md) y [`Dockerfile`](../Dockerfile)

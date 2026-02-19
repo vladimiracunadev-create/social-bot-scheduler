@@ -126,7 +126,7 @@ Este sistema es "inteligente". Si intentas enviar el mismo mensaje dos veces, o 
 
 Puedes probar esto apagando el contenedor destino (`docker stop social-bot-dest-php`) y viendo cómo n8n maneja el error.
 
----
+> 💡 **¿Quieres profundizar?** Este sistema implementa **11 patrones arquitectónicos** (Microservices, Event-Driven, Circuit Breaker, IaC, y más). Consulta [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) para un catálogo completo con diagramas y explicaciones.
 
 ---
 
