@@ -232,6 +232,7 @@ Dada la complejidad del stack (8 bases de datos), es vital saber cómo liberar r
 - 🔧 **[Solución de Problemas](docs/TROUBLESHOOTING.md)**: Resolución de errores comunes de Docker, n8n y dependencias.
 - 📊 **[Índice de Casos](docs/CASES_INDEX.md)**: Matriz técnica detallada de cada flujo de integración.
 - 🏗️ **[Arquitectura](docs/ARCHITECTURE.md)**: Diagramas del sistema y decisiones de diseño.
+- 📝 **[Artículo Técnico](articulo/LINKEDIN_ARTICLE.md)**: Análisis de alto nivel para LinkedIn sobre la experiencia políglota.
 - 🧪 **[Guía de Verificación](docs/VERIFICATION_GUIDE.md)**: Manual de pruebas para asegurar la salud del repositorio.
 - 💻 **[Requisitos del Sistema](docs/REQUIREMENTS.md)**: Especificaciones de hardware y software recomendadas.
 - ⚠️ **[Limitaciones](docs/LIMITATIONS.md)**: Trade-offs y decisiones técnicas de diseño.
