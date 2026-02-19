@@ -18,6 +18,9 @@ n8n/data/*.sqlite*
 n8n/data/crash.journal
 n8n/data/.workflows_imported
 n8n/data/config
+n8n/data/n8nEventLog*.log
+n8n/data/nodes/
+n8n/data/storage/
 
 # IDE y herramientas
 .vscode/
