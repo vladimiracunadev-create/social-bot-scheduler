@@ -1,5 +1,20 @@
 package main
 
+/**
+ * EMISOR DE ALTA CONFIABILIDAD (Go)
+ * --------------------------------
+ * ¿Por qué Go para el emisor?
+ * En este caso (03-go-to-node), Go actúa como un daemon ligero. Su capacidad de compilar 
+ * a un binario estático sin dependencias externas (como un runtime de Python o Node) 
+ * lo hace ideal para entornos de infraestructura mínima o sistemas embebidos que 
+ * necesitan reportar datos a una API central.
+ * 
+ * Patrones aplicados:
+ * - 12-Factor App: Configuración externa vía variables de entorno.
+ * - Daemon Loop: Bucle infinito con control de intervalos para evitar CPU spikes.
+ * - JSON Marshalling: Mapeo estricto del esquema de publicación.
+ */
+
 import (
 	"bytes"
 	"encoding/json"

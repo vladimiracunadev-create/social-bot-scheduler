@@ -1,3 +1,23 @@
+// ==================================================================================================
+// EMISOR EMPRESARIAL .NET (Case 08: C# -> n8n -> Flask + MSSQL)
+// ==================================================================================================
+// ¿Por qué C# / .NET para el emisor?
+// C# es el lenguaje dominante en entornos corporativos Microsoft. Este caso simula el escenario 
+// donde una aplicación .NET legacy (ej: ERP, CRM) necesita enviar datos a un microservicio 
+// moderno en Python (Flask) a través del bus de eventos n8n.
+// 
+// Patrones Clave de .NET en este archivo:
+// - HttpClient Estático: Diseño recomendado por Microsoft para evitar Socket Exhaustion.
+//   Instanciar HttpClient por request agotaría los puertos TCP del sistema operativo.
+// - async/await: Modelo de concurrencia no-bloqueante nativo de C# 5.0+.
+// - System.Text.Json: Serializador JSON de alto rendimiento, reemplazando a Newtonsoft.Json.
+// - Task.Delay: Pausa no-bloqueante (no consume CPU mientras espera, a diferencia de Thread.Sleep).
+// 
+// Persistencia en SQL Server (Destino):
+// MSSQL es la base de datos más pesada del ecosistema (~2GB RAM mínimo). El receptor Flask 
+// utiliza pyodbc con el driver ODBC 18 para conectarse, demostrando la interoperabilidad 
+// cross-platform (Python + Linux + MSSQL).
+
 using System;
 using System.Net.Http;
 using System.Text;

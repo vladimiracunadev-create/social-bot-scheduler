@@ -1,5 +1,19 @@
 package main
 
+/**
+ * RECEPTOR DE ALTO RENDIMIENTO (Go + MariaDB)
+ * -----------------------------------------
+ * ¿Por qué Go para el receptor?
+ * Go brilla en la concurrencia nativa (Goroutines) y eficiencia de red. Mientras que lenguajes
+ * interpretados sufren con miles de peticiones simultáneas, este binario compilado ofrece 
+ * tiempos de respuesta en microsegundos, ideal para actuar como sumidero de múltiples bots.
+ * 
+ * Estrategia de Persistencia:
+ * - Driver: go-sql-driver/mysql (MariaDB compatible).
+ * - Sincronización: Uso de sync.Mutex para garantizar integridad en los logs compartidos.
+ * - Resiliencia: Implementación de Pings y reintentos para soportar latencia en el arranque del contenedor MariaDB.
+ */
+
 import (
 	"database/sql"
 	"encoding/json"
@@ -179,14 +193,19 @@ func main() {
 			post.Text,
 		)
 
-		// Escritura Sincronizada (Critical Section)
+		// ESCRITURA SINCRONIZADA (Critical Section)
+		// Go maneja cada request en un hilo diferente. Sin este Lock, múltiples hilos
+		// intentando escribir en el mismo archivo provocarían corrupción de datos.
 		logMutex.Lock()
 		if _, err := logFile.WriteString(logLine); err != nil {
 			log.Printf("Error escribiendo en log: %v", err)
 		}
 		logMutex.Unlock()
 
-		// Persistencia en DB
+		// PERSISTENCIA EN DB (MariaDB)
+		// Se utiliza SQL parametrizado (`?`) para evitar ataques de SQL Injection por diseño.
+		// El uso de `ON DUPLICATE KEY UPDATE` dota al sistema de Idempotencia: si el bot envía
+		// el mismo ID dos veces por error de red, el sistema solo actualiza el registro existente.
 		if db != nil {
 			query := `INSERT INTO social_posts (id, text, channel, scheduled_at) 
 					  VALUES (?, ?, ?, ?) 

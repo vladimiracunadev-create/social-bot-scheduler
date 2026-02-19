@@ -1,3 +1,26 @@
+# ==================================================================================================
+# RECEPTOR MINIMALISTA DE ALTO ACOPLAMIENTO (Case 07: Rust -> n8n -> Ruby/Sinatra + Cassandra)
+# ==================================================================================================
+# ¿Por qué Ruby/Sinatra para el receptor?
+# Sinatra es el micro-framework original que inspiró a Flask (Python), Express (Node.js), y Gin (Go).
+# Su filosofía "Convention over Configuration" permite crear un Webhook receptor funcional 
+# en menos de 50 líneas de código, demostrando que la complejidad del receptor no necesita 
+# escalar con la complejidad del emisor (Rust).
+# 
+# Persistencia en Apache Cassandra:
+# Cassandra es una base de datos NoSQL distribuida, diseñada para manejar cantidades masivas 
+# de datos con alta disponibilidad y sin punto único de fallo (SPOF). Es la base de datos 
+# más exigente en recursos de todo el ecosistema (requiere ~2GB RAM mínimo por nodo).
+# 
+# ⚠️ Hallazgo del Stress Test:
+# En máquinas con RAM limitada (<10GB), Cassandra fue el primer servicio en ser eliminado 
+# por el OOM Killer del kernel, documentado en DOCKER_RESOURCES.md.
+# 
+# Patrones aplicados:
+# - FIFO Queue (In-Memory): Cola limitada a 20 posts (rotación automática).
+# - Rack::Protection: Desactivación selectiva de HostAuthorization para entornos Docker internos.
+# - Idempotencia: Cassandra usa INSERT que sobrescribe por PRIMARY KEY automáticamente.
+
 require 'sinatra'
 require 'json'
 require 'cassandra'

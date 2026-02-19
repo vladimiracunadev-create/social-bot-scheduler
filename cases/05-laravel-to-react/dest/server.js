@@ -1,3 +1,24 @@
+/**
+ * ==================================================================================================
+ * BACKEND FULLSTACK MODERNO (Case 05: Laravel -> n8n -> React + MongoDB)
+ * ==================================================================================================
+ * ¿Por qué Node.js + React + MongoDB para el receptor?
+ * Este caso demuestra la migración de un sistema empresarial PHP (monolito) hacia una arquitectura 
+ * moderna de "API + SPA". Node.js sirve como Backend-for-Frontend (BFF), exponiendo una API REST 
+ * para el componente React y un Webhook para las integraciones n8n.
+ * 
+ * Persistencia en MongoDB:
+ * Se eligió MongoDB por su naturaleza Schema-Less, ideal para datos semi-estructurados 
+ * como los posts de redes sociales. El uso de `upsert: true` proporciona Idempotencia 
+ * nativa: si el bot de Laravel envía el mismo ID dos veces, MongoDB actualiza en lugar de duplicar.
+ * 
+ * Particularidades Arquitectónicas:
+ * - CORS habilitado: Necesario si React se sirve desde un puerto diferente (#4000 vs #3000).
+ * - Static Middleware: Express sirve los archivos React directamente (en producción se usaría Nginx).
+ * - Respuesta antes de DB: El servidor responde al Webhook ANTES de la inserción en MongoDB,
+ *   priorizando la velocidad de ACK sobre la garantía de persistencia.
+ */
+
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');

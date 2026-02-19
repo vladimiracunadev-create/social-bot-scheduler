@@ -1,4 +1,19 @@
 const express = require('express');
+
+/**
+ * RECEPTOR ASÍNCRONO ESCALABLE (Node.js + Express + PostgreSQL)
+ * -----------------------------------------------------------
+ * ¿Por qué Node.js para este rol?
+ * Node.js es el estándar de facto para construir Webhooks y APIs debido a su modelo 
+ * de I/O no bloqueante. En este caso (03), manejamos la persistencia en PostgreSQL 
+ * de forma asíncrona, permitiendo que el servidor responda al bot de Go casi 
+ * instantáneamente mientras la base de datos procesa la información en segundo plano.
+ * 
+ * Persistencia en PostgreSQL:
+ * Se eligió Postgres por su robustez transaccional y su excelente manejo de JSONB, 
+ * aunque aquí usamos tipos relacionales estándar para demostrar interoperabilidad básica.
+ */
+
 const fs = require('fs');
 const path = require('path');
 const { Pool } = require('pg');

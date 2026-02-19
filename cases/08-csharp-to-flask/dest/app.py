@@ -1,3 +1,29 @@
+"""
+==================================================================================================
+RECEPTOR WSGI CON BRIDGE ODBC (Case 08: C# -> n8n -> Flask + SQL Server)
+==================================================================================================
+¿Por qué Flask para el receptor?
+Flask es el micro-framework WSGI de Python, ideal para construir APIs ligeras. A diferencia de 
+FastAPI (Case 04), Flask usa el modelo síncrono tradicional (WSGI), lo cual es más simple 
+de depurar y compatible con un mayor número de extensiones del ecosistema Python.
+
+Persistencia en Microsoft SQL Server:
+Este es el caso más complejo en cuanto a configuración de infraestructura:
+- Se requiere el driver ODBC 18 de Microsoft (instalado en el Dockerfile).
+- Se usa pyodbc como puente entre Python y el driver nativo de MS.
+- Se usa una imagen Docker basada en Debian (python:3.9-slim) en lugar de Alpine,
+  porque Alpine no soporta oficialmente el driver ODBC de Microsoft.
+
+⚠️ Hallazgo del Stress Test:
+SQL Server requiere ~2GB de RAM solo para arrancar. En máquinas con RAM limitada,
+fue uno de los servicios que compitió con Cassandra por recursos, causando OOM Kills.
+
+Patrones aplicados:
+- UPSERT Manual: `IF EXISTS ... UPDATE ELSE INSERT` (T-SQL nativo de MSSQL).
+- Retry con Backoff: La inicialización de DB reintenta 15 veces con pausa de 3s.
+- LIFO Visual: Los posts más recientes se muestran primero en el dashboard.
+"""
+
 import os
 from datetime import datetime
 import pyodbc

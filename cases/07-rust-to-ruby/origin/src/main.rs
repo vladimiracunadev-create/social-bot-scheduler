@@ -1,3 +1,20 @@
+// ==================================================================================================
+// EMISOR DE MÁXIMA SEGURIDAD (Case 07: Rust -> n8n -> Ruby/Sinatra + Cassandra)
+// ==================================================================================================
+// ¿Por qué Rust para el emisor?
+// Rust es el lenguaje de sistemas más seguro disponible. A diferencia de C/C++, su sistema de 
+// Ownership y Borrowing elimina toda una categoría de bugs (Use-After-Free, Data Races, Buffer 
+// Overflows) en TIEMPO DE COMPILACIÓN, sin Garbage Collector.
+// 
+// En este caso, Rust actúa como el productor más exigente del ecosistema. Si el bot puede 
+// enviar datos correctamente desde Rust, cualquier otro lenguaje también puede.
+// 
+// Conceptos Clave de Rust en este archivo:
+// - `#[derive(Serialize, Deserialize)]`: Macros que generan código automáticamente (Metaprogramming).
+// - `match`: Pattern Matching exhaustivo que OBLIGA a manejar éxito Y error (Result<T, E>).
+// - `&posts`: Referencia compartida para evitar la transferencia de propiedad (Move Semantics).
+// - `reqwest::blocking`: Cliente HTTP síncrono (en prod se usaría `tokio` para async).
+
 use std::thread;
 use std::time::Duration;
 use std::env;

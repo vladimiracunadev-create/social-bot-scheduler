@@ -1,5 +1,23 @@
 package main
 
+/**
+ * EMISOR COMPACTO (Case 06: Go -> n8n -> Symfony + Redis)
+ * -------------------------------------------------------
+ * ¿Por qué Go para el emisor y Symfony para el destino?
+ * Este caso simula un escenario empresarial donde una aplicación de alta performance (Go)
+ * necesita alimentar un CMS o ERP empresarial basado en Symfony (PHP). Es el patrón 
+ * inverso al Caso 05: aquí el código moderno alimenta al legado.
+ * 
+ * Estilo de Código:
+ * Este emisor usa un estilo Go más compacto (one-liners) para demostrar
+ * la flexibilidad sintáctica del lenguaje, contrastando con el estilo más 
+ * verborreico de los Casos 02 y 03.
+ * 
+ * Persistencia en Redis (Destino):
+ * Redis actúa como cache temporal con TTL de 24h, ideal para datos efímeros
+ * como publicaciones de redes sociales que no requieren persistencia a largo plazo.
+ */
+
 import (
 	"bytes"
 	"encoding/json"

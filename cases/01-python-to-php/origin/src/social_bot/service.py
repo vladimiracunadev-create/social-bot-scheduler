@@ -23,16 +23,19 @@ logger = logging.getLogger(__name__)
 
 class BotService:
     """
-    Servicio de Aplicación: Orquestador principal de la lógica de negocio.
+    SERVICIO DE DOMINIO: Core de Orquestación del Emisor
+    -------------------------------------------------
+    Este servicio implementa el flujo de vida de un post desde su estado "pendiente" 
+    hasta su "publicación" (envío al bus de eventos).
 
-    Responsabilidades:
-        1. Persistencia: Leer y escribir el estado de los posts (patrón Repository simplificado).
-        2. Lógica de Negocio: Filtrar posts vencidos (`due_posts`).
-        3. Integración Externa: Comunicarse con el webhook de destino (Gateway).
+    Patrones aplicados:
+    - Repository (Simplificado): Abstracción sobre la persistencia en JSON.
+    - Transaction Script: Lógica procedimental robusta para el envío secuencial.
+    - Dead Letter Queue (DLQ): Diseño que permite que fallos individuales no bloqueen el proceso.
 
-    Diseño:
-        Sigue un flujo lineal: Load -> Filter -> Process -> Save.
-        Diseñado para ser ejecutado periódicamente (cron job) o como un worker de ciclo largo.
+    ¿Por qué Python aquí?
+    Python es el lenguaje ideal para este rol por su ecosistema de librerías (`requests`, `pydantic`)
+    que permiten prototipar integraciones web de forma extremadamente rápida y legible.
     """
 
     def __init__(self):

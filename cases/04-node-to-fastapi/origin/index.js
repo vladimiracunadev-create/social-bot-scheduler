@@ -1,4 +1,19 @@
 const fs = require('fs');
+
+/**
+ * EMISOR ORIENTADO A EVENTOS (Node.js)
+ * -----------------------------------
+ * ¿Por qué Node.js para el emisor?
+ * Node.js es excelente para tareas de entrada/salida (I/O) masivas. En este flujo (04), 
+ * el bot emisor utiliza un bucle de polling asíncrono que no bloquea la ejecución de otros 
+ * procesos, permitiendo que el emisor escale de forma eficiente.
+ * 
+ * Estrategia:
+ * - Polling No-Bloqueante: Uso de `setInterval` para verificar estados.
+ * - Axios: Cliente HTTP moderno para manejar promesas y reintentos.
+ * - JSON-DB: Persistencia ligera en archivos para mantener el estado del bot.
+ */
+
 const axios = require('axios');
 
 // =================================================================================================

@@ -1,4 +1,23 @@
 <?php
+/**
+ * ==================================================================================================
+ * EMISOR EMPRESARIAL (Case 05: Laravel/Artisan -> n8n -> React + MongoDB)
+ * ==================================================================================================
+ * ¿Por qué PHP/Laravel para el emisor?
+ * En contextos empresariales reales, la migración de sistemas legados PHP hacia frontends modernos
+ * (React, Vue) es uno de los escenarios más frecuentes. Este caso demuestra cómo un "Worker" 
+ * de tipo Artisan Command puede actuar como puente entre un backend monolítico PHP y un ecosistema 
+ * de microservicios JavaScript a través de n8n.
+ * 
+ * Patrones aplicados:
+ * - Queue Worker (Simulado): El script imita el comportamiento de `php artisan queue:work`.
+ * - Stream Context: PHP nativo para HTTP POST (sin composer/guzzle, ideal para entornos restringidos).
+ * - State Machine: El campo `published` actúa como flag de transición de estado.
+ *
+ * Nota de Interoperabilidad:
+ * PHP usa `json_encode()` que produce JSON compatible con cualquier receptor (Node.js, Python, Go).
+ * Esta compatibilidad es el fundamento del agnosticismo tecnológico del ecosistema.
+ */
 
 namespace App\Console\Commands;
 

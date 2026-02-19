@@ -1,4 +1,27 @@
 <?php
+/**
+ * ==================================================================================================
+ * RECEPTOR EMPRESARIAL SYMFONY LITE (Case 06: Go -> n8n -> Symfony + Redis)
+ * ==================================================================================================
+ * ¿Por qué Symfony para el receptor?
+ * Symfony es el framework PHP de referencia en entornos empresariales europeos. Su arquitectura 
+ * basada en componentes (HttpFoundation, Routing, DependencyInjection) lo hace ideal para 
+ * aplicaciones de misión crítica que necesitan mantenimiento a largo plazo.
+ * 
+ * Diseño Dual (OOP + Procedural):
+ * Este archivo contiene DOS implementaciones del mismo receptor:
+ * 1. Clase `SocialBotController`: Versión OOP que imita un controlador Symfony real.
+ * 2. Script Procedural: Front-Controller ligero que maneja rutas sin el Kernel de Symfony.
+ * 
+ * Persistencia en Redis:
+ * Redis actúa como almacén de clave-valor con TTL (Time-To-Live). Cada post se guarda como 
+ * `post:{id}` con una expiración de 24h. Esto es ideal para datos efímeros como feeds de RRSS,
+ * donde no necesitamos retención permanente como en MySQL o PostgreSQL.
+ *
+ * ¿Por qué Redis y no SQL?
+ * Redis alcanza latencias de ~1ms por operación, 100x más rápido que un INSERT en MySQL.
+ * Para un receptor que necesita responder instantáneamente al bus de eventos, esta velocidad es crítica.
+ */
 
 namespace App\Controller;
 
