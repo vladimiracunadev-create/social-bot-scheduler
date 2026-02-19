@@ -81,8 +81,9 @@ Para hacer el laboratorio aún más robusto y realista, cada eje de integración
 ## 🚀 Despliegue y Escalabilidad
 
 ### Prerrequisitos
-Antes de comenzar, asegúrate de tener instalado:
-1.  **[Docker Desktop](https://www.docker.com/products/docker-desktop/)**: Para ejecutar la infraestructura (n8n, bases de datos y receptores).
+Antes de comenzar, consulta el **[Análisis de Recursos Docker](docs/DOCKER_RESOURCES.md)** para entender el impacto en hardware.
+Asegúrate de tener instalado:
+1.  **[Docker Desktop](https://www.docker.com/products/docker-desktop/)**: Para ejecutar la infraestructura.
 2.  **[Python 3.10+](https://www.python.org/downloads/)**: Para ejecutar el asistente de configuración `setup.py` y los bots emisores.
 3.  **[Git](https://git-scm.com/downloads)**: Para clonar este repositorio.
 
@@ -220,12 +221,12 @@ Tabla de estado actual de los 8 ejes de integración:
 Accede a las guías específicas para profundizar en cada área del sistema:
 
 - 👔 **[Guía para Reclutadores](docs/RECRUITER.md)**: Evaluación técnica rápida y valor de negocio del proyecto.
+- 🐳 **[Análisis de Recursos Docker](docs/DOCKER_RESOURCES.md)**: Informe detallado de uso de RAM y Disco (Stress Test).
 
 ### 🧹 Gestión de Recursos y Limpieza
 Dada la complejidad del stack (8 bases de datos), es vital saber cómo liberar recursos:
-- **Limpieza Estándar**: `make clean` (Borra contenedores y volúmenes).
 - **Liberación Total (Nuke)**: `make nuke` (☢️ Borra imágenes base, volúmenes, redes y caché).
-- Consulta la [Guía de Recursos Docker](file:///c:/dev/social-bot-scheduler/docs/DOCKER_RESOURCES.md) para más detalle.
+- **Limpieza Estándar**: `make clean` (Borra contenedores y volúmenes).
 
 - 🔗 **[Activación de Workflows](COMO_ACTIVAR_WORKFLOWS.md)**: Cómo importar y activar la lógica en n8n automáticamente.
 - 🔧 **[Solución de Problemas](docs/TROUBLESHOOTING.md)**: Resolución de errores comunes de Docker, n8n y dependencias.
