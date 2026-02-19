@@ -2,8 +2,8 @@
   "name": "social-bot-react-dest",
   "version": "3.0.0",
   "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5",
+    "cors": "^2.8.6",
+    "express": "^4.22.1",
     "mongodb": "^6.3.0"
   }
 }
