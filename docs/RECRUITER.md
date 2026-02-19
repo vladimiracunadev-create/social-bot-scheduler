@@ -143,6 +143,11 @@ make demo
 
 ---
 
+### 📉 Gestión de Recursos y Rendimiento
+El proyecto está diseñado para demostrar resiliencia bajo estrés. Se incluye una [Guía de Recursos Docker](file:///c:/dev/social-bot-scheduler/docs/DOCKER_RESOURCES.md) que documenta:
+- **Reporte de Estrés**: Comportamiento del sistema al límite de RAM.
+- **Protocolo de Limpieza**: Cómo revertir el impacto en disco (hasta 10GB) tras la evaluación usando Deep Cleanup.
+
 ## 💻 Requisitos de Hardware y Recursos
 
 Para una evaluación fluida, elige el perfil que mejor se adapte a tu máquina. Consulta el [Análisis de Recursos Docker](DOCKER_RESOURCES.md) para más detalle.

@@ -1,5 +1,11 @@
 # 🐳 Análisis de Recursos Docker (Total vs. Actual)
 
+### 🧹 Gestión de Recursos y Limpieza
+Dada la alta demanda técnica de este repositorio (8 bases de datos simultáneas), es vital saber cómo liberar recursos:
+- Consulta la [Guía de Recursos Docker](file:///c:/dev/social-bot-scheduler/docs/DOCKER_RESOURCES.md) para ver el reporte de estrés y límites.
+- Usa `make clean` o `python hub.py clean` para una limpieza estándar.
+- Usa `docker system prune -a -f --volumes` para una limpieza total (Deep Cleanup).
+
 Este documento detalla el consumo de recursos (Disco y RAM) del proyecto **Social Bot Scheduler**. Se ha ajustado para reflejar la diferencia entre el estado actual de tu entorno y el potencial total del repositorio para que reclutadores y novatos tomen decisiones informadas.
 
 ## 🏁 Estado del Entorno Docker
@@ -77,8 +83,16 @@ make clean
 python hub.py clean
 ```
 
+### Opción 3: Limpieza Total (Deep Cleanup)
+Si deseas liberar **todo** el espacio (incluyendo imágenes base como MSSQL, Cassandra y PHP) para que la máquina quede como si nunca hubiera ejecutado el repo:
+
+```bash
+# ADVERTENCIA: Esto borrará todas las imágenes no usadas por otros contenedores activos
+docker system prune -a -f --volumes
+```
+
 ### ¿Qué hace este proceso?
 1.  **Detiene y elimina** todos los contenedores del proyecto.
 2.  **Elimina los volúmenes** (borrando todos los datos de las bases de datos).
 3.  **Limpia imágenes huérfanas** y redes temporales.
-4.  **Opcional**: Para una limpieza total incluyendo imágenes base, usa `docker system prune -a`.
+4.  **Prune -a**: Elimina imágenes base, liberando hasta 10GB+ de espacio.
