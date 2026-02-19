@@ -222,6 +222,7 @@ Accede a las guías específicas para profundizar en cada área del sistema:
 
 - 👔 **[Guía para Reclutadores](docs/RECRUITER.md)**: Evaluación técnica rápida y valor de negocio del proyecto.
 - 🐳 **[Análisis de Recursos Docker](docs/DOCKER_RESOURCES.md)**: Informe detallado de uso de RAM y Disco (Stress Test).
+- 🗺️ **[Mapa Completo del Sistema](docs/FILE_MAP.md)**: Explicación detallada de **cada archivo** del repositorio, su rol e importancia.
 
 ### 🧹 Gestión de Recursos y Limpieza
 Dada la complejidad del stack (8 bases de datos), es vital saber cómo liberar recursos:
