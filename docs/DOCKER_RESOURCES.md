@@ -1,5 +1,20 @@
 # 🐳 Análisis de Recursos Docker (Total vs. Actual)
 
+### ☢️ Comando de Liberación Total (Un solo paso)
+Si deseas borrar **todo rastro** (imágenes base, volúmenes, contenedores y caché) y recuperar ~10GB de espacio:
+```bash
+make nuke
+```
+*(O directamente: `docker system prune -a -f --volumes`)*
+
+Este documento detalla el consumo de recursos (Disco y RAM) del proyecto **Social Bot Scheduler**.
+ Se ha ajustado para reflejar la diferencia entre el estado actual de tu entorno y el potencial total del repositorio para que reclutadores y novatos tomen decisiones informadas.
+
+## 🏁 Estado del Entorno Docker
+
+> [!WARNING]
+> Tu entorno actual puede estar "incompleto" si solo has descargado algunos servicios. Para ejecutar el laboratorio completo, debes considerar el **Tamaño Real Total**.
+
 ### 🧹 Gestión de Recursos y Limpieza
 Dada la alta demanda técnica de este repositorio (8 bases de datos simultáneas), es vital saber cómo liberar recursos:
 - Consulta la [Guía de Recursos Docker](file:///c:/dev/social-bot-scheduler/docs/DOCKER_RESOURCES.md) para ver el reporte de estrés y límites.

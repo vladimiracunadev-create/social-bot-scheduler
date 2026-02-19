@@ -219,9 +219,11 @@ Tabla de estado actual de los 8 ejes de integración:
 
 Accede a las guías específicas para profundizar en cada área del sistema:
 
-- 👔 **[Guía para Reclutadores](docs/RECRUITER.md)**: Evaluación técnica rápida y valor de negocio del proyecto.
-- 🎓 **[Guía para Principiantes](docs/BEGINNERS_GUIDE.md)**: Manual detallado para empezar desde cero.
-- 🐳 **[Análisis de Recursos Docker](docs/DOCKER_RESOURCES.md)**: Informe detallado de uso de RAM y Disco (Total vs Parcial).
+- 👔 **[Guía para Reclutadores](docs/RECRUITER.md)**: Evaluación técnica rápida y valor de### 🧹 Gestión de Recursos y Limpieza
+Dada la complejidad del stack (8 bases de datos), es vital saber cómo liberar recursos:
+- **Limpieza Estándar**: `make clean` (Borra contenedores y volúmenes).
+- **Liberación Total (Nuke)**: `make nuke` (☢️ Borra imágenes base, volúmenes, redes y caché).
+- Consulta la [Guía de Recursos Docker](file:///c:/dev/social-bot-scheduler/docs/DOCKER_RESOURCES.md) para más detalle.
 - 🔗 **[Activación de Workflows](COMO_ACTIVAR_WORKFLOWS.md)**: Cómo importar y activar la lógica en n8n automáticamente.
 - 🔧 **[Solución de Problemas](docs/TROUBLESHOOTING.md)**: Resolución de errores comunes de Docker, n8n y dependencias.
 - 📊 **[Índice de Casos](docs/CASES_INDEX.md)**: Matriz técnica detallada de cada flujo de integración.

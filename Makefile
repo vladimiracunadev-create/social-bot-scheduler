@@ -1,5 +1,8 @@
-clean: ## Limpieza total de Docker (contenedores, volúmenes, imágenes e imágenes huérfanas)
+clean: ## Limpieza estándar (contenedores y volúmenes del proyecto)
 	python3 hub.py clean
+
+nuke: ## ☢️ LIMPIEZA TOTAL (Borra TODO: imágenes base, volúmenes, redes y caché)
+	docker system prune -a -f --volumes
 
 check: ## Verifica recursos físicos de la máquina (CPU, RAM, Disco)
 	python3 check_resources.py
