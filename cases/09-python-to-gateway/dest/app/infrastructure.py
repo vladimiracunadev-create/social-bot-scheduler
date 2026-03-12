@@ -59,10 +59,26 @@ class DuckDBDatabase:
                 url TEXT NOT NULL
             )
             """,
-            "CREATE INDEX IF NOT EXISTS idx_integration_requests_created_at ON integration_requests(created_at)",
-            "CREATE INDEX IF NOT EXISTS idx_integration_requests_status ON integration_requests(status)",
-            "CREATE INDEX IF NOT EXISTS idx_provider_calls_request_id ON provider_calls(request_id)",
-            "CREATE INDEX IF NOT EXISTS idx_repo_snapshots_request_id ON repo_snapshots(request_id)",
+            (
+                "CREATE INDEX IF NOT EXISTS "
+                "idx_integration_requests_created_at "
+                "ON integration_requests(created_at)"
+            ),
+            (
+                "CREATE INDEX IF NOT EXISTS "
+                "idx_integration_requests_status "
+                "ON integration_requests(status)"
+            ),
+            (
+                "CREATE INDEX IF NOT EXISTS "
+                "idx_provider_calls_request_id "
+                "ON provider_calls(request_id)"
+            ),
+            (
+                "CREATE INDEX IF NOT EXISTS "
+                "idx_repo_snapshots_request_id "
+                "ON repo_snapshots(request_id)"
+            ),
         ]
 
         with self._lock:
@@ -121,7 +137,14 @@ class DuckDBIntegrationRequestRepository(IntegrationRequestRepository):
         try:
             row = conn.execute(
                 """
-                SELECT request_id, fingerprint, channel, action, owner, request_limit, status,
+                SELECT
+                    request_id,
+                    fingerprint,
+                    channel,
+                    action,
+                    owner,
+                    request_limit,
+                    status,
                        api_key_prefix, api_key_hash, created_at
                 FROM integration_requests
                 WHERE fingerprint = ?
@@ -153,13 +176,25 @@ class DuckDBIntegrationRequestRepository(IntegrationRequestRepository):
         try:
             rows = conn.execute(
                 """
-                SELECT ir.request_id, ir.action, ir.owner, ir.request_limit, ir.status,
-                       pc.http_status, pc.latency_ms, pc.mode, ir.api_key_prefix, ir.created_at
+                SELECT
+                    ir.request_id,
+                    ir.action,
+                    ir.owner,
+                    ir.request_limit,
+                    ir.status,
+                    pc.http_status,
+                    pc.latency_ms,
+                    pc.mode,
+                    ir.api_key_prefix,
+                    ir.created_at
                 FROM integration_requests ir
                 LEFT JOIN (
                     SELECT *
                     FROM provider_calls
-                    QUALIFY ROW_NUMBER() OVER (PARTITION BY request_id ORDER BY created_at DESC) = 1
+                    QUALIFY ROW_NUMBER() OVER (
+                        PARTITION BY request_id
+                        ORDER BY created_at DESC
+                    ) = 1
                 ) pc ON pc.request_id = ir.request_id
                 ORDER BY ir.created_at DESC
                 LIMIT ?
@@ -188,7 +223,12 @@ class DuckDBIntegrationRequestRepository(IntegrationRequestRepository):
         try:
             rows = conn.execute(
                 """
-                SELECT ir.request_id, ir.status, pc.provider, pc.http_status, pc.error_code,
+                SELECT
+                    ir.request_id,
+                    ir.status,
+                    pc.provider,
+                    pc.http_status,
+                    pc.error_code,
                        pc.error_message, ir.created_at
                 FROM integration_requests ir
                 LEFT JOIN provider_calls pc ON pc.request_id = ir.request_id
@@ -273,7 +313,11 @@ class DuckDBProviderCallRepository(ProviderCallRepository):
             conn = self.database.connect()
             try:
                 conn.executemany(
-                    "INSERT INTO repo_snapshots (request_id, repo, stars, language, url) VALUES (?, ?, ?, ?, ?)",
+                    (
+                        "INSERT INTO repo_snapshots "
+                        "(request_id, repo, stars, language, url) "
+                        "VALUES (?, ?, ?, ?, ?)"
+                    ),
                     [
                         [
                             snapshot.request_id,
@@ -293,7 +337,11 @@ class DuckDBProviderCallRepository(ProviderCallRepository):
         try:
             rows = conn.execute(
                 """
-                SELECT repo, MAX(stars) AS stars, any_value(language) AS language, any_value(url) AS url
+                SELECT
+                    repo,
+                    MAX(stars) AS stars,
+                    any_value(language) AS language,
+                    any_value(url) AS url
                 FROM repo_snapshots
                 GROUP BY repo
                 ORDER BY stars DESC, repo ASC

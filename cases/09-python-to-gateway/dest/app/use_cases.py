@@ -120,7 +120,11 @@ class HandleIntegrationRequest:
             self.provider_repo.save_snapshots(snapshots)
             self.integration_repo.update_status(fingerprint.value, "SUCCEEDED")
 
-            top_repo = max(snapshots, key=lambda snapshot: snapshot.stars, default=None)
+            top_repo = max(
+                snapshots,
+                key=lambda snapshot: snapshot.stars,
+                default=None,
+            )
             return {
                 "ok": True,
                 "request_id": request_id.value,
