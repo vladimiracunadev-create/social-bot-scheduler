@@ -169,6 +169,7 @@ Para asegurar que el entorno sea correcto y esté listo para operar:
 2.  **Prueba de Integración (E2E)**: Abre [http://localhost:8080](http://localhost:8080) y pulsa **"🚀 PROBAR INTEGRACIÓN GLOBAL"**.
 3.  **Calidad y Seguridad**: 
     - `black --check .` (Formato)
+    - Si `black --check .` falla y no es obvio el cambio, usa `black --diff --check <archivo>` para ver el parche exacto que Black quiere aplicar antes de commitear.
     - `pip-audit --ignore-vuln CVE-2026-1703` (Vulnerabilidades)
 
 > **Guía Detallada**: Consulta [VERIFICATION_GUIDE.md](docs/VERIFICATION_GUIDE.md) para un manual completo de pruebas.

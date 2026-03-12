@@ -89,3 +89,26 @@ Valida lo siguiente en `http://localhost:8090`:
 - requests recientes con `request_id`, `action`, `owner`, `limit`, `status`, `http_status`, `latency_ms`, `mode` y `api_key_prefix`
 - errores recientes desde DLQ
 - top repos por stars leidos desde DuckDB
+## Nota sobre Black
+
+En este repositorio, `black --check .` puede fallar incluso cuando el archivo parece bien formateado visualmente. Esto ocurre con cierta frecuencia en archivos con:
+- strings implicitas concatenadas
+- SQL embebido
+- HTML o CSS inline
+- llamadas largas que Black decide colapsar o expandir
+
+Diagnostico recomendado:
+```bash
+black --diff --check <archivo>
+```
+
+Ejemplo real:
+```bash
+black --diff --check cases/09-python-to-gateway/dest/app/api.py cases/09-python-to-gateway/dest/app/infrastructure.py cases/09-python-to-gateway/dest/app/use_cases.py
+```
+
+Regla operativa recomendada:
+1. Ejecuta `black --check .`
+2. Si falla, ejecuta `black --diff --check <archivo>`
+3. Aplica exactamente el diff mostrado por Black
+4. Repite hasta obtener salida limpia

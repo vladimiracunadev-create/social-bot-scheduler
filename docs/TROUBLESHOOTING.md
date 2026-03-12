@@ -118,3 +118,39 @@ docker-compose up -d --build
 
 > **Tip**: Despu?s de `docker-compose down -v`, n8n re-importar? los 9 workflows autom?ticamente al arrancar.
 
+## Black y Formato
+
+### Error recurrente: `black --check .` falla aunque el archivo "se vea bien"
+**Sintoma**: CI muestra mensajes como `would reformat cases/.../api.py` o `would reformat cases/.../use_cases.py`, pero a simple vista el archivo parece ya formateado.
+
+**Causa**: Black aplica reglas sintacticas muy especificas sobre:
+- concatenacion implicita de strings
+- comprensiones o llamadas largas que Black decide colapsar en una sola linea
+- bloques multilinea con parentesis donde Black prefiere una forma distinta
+- lineas SQL, HTML o CSS embebidas que visualmente parecen correctas, pero no coinciden con el formato exacto de Black
+
+**Diagnostico recomendado**:
+```bash
+black --diff --check <archivo>
+```
+
+Ejemplo real para este repo:
+```bash
+black --diff --check cases/09-python-to-gateway/dest/app/api.py cases/09-python-to-gateway/dest/app/infrastructure.py cases/09-python-to-gateway/dest/app/use_cases.py
+```
+
+**Por que usar `--diff --check` y no solo `--check`**:
+- `--check` solo dice que reformataria el archivo
+- `--diff --check` muestra exactamente el parche que Black espera
+- eso evita adivinar cambios y reduce commits repetidos por formato
+
+**Flujo recomendado antes de subir cambios**:
+1. Ejecuta `black --check .`
+2. Si falla, ejecuta `black --diff --check <archivo>` sobre los archivos reportados
+3. Aplica exactamente ese diff
+4. Repite hasta que Black no reporte mas diferencias
+5. Recien despues haz commit y push
+
+**Leccion aprendida**:
+- En este repositorio ya ocurrio con el Caso 09 y puede repetirse en casos con FastAPI, SQL embebido, dashboards HTML inline o strings largas.
+- Cuando haya duda, el output de Black es la fuente de verdad.

@@ -98,9 +98,7 @@ class HandleIntegrationRequest:
                     endpoint=endpoint,
                     http_status=HttpStatus(response.status_code),
                     latency_ms=LatencyMs(latency_ms),
-                    rate_limit_remaining=response.headers.get(
-                        "X-RateLimit-Remaining"
-                    ),
+                    rate_limit_remaining=response.headers.get("X-RateLimit-Remaining"),
                     error_code=None,
                     error_message=None,
                 )

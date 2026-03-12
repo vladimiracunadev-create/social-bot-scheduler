@@ -255,15 +255,13 @@ class DuckDBIntegrationRequestRepository(IntegrationRequestRepository):
     def stats(self) -> dict:
         conn = self.database.connect()
         try:
-            summary = conn.execute(
-                """
+            summary = conn.execute("""
                 SELECT
                     COUNT(*) AS total_requests,
                     SUM(CASE WHEN status = 'SUCCEEDED' THEN 1 ELSE 0 END) AS succeeded,
                     SUM(CASE WHEN status = 'FAILED' THEN 1 ELSE 0 END) AS failed
                 FROM integration_requests
-                """
-            ).fetchone()
+                """).fetchone()
         finally:
             conn.close()
 

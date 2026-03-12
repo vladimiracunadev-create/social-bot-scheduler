@@ -16,7 +16,6 @@ from app.infrastructure import (
 )
 from app.use_cases import create_use_cases
 
-
 DATA_DIR = Path("/app/data")
 LOG_DIR = Path("/app/logs")
 DB_PATH = DATA_DIR / "case09.duckdb"
@@ -35,8 +34,7 @@ app = FastAPI(
     title="Case 09 Integration Gateway",
     version="1.0.0",
     description=(
-        "FastAPI gateway with DuckDB persistence "
-        "and a server-rendered dashboard."
+        "FastAPI gateway with DuckDB persistence " "and a server-rendered dashboard."
     ),
 )
 
@@ -68,8 +66,7 @@ def render_table_rows(rows: list[dict], columns: list[str]) -> str:
     rendered = []
     for row in rows:
         cells = "".join(
-            f"<td>{html.escape(str(row.get(column, '')))}</td>"
-            for column in columns
+            f"<td>{html.escape(str(row.get(column, '')))}</td>" for column in columns
         )
         rendered.append(f"<tr>{cells}</tr>")
     return "".join(rendered)
@@ -85,10 +82,7 @@ def webhook(
     except requests.HTTPError as exc:
         raise HTTPException(
             status_code=exc.response.status_code,
-            detail=(
-                "GitHub provider call failed "
-                f"with {exc.response.status_code}"
-            ),
+            detail=("GitHub provider call failed " f"with {exc.response.status_code}"),
         ) from exc
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
