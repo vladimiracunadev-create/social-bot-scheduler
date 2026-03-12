@@ -70,7 +70,7 @@ def init_db():
             break
         except Exception as e:
             print(f"Esperando a SQL Server... ({i+1}/15) {e}")
-            time.Sleep(3)
+            time.sleep(3)
 
 
 init_db()

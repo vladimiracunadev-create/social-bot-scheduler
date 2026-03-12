@@ -3,10 +3,10 @@ name: "Laravel -> n8n -> React"
 path: "cases/05-laravel-to-react"
 origin:
   language: "php"
-  entrypoint: "origin/artisan"
+  entrypoint: "origin/ArtisanPost.php"
 destination:
   language: "react"
   port: 8085
   url: "http://localhost:8085"
 stack: ["laravel", "n8n", "react", "vite"]
-description: "Integración de comando Laravel con frontend React"
+description: "Integracion de comando Laravel con frontend React"
