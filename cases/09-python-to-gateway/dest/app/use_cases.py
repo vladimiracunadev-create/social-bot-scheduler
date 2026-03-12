@@ -7,12 +7,31 @@ from datetime import datetime, timezone
 
 import requests
 
-from app.domain import Action, ApiKeyId, Channel, Fingerprint, HttpStatus, IntegrationRequest, LatencyMs, Limit, Owner, ProviderCall, ProviderMode, RepoSnapshot, RequestId
+from app.domain import (
+    Action,
+    ApiKeyId,
+    Channel,
+    Fingerprint,
+    HttpStatus,
+    IntegrationRequest,
+    LatencyMs,
+    Limit,
+    Owner,
+    ProviderCall,
+    ProviderMode,
+    RepoSnapshot,
+    RequestId,
+)
 from app.repositories import IntegrationRequestRepository, ProviderCallRepository
 
 
 class HandleIntegrationRequest:
-    def __init__(self, integration_repo: IntegrationRequestRepository, provider_repo: ProviderCallRepository, github_token: str | None) -> None:
+    def __init__(
+        self,
+        integration_repo: IntegrationRequestRepository,
+        provider_repo: ProviderCallRepository,
+        github_token: str | None,
+    ) -> None:
         self.integration_repo = integration_repo
         self.provider_repo = provider_repo
         self.github_token = github_token or ""
@@ -29,7 +48,13 @@ class HandleIntegrationRequest:
 
         existing = self.integration_repo.get_by_fingerprint(fingerprint.value)
         if existing:
-            return {"ok": True, "duplicate": True, "request_id": existing["request_id"], "fingerprint": existing["fingerprint"], "status": existing["status"]}
+            return {
+                "ok": True,
+                "duplicate": True,
+                "request_id": existing["request_id"],
+                "fingerprint": existing["fingerprint"],
+                "status": existing["status"],
+            }
 
         integration_request = IntegrationRequest(
             request_id=request_id,
@@ -46,8 +71,14 @@ class HandleIntegrationRequest:
         self.integration_repo.save(integration_request)
 
         mode = ProviderMode.REAL if self.github_token else ProviderMode.PUBLIC
-        endpoint = f"https://api.github.com/users/{owner.value}/repos?per_page={limit.value}&sort=updated"
-        headers = {"Accept": "application/vnd.github+json", "User-Agent": "social-bot-scheduler-case09"}
+        endpoint = (
+            f"https://api.github.com/users/{owner.value}/repos?"
+            f"per_page={limit.value}&sort=updated"
+        )
+        headers = {
+            "Accept": "application/vnd.github+json",
+            "User-Agent": "social-bot-scheduler-case09",
+        }
         if self.github_token:
             headers["Authorization"] = f"Bearer {self.github_token}"
 
@@ -67,7 +98,9 @@ class HandleIntegrationRequest:
                     endpoint=endpoint,
                     http_status=HttpStatus(response.status_code),
                     latency_ms=LatencyMs(latency_ms),
-                    rate_limit_remaining=response.headers.get("X-RateLimit-Remaining"),
+                    rate_limit_remaining=response.headers.get(
+                        "X-RateLimit-Remaining"
+                    ),
                     error_code=None,
                     error_message=None,
                 )
@@ -110,7 +143,9 @@ class HandleIntegrationRequest:
                     endpoint=endpoint,
                     http_status=HttpStatus(exc.response.status_code),
                     latency_ms=LatencyMs(latency_ms),
-                    rate_limit_remaining=exc.response.headers.get("X-RateLimit-Remaining"),
+                    rate_limit_remaining=exc.response.headers.get(
+                        "X-RateLimit-Remaining"
+                    ),
                     error_code=f"HTTP_{exc.response.status_code}",
                     error_message=str(exc)[:255],
                 )
@@ -119,7 +154,11 @@ class HandleIntegrationRequest:
 
 
 class HandleIntegrationFailure:
-    def __init__(self, integration_repo: IntegrationRequestRepository, provider_repo: ProviderCallRepository) -> None:
+    def __init__(
+        self,
+        integration_repo: IntegrationRequestRepository,
+        provider_repo: ProviderCallRepository,
+    ) -> None:
         self.integration_repo = integration_repo
         self.provider_repo = provider_repo
 
@@ -131,7 +170,9 @@ class HandleIntegrationFailure:
         action = Action(body.get("action", Action.GITHUB_REPOS_LIST.value))
         owner = Owner(params.get("owner", "fallback-owner"))
         limit = Limit(int(params.get("limit", 1)))
-        fingerprint_value = payload.get("fingerprint") or f"{request_id.value}_{channel.value}"
+        fingerprint_value = (
+            payload.get("fingerprint") or f"{request_id.value}_{channel.value}"
+        )
         fingerprint = Fingerprint(fingerprint_value)
 
         if not self.integration_repo.get_by_fingerprint(fingerprint.value):
@@ -169,8 +210,18 @@ class HandleIntegrationFailure:
         return {"ok": True, "status": "FAILED", "fingerprint": fingerprint.value}
 
 
-def create_use_cases(integration_repo: IntegrationRequestRepository, provider_repo: ProviderCallRepository) -> tuple[HandleIntegrationRequest, HandleIntegrationFailure]:
+def create_use_cases(
+    integration_repo: IntegrationRequestRepository,
+    provider_repo: ProviderCallRepository,
+) -> tuple[HandleIntegrationRequest, HandleIntegrationFailure]:
     return (
-        HandleIntegrationRequest(integration_repo=integration_repo, provider_repo=provider_repo, github_token=os.getenv("GITHUB_TOKEN", "")),
-        HandleIntegrationFailure(integration_repo=integration_repo, provider_repo=provider_repo),
+        HandleIntegrationRequest(
+            integration_repo=integration_repo,
+            provider_repo=provider_repo,
+            github_token=os.getenv("GITHUB_TOKEN", ""),
+        ),
+        HandleIntegrationFailure(
+            integration_repo=integration_repo,
+            provider_repo=provider_repo,
+        ),
     )

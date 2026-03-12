@@ -4,7 +4,6 @@ from pathlib import Path
 
 import requests
 
-
 DEFAULT_WEBHOOK = "http://localhost:5678/webhook/social-bot-scheduler-gateway"
 PAYLOAD_FILE = Path(__file__).with_name("payload.example.json")
 

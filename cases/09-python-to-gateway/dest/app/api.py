@@ -9,7 +9,11 @@ from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 
-from app.infrastructure import DuckDBDatabase, DuckDBIntegrationRequestRepository, DuckDBProviderCallRepository
+from app.infrastructure import (
+    DuckDBDatabase,
+    DuckDBIntegrationRequestRepository,
+    DuckDBProviderCallRepository,
+)
 from app.use_cases import create_use_cases
 
 
@@ -23,7 +27,9 @@ LOG_DIR.mkdir(parents=True, exist_ok=True)
 database = DuckDBDatabase(str(DB_PATH))
 integration_repo = DuckDBIntegrationRequestRepository(database)
 provider_repo = DuckDBProviderCallRepository(database)
-handle_request_use_case, handle_failure_use_case = create_use_cases(integration_repo, provider_repo)
+handle_request_use_case, handle_failure_use_case = create_use_cases(
+    integration_repo, provider_repo
+)
 
 app = FastAPI(
     title="Case 09 Integration Gateway",
@@ -55,20 +61,32 @@ def validate_api_key(api_key: str | None) -> str:
 def render_table_rows(rows: list[dict], columns: list[str]) -> str:
     if not rows:
         return "<tr><td colspan='%s'>No data yet</td></tr>" % len(columns)
+
     rendered = []
     for row in rows:
-        cells = "".join(f"<td>{html.escape(str(row.get(column, '')))}</td>" for column in columns)
+        cells = "".join(
+            f"<td>{html.escape(str(row.get(column, '')))}</td>"
+            for column in columns
+        )
         rendered.append(f"<tr>{cells}</tr>")
     return "".join(rendered)
 
 
 @app.post("/webhook")
-def webhook(payload: IntegrationRequestDTO, x_api_key: str | None = Header(default=None)):
+def webhook(
+    payload: IntegrationRequestDTO, x_api_key: str | None = Header(default=None)
+):
     api_key = validate_api_key(x_api_key)
     try:
         return handle_request_use_case.execute(payload.model_dump(), api_key)
     except requests.HTTPError as exc:
-        raise HTTPException(status_code=exc.response.status_code, detail=f"GitHub provider call failed with {exc.response.status_code}") from exc
+        raise HTTPException(
+            status_code=exc.response.status_code,
+            detail=(
+                "GitHub provider call failed "
+                f"with {exc.response.status_code}"
+            ),
+        ) from exc
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
@@ -81,7 +99,12 @@ def errors(payload: dict):
 @app.get("/api/health")
 def health() -> dict:
     stats = integration_repo.stats()
-    return {"ok": True, "db_path": str(DB_PATH), "stats": stats, "provider_mode": "real" if os.getenv("GITHUB_TOKEN") else "public"}
+    return {
+        "ok": True,
+        "db_path": str(DB_PATH),
+        "stats": stats,
+        "provider_mode": "real" if os.getenv("GITHUB_TOKEN") else "public",
+    }
 
 
 @app.get("/api/requests")
@@ -103,9 +126,30 @@ def dashboard() -> str:
     top_repo_rows = provider_repo.top_repos(10)
     stats = integration_repo.stats()
 
-    request_columns = ["request_id", "action", "owner", "limit", "status", "http_status", "latency_ms", "mode", "api_key_prefix", "created_at"]
-    error_columns = ["request_id", "status", "provider", "http_status", "error_code", "error_message", "created_at"]
+    request_columns = [
+        "request_id",
+        "action",
+        "owner",
+        "limit",
+        "status",
+        "http_status",
+        "latency_ms",
+        "mode",
+        "api_key_prefix",
+        "created_at",
+    ]
+    error_columns = [
+        "request_id",
+        "status",
+        "provider",
+        "http_status",
+        "error_code",
+        "error_message",
+        "created_at",
+    ]
     top_columns = ["repo", "stars", "language", "url"]
+
+    provider_mode = "real" if os.getenv("GITHUB_TOKEN") else "public"
 
     return f"""
     <!DOCTYPE html>
@@ -139,7 +183,7 @@ def dashboard() -> str:
           <div class="card"><div class="muted">Total requests</div><div class="metric">{stats['total_requests']}</div></div>
           <div class="card"><div class="muted">Succeeded</div><div class="metric">{stats['succeeded']}</div></div>
           <div class="card"><div class="muted">Failed</div><div class="metric">{stats['failed']}</div></div>
-          <div class="card"><div class="muted">Provider mode</div><div class="metric">{'real' if os.getenv('GITHUB_TOKEN') else 'public'}</div></div>
+          <div class="card"><div class="muted">Provider mode</div><div class="metric">{provider_mode}</div></div>
         </section>
         <section class="card">
           <h2>Ultimos 20 requests</h2>

@@ -109,7 +109,10 @@ class DuckDBIntegrationRequestRepository(IntegrationRequestRepository):
         with self.database._lock:
             conn = self.database.connect()
             try:
-                conn.execute("UPDATE integration_requests SET status = ? WHERE fingerprint = ?", [status, fingerprint])
+                conn.execute(
+                    "UPDATE integration_requests SET status = ? WHERE fingerprint = ?",
+                    [status, fingerprint],
+                )
             finally:
                 conn.close()
 
@@ -131,7 +134,18 @@ class DuckDBIntegrationRequestRepository(IntegrationRequestRepository):
         if not row:
             return None
 
-        keys = ["request_id", "fingerprint", "channel", "action", "owner", "limit", "status", "api_key_prefix", "api_key_hash", "created_at"]
+        keys = [
+            "request_id",
+            "fingerprint",
+            "channel",
+            "action",
+            "owner",
+            "limit",
+            "status",
+            "api_key_prefix",
+            "api_key_hash",
+            "created_at",
+        ]
         return dict(zip(keys, row))
 
     def latest_requests(self, limit: int = 20) -> list[dict]:
@@ -155,7 +169,18 @@ class DuckDBIntegrationRequestRepository(IntegrationRequestRepository):
         finally:
             conn.close()
 
-        keys = ["request_id", "action", "owner", "limit", "status", "http_status", "latency_ms", "mode", "api_key_prefix", "created_at"]
+        keys = [
+            "request_id",
+            "action",
+            "owner",
+            "limit",
+            "status",
+            "http_status",
+            "latency_ms",
+            "mode",
+            "api_key_prefix",
+            "created_at",
+        ]
         return [dict(zip(keys, row)) for row in rows]
 
     def latest_errors(self, limit: int = 20) -> list[dict]:
@@ -176,7 +201,15 @@ class DuckDBIntegrationRequestRepository(IntegrationRequestRepository):
         finally:
             conn.close()
 
-        keys = ["request_id", "status", "provider", "http_status", "error_code", "error_message", "created_at"]
+        keys = [
+            "request_id",
+            "status",
+            "provider",
+            "http_status",
+            "error_code",
+            "error_message",
+            "created_at",
+        ]
         return [dict(zip(keys, row)) for row in rows]
 
     def stats(self) -> dict:
@@ -194,7 +227,11 @@ class DuckDBIntegrationRequestRepository(IntegrationRequestRepository):
         finally:
             conn.close()
 
-        return {"total_requests": int(summary[0] or 0), "succeeded": int(summary[1] or 0), "failed": int(summary[2] or 0)}
+        return {
+            "total_requests": int(summary[0] or 0),
+            "succeeded": int(summary[1] or 0),
+            "failed": int(summary[2] or 0),
+        }
 
 
 class DuckDBProviderCallRepository(ProviderCallRepository):
@@ -237,7 +274,16 @@ class DuckDBProviderCallRepository(ProviderCallRepository):
             try:
                 conn.executemany(
                     "INSERT INTO repo_snapshots (request_id, repo, stars, language, url) VALUES (?, ?, ?, ?, ?)",
-                    [[snapshot.request_id, snapshot.repo, snapshot.stars, snapshot.language, snapshot.url] for snapshot in snapshots],
+                    [
+                        [
+                            snapshot.request_id,
+                            snapshot.repo,
+                            snapshot.stars,
+                            snapshot.language,
+                            snapshot.url,
+                        ]
+                        for snapshot in snapshots
+                    ],
                 )
             finally:
                 conn.close()
@@ -258,4 +304,7 @@ class DuckDBProviderCallRepository(ProviderCallRepository):
         finally:
             conn.close()
 
-        return [{"repo": row[0], "stars": row[1], "language": row[2], "url": row[3]} for row in rows]
+        return [
+            {"repo": row[0], "stars": row[1], "language": row[2], "url": row[3]}
+            for row in rows
+        ]

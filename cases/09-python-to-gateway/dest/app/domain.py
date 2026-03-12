@@ -6,7 +6,6 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
 
-
 OWNER_PATTERN = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$")
 
 
@@ -69,7 +68,10 @@ class ApiKeyId:
         if not api_key or not api_key.strip():
             raise ValueError("api key must be present")
         trimmed = api_key.strip()
-        return cls(prefix=trimmed[:8], hash_value=hashlib.sha256(trimmed.encode("utf-8")).hexdigest())
+        return cls(
+            prefix=trimmed[:8],
+            hash_value=hashlib.sha256(trimmed.encode("utf-8")).hexdigest(),
+        )
 
 
 @dataclass(frozen=True)
@@ -124,7 +126,9 @@ class IntegrationRequest:
     status: str
     api_key_prefix: str
     api_key_hash: str
-    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    created_at: str = field(
+        default_factory=lambda: datetime.now(timezone.utc).isoformat()
+    )
 
     def mark_failed(self) -> None:
         self.status = "FAILED"
