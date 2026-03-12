@@ -1,5 +1,5 @@
 """
-Script de verificacion completa de los 8 casos
+Script de verificacion completa de los 9 casos
 Prueba cada bot y verifica respuesta
 """
 
@@ -22,6 +22,7 @@ CASES = [
     ("06", "go-to-symfony", 8086, "cases/06-go-to-symfony/origin"),
     ("07", "rust-to-ruby", 8087, "cases/07-rust-to-ruby/origin"),
     ("08", "csharp-to-flask", 8088, "cases/08-csharp-to-flask/origin"),
+    ("09", "python-to-gateway", 8090, "cases/09-python-to-gateway/origin"),
 ]
 
 
@@ -104,7 +105,7 @@ def run_bot(case_dir):
 
 def main():
     print("=" * 70)
-    print("[*] Verificación Completa de los 8 Casos")
+    print("[*] Verificacion Completa de los 9 Casos")
     print("=" * 70)
 
     results = []
@@ -157,12 +158,12 @@ def main():
         print(f"  Caso {case_id} ({case_name}): {status}")
 
     passed = sum(1 for _, _, s in results if "PASS" in s)
-    print(f"\n  Total: {passed}/8 casos funcionando")
+    print(f"\n  Total: {passed}/9 casos funcionando")
 
-    if passed == 8:
+    if passed == 9:
         print("\n  🎉 ¡TODOS LOS CASOS VERIFICADOS!")
     else:
-        print(f"\n  ⚠ {8-passed} casos requieren atención")
+        print(f"\n  {9-passed} casos requieren atencion")
 
 
 if __name__ == "__main__":

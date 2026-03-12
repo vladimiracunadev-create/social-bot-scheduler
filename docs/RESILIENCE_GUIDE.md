@@ -6,14 +6,14 @@ Esta guía detalla la implementación completa de resiliencia en el Social Bot S
 
 ## 📊 Resumen Ejecutivo
 
-**Cobertura:** 100% en todos los casos (01-08)
+**Cobertura:** 100% en todos los casos (01-09)
 
 | Mecanismo | Descripción | Estado |
 |-----------|-------------|--------|
-| **Reintentos Automáticos** | 3 intentos con 1s de espera | ✅ 8/8 casos |
-| **Dead Letter Queue** | Registro de errores irrecuperables | ✅ 8/8 casos |
-| **Idempotencia** | Prevención de duplicados | ✅ 8/8 casos |
-| **Circuit Breaker** | Protección contra servicios caídos | ✅ 8/8 casos |
+| **Reintentos Autom?ticos** | 3 intentos con 1s de espera | ? 9/9 casos |
+| **Dead Letter Queue** | Registro de errores irrecuperables | ? 9/9 casos |
+| **Idempotencia** | Prevenci?n de duplicados | ? 9/9 casos |
+| **Circuit Breaker** | Protecci?n contra servicios ca?dos | ? 9/9 casos |
 
 ---
 
@@ -178,6 +178,7 @@ Todos los servicios de destino tienen endpoint `/errors`:
 - **Caso 06 (Symfony):** `http://dest-symfony:80/errors`
 - **Caso 07 (Ruby):** `http://dest-ruby:4567/errors`
 - **Caso 08 (Flask):** `http://dest-flask:5000/errors`
+- **Caso 09 (FastAPI Gateway):** `http://dest-gateway-09:8000/errors`
 
 ### Formato de Log
 
@@ -243,6 +244,7 @@ Todos los workflows tienen reintentos configurados:
 - `cases/06-go-to-symfony/n8n/workflow.json`
 - `cases/07-rust-to-ruby/n8n/workflow.json`
 - `cases/08-csharp-to-flask/n8n/workflow.json`
+- `n8n/workflows/case-09-python-to-gateway.json`
 
 ---
 
@@ -330,7 +332,7 @@ python3 scripts/circuit_breaker.py reset "01"
 python3 scripts/check_idempotency.py stats "01"
 
 # Todos los casos
-for i in {01..08}; do
+for i in {01..09}; do
   echo "Caso $i:"
   python3 scripts/check_idempotency.py stats "$i"
 done

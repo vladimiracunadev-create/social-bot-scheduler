@@ -1,7 +1,7 @@
 # 📖 Guía de Uso Detallada
 
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
-[![Ecosystem](https://img.shields.io/badge/Matriz-8_Ejes-blueviolet.svg)]()
+[![Ecosystem](https://img.shields.io/badge/Matriz-9_Ejes-blueviolet.svg)]()
 
 [← Volver al Inicio](Home)
 
@@ -44,3 +44,11 @@ Si algo sale mal, el sistema tiene mecanismos de auto-protección.
 - Si un servicio destino falla, se reintentará 3 veces.
 - Si persiste, se enviará al **DLQ** (`errors.log` en el destino).
 - Para más detalles, ver [Resiliencia](Resilience.md).
+
+
+## 5. Caso 09
+Para probar el gateway autenticado:
+```bash
+make demo09
+```
+Luego abre `http://localhost:8090`.

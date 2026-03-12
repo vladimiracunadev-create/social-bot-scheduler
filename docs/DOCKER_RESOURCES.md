@@ -31,7 +31,7 @@ Este documento detalla el consumo de recursos (Disco y RAM) del proyecto **Socia
 | Escenario | Almacenamiento (Disco) | RAM Sugerida | Notas |
 |-----------|------------------------|--------------|-------|
 | **Estado Parcial** | Variable (~600 MB - 1 GB) | 4 GB | Solo servicios básicos o un caso individual. |
-| **Repositorio Total** | **~8.0 GB** | **16 GB** | Los 18+ servicios, 8 bases de datos y herramientas de observabilidad. |
+| **Repositorio Total** | **~8.0 GB** | **16 GB** | Los 19+ servicios, 8 bases de datos externas, 1 gateway con DuckDB y herramientas de observabilidad. |
 
 ---
 
@@ -50,7 +50,7 @@ Si decides hacer un `docker-compose --profile full pull`, este es el impacto en 
 
 ### 💾 Volúmenes y Persistencia (Total: ~1.2 GB)
 - **Caché de Construcción**: ~500 MB (Capas intermedias de Dockerfiles personalizados).
-- **Datos de DBs**: ~500 MB (Espacio reservado para persistencia de los 8 motores).
+- **Datos de DBs**: ~550 MB (Espacio reservado para persistencia de los 8 motores externos y DuckDB embebida).
 - **Configuración**: ~200 MB (Logs, n8n workflows, grafana dashboards).
 
 ---

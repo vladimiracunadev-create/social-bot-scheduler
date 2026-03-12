@@ -39,7 +39,7 @@ Para confirmar que el "circuito" (Chatbot -> n8n -> Dashboard) funciona, tienes 
 ### A. Prueba Global (Dashboard)
 1. Abre [http://localhost:8080](http://localhost:8080) en tu navegador.
 2. Observa el indicador de **"Estado del Entorno"**.
-3. Haz clic en **"🚀 PROBAR INTEGRACIÓN GLOBAL"**. El Dashboard ejecutará secuencialmente los 8 casos y mostrará los resultados en tiempo real.
+3. Haz clic en **"?? PROBAR INTEGRACI?N GLOBAL"**. El Dashboard ejecutar? secuencialmente los 9 casos y mostrar? los resultados en tiempo real.
 
 ### B. Prueba Individual (CLI)
 Si prefieres la terminal, puedes ejecutar casos específicos:
@@ -76,3 +76,16 @@ Si el sistema presenta comportamientos erráticos, realiza una limpieza profunda
 make clean
 ```
 esto eliminará volúmenes y redes, permitiendo una reinstalación "desde cero" limpia.
+
+
+## 6. Verificacion del Caso 09
+
+```bash
+make demo09
+```
+
+Valida lo siguiente en `http://localhost:8090`:
+- autenticacion obligatoria por `X-API-Key` desde n8n
+- requests recientes con `request_id`, `action`, `owner`, `limit`, `status`, `http_status`, `latency_ms`, `mode` y `api_key_prefix`
+- errores recientes desde DLQ
+- top repos por stars leidos desde DuckDB

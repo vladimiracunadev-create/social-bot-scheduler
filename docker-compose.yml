@@ -22,6 +22,7 @@ services:
       - N8N_PERSONALIZATION_ENABLED=false
       - N8N_TEMPLATES_ENABLED=false
       - GENERIC_TIMEZONE=America/Santiago
+      - INTEGRATION_API_KEY=${INTEGRATION_API_KEY}
     volumes:
       - ./n8n/data:/home/node/.n8n
       - ./scripts:/data/scripts:ro
@@ -200,7 +201,28 @@ services:
       - DB_HOST=db-mssql
       - DB_PASS=Bot-Secret-2026!
 
-  # 📊 Prometheus (Métricas)
+  # Case 09: Integration Gateway (FastAPI + DuckDB)
+  dest-gateway-09:
+    build: ./cases/09-python-to-gateway/dest
+    container_name: social-bot-dest-gateway-09
+    profiles: ["case09", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.20'
+    ports:
+      - "8090:8000"
+    volumes:
+      - ./cases/09-python-to-gateway/dest/data:/app/data
+      - ./cases/09-python-to-gateway/dest/logs:/app/logs
+    environment:
+      - INTEGRATION_API_KEY=${INTEGRATION_API_KEY}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+    networks:
+      - bot-network
+
+  # Prometheus (Metrics)
   prometheus:
     image: prom/prometheus:latest
     container_name: social-bot-prometheus

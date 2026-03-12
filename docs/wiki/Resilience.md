@@ -1,6 +1,6 @@
 # 🛡️ Guía Completa de Resiliencia
 
-[![Ecosystem](https://img.shields.io/badge/Matriz-8_Ejes-blueviolet.svg)]()
+[![Ecosystem](https://img.shields.io/badge/Matriz-9_Ejes-blueviolet.svg)]()
 [![Security](https://img.shields.io/badge/Security-Hardened-success.svg)]()
 
 [← Volver al Inicio](Home)
@@ -14,14 +14,14 @@ Esta guía detalla la implementación completa de resiliencia en el Social Bot S
 
 ## 📊 Resumen Ejecutivo
 
-**Cobertura:** 100% en todos los casos (01-08)
+**Cobertura:** 100% en todos los casos (01-09)
 
 | Mecanismo | Descripción | Estado |
 |-----------|-------------|--------|
-| **Reintentos Automáticos** | 3 intentos con 1s de espera | ✅ 8/8 casos |
-| **Dead Letter Queue** | Registro de errores irrecuperables | ✅ 8/8 casos |
-| **Idempotencia** | Prevención de duplicados | ✅ 8/8 casos |
-| **Circuit Breaker** | Protección contra servicios caídos | ✅ 8/8 casos |
+| **Reintentos Autom?ticos** | 3 intentos con 1s de espera | ? 9/9 casos |
+| **Dead Letter Queue** | Registro de errores irrecuperables | ? 9/9 casos |
+| **Idempotencia** | Prevenci?n de duplicados | ? 9/9 casos |
+| **Circuit Breaker** | Protecci?n contra servicios ca?dos | ? 9/9 casos |
 
 ---
 
@@ -359,3 +359,11 @@ cat cases/01-python-to-php/dest/logs/errors.log
 # Todos los casos
 find cases -name "errors.log" -exec echo {} \; -exec cat {} \;
 ```
+
+
+## Caso 09: Guardrails + Gateway
+- Webhook: `social-bot-scheduler-gateway`
+- Fingerprint: `{{$json.body.id}}_{{$json.body.channel}}`
+- Destino: `http://dest-gateway-09:8000/webhook`
+- Header inyectado por n8n: `X-API-Key={{$env.INTEGRATION_API_KEY}}`
+- DLQ: `http://dest-gateway-09:8000/errors`

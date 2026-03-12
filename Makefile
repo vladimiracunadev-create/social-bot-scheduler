@@ -56,3 +56,8 @@ deploy: ## Despliega los manifiestos en el clúster de Kubernetes activo
 	kubectl apply -k k8s/overlays/prod/ || kubectl apply -f k8s/base/
 	@echo "✅ Despliegue solicitado."
 
+
+
+demo09: ## Ejecuta la demostraci?n del Caso 09
+	@echo "Iniciando Demo Caso 09 (Python -> FastAPI Gateway)..."
+	python3 hub.py ejecutar 09-python-to-gateway

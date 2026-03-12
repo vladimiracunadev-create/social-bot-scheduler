@@ -5,7 +5,7 @@ Esta carpeta contiene la configuración necesaria para que **n8n se auto-configu
 ## Contenido
 
 ### `workflows/`
-Los 8 workflows de integración pre-configurados, listos para importación automática:
+Los 9 workflows de integraci?n pre-configurados, listos para importaci?n autom?tica:
 
 | Archivo | Caso | Ruta Origen → Destino |
 |---------|------|-----------------------|
@@ -17,6 +17,7 @@ Los 8 workflows de integración pre-configurados, listos para importación autom
 | `case-06-go-to-symfony.json` | 06 | Go → n8n → Symfony |
 | `case-07-rust-to-ruby.json` | 07 | Rust → n8n → Ruby |
 | `case-08-csharp-to-flask.json` | 08 | C# → n8n → Flask |
+| `case-09-python-to-gateway.json` | 09 | Python -> n8n -> FastAPI Gateway |
 
 ## ¿Cómo funciona?
 
@@ -25,7 +26,7 @@ Al ejecutar `docker-compose up -d`, el contenedor de n8n usa un entrypoint perso
 1. **Arranca n8n** en segundo plano
 2. **Espera** a que esté listo (health check)
 3. **Crea** un usuario administrador automáticamente
-4. **Importa** los 8 workflows desde esta carpeta
+4. **Importa** los 9 workflows desde esta carpeta
 5. **Activa** todos los workflows
 6. **Marca** la importación como completada (no se repite en reinicios)
 

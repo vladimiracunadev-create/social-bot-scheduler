@@ -3,7 +3,7 @@
 ### *Automatización avanzada: Orquestación de Python, Go, Node.js y PHP mediante n8n.*
 
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
-[![Ecosystem](https://img.shields.io/badge/Matriz-8_Ejes-blueviolet.svg)]()
+[![Ecosystem](https://img.shields.io/badge/Matriz-9_Ejes-blueviolet.svg)]()
 [![Security](https://img.shields.io/badge/Security-Hardened-success.svg)]()
 [![Latest Release](https://img.shields.io/badge/release-v4.1.0-blue.svg)]()
 
@@ -13,7 +13,7 @@
 
 **Objetivo**: Ver la interoperabilidad Python -> PHP en acción ahora mismo.
 
-1. **Levanta todo**: `make up` (o `docker-compose up -d`) — n8n se auto-configura con los 8 workflows ✅
+1. **Levanta todo**: `make up` (o `docker-compose up -d`) — n8n se auto-configura con los 9 workflows ✅
 2. **Espera ~30s**: Los workflows se importan y activan automáticamente
 3. **Dispara**: `make demo` (o `python3 hub.py ejecutar 01-python-to-php`)
 4. **Verifica**: Abre [http://localhost:8081](http://localhost:8081) para ver el dashboard PHP actualizado
@@ -39,14 +39,14 @@ Este repositorio ha sido auditado y robustecido siguiendo estándares de segurid
 
 ## 🛡️ Resiliencia y Fiabilidad (Guardrails) - 100% de Cobertura
 
-La capa de n8n actúa como un cortafuegos inteligente entre tus bots y las redes sociales. **TODOS los casos (01-08)** implementan:
+La capa de n8n actúa como un cortafuegos inteligente entre tus bots y las redes sociales. **TODOS los casos (01-09)** implementan:
 
 | Mecanismo | Descripción | Cobertura |
 |-----------|-------------|-----------|
-| **Reintentos Automáticos** | 3 intentos con 1s de espera | ✅ 8/8 casos |
-| **Dead Letter Queue (DLQ)** | Registro de errores irrecuperables | ✅ 8/8 casos |
-| **Idempotencia** | Prevención de duplicados con SQLite | ✅ 8/8 casos |
-| **Circuit Breaker** | Protección contra servicios caídos | ✅ 8/8 casos |
+| **Reintentos Autom?ticos** | 3 intentos con 1s de espera | ? 9/9 casos |
+| **Dead Letter Queue (DLQ)** | Registro de errores irrecuperables | ? 9/9 casos |
+| **Idempotencia** | Prevenci?n de duplicados con SQLite | ? 9/9 casos |
+| **Circuit Breaker** | Protecci?n contra servicios ca?dos | ? 9/9 casos |
 
 **Scripts Compartidos:**
 - `scripts/check_idempotency.py` - Gestión de fingerprints con SQLite
@@ -73,6 +73,7 @@ Para hacer el laboratorio aún más robusto y realista, cada eje de integración
 | **06** | **Redis** | In-Memory / KV | Caché y Estados Symfony |
 | **07** | **Cassandra** | NoSQL Wide-Column | Alta disponibilidad Ruby |
 | **08** | **SQL Server** | Relacional Enterprise | Datos Estructurados Flask |
+| **09** | **DuckDB** | Embebido | Integration Gateway FastAPI + Dashboard GitHub |
 
 > **Auto-Migración**: Cada servicio receptor está programado para verificar la conexión, crear la base de datos y generar las tablas/colecciones automáticamente al arrancar.
 
@@ -131,7 +132,7 @@ n8n se auto-configura al arrancar. Solo verifica:
 2.  Deberías ver los workflows ya importados y activos.
 3.  Si pide login: `admin@social-bot.local` / `SocialBot2026!`
 
-> **Nota**: La primera vez, espera ~30 segundos para la auto-configuración. Los 8 workflows se importan desde `n8n/workflows/`.
+> **Nota**: La primera vez, espera ~30 segundos para la auto-configuración. Los 9 workflows se importan desde `n8n/workflows/`.
 
 ### Paso 5: ¡Disparar y Monitorear!
 Ejecuta el bot emisor desde su carpeta `origin`:
@@ -201,7 +202,7 @@ Este proyecto implementa un **stack de monitoreo industrial** para eliminar la "
 ---
 
 ## 🏗️ La Gran Matriz de Integración
-Tabla de estado actual de los 8 ejes de integración:
+Tabla de estado actual de los 9 ejes de integraci?n:
 
 | ID | Eje Tecnológico (Origen -> Puente -> Destino) | Persistencia | Estado |
 | :--- | :--- | :--- | :--- |
@@ -213,6 +214,7 @@ Tabla de estado actual de los 8 ejes de integración:
 | [**06**](cases/06-go-to-symfony/README.md) | 🐹 **Go** -> 🔗 n8n -> 🐘 **Symfony** | `Redis` | ✅ Operativo |
 | [**07**](cases/07-rust-to-ruby/README.md) | 🦀 **Rust** -> 🔗 n8n -> 💎 **Ruby** | `Cassandra` | ✅ Operativo |
 | [**08**](cases/08-csharp-to-flask/README.md) | ❄️ **C#** -> 🔗 n8n -> 🌶️ **Flask** | `SQL Server` | ✅ Operativo |
+| [**09**](cases/09-python-to-gateway/README.md) | Python -> n8n -> FastAPI Gateway | `DuckDB` | OK |
 
 ---
 
@@ -225,7 +227,7 @@ Accede a las guías específicas para profundizar en cada área del sistema:
 - 🗺️ **[Mapa Completo del Sistema](docs/FILE_MAP.md)**: Explicación detallada de **cada archivo** del repositorio, su rol e importancia.
 
 ### 🧹 Gestión de Recursos y Limpieza
-Dada la complejidad del stack (8 bases de datos), es vital saber cómo liberar recursos:
+Dada la complejidad del stack (9 destinos y 8 bases de datos externas m?s DuckDB embebida), es vital saber c?mo liberar recursos:
 - **Liberación Total (Nuke)**: `make nuke` (☢️ Borra imágenes base, volúmenes, redes y caché).
 - **Limpieza Estándar**: `make clean` (Borra contenedores y volúmenes).
 

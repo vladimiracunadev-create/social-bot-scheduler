@@ -10,6 +10,7 @@ CASES = [
     {"id": "06", "path": "social-bot-scheduler-case-06", "port": 5678},
     {"id": "07", "path": "social-bot-scheduler-case-07", "port": 5678},
     {"id": "08", "path": "social-bot-scheduler-case-08", "port": 5678},
+    {"id": "09", "path": "social-bot-scheduler-gateway", "port": 5678},
 ]
 
 

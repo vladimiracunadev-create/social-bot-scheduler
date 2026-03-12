@@ -1,0 +1,12 @@
+id: "09"
+name: "Python -> n8n -> FastAPI Gateway"
+path: "cases/09-python-to-gateway"
+origin:
+  language: "python"
+  entrypoint: "origin/bot.py"
+destination:
+  language: "python"
+  port: 8090
+  url: "http://localhost:8090"
+stack: ["python", "n8n", "fastapi", "duckdb", "github-api"]
+description: "Integracion de bot Python con Integration Gateway en FastAPI, autenticacion por X-API-Key y persistencia DuckDB"

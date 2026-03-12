@@ -1,42 +1,26 @@
-# 📔 Índice de la Matriz Tecnológica
+# Indice de la Matriz Tecnologica
 
-[![Ecosystem](https://img.shields.io/badge/Matriz-8_Ejes-blueviolet.svg)]()
-[![Latest Release](https://img.shields.io/badge/release-v3.0.0-blue.svg)]()
+[![Ecosystem](https://img.shields.io/badge/Matriz-9_Ejes-blueviolet.svg)]()
+[![Latest Release](https://img.shields.io/badge/release-v4.1.0-blue.svg)]()
 
-[← Volver al Inicio](Home)
-
----
-
-
-Descubre por qué hemos elegido estas combinaciones y qué beneficios aporta cada una a tu flujo de trabajo.
+[? Volver al Inicio](Home)
 
 ---
 
-## 📊 Comparativa de Emisores (Origen)
-| Tecnología | Caso | Ventaja | Uso Recomendado |
-| :--- | :--- | :--- | :--- |
-| **Python** | 01, 02 | Facilidad de scripting y librerías robustas (Pydantic). | Prototipado rápido y validación de tipos compleja. |
-| **Go** | 03, 06 | Binario único, ultra-rápido y concurrente. | Sistemas embebidos o servidores de alta carga. |
-| **Node.js** | 04 | Manejo asíncrono nativo excelente. | Integración con otros servicios JS existentes. |
-| **Laravel** | 05 | Framework PHP ultra-productivo. | Aplicaciones SaaS empresariales. |
-| **Rust** | 07 | Seguridad de memoria y rendimiento. | Sistemas críticos y de baja latencia. |
-| **C# (.NET)** | 08 | Ecosistema empresarial maduro. | Integraciones corporativas y servicios Windows. |
+## Casos Implementados
+| Caso | Flujo | Puerto | Persistencia | Nota |
+| :--- | :--- | :--- | :--- | :--- |
+| 01 | Python -> n8n -> PHP | 8081 | MySQL | Caso demo por defecto |
+| 02 | Python -> n8n -> Go | 8082 | MariaDB | Receptor Go minimalista |
+| 03 | Go -> n8n -> Node.js | 8083 | PostgreSQL | Event loop + JSONB |
+| 04 | Node.js -> n8n -> FastAPI | 8084 | SQLite | FastAPI asincrono |
+| 05 | Laravel -> n8n -> React | 8085 | MongoDB | BFF + UI reactiva |
+| 06 | Go -> n8n -> Symfony | 8086 | Redis | Estados en memoria |
+| 07 | Rust -> n8n -> Ruby | 8087 | Cassandra | Caso de alta complejidad |
+| 08 | C# -> n8n -> Flask | 8088 | SQL Server | Integracion .NET |
+| 09 | Python -> n8n -> FastAPI Gateway | 8090 | DuckDB | X-API-Key + GitHub API + dashboard |
 
----
-
-## 🛠️ Comparativa de Receptores (Destino)
-| Tecnología | Dashboard | Por qué elegirlo |
-| :--- | :--- | :--- |
-| **PHP (Vanilla)** | 8081 | Universalidad y simplicidad máxima. |
-| **Go** | 8082 | Eficiencia extrema. El receptor ocupa menos de 10MB de RAM. |
-| **Node.js** | 8083 | Flexibilidad. Fácil de extender con Express y middlewares. |
-| **FastAPI** | 8084 | Velocidad Python. Rendimiento comparable a Node. |
-| **React** | 8085 | Experiencia de usuario (UX) rica y reactiva. |
-| **Symfony** | 8086 | Estabilidad y estándares industriales. |
-| **Ruby (Sinatra)** | 8087 | Elegancia y simplicidad del DSL de Sinatra. |
-| **Flask** | 8088 | Microframework Python ideal para servicios ligeros. |
-
----
-
-## 🔄 El Rol de n8n
-En todos los casos, **n8n** actúa como la capa de abstracción. Esto significa que puedes cambiar el Emisor o el Receptor sin que tus flujos de publicación en Facebook, Twitter o Slack se rompan. Es el seguro de vida de tu automatización.
+## Caso 09 en foco
+- Origen: bot Python que envia payload operativo compatible con el fingerprint actual.
+- Puente: n8n con circuit breaker, idempotencia SQLite, reintentos y DLQ.
+- Destino: FastAPI Integration Gateway con DDD, DuckDB embebida y dashboard HTML.

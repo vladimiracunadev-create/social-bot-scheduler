@@ -408,7 +408,7 @@
     </header>
 
     <div class="summary-bar" id="summary-bar" style="display: none;">
-        <span class="summary-stat" id="stat-total">Total: 0/8</span>
+        <span class="summary-stat" id="stat-total">Total: 0/9</span>
         <span class="summary-stat status-pass" id="stat-pass">✅ Pass: 0</span>
         <span class="summary-stat status-fail" id="stat-fail">❌ Fail: 0</span>
     </div>
@@ -557,6 +557,25 @@
             <div class="db-records" id="db-records-08" style="display:none"></div>
             <div class="case-result" id="result-08"></div>
         </div>
+
+
+        <!-- Case 09 -->
+        <div class="case-card" data-case="09">
+            <div class="case-header">
+                <span class="case-id">CASE-09</span>
+                <span class="case-status" id="status-09">READY</span>
+            </div>
+            <h3 class="case-title">Python ? n8n ? FastAPI Gateway</h3>
+            <div class="db-tag">Database: DuckDB</div>
+            <div class="tech-stack">
+                <span class="tech-tag">Python Bot</span>
+                <span class="tech-tag">FastAPI</span>
+                <span class="tech-tag">GitHub API</span>
+            </div>
+            <button class="btn-test" id="btn-09">Probar Integracion</button>
+            <div class="db-records" id="db-records-09" style="display:none"></div>
+            <div class="case-result" id="result-09"></div>
+        </div>
     </main>
 
     <div id="terminal-area">
@@ -589,7 +608,8 @@
             '05': { webhook: 'social-bot-scheduler-react', port: 8085, origin: 'Laravel', dest: 'React' },
             '06': { webhook: 'social-bot-scheduler-symfony', port: 8086, origin: 'Go', dest: 'Symfony' },
             '07': { webhook: 'social-bot-scheduler-ruby', port: 8087, origin: 'Rust', dest: 'Ruby' },
-            '08': { webhook: 'social-bot-scheduler-flask', port: 8088, origin: 'C#', dest: 'Flask' }
+            '08': { webhook: 'social-bot-scheduler-flask', port: 8088, origin: 'C#', dest: 'Flask' },
+            '09': { webhook: 'social-bot-scheduler-gateway', port: 8090, origin: 'Python', dest: 'FastAPI Gateway' }
         };
 
         const N8N_BASE = 'http://localhost:5678';
@@ -636,7 +656,7 @@
 
         function updateSummary() {
             document.getElementById('summary-bar').style.display = 'flex';
-            document.getElementById('stat-total').textContent = `Total: ${testResults.pass + testResults.fail}/8`;
+            document.getElementById('stat-total').textContent = `Total: ${testResults.pass + testResults.fail}/9`;
             document.getElementById('stat-pass').textContent = `✅ Pass: ${testResults.pass}`;
             document.getElementById('stat-fail').textContent = `❌ Fail: ${testResults.fail}`;
         }

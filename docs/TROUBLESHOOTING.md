@@ -116,5 +116,5 @@ docker system prune -a --volumes
 docker-compose up -d --build
 ```
 
-> **Tip**: Después de `docker-compose down -v`, n8n re-importará los 8 workflows automáticamente al arrancar.
+> **Tip**: Despu?s de `docker-compose down -v`, n8n re-importar? los 9 workflows autom?ticamente al arrancar.
 

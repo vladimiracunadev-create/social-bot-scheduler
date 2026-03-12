@@ -19,7 +19,7 @@ Es la **capa de abstracción y resiliencia**. Recibe un Webhook genérico y aseg
 
 ### 3. Eje de Destino (Receptores + Dashboards + Persistencia Políglota)
 Es la **capa de auditoría y visualización**. n8n envía una copia del post finalizado a estos servicios para que el usuario pueda ver el historial en un navegador.
-- **Implementaciones**: PHP (Apache), Go, Node.js (Express), FastAPI, React (Node API), Symfony, Ruby (Sinatra), Flask.
+- **Implementaciones**: PHP (Apache), Go, Node.js (Express), FastAPI, React (Node API), Symfony, Ruby (Sinatra), Flask y FastAPI Gateway.
 - **Persistencia**: Cada destino orquesta su propio motor de base de datos (MySQL, PostgreSQL, MongoDB, Cassandra, etc.), demostrando la capacidad de manejar diversos paradigmas de datos.
 
 ---
@@ -36,6 +36,7 @@ Es la **capa de auditoría y visualización**. n8n envía una copia del post fin
 | **06** | Go | n8n | Symfony | **Redis** | 8086 |
 | **07** | Rust | n8n | Ruby (Sinatra) | **Cassandra** | 8087 |
 | **08** | C# (.NET) | n8n | Flask | **SQL Server** | 8088 |
+| **09** | Python | n8n | FastAPI Gateway | **DuckDB** | 8090 |
 
 ---
 
@@ -81,7 +82,7 @@ A continuación se detallan los **11 patrones** que conforman la arquitectura de
 **Descripción**: El sistema se descompone en servicios independientes, cada uno ejecutándose en su propio contenedor Docker con su propio proceso, runtime y base de datos.
 
 **Evidencia en el código**:
-- `docker-compose.yml` define **~20 servicios**: 8 destinos, 8 bases de datos, n8n, Prometheus, Grafana, cAdvisor y Master Dashboard.
+- `docker-compose.yml` define **~20 servicios**: 9 destinos, 8 bases de datos externas, n8n, Prometheus, Grafana, cAdvisor y Master Dashboard.
 - Cada servicio tiene su propia imagen Docker, límites de CPU/RAM (`deploy.resources`), y red compartida (`bot-network`).
 - Los perfiles Docker Compose (`profiles: ["case01", "full"]`) permiten levantar subconjuntos de servicios según necesidad.
 
@@ -134,7 +135,7 @@ graph TD
 **Descripción**: n8n actúa como un **mediador central** (spoke) al que todos los flujos convergen y desde el cual divergen. Ningún componente se comunica directamente con otro; todo pasa por el puente.
 
 **Evidencia en el código**:
-- Los 8 workflows en `n8n/workflows/` definen las rutas de cada caso.
+- Los 9 workflows en `n8n/workflows/` definen las rutas de cada caso.
 - `hub.py` actúa como un segundo mediador a nivel CLI, orquestando Docker, ejecución de casos y diagnósticos desde un solo punto de entrada.
 - `setup.py` (Master Launcher) configura las variables de entorno para enrutar correctamente cada caso.
 
@@ -283,7 +284,7 @@ Stage 2 (final):    python:3.11-slim → solo runtime, sin herramientas de compi
 
 | Comando | Descripción | Función interna |
 | :--- | :--- | :--- |
-| `listar-casos` | Enumera los 8 casos con su stack tecnológico | `listar_casos()` |
+| `listar-casos` | Enumera los 9 casos con su stack tecnol?gico | `listar_casos()` |
 | `ejecutar <caso>` | Lanza un caso con validación de seguridad | `ejecutar_caso()` |
 | `doctor` | Diagnóstico de salud del entorno | `ejecutar_doctor()` |
 | `up [--full]` | Levanta infraestructura Docker | `gestionar_stack()` |
@@ -322,7 +323,7 @@ Para facilitar el despliegue, el contenedor de n8n utiliza un entrypoint persona
 
 1. **Polling de Salud**: Espera a que la API de n8n esté disponible.
 2. **Configuración de Admin**: Crea automáticamente la cuenta `admin@social-bot.local`.
-3. **Importación REST**: Autentica y utiliza la API de n8n para importar los 8 archivos JSON desde `n8n/workflows/`.
+3. **Importación REST**: Autentica y utiliza la API de n8n para importar los 9 archivos JSON desde `n8n/workflows/`.
 4. **Activación Forzada**: Activa cada flujo individualmente para que los Webhooks queden registrados.
 
 Este proceso elimina la necesidad de configuración manual de la UI, permitiendo un flujo de trabajo "Infrastructure as Code" para las automatizaciones visuales.
@@ -386,7 +387,7 @@ graph TB
         K8S["Kubernetes / Kustomize"]
     end
 
-    subgraph "CAPA DE NEGOCIO (8 Casos)"
+    subgraph "CAPA DE NEGOCIO (9 Casos)"
         direction LR
         subgraph "Eje Origen"
             O1[Python] 
@@ -438,7 +439,7 @@ graph TB
 | 2 | Comunicación | **Event-Driven / Webhooks** | n8n como broker HTTP |
 | 3 | Coordinación | **Mediator / Hub-and-Spoke** | n8n + `hub.py` |
 | 4 | Flujo | **Three-Tier Pipeline** | Origen → Puente → Destino |
-| 5 | Datos | **Polyglot Persistence** | 8 motores de BD distintos |
+| 5 | Datos | **Polyglot Persistence** | 9 estrategias de persistencia (8 motores externos + DuckDB embebida) |
 | 6 | Resiliencia | **Circuit Breaker + Idempotency + DLQ** | `scripts/circuit_breaker.py`, `scripts/check_idempotency.py` |
 | 7 | Observabilidad | **Prometheus + Grafana + cAdvisor** | Stack CNCF completo |
 | 8 | Infraestructura | **Infrastructure as Code** | Docker Compose + K8s + auto-setup |

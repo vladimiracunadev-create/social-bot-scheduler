@@ -27,7 +27,7 @@ social-bot-scheduler/
 
 | Archivo | Importancia | Descripción |
 |---------|:-----------:|-------------|
-| `docker-compose.yml` | 🔴 **Crítico** | Define los **24 servicios** del ecosistema completo: 8 receptores, 8 bases de datos, n8n, Grafana, Prometheus, y el dashboard maestro. Contiene perfiles (`core`, `full`) para despliegue parcial o total. |
+| `docker-compose.yml` | 🔴 **Crítico** | Define los servicios del ecosistema completo: 9 receptores, 8 bases de datos externas, n8n, Grafana, Prometheus, cAdvisor y el dashboard maestro. Contiene perfiles (`core`, `full`) para despliegue parcial o total. |
 | `docker-compose.dev.yml` | 🟡 Media | Override para desarrollo local. Añade hot-reload y puertos de depuración. |
 | `Dockerfile` | 🟡 Media | Imagen Docker para el dashboard maestro (`master-dashboard`). |
 | `Makefile` | 🟢 Alta | Automatización de comandos frecuentes: `make up`, `make clean`, `make nuke` (☢️ limpieza total). |
@@ -46,7 +46,7 @@ social-bot-scheduler/
 
 | Archivo | Importancia | Descripción |
 |---------|:-----------:|-------------|
-| `import_workflows.py` | 🟢 Alta | Importa automáticamente los 8 workflows JSON al motor n8n vía API REST. Esencial para el primer despliegue. |
+| `import_workflows.py` | ?? Alta | Importa autom?ticamente los 9 workflows JSON al motor n8n v?a API REST. Esencial para el primer despliegue. |
 | `generate_workflows.py` | 🟡 Media | Genera plantillas base de workflows n8n para nuevos casos de integración. |
 | `check_workflows.py` | 🟡 Media | Verifica que los workflows importados estén activos y sus webhooks registrados. |
 | `diagnose_n8n.py` | 🟡 Media | Diagnóstico profundo del estado de n8n: nodos registrados, credenciales, errores de arranque. |
@@ -80,7 +80,7 @@ social-bot-scheduler/
 | `SECURITY.md` | 🟢 Alta | Política de seguridad: cómo reportar vulnerabilidades de forma responsable. |
 | `LICENSE` | 🟡 Media | Licencia del proyecto (MIT/Apache). |
 | `NOTICE` | 🟢 Baja | Atribuciones legales de dependencias de terceros. |
-| `index.html` | 🟢 Alta | **Dashboard Maestro** — Interfaz web unificada que muestra el estado de los 8 casos en tiempo real. |
+| `index.html` | 🟢 Alta | **Dashboard Maestro** — Interfaz web unificada que muestra el estado de los 9 casos en tiempo real. |
 | `llms.txt` | 🟢 Baja | Metadatos del proyecto optimizados para consumo por modelos de lenguaje (LLMs). |
 | `COMO_ACTIVAR_WORKFLOWS.md` | 🟢 Alta | Guía paso a paso para importar y activar los workflows de n8n. |
 | `IMPORT_WORKFLOWS.md` | 🟡 Media | Documentación técnica del proceso de importación de workflows. |
@@ -209,7 +209,7 @@ cases/XX-origen-to-destino/
 
 | Archivo/Dir | Descripción |
 |-------------|-------------|
-| `workflows/*.json` | 8 archivos JSON, uno por caso. Contienen la lógica de transformación, enrutamiento y manejo de errores del bus de eventos. |
+| `workflows/*.json` | 9 archivos JSON, uno por caso. Contienen la lógica de transformación, enrutamiento y manejo de errores del bus de eventos. |
 | `data/` | Datos persistentes de n8n (base de datos SQLite interna, credenciales, ejecuciones). Excluido de Git. |
 | `README.md` | Documentación específica de la configuración de n8n. |
 

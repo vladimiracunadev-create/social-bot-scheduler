@@ -1,7 +1,7 @@
 # 🤖 Social Bot Scheduler: Wiki
 
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
-[![Ecosystem](https://img.shields.io/badge/Matriz-8_Ejes-blueviolet.svg)]()
+[![Ecosystem](https://img.shields.io/badge/Matriz-9_Ejes-blueviolet.svg)]()
 [![Security](https://img.shields.io/badge/Security-Hardened-success.svg)]()
 [![Latest Release](https://img.shields.io/badge/release-v3.0.0-blue.svg)]()
 
@@ -20,7 +20,7 @@ Bienvenido a la Wiki oficial de **Social Bot Scheduler**. Este es un laboratorio
 - **[Resiliencia y Guardrails](Resilience)**: Circuit Breakers, Idempotencia y DLQ.
 
 ### 🏗️ Arquitectura y Casos
-- **[Índice de Casos](Cases-Index)**: Detalle de los 8 casos de integración.
+- **[?ndice de Casos](Cases-Index)**: Detalle de los 9 casos de integraci?n.
 - **[Arquitectura](https://github.com/vladimiracunadev-create/social-bot-scheduler/blob/main/docs/ARCHITECTURE.md)**: Diagramas y flujos de datos.
 
 ---

@@ -6,7 +6,7 @@
 
 ## 🎯 Resumen Ejecutivo
 
-**Social Bot Scheduler** es un laboratorio de ingeniería de software que demuestra **interoperabilidad multi-lenguaje y políglota de datos a escala empresarial**. El proyecto implementa una matriz de 8 ejes de integración donde diferentes lenguajes de programación (Python, Go, Node.js, PHP, Rust, Ruby, C#) se comunican entre sí y persisten datos en 8 motores de bases de datos diferentes.
+**Social Bot Scheduler** es un laboratorio de ingeniería de software que demuestra **interoperabilidad multi-lenguaje y políglota de datos a escala empresarial**. El proyecto implementa una matriz de 8 ejes de integración donde diferentes lenguajes de programación (Python, Go, Node.js, PHP, Rust, Ruby, C#) se comunican entre sí y persisten datos en 8 motores de bases de datos externos diferentes y un DuckDB embebido para el gateway de integraci?n.
 
 ### Valor de Negocio
 - **Reducción de silos tecnológicos**: Permite que equipos con diferentes stacks trabajen juntos sin fricciones
@@ -28,7 +28,7 @@ El proyecto implementa **11 patrones arquitectónicos** documentados en detalle 
 | 2 | **Event-Driven / Webhooks** | Comunicación asíncrona desacoplada |
 | 3 | **Mediator / Hub-and-Spoke** | n8n como broker central + CLI Facade |
 | 4 | **Three-Tier Pipeline** | Origen → Puente → Destino |
-| 5 | **Polyglot Persistence** | 8 motores de BD (SQL, NoSQL, KV, Columnar) |
+| 5 | **Polyglot Persistence** | 8 motores de BD externos + DuckDB embebida |
 | 6 | **Resilience Patterns** | Circuit Breaker, Idempotencia, DLQ |
 | 7 | **Observability Stack** | Prometheus + Grafana + cAdvisor (CNCF) |
 | 8 | **Infrastructure as Code** | Docker Compose + Kubernetes + auto-setup |
@@ -137,7 +137,7 @@ El proyecto implementa **11 patrones arquitectónicos** documentados en detalle 
 git clone https://github.com/vladimiracunadev-create/social-bot-scheduler.git
 cd social-bot-scheduler
 
-# Levantar todo (n8n se auto-configura con los 8 workflows)
+# Levantar todo (n8n se auto-configura con los 9 workflows)
 docker-compose up -d
 
 # Esperar ~30s y verificar
@@ -167,7 +167,7 @@ Para una evaluación fluida, elige el perfil que mejor se adapte a tu máquina. 
 |--------|-----------|-----|-------|
 | **Mínimo** | Caso a caso (`profile caseXX`) | 4 GB | 2 GB* |
 | **Óptimo** | Estándar (Casos 01-06) | 8 GB | 5 GB |
-| **Experto** | **Repositorio TOTAL (8 Casos + Obs)** | **16 GB** | **8-10 GB** |
+| **Experto** | **Repositorio TOTAL (9 Casos + Obs)** | **16 GB** | **8-10 GB** |
 
 *\* El tamaño de disco del perfil Mínimo depende del caso seleccionado.*
 

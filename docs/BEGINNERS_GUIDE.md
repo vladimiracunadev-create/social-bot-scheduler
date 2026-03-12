@@ -70,7 +70,7 @@ Deberías ver una lista con `social-bot-n8n` y `social-bot-dest-php` en estado *
 
 A diferencia de antes, **ya no necesitas configurar n8n manualmente**. El sistema se auto-configura al arrancar:
 
--   ✅ Los 8 workflows se importan automáticamente
+-   ? Los 9 workflows se importan autom?ticamente
 -   ✅ Se activan solos (webhooks listos para recibir)
 -   ✅ Se crea un usuario admin automáticamente
 

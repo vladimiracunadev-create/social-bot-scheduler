@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate that the 8 cases keep a consistent first-class structure."""
+"""Validate that the 9 cases keep a consistent first-class structure, including Case 09."""
 
 from __future__ import annotations
 
@@ -125,6 +125,19 @@ EXPECTED_CASES = (
             "dest/Dockerfile",
         ),
         workflow_file="case-08-csharp-to-flask.json",
+    ),
+    CaseExpectation(
+        slug="09-python-to-gateway",
+        case_id="09",
+        origin_language="python",
+        origin_entrypoint="origin/bot.py",
+        destination_language="python",
+        destination_files=(
+            "dest/main.py",
+            "dest/app/api.py",
+            "dest/Dockerfile",
+        ),
+        workflow_file="case-09-python-to-gateway.json",
     ),
 )
 
@@ -270,7 +283,7 @@ def main() -> int:
             print(f" - {error}")
         return 1
 
-    print("Matrix validation passed for cases 01-08.")
+    print("Matrix validation passed for cases 01-09.")
     return 0
 
 

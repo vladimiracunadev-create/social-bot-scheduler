@@ -9,7 +9,7 @@ El objetivo no es crear un producto comercial, sino un **entorno de aprendizaje 
 - **Orquestación**: Mostrar cómo una herramienta Low-Code (n8n) puede actuar como "pegamento" universal en arquitecturas de microservicios.
 
 ## ⛰️ Desafíos Técnicos (Challenges)
-Durante el desarrollo de los 8 casos, enfrentamos retos significativos:
+Durante el desarrollo de los 9 casos, enfrentamos retos significativos:
 1.  **Uniformidad de Datos**: Lograr que un struct de Rust, una clase de C# y un array de PHP envíen exactamente el mismo JSON al webhook.
 2.  **Gestión de Puertos**: Orquestar 8 servicios web simultáneos sin colisiones (puertos 8081-8088).
 3.  **Contenerización**: Crear Dockerfiles optimizados para tecnologías muy distintas (Alpine para Go/Rust vs. imágenes más pesadas para .NET).
@@ -26,7 +26,7 @@ Durante el desarrollo de los 8 casos, enfrentamos retos significativos:
 ## 🔮 El Futuro
 Planeamos explorar:
 - **K8s Helm**: Desplegar la matriz completa usando Helm Charts para mayor control.
-- **Testing E2E**: Pruebas automatizadas con Playwright para validar los 8 dashboards y la persistencia real.
+- **Testing E2E**: Pruebas automatizadas con Playwright para validar los 9 dashboards y la persistencia real.
 
 ## 📈 Valor del Negocio: Observabilidad
 "No se puede mejorar lo que no se mide". La incorporación de **Prometheus y Grafana** (v3.0) transforma este proyecto de un "demo" a una solución "product-ready".
