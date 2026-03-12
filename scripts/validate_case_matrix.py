@@ -30,7 +30,11 @@ EXPECTED_CASES = (
         origin_language="python",
         origin_entrypoint="origin/bot.py",
         destination_language="php",
-        destination_files=("dest/index.php", "dest/index.html", "dest/errors.php"),
+        destination_files=(
+            "dest/index.php",
+            "dest/index.html",
+            "dest/errors.php",
+        ),
         workflow_file="case-01-python-to-php.json",
     ),
     CaseExpectation(
@@ -39,7 +43,11 @@ EXPECTED_CASES = (
         origin_language="python",
         origin_entrypoint="origin/bot.py",
         destination_language="go",
-        destination_files=("dest/main.go", "dest/index.html", "dest/Dockerfile"),
+        destination_files=(
+            "dest/main.go",
+            "dest/index.html",
+            "dest/Dockerfile",
+        ),
         workflow_file="case-02-python-to-go.json",
     ),
     CaseExpectation(
@@ -48,7 +56,11 @@ EXPECTED_CASES = (
         origin_language="go",
         origin_entrypoint="origin/main.go",
         destination_language="nodejs",
-        destination_files=("dest/index.js", "dest/index.html", "dest/package.json"),
+        destination_files=(
+            "dest/index.js",
+            "dest/index.html",
+            "dest/package.json",
+        ),
         workflow_file="case-03-go-to-node.json",
     ),
     CaseExpectation(
@@ -57,7 +69,11 @@ EXPECTED_CASES = (
         origin_language="nodejs",
         origin_entrypoint="origin/index.js",
         destination_language="python",
-        destination_files=("dest/main.py", "dest/index.html", "dest/Dockerfile"),
+        destination_files=(
+            "dest/main.py",
+            "dest/index.html",
+            "dest/Dockerfile",
+        ),
         workflow_file="case-04-node-to-fastapi.json",
     ),
     CaseExpectation(
@@ -66,7 +82,11 @@ EXPECTED_CASES = (
         origin_language="php",
         origin_entrypoint="origin/ArtisanPost.php",
         destination_language="react",
-        destination_files=("dest/server.js", "dest/App.jsx", "dest/package.json"),
+        destination_files=(
+            "dest/server.js",
+            "dest/App.jsx",
+            "dest/package.json",
+        ),
         workflow_file="case-05-laravel-to-react.json",
     ),
     CaseExpectation(
@@ -84,7 +104,11 @@ EXPECTED_CASES = (
         origin_language="rust",
         origin_entrypoint="origin/src/main.rs",
         destination_language="ruby",
-        destination_files=("dest/app.rb", "dest/views/index.erb", "dest/Dockerfile"),
+        destination_files=(
+            "dest/app.rb",
+            "dest/views/index.erb",
+            "dest/Dockerfile",
+        ),
         workflow_file="case-07-rust-to-ruby.json",
     ),
     CaseExpectation(
@@ -93,7 +117,11 @@ EXPECTED_CASES = (
         origin_language="csharp",
         origin_entrypoint="origin/Program.cs",
         destination_language="python",
-        destination_files=("dest/app.py", "dest/templates/index.html", "dest/Dockerfile"),
+        destination_files=(
+            "dest/app.py",
+            "dest/templates/index.html",
+            "dest/Dockerfile",
+        ),
         workflow_file="case-08-csharp-to-flask.json",
     ),
 )
@@ -184,21 +212,27 @@ def validate_case(case: CaseExpectation) -> list[str]:
 
     if manifest_origin.get("language") != case.origin_language:
         errors.append(
-            f"{case.slug}: expected origin.language {case.origin_language}, got {manifest_origin.get('language')}"
+            f"{case.slug}: expected origin.language {case.origin_language}, "
+            f"got {manifest_origin.get('language')}"
         )
 
     if manifest_origin.get("entrypoint") != case.origin_entrypoint:
         errors.append(
-            f"{case.slug}: expected origin.entrypoint {case.origin_entrypoint}, got {manifest_origin.get('entrypoint')}"
+            f"{case.slug}: expected origin.entrypoint {case.origin_entrypoint}, "
+            f"got {manifest_origin.get('entrypoint')}"
         )
 
     if manifest_destination.get("language") != case.destination_language:
         errors.append(
-            f"{case.slug}: expected destination.language {case.destination_language}, got {manifest_destination.get('language')}"
+            f"{case.slug}: expected destination.language "
+            f"{case.destination_language}, "
+            f"got {manifest_destination.get('language')}"
         )
 
     if not (case_dir / case.origin_entrypoint).exists():
-        errors.append(f"{case.slug}: missing origin entrypoint {case.origin_entrypoint}")
+        errors.append(
+            f"{case.slug}: missing origin entrypoint {case.origin_entrypoint}"
+        )
 
     for relative_path in case.destination_files:
         if not (case_dir / relative_path).exists():
