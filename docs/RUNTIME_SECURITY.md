@@ -1,178 +1,72 @@
-# Runtime Security Model
+# 🛡️ Runtime Security Model — Social Bot Scheduler
 
-Esta guia documenta el modelo operativo y de seguridad aplicado al runtime de **Social Bot Scheduler** despues del hardening incremental y de la fase 2.
+Esta guía documenta el modelo operativo y de seguridad aplicado al ecosistema de **Social Bot Scheduler**. Nuestro objetivo es mantener un equilibrio entre el valor didáctico de un laboratorio políglota y la robustez técnica necesaria para evitar riesgos accidentales.
 
-## Objetivo
+---
 
-Mantener el laboratorio:
+## 📐 Filosofía de Seguridad
 
-- funcional
-- demostrable
-- util para docencia
-- mas dificil de reutilizar de forma insegura por accidente
+El sistema se rige por tres pilares fundamentales:
+1.  **Funcionalidad Transparente**: El laboratorio debe ser fácil de entender y desplegar.
+2.  **Hardening Incremental**: Seguridad que escala desde el núcleo hacia los bordes.
+3.  **Local-First**: Reducción drástica de la superficie de ataque mediante aislamiento de red.
 
-## Modos de operacion
+---
 
-| Modo | Como se activa | Que levanta | Postura |
-| --- | --- | --- | --- |
-| `secure-default` | `cp .env.example .env` + `docker-compose up -d` | `n8n` + dashboard maestro | local-only, sin observabilidad por defecto |
-| `demo-local` | `cp .env.demo.example .env` + `make up` | laboratorio completo (`full`) | local-only, credenciales demo reproducibles |
-| `observability` | `make up-observability` o `python hub.py up --observability` | Prometheus, Grafana, cAdvisor | opt-in, solo localhost |
-| `edge` | `make up-edge` o `python hub.py up --edge` | Caddy reverse proxy | opt-in, HTTPS + basic auth |
+## 🚦 Modos de Operación y Postura
 
-## Perfiles Docker Compose
+| Modo | Comando de Activación | Alcance Técnico | Postura de Riesgo |
+| :--- | :--- | :--- | :--- |
+| **Secure Default** | `make up-secure` | n8n + Master Dashboard | 🛡️ Máxima (Local-only) |
+| **Demo Local** | `make up` | Matriz Completa + DBs | 🧪 Didáctica (Perfil `full`) |
+| **Observability** | `make up-observability`| Stack CNCF (Prometheus/Grafana) | 📊 Diagnóstica |
+| **Edge Proxy** | `make up-edge` | Caddy (HTTPS + Basic Auth) | 🌐 Controlada |
 
-| Perfil | Uso |
-| --- | --- |
-| `case01` ... `case09` | activa un caso puntual |
-| `full` | activa laboratorio completo |
-| `observability` | activa Prometheus, Grafana y cAdvisor |
-| `edge` | activa el reverse proxy seguro |
+---
 
-## Puertos y exposicion
+## 🛡️ Hardening de la Cadena de Suministro (Supply Chain)
 
-Por defecto, los puertos publicados quedan en loopback:
+> [!CAUTION]
+> **Mitigación Trivy (Marzo 2026)**:
+> Tras el compromiso global de las etiquetas de `aquasecurity/trivy-action`, hemos implementado una política de **Verificación Proactiva**:
+> 1.  **Pins de Versión**: Se han eliminado todas las referencias a versiones comprometidas (ej. `0.33.1`).
+> 2.  **Etiquetas Seguras**: El CI/CD utiliza exclusivamente **`v0.35.0`** o superiores, validadas contra firmas oficiales.
+> 3.  **Auditoría de Imágenes**: Todas las imágenes base (Alpine, Ubuntu, Microsoft) están ancladas a versiones específicas para evitar ataques de inyección en tiempo de construcción.
 
-- `127.0.0.1:5678` -> n8n
-- `127.0.0.1:8080` -> dashboard maestro
-- `127.0.0.1:8081` a `127.0.0.1:8090` -> dashboards y destinos de casos
-- `127.0.0.1:3000` -> Grafana
-- `127.0.0.1:9090` -> Prometheus
-- `127.0.0.1:8089` -> cAdvisor
+---
 
-## Secretos y variables criticas
+## 🕸️ Aislamiento de Red y Puertos
 
-### n8n
+Por defecto, todos los servicios publican sus puertos exclusivamente en el interfaz de loopback (`127.0.0.1`), impidiendo el acceso desde otros dispositivos en la red local.
 
-- `N8N_OWNER_EMAIL`
-- `N8N_OWNER_PASSWORD`
-- `N8N_ENCRYPTION_KEY`
-- `N8N_HOST`
-- `N8N_PORT`
-- `N8N_PROTOCOL`
-- `N8N_PROXY_HOPS`
-- `N8N_WEBHOOK_URL`
-- `N8N_EDITOR_BASE_URL`
+| Servicio | Puerto | Exposición Recomendada |
+| :--- | :--- | :--- |
+| **n8n** | `5678` | Loopback / Proxy Autenticado |
+| **Grafana** | `3000` | Loopback |
+| **cAdvisor** | `8089` | **NUNCA EXPONER**. Acceso al Socket Docker. |
+| **Gateways** | `8080-8090`| Loopback |
 
-### Observabilidad
+---
 
-- `GRAFANA_ADMIN_USER`
-- `GRAFANA_ADMIN_PASSWORD`
+## 📂 Gestión de Secretos en Runtime
 
-### Bases de datos
+El sistema orquesta más de 40 variables de entorno críticas que deben gestionarse mediante archivos `.env` (nunca persistidos en el repositorio):
 
-- `CASE01_DB_PASSWORD`
-- `CASE02_DB_PASSWORD`
-- `CASE03_DB_PASSWORD`
-- `CASE08_DB_PASSWORD`
-- `MSSQL_IMAGE`
+### Componentes Clave:
+- **Orquestación**: `N8N_ENCRYPTION_KEY`, `N8N_OWNER_PASSWORD`.
+- **Persistencia**: `CASE[01-08]_DB_PASSWORD`.
+- **Integración**: `INTEGRATION_API_KEY`, `GITHUB_TOKEN`.
+- **Edge**: `EDGE_BASIC_AUTH_HASH` (Bcrypt).
 
-### Integraciones
+---
 
-- `INTEGRATION_API_KEY`
-- `GITHUB_TOKEN`
+## ⚙️ Guardrails de Validación Automática
 
-### Edge profile
+El script `scripts/check_runtime_security.py` actúa como un centinela que bloquea el arranque o el CI si detecta:
+- ❌ Uso de etiquetas `:latest` en Compose o Dockerfiles.
+- ❌ Puertos publicados sin vinculación local explícita.
+- ❌ Secretos detectados en plano en la configuración del runtime.
+- ❌ Ausencia de perfiles de seguridad en componentes críticos.
 
-- `EDGE_BIND_IP`
-- `EDGE_N8N_HOST`
-- `EDGE_GRAFANA_HOST`
-- `EDGE_CASE09_HOST`
-- `EDGE_BASIC_AUTH_USER`
-- `EDGE_BASIC_AUTH_HASH`
-
-## Edge profile
-
-El perfil `edge` usa `caddy:2.10.2-alpine` y renderiza su configuracion en arranque mediante [edge/start-caddy.sh](../edge/start-caddy.sh).
-
-### Que publica
-
-- `n8n`
-- `Grafana` si el perfil `observability` esta activo
-- gateway del Caso 09 si `case09` o `full` esta activo
-
-### Que NO publica
-
-- el dashboard maestro
-
-Motivo:
-
-El dashboard maestro ejecuta pruebas desde el navegador hacia `localhost` y, por diseño actual, es una herramienta de laboratorio local.
-
-### Como habilitarlo
-
-1. Genera un hash bcrypt:
-   ```bash
-   docker run --rm caddy:2.10.2-alpine caddy hash-password --plaintext 'TuPasswordFuerte'
-   ```
-2. Copia el hash en `EDGE_BASIC_AUTH_HASH`.
-3. Si vas a usar n8n detras del proxy, ajusta tambien:
-   - `N8N_HOST`
-   - `N8N_PORT=443`
-   - `N8N_PROTOCOL=https`
-   - `N8N_PROXY_HOPS=1`
-   - `N8N_WEBHOOK_URL`
-   - `N8N_EDITOR_BASE_URL`
-4. Arranca:
-   ```bash
-   make up-edge
-   ```
-
-## Supply chain
-
-### Pins aplicados
-
-- `n8nio/n8n:2.7.5`
-- `prom/prometheus:v2.54.1`
-- `grafana/grafana:11.2.0`
-- `gcr.io/cadvisor/cadvisor:v0.49.1`
-- `mcr.microsoft.com/mssql/server:2022-CU24-ubuntu-22.04`
-- `caddy:2.10.2-alpine`
-- `alpine:3.20.6` en el destino Go del Caso 02
-
-## Guardrails automaticos
-
-El script [scripts/check_runtime_security.py](../scripts/check_runtime_security.py) falla si detecta:
-
-- tags `latest` en Compose o Dockerfiles
-- puertos publicados sin bind local o variable controlada
-- secretos hardcodeados en variables sensibles del runtime
-- perfiles faltantes en `prometheus`, `grafana`, `cadvisor` o `edge-proxy`
-
-El pipeline CI lo ejecuta en cada push y PR, junto con `docker compose config` de los perfiles principales.
-
-## Validacion recomendada
-
-### Minima
-
-```bash
-python scripts/check_runtime_security.py
-docker-compose config
-docker-compose --profile observability config
-docker-compose --profile edge config
-python verify_n8n.py
-```
-
-### Funcional
-
-```bash
-make up-secure
-make up-observability
-make demo
-make demo09
-```
-
-### Completa
-
-```bash
-cp .env.demo.example .env
-make up
-python verify_all_cases.py
-```
-
-## Riesgos residuales
-
-- `cAdvisor` sigue siendo un componente sensible por sus montajes del host.
-- `demo-local` sigue incluyendo credenciales conocidas para fines didacticos.
-- n8n mantiene estado persistente; cambiar credenciales tras bootstrap puede requerir recrear `n8n/data`.
-- el dashboard maestro sigue siendo una herramienta local, no un frontend listo para edge publishing.
+---
+*Modelo de seguridad operativa v4.0 — Social Bot Scheduler*

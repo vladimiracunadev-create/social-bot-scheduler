@@ -59,3 +59,4 @@ Este caso implementa protecciones de nivel corporativo:
 ---
 
 *Desarrollado como parte del Social Bot Scheduler v4.0*
+

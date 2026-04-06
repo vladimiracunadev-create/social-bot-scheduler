@@ -59,3 +59,4 @@ Este caso implementa defensas contra fallos en la comunicación:
 ---
 
 *Desarrollado como parte del Social Bot Scheduler v4.0*
+

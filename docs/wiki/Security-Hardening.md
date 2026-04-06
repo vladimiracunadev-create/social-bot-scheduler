@@ -1,37 +1,57 @@
-# 🛡️ Hardening de Seguridad
+# 🛡️ Hardening de Seguridad — Social Bot Scheduler
 
-[![Security](https://img.shields.io/badge/Security-Hardened-success.svg)]()
-[![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
-
-[← Volver al Inicio](Home)
+Esta guía documenta los estándares de endurecimiento (**Hardening**) aplicados al laboratorio para garantizar un entorno de ejecución industrial, resiliente y libre de vulnerabilidades críticas.
 
 ---
 
+## 🛡️ ¿Qué significa "Security: Hardened"?
 
-Este proyecto ha sido robustecido para cumplir con estándares de seguridad industrial y garantizar imágenes de contenedor libres de vulnerabilidades.
+En el contexto de este repositorio, el término **Hardened** (Endurecido) implica una postura de seguridad proactiva dividida en cuatro dimensiones críticas:
 
-## Estrategia de Triple Capa
+1.  **Aislamiento (Isolation)**: Los servicios operan exclusivamente en `127.0.0.1`, eliminando vectores de ataque externos por defecto.
+2.  **Minimización (Surface Reduction)**: Uso de imágenes base `Alpine` y eliminación de binarios innecesarios en producción.
+3.  **Privilegio Mínimo (Least Privilege)**: Ejecución mandatoria como usuario no-root (`botuser`) y sistemas de archivos de solo lectura siempre que es posible.
+4.  **Auditoría Continua (Supply Chain)**: Escaneos automáticos de CVEs en cada cambio del código.
 
-### 1. Inmunidad a CVEs (Dual-Layer Patching)
+---
+
+## 🛑 Mitigación de Ataques de Cadena de Suministro
+
+> [!CAUTION]
+> **Vulnerabilidad Trivy Detectada y Mitigada (Marzo 2026)**
+> El sistema ha sido actualizado para neutralizar el compromiso global de `aquasecurity/trivy-action`. 
+> - **Acción**: Migración mandatoria a la versión verificada **`v0.35.0`**.
+> - **Impacto**: Protección total contra ataques de inyección de código vía "Tag Poisoning".
+
+---
+
+## 🏗️ Estrategia de Triple Capa de Seguridad
+
+El hardening se aplica de forma granular en tres niveles del stack tecnológico:
+
+### 1. Inmunidad a CVEs (Patching Permanente)
 Nuestras imágenes Docker se limpian en dos niveles:
--   **App Layer**: Uso de Entornos Virtuales (`venv`) con dependencias estrictas y parchadas.
--   **System Layer**: Actualización activa de los paquetes del sistema base (`pip`, `setuptools`, `wheel`) en la etapa final del build.
+-   **📦 App Layer**: Uso de Entornos Virtuales (`venv`) con dependencias estrictas y cifradas.
+-   **⚙️ System Layer**: Actualización activa de librerías críticas (`pip`, `setuptools`, `wheel`) en la etapa final de construcción.
 
-### 2. Escaneo Proactivo (Triple Scan)
-El pipeline de CI/CD realiza tres auditorías automáticas en cada push:
--   **Trivy**: Escaneo de vulnerabilidades en el SO y librerías.
--   **pip-audit**: Auditoría de dependencias de Python.
--   **Gitleaks**: Detección de secretos y llaves filtradas.
+### 2. Escaneo Proactivo (Triple Scan CI/CD)
+El flujo de entrega continua realiza tres auditorías automáticas:
+- **🛡️ Trivy**: Diagnóstico de vulnerabilidades en el SO y librerías de sistema.
+- **🐍 pip-audit**: Auditoría profunda de vulnerabilidades en el ecosistema Python.
+- **🔑 Gitleaks**: Escaneo preventivo para evitar la fuga accidental de secretos o llaves API.
 
-### 3. Principio de Menor Privilegio
-- El contenedor nunca corre como root (usuario `botuser`).
-- Políticas de red (**NetworkPolicies**) Zero Trust que bloquean todo el tráfico entrante por defecto.
+### 3. Redes de Confianza Cero (Zero Trust)
+- **NetworkPolicies**: Los manifiestos de Kubernetes implementan una denegación selectiva de tráfico persistente.
+- **Proxy de Borde**: El perfil `edge` utiliza Caddy con TLS forzado y autenticación básica Bcrypt para accesos remotos controlados.
 
-## 🛡️ Resiliencia Industrial
+---
 
-Además de la seguridad, el sistema implementa **Guardrails** para tolerancia a fallos:
-- **Idempotencia**: Prevención de duplicados.
-- **Circuit Breaker**: Protección contra caídas.
-- **DLQ**: Manejo de errores irrecuperables.
+## 🛡️ Resiliencia y Defensa en Profundidad
 
-Consulta la guía completa de [Resiliencia y Guardrails](Resilience.md).
+La seguridad no es solo evitar ataques, sino garantizar que el sistema se recupere. El laboratorio integra **Guardrails** avanzados:
+- **✅ Idempotencia**: Evita el procesamiento duplicado de eventos.
+- **⚡ Circuit Breaker**: Protege el sistema contra cascadas de fallos en servicios externos.
+- **📥 DLQ (Dead Letter Queue)**: Captura fallos irrecuperables para auditoría posterior.
+
+---
+*Manual de seguridad industrial v4.0 — Social Bot Scheduler*

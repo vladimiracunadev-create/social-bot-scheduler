@@ -1,46 +1,55 @@
-# System Requirements
+# 💻 Requisitos del Sistema — Social Bot Scheduler
 
-This document outlines the minimum and optimal hardware/software requirements for running the **Social Bot Scheduler** laboratory.
+Este documento detalla las especificaciones mínimas y recomendadas de hardware y software para garantizar la ejecución fluida del laboratorio políglota.
 
-## 💻 Hardware Requirements
+---
 
-Running 20 containers simultaneously (including 8 different database engines) is a resource-intensive task.
+## 🏗️ Requisitos de Hardware
 
-| Component | Mínimo (Por caso) | Óptimo (Estándar) | Máximo (Todo el Repo) |
+Ejecutar más de 20 contenedores simultáneamente (incluyendo 8 motores de bases de datos heterogéneos) es una tarea intensiva en recursos. El sistema permite **Carga Selectiva** mediante perfiles para ajustarse a máquinas con menos recursos.
+
+| Componente | Perfil Mínimo (1 Caso) | Perfil Estándar (Demo) | Perfil Total (9 Casos + Obs) |
 | :--- | :--- | :--- | :--- |
 | **CPU** | 2 Cores | 4 Cores | 4-8 Cores |
 | **RAM** | 4 GB | 8 GB | **16 GB** |
 | **Disco** | 2 GB | 5 GB | **8-10 GB** |
 
-> [!TIP]
-> Para un desglose detallado de cada servicio, consulta el [Análisis de Recursos Docker](DOCKER_RESOURCES.md).
+---
 
-### ⚠️ Resource Management Notes
-- **MSSQL & Cassandra**: These are the heaviest consumers. In our optimized `docker-compose.yml`, they are capped at 2GB each.
-- **Selective Loading**: Use `docker-compose --profile case01 up` to run with only 4GB of RAM.
-- **Background Tasks**: Close heavy applications (Chrome, IDs) before running the `full` profile on 8GB machines.
+## ⚡ Notas de Gestión de Recursos
 
-## 🛠️ Software Requirements
+> [!WARNING]
+> **Consumo Crítico**: Los motores **MSSQL** y **Cassandra** son los mayores consumidores de memoria. En nuestra configuración optimizada, están limitados a 2GB de RAM cada uno mediante límites de Docker Compose.
 
-### Core Dependencies
-- **[Docker Desktop](https://www.docker.com/products/docker-desktop/)**: Mandatory (v24.0+ recommended).
-- **[Python 3.10+](https://www.python.org/downloads/)**: Required for the HUB CLI and Emisores.
-- **[Git](https://git-scm.com/downloads)**: To clone and manage the repository.
+- **Carga Selectiva**: Utiliza `make up-case-01` o `docker-compose --profile case01 up` para operar con el consumo mínimo de recursos (aprox. 4GB RAM).
+- **Optimización**: Se recomienda cerrar aplicaciones pesadas (Chrome, IDEs, etc.) antes de lanzar el perfil `full` en máquinas de 8GB.
 
-### Optional Tools
-- **Make**: To use the `Makefile` shortcuts (`make up`, `make clean`, `make doctor`).
-- **Web Browser**: Chrome/Edge/Firefox for the Dashboard.
+---
 
-## 🧹 Maintenance & Optimization
+## 🛠️ Dependencias de Software
 
-To guarantee optimal performance, it is recommended to run the cleanup command periodically:
+### Núcleo Obligatorio
+- **[Docker Desktop](https://www.docker.com/products/docker-desktop/)**: v24.0 o superior (Recomendado).
+- **[Python 3.10+](https://www.python.org/downloads/)**: Necesario para el HUB CLI y los emisores de origen.
+- **[Git](https://git-scm.com/downloads)**: Para la gestión del repositorio y sincronización de cambios.
+
+### Herramientas Opcionales
+- **Make**: Para ejecutar los atajos del `Makefile` (`make up`, `make clean`, `make doctor`).
+- **Navegador Web Moderno**: Chrome, Edge o Firefox para interactuar con los Dashboards.
+
+---
+
+## 🧹 Mantenimiento y Purga de Recursos
+
+Para garantizar un rendimiento óptimo y liberar espacio en disco tras una sesión de evaluación masiva, utiliza los comandos de limpieza profunda:
 
 ```bash
-# Via Makefile
+# Limpiar contenedores y volúmenes (vía Makefile)
 make clean
 
-# Via HUB CLI
+# Purga total de imágenes huérfanas (vía HUB CLI)
 python hub.py clean
 ```
 
-This will remove all containers, volumes, and images to reclaim disk space and ensure a fresh start.
+---
+*Especificaciones técnicas v4.0 — Social Bot Scheduler*

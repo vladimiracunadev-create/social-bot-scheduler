@@ -1,89 +1,70 @@
-# 🚀 Guía de Uso del HUB (Capa de Orquestación)
+# 🚀 HUB Maestro de Orquestación
 
-El **Social Bot Scheduler** incluye una capa de orquestación llamada **HUB** que permite gestionar todos los casos de integración de forma centralizada y segura.
-
-## 🛠️ Herramientas Disponibles
-
-Puedes interactuar con el HUB de tres maneras:
-- **Linux/Mac**: `./hub.sh`
-- **Windows**: `.\hub.ps1`
-- **Makefile**: `make hub-listar`, `make hub-ejecutar`, `make hub-doctor`
+El **Social Bot Scheduler** incluye una capa de abstracción denominada **HUB CLI**. Esta herramienta permite gestionar la matriz de 8 ejes de integración de forma centralizada, segura y estandarizada.
 
 ---
 
-## ⚖️ Decisión de Runtime (Obligatoria)
+## 🛠️ Modos de Interacción
 
-Este repositorio utiliza **Python** como lenguaje principal para el HUB siguiendo estas reglas:
-1. **Detección**: Se detectó `pyproject.toml` / `requirements.txt` en la raíz.
-2. **Prioridad**: Al ser un repositorio Python-first, el HUB se implementa en Python (`hub.py`).
-3. **Alternativas**: Si el repo fuera Node.js, se usaría TS. Si no tuviera runtime claro, se usaría Bash/BS1.
-4. **Opcionalidad**: El HUB es una capa de conveniencia. El "legacy quickstart" (`docker-compose up`) sigue funcionando sin cambios.
+Dependiendo de tu sistema operativo, puedes invocar al orquestador mediante los siguientes wrappers:
 
----
-
-## 🛠️ Herramientas de Acceso (Detección de Sistema)
-
-El HUB detecta automáticamente tu entorno a través de estos puntos de entrada:
-- **Linux/bash**: `./hub.sh` (Auto-detecta `python3` o `python`).
-- **Windows/powershell**: `.\hub.ps1` (Auto-detecta `python`).
-- **Universal/Makefile**: `make hub-listar`, etc.
+| Entorno | Comando | Descripción |
+| :--- | :--- | :--- |
+| **Linux / macOS** | `./hub.sh` | Wrapper en Bash con auto-detección de Python. |
+| **Windows** | `.\hub.ps1` | Script en PowerShell optimizado para el entorno local. |
+| **Universal** | `make hub-*` | Comandos integrados en el `Makefile` para CI/CD. |
 
 ---
 
-### 1. Listar Casos
-Enumera todos los casos de integración registrados mediante archivos `app.manifest.yml`.
-```bash
-# Recomendado usar los wrappers:
-./hub.sh listar-casos
-# o
-make hub-listar
-```
+## 🏗️ Funcionalidades del HUB
 
-### 2. Ejecutar un Bot
-Lanza el emisor de un caso específico. Por defecto funciona en modo simulación (dry-run).
-```bash
-# Modo simulación
-python hub.py ejecutar 01-python-to-php
-
-# Ejecución real (si el bot lo soporta)
-python hub.py ejecutar 01-python-to-php --real
-```
-
-### 3. Diagnóstico (Doctor)
-Verifica que tu entorno (Docker, casos, logs) esté correctamente configurado.
+### 1. Diagnóstico de Salud (Doctor)
+Verifica que el daemon de Docker esté activo y que todos los servicios necesarios (incluyendo las 8 DBs) estén configurados.
 ```bash
 python hub.py doctor
 ```
 
-### 4. Gestión de Infraestructura
-Levanta o detiene los servicios de Docker Compose.
+### 2. Ejecución Controlada
+Lanza el bot de origen de un caso específico. Por defecto, el sistema opera en modo `dry-run` para evitar efectos secundarios.
 ```bash
-python hub.py up
-python hub.py down
+# Modo Simulación (Seguro)
+python hub.py ejecutar 01-python-to-php
+
+# Ejecución Real (Producción/Integración)
+python hub.py ejecutar 01-python-to-php --real
 ```
 
-> **Soporte Multi-DB**: El HUB heredará la orquestación de las 8 bases de datos definidas en `docker-compose.yml`, asegurando que la infraestructura de persistencia esté lista antes de ejecutar los bots.
+### 3. Inventario de Casos
+Escanea el sistema en busca de archivos `app.manifest.yml` y genera la matriz de integración actual.
+```bash
+python hub.py listar-casos
+```
 
 ---
 
-## 📄 Archivos de Configuración
+## 🔐 Seguridad y Auditoría
 
-### Manifiesto de Aplicación (`app.manifest.yml`)
-Cada caso debe incluir este archivo para ser reconocido por el HUB.
+> [!IMPORTANT]
+> **Audit Trail**: Cada comando ejecutado a través del HUB queda registrado en `hub.audit.log`, permitiendo la trazabilidad de operaciones en el laboratorio.
+
+El HUB implementa **Validación de Entradas** estricta para prevenir ataques de inyección de comandos o Path Traversal durante la ejecución de los entrypoints de los bots.
+
+---
+
+## 📁 El Manifiesto de Aplicación
+
+Cada caso dentro del directorio `cases/` debe contar con un archivo `app.manifest.yml` para ser reconocido por el HUB:
+
 ```yaml
 id: "01"
-name: "Nombre del Caso"
+name: "Python to PHP Integration"
 origin:
   language: "python"
-  entrypoint: "origin/bot.py"
+  entrypoint: "origin/bot.py" # Relativo a la carpeta del caso
 destination:
   port: 8081
+  database: "mysql"
 ```
 
-### Log de Auditoría (`hub.audit.log`)
-Registra cada acción realizada a través del CLI para fines de seguridad y monitoreo.
-
 ---
-
-> [!NOTE]
-> El HUB es una herramienta opcional diseñada para facilitar el desarrollo. El flujo tradicional de configuración manual (`setup.py` y `docker-compose`) sigue estando disponible.
+*Documentación técnica del orquestador v4.0 — Social Bot Scheduler*

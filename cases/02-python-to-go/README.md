@@ -59,3 +59,4 @@ Este caso aprovecha los patrones de n8n para asegurar la entrega:
 ---
 
 *Desarrollado como parte del Social Bot Scheduler v4.0*
+

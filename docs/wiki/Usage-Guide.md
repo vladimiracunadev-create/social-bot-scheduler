@@ -1,54 +1,61 @@
-# 📖 Guía de Uso Detallada
+# 📖 Guía de Operación y Uso — Social Bot Scheduler
 
-[![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
-[![Ecosystem](https://img.shields.io/badge/Matriz-9_Ejes-blueviolet.svg)]()
-
-[← Volver al Inicio](Home)
+Esta guía proporciona las instrucciones operativas para interactuar con el laboratorio de ingeniería, desde la ejecución de bots individuales hasta la orquestación masiva.
 
 ---
 
+## 🚦 Primeros Pasos (Bootstrap)
 
-El proyecto se puede utilizar a través de tres capas principales:
+Asegúrate de haber configurado tu entorno siguiendo la [Guía de Instalación](../../docs/INSTALL.md).
 
-## 1. HUB CLI (Recomendado)
-El HUB centraliza todas las operaciones. Puedes usarlo mediante los wrappers `hub.sh` (Linux) o `hub.ps1` (Windows).
+### 🖥️ Interacción con el HUB (CLI)
+El **HUB** es la herramienta maestra para gestionar la matriz de 9 casos:
+- **Windows**: `.\hub.ps1 doctor`
+- **Linux / macOS**: `./hub.sh doctor`
 
-### Comandos Principales:
-- `listar-casos`: Muestra todos los escenarios disponibles.
-- `doctor`: Diagnostica el estado de Docker, archivos y logs.
-- `up` / `down`: Gestiona la infraestructura de contenedores.
-- `ejecutar <id>`: Lanza un bot emisor específico.
+---
 
-## 2. Gestión de Contenido (`posts.json`)
-Cada bot de origen lee las tareas pendientes desde un archivo JSON.
-- **Formato**:
-```json
-{
-  "id": "p001",
-  "text": "Mensaje...",
-  "channels": ["twitter"],
-  "scheduled_at": "2026-02-04T12:00:00",
-  "published": false
-}
-```
-- **Lógica**: El bot solo procesará posts donde `published` sea `false` y la fecha haya pasado.
+## 🧩 Ejecución de Casos de Integración
 
-## 3. Orquestador n8n
-1. Accede a `http://localhost:5678`.
-2. Importa el archivo `workflow.json` del caso que estés probando.
-3. El bot emisor enviará el JSON al webhook de n8n, y n8n se encargará de distribuirlo al destino.
+Existen dos modalidades principales para poner a prueba el ecosistema:
 
-## 4. Recuperación de Fallos
-
-Si algo sale mal, el sistema tiene mecanismos de auto-protección.
-- Si un servicio destino falla, se reintentará 3 veces.
-- Si persiste, se enviará al **DLQ** (`errors.log` en el destino).
-- Para más detalles, ver [Resiliencia](Resilience.md).
-
-
-## 5. Caso 09
-Para probar el gateway autenticado:
+### 🚀 Modo A: Ejecución Unificada (HUB)
+Utiliza el HUB para automatizar el lanzamiento de bots sin navegar por carpetas:
 ```bash
-make demo09
+# Listar todos los ejes disponibles
+python hub.py listar-casos
+
+# Ejecutar el bot del Caso 01 (Simulación)
+python hub.py ejecutar 01-python-to-php
+
+# Ejecutar el bot real (Envío HTTP activo)
+python hub.py ejecutar 01-python-to-php --real
 ```
-Luego abre `http://localhost:8090`.
+
+### 🛠️ Modo B: Ejecución Manual (Directa)
+Para desarrolladores que deseen depurar el código de los emisores:
+1. Accede a la carpeta del caso: `cd cases/01-python-to-php/origin`.
+2. Ejecuta el emisor nativo: `python bot.py`.
+
+---
+
+## 🏗️ Gestión de Infraestructura Docker
+
+Operar 20+ contenedores requiere comandos precisos:
+- **🎛️ Activar Todo (`full`)**: `make up` o `python hub.py up`.
+- **🛡️ Núcleo Seguro**: `make up-secure` (n8n + Dashboard).
+- **📊 Monitoreo**: `make up-observability` (Prometheus/Grafana).
+- **🧹 Purga Total**: `make clean` (Elimina volúmenes y estados).
+
+---
+
+## 🛡️ Diagnóstico y Salud
+
+> [!TIP]
+> **Diagnostic Trail**: Utiliza `make doctor` frecuentemente para verificar la conectividad de los puertos y la presencia de variables de entorno críticas.
+
+- **Check n8n**: `python verify_n8n.py`
+- **Check Security**: `python scripts/check_runtime_security.py`
+
+---
+*Manual de operaciones v4.0 — Social Bot Scheduler*

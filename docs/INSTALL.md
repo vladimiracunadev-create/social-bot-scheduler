@@ -1,82 +1,82 @@
-# Guia de instalacion
+# 📦 Guía de Instalación — Social Bot Scheduler
 
-Esta guia refleja el modelo actual del repositorio: laboratorio funcional, local por defecto y con endurecimiento incremental.
+Esta guía describe el despliegue del laboratorio en sus diferentes modalidades. El sistema está diseñado para ser **Local-First** y **Secure-by-Default**.
 
-## 1. Elegir modo
+---
 
-### Opcion A: secure-default
+## 🏗️ 1. Selección del Perfil de Despliegue
 
+### 🛡️ Opción A: Core Seguro (Mínimo)
+Ideal para desarrollo de nuevos flujos sin sobrecargar el sistema.
 ```bash
 cp .env.example .env
 docker-compose up -d
 ```
+**Servicios activos**: `n8n` y el `Master Dashboard`.
 
-Levanta:
-
-- `n8n`
-- dashboard maestro
-
-Luego activa solo lo que necesites:
-
-```bash
-docker-compose --profile case01 up -d n8n master-dashboard dest-php
-docker-compose --profile observability up -d prometheus grafana cadvisor
-```
-
-### Opcion B: demo-local
-
+### 🚀 Opción B: Laboratorio Completo (Demo)
+Activa la matriz completa de 9 casos y el stack de observabilidad.
 ```bash
 cp .env.demo.example .env
 make up
 ```
+**Efecto**: Levanta 20+ contenedores con persistencia políglota y métricas en tiempo real.
 
-Levanta el laboratorio completo con el perfil `full`, manteniendo los puertos publicados solo en `127.0.0.1`.
+---
 
-## 2. Variables de entorno
+## 🔐 2. Configuración de Seguridad (Variables de Entorno)
 
-Configura como minimo:
+> [!IMPORTANT]
+> Antes del primer arranque, personaliza las siguientes variables en tu archivo `.env`:
 
-- `N8N_OWNER_EMAIL`
-- `N8N_OWNER_PASSWORD`
-- `N8N_ENCRYPTION_KEY`
-- `INTEGRATION_API_KEY`
-- `GRAFANA_ADMIN_PASSWORD` si vas a usar observabilidad
+| Variable | Propósito | Requerido |
+| :--- | :--- | :---: |
+| `N8N_OWNER_EMAIL` | Acceso inicial al orquestador. | ✅ |
+| `N8N_OWNER_PASSWORD`| Contraseña maestra de n8n. | ✅ |
+| `INTEGRATION_API_KEY`| Token de autenticación del Gateway (Caso 09). | ✅ |
+| `GRAFANA_ADMIN_PASSWORD`| Acceso al stack de observabilidad. | 🟡 |
 
-## 3. Perfil edge opcional
+---
 
-Si necesitas acceso administrativo remoto controlado:
+## 🌐 3. Configuración de Acceso Remoto (Edge Profile)
 
-1. Genera hash bcrypt:
+Si necesitas exponer el laboratorio de forma controlada mediante un **Reverse Proxy (Caddy)**:
+
+1. **Generar Credenciales**:
    ```bash
    docker run --rm caddy:2.10.2-alpine caddy hash-password --plaintext 'TuPasswordFuerte'
    ```
-2. Copia el resultado en `EDGE_BASIC_AUTH_HASH`.
-3. Ajusta `N8N_HOST`, `N8N_PORT`, `N8N_PROTOCOL`, `N8N_PROXY_HOPS`, `N8N_WEBHOOK_URL` y `N8N_EDITOR_BASE_URL` si vas a publicar n8n detras del proxy.
-4. Activa:
+2. **Configurar Hash**: Pega el resultado en la variable `EDGE_BASIC_AUTH_HASH` del `.env`.
+3. **Desplegar**:
    ```bash
    make up-edge
    ```
 
-## 4. Kubernetes
+---
 
-Los manifiestos de `k8s/` siguen disponibles, pero este repositorio se documenta y valida principalmente como laboratorio Docker local.
+## 🐍 4. Instalación del Entorno de Scripting (Local)
 
-Si vas a desplegarlo en Kubernetes:
-
-- no reutilices credenciales demo
-- define secretos reales
-- aplica segmentacion de red
-- revisa [SECURITY.md](../SECURITY.md) y [RUNTIME_SECURITY.md](RUNTIME_SECURITY.md)
-
-## 5. Instalacion manual
-
-Para ejecutar bots de origen fuera de Docker:
+Para ejecutar o depurar los bots (`origin`) fuera de Docker (recomendado para desarrollo rápido):
 
 ```bash
+# Crear y activar entorno virtual
 python -m venv venv
-source venv/bin/activate   # Linux/macOS
-venv\Scripts\activate      # Windows
+# Linux/macOS: source venv/bin/activate
+# Windows: venv\Scripts\activate
+
+# Instalar dependencias base
 pip install -r requirements.txt
 ```
 
-Luego ejecuta el bot del caso correspondiente desde `cases/*/origin/`.
+---
+
+## 🚢 5. Consideraciones para Kubernetes
+
+Aunque el laboratorio se valida principalmente en Docker, incluimos manifiestos en `k8s/` para entornos de orquestación.
+
+- **Segmentación**: Aplica `NetworkPolicies` estrictas.
+- **Secretos**: No utilices valores de la plantilla `demo` en clústeres compartidos.
+- **Hardening**: Revisa las guías de [Seguridad Runtime](./RUNTIME_SECURITY.md) antes del despliegue.
+
+---
+*Manual de despliegue v4.0 — Social Bot Scheduler*

@@ -1,80 +1,70 @@
 # 🛡️ Security Policy — Social Bot Scheduler
 
-Este repositorio es un **laboratorio de ingeniería** con múltiples servicios y componentes. El hardening de seguridad se enfoca en reducir el riesgo operativo sin sacrificar el valor didáctico del ecosistema.
+Este repositorio es un **laboratorio de ingeniería** políglota. Nuestra postura de seguridad se enfoca en reducir el riesgo operativo mediante el **Hardening por Defecto** y el monitoreo constante de la cadena de suministro.
 
 ---
 
-## 🛡️ Postura de Seguridad
+## 🛡️ Postura de Seguridad Industrial
 
-A partir de la versión `4.0.0`, el proyecto implementa un estándar de **Hardening por Defecto**.
+A partir de la versión `4.0.0`, el proyecto implementa estándares de **Seguridad Runtime** agresivos:
 
-### 🔒 Secure-Default
-- **Red Privada**: Todos los puertos de red se bindean exclusivamente a `127.0.0.1`.
-- **Gestión de Secretos**: Eliminación de contraseñas hardcodeadas; uso obligatorio de variables de entorno (`.env`).
-- **Surface Reduction**: Los componentes de observabilidad (Prometheus/Grafana) son opt-in.
-- **Bootstrap Seguro**: n8n se configura dinámicamente sin credenciales predecibles en el código fuente.
+### 🔒 Hardening por Defecto (Secure-by-Default)
+- **Aislamiento de Red**: Todos los servicios se vinculan exclusivamente a `127.0.0.1` (localhost) para evitar exposición accidental.
+- **Gestión de Secretos**: Uso mandatorio de variables de entorno via `.env`. No se permiten credenciales hardcodeadas.
+- **Principio de Menor Privilegio**: Imágenes Docker optimizadas que ejecutan como usuarios no-root siempre que es posible.
 
-### 🧪 Demo-Local
-El perfil `demo-local` (usando `.env.demo.example`) es para **workshops controlados**.
-- ⚠️ **ADVERTENCIA**: No debe usarse en entornos de nube pública o Internet sin capas adicionales de seguridad.
+---
+
+## 🛑 Mitigación de Ataques de Cadena de Suministro (Trivy)
+
+> [!CAUTION]
+> **Aviso de Seguridad Crítica (Marzo 2026)**:
+> Hemos detectado y mitigado proactivamente el compromiso de la acción `aquasecurity/trivy-action`. 
+> 
+> **Acciones tomadas por este sistema**:
+> 1. **Upgrade Inmediato**: Hemos migrado de la versión comprometida (`0.33.1`) a la versión verificada y segura **`v0.35.0`**.
+> 2. **Auditoría de CI/CD**: Se ha revisado el pipeline para asegurar que no existan más dependencias vulnerables a ataques de "tag-poisoning".
+> 3. **Monitoreo Informado**: Este repositorio considera activamente las alertas de seguridad globales para proteger tu entorno de desarrollo.
 
 ---
 
 ## 🏗️ Matriz de Superficie de Ataque
 
-| Componente | Nivel de Riesgo | Exposición Local | Recomendación |
+| Componente | Riesgo | Puerto Local | Acción Recomendada |
 | :--- | :--- | :--- | :--- |
-| **n8n** | 🔴 ALTO | Puerto 5678 | Proteger con Basic Auth / MFA |
-| **cAdvisor** | 🔴 CRÍTICO | Puerto 8089 | **Nunca exponer.** Tiene acceso al Socket Docker. |
-| **Grafana** | 🟡 MEDIO | Puerto 3000 | Configurar admin/password robustos en `.env`. |
-| **Dashboards** | 🟢 BAJO | Puertas 8080-8090 | Solo visualización de datos de prueba. |
+| **n8n Orchestrator** | 🔴 ALTO | `5678` | Proteger con Basic Auth / MFA |
+| **cAdvisor (Socket)** | 🔴 CRÍTICO | `8089` | **NUNCA EXPONER**. Acceso root a Docker. |
+| **Prometheus/Grafana**| 🟡 MEDIO | `3000`/`9090` | Cambiar credenciales default en `.env`. |
+| **Integration Hubs** | 🟢 BAJO | `8080-8090` | Visualización de casos de prueba. |
 
 ---
 
-## 🚫 Lo que NO debe exponerse a Internet
+## 📂 Gestión de Secretos y Configuración
 
-> [!CAUTION]
-> No publiques directamente ninguno de los puertos del laboratorio (5678, 3000, 9090, 8089, 8080-8090).
-
-Si es estrictamente necesario el acceso remoto, implementa:
-1. **Reverse Proxy**: Caddy/Nginx con TLS forzado.
-2. **Autenticación**: Basic Auth o Authelia.
-3. **Firewall**: Filtrado por IP (Whitelist).
-4. **Segmentación**: Aislamiento a nivel de red Docker.
-
----
-
-## 📂 Gestión de Secretos
-
-Contamos con dos plantillas de configuración:
-- `[.env.example](.env.example)`: Estándar para desarrollo seguro.
-- `[.env.demo.example](.env.demo.example)`: Configuración para demostraciones rápidas.
+El proyecto provee plantillas de configuración para distintos escenarios:
+- **[.env.example](.env.example)**: Configuración recomendada para desarrollo local seguro.
+- **[.env.demo.example](.env.demo.example)**: Configuración rápida para workshops controlados.
 
 > [!IMPORTANT]
-> Nunca incluyas el archivo `.env` en el control de versiones. Asegúrate de que esté listado en `.gitignore`.
-
----
-
-## 🐛 Reporte de Vulnerabilidades
-
-Si encuentras una falla de seguridad:
-1. **No la divulgues públicamente** de inmediato.
-2. Abre un **Security Advisory** en GitHub o contacta al mantenedor.
-3. Proporciona:
-   - Resumen del problema.
-   - Pasos para reproducir.
-   - Impacto potencial.
+> Nunca incluyas tu archivo `.env` real en el control de versiones. El sistema ignorará automáticamente estos archivos mediante el `.gitignore`.
 
 ---
 
 ## ⚙️ Recomendaciones Operativas
 
-| Acción | Comando Recomendado |
-| :--- | :--- |
-| Desarrollo Seguro | `make up-secure` |
-| Monitoreo Local | `make up-observability` |
-| Acceso Remoto Controlado | `make up-edge` |
+| Escenario | Comando | Nivel de Hardening |
+| :--- | :--- | :--- |
+| **Desarrollo Estándar** | `make up-secure` | 🛡️ Máximo |
+| **Auditoría de Recursos** | `make up-observability` | 📊 Medio |
+| **Acceso Remoto (Proxy)** | `make up-edge` | 🌐 Controlado |
 
 ---
 
-*Seguridad gestionada proactivamente por Vladimir Acuña*
+## 🐛 Reporte de Vulnerabilidades
+
+Si identificas un riesgo de seguridad en el laboratorio:
+1. **Reporte Privado**: No abras un Issue público. Utiliza el sistema de **Security Advisories** de GitHub.
+2. **Detalles**: Incluye pasos para reproducir y el impacto técnico estimado.
+
+---
+*Seguridad gestionada proactivamente por Vladimir Acuña — Software & Security Engineering*

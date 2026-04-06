@@ -59,3 +59,4 @@ Este caso implementa defensas para garantizar entregas seguras en flujos de dato
 ---
 
 *Desarrollado como parte del Social Bot Scheduler v4.0*
+

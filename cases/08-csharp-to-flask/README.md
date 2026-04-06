@@ -59,3 +59,4 @@ Este caso implementa defensas para asegurar la integridad de los datos empresari
 ---
 
 *Desarrollado como parte del Social Bot Scheduler v4.0*
+

@@ -1,87 +1,95 @@
-# Guia de verificacion
+# 🚦 Guía de Verificación — Social Bot Scheduler
 
-Esta guia cubre la validacion del laboratorio despues del hardening de runtime.
+Esta guía detalla los procedimientos para validar la integridad, seguridad y funcionalidad del laboratorio tras cualquier cambio en el entorno de runtime.
 
-## 1. Validacion de configuracion
+---
 
+## 🛡️ 1. Auditoría de Seguridad y Cadena de Suministro
+
+> [!IMPORTANT]
+> **Mitigación Trivy**: Asegúrate de que el flujo de CI/CD esté utilizando la versión **`v0.35.0`** o superior para evitar vulnerabilidades de "tag-poisoning".
+
+### Ejecutar Diagnóstico de Hardening
+Valida que la configuración de Docker y los secretos sigan los estándares del proyecto:
 ```bash
 python scripts/check_runtime_security.py
+```
+
+---
+
+## 🏗️ 2. Validación de Configuración (Docker)
+
+Verifica que los perfiles y archivos compose se rendericen correctamente sin errores de sintaxis:
+
+```bash
+# Validar core y perfiles extendidos
 docker-compose config
 docker-compose --profile observability config
 docker-compose --profile edge config
-docker-compose -f docker-compose.dev.yml config
 ```
 
-Esto valida:
+---
 
-- ausencia de `latest` en runtime
-- binds a loopback o variables controladas
-- secretos sensibles parametrizados
-- perfiles obligatorios para observabilidad y edge
+## 🌉 3. Validación del Orquestador (n8n)
 
-## 2. Validacion de n8n
+Asegúrate de que n8n esté respondiendo y tenga los flujos importados correctamente:
 
 ```bash
 python verify_n8n.py
 ```
+**Puntos de control**:
+- [ ] Salud del endpoint `/healthz`.
+- [ ] Estado de los 9 flujos de la matriz (Active/Inactive).
+- [ ] Conectividad con la base de datos interna.
 
-Comprueba:
+---
 
-- `/healthz`
-- login si el `.env` tiene credenciales no placeholder
-- listado de workflows importados
+## 🧩 4. Validación Funcional (E2E)
 
-## 3. Validacion funcional minima
-
+### Nivel 1: Smoke Test (Caso 01)
 ```bash
 make up-secure
 make demo
+```
+
+### Nivel 2: Integración Completa (Caso 09)
+```bash
 make demo09
 ```
 
-Verifica:
-
-- `http://localhost:5678`
-- `http://localhost:8080`
-- `http://localhost:8081`
-- `http://localhost:8090`
-
-## 4. Validacion de observabilidad
-
+### Nivel 3: Matriz Total
 ```bash
-make up-observability
-```
-
-Verifica:
-
-- `http://localhost:9090`
-- `http://localhost:3000`
-- `http://localhost:8089`
-
-## 5. Validacion completa del laboratorio
-
-```bash
-cp .env.demo.example .env
-make up
+# Requiere perfil 'full' activo
 python verify_all_cases.py
 ```
 
-## 6. Validacion del perfil edge
+---
 
-Antes de activarlo debes definir `EDGE_BASIC_AUTH_HASH`.
+## 📊 5. Validación de Observabilidad
 
-```bash
-make up-edge
-```
+Si el stack de monitoreo está activo (`make up-observability`):
 
-Comprueba:
+- **Prometheus**: `http://localhost:9090` (Check targets: `UP`).
+- **Grafana**: `http://localhost:3000` (Verificar dashboards de contenedores).
+- **cAdvisor**: `http://localhost:8089` (Métricas de runtime Docker).
 
-- `https://n8n.localhost`
-- `https://grafana.localhost` si observabilidad esta activa
-- `https://gateway.localhost` si Caso 09 esta activo
+---
 
-## 7. Notas practicas
+## 🌐 6. Validación del Perfil Edge (Proxy)
 
-- Si cambias credenciales de n8n despues del primer arranque, recrea `n8n/data`.
-- Si el daemon Docker no esta disponible, limita la validacion a `docker-compose config`, `py_compile` y `scripts/check_runtime_security.py`.
-- El dashboard maestro sigue siendo una herramienta local; no se usa como frontend edge-aware.
+Si el Caddy Reverse Proxy está en uso (`make up-edge`):
+
+- **n8n**: `https://n8n.localhost`
+- **Dashboard**: `https://grafana.localhost`
+- **Gateway**: `https://gateway.localhost`
+
+---
+
+## 📝 Notas de Operación
+
+- **Persistencia**: Si el login de n8n falla inexplicablemente, recrea el volumen: `docker volume rm social-bot-scheduler_n8n_data`.
+- **Latencia**: Tras activar un workflow en n8n, espera ~10 segundos antes de disparar el bot de origen.
+- **Entorno**: Si no tienes Docker disponible, limita las pruebas a `python -m py_compile` y validación estática de scripts.
+
+---
+*Manual de verificación v4.0 — Social Bot Scheduler*

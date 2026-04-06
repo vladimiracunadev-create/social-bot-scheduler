@@ -59,3 +59,4 @@ Este caso implementa protecciones para asegurar la disponibilidad de la interfaz
 ---
 
 *Desarrollado como parte del Social Bot Scheduler v4.0*
+

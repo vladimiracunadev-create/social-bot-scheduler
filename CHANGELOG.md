@@ -1,67 +1,60 @@
-Todos los cambios notables en este proyecto serán documentados en este archivo.
+# 📜 Changelog — Social Bot Scheduler
 
-## [4.1.0] - 2026-02-18
-### Añadido
-- **Verificación de Recursos**: Nuevo script `check_resources.py` para monitorear CPU, RAM y Disco del host.
-- **Indicador de Disponibilidad**: Dashboard visual que muestra la salud del sistema y preparación del entorno.
-- **Limpieza Profunda**: Comandos `make clean` y `hub clean` para purgar contenedores, volúmenes e imágenes.
-- **Perfiles de Docker**: Carga selectiva de servicios mediante `--profile` (ej: `case01`, `full`).
-- **Requisitos del Sistema**: Nueva guía detallada en `docs/REQUIREMENTS.md`.
+Todos los cambios notables en este proyecto se documentan sistemáticamente en este archivo. Seguimos los principios de [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y el versionado semántico.
 
-### Cambiado
-- **Optimización de Rendimiento**: Límites de CPU/RAM para los 20 contenedores.
-- **Migración a Alpine**: Servicios de destino migrados a imágenes ligeras basadas en Alpine.
-- **Hub CLI mejorado**: Integración de diagnóstico de recursos en los comandos `doctor` y `up`.
+---
 
-## [4.0.0] - 2026-02-18
-### Añadido
-- **Persistencia Multi-Motor (Políglota)**: Integración de 8 bases de datos distintas (MySQL, MariaDB, PostgreSQL, SQLite, MongoDB, Redis, Cassandra y SQL Server) en los 8 casos de integración.
-- **Dashboard Dinámico v2**: El Dashboard Maestro ahora visualiza el estado de la base de datos y previsualiza los últimos registros persistidos en tiempo real.
-- **Auto-Provisionamiento de Datos**: Lógica de creación automática de bases de datos, colecciones y tablas en todos los servicios receptores.
-- **Nuevas Dependencias**: Soporte para `pyodbc` (Python), `cassandra-driver` (Ruby), `pg` (Node), `mongodb` (Node) y extensiones de Redis en PHP.
-- **Infraestructura Expandida**: Nueve servicios de bases de datos añadidos al orquestador `docker-compose`.
+## 🚀 [4.1.0] — 2026-03-24
 
-## [3.0.0] - 2026-02-11
-### Añadido
-- **Resiliencia Global (100%)**: Implementación de **Idempotencia (SQLite)** y **Circuit Breaker** en los 8 casos de integración.
-- **Dead Letter Queue (DLQ)**: Sistema de captura de errores irrecuperables en todos los receptores.
-- **Scripts Compartidos**: Nueva librería en `scripts/` para lógica reutilizable de resiliencia.
-- **Generador de Workflows**: Script `generate_workflows.py` para estandarizar flujos de n8n.
-- **Documentación Técnica**: Nuevas guías `GUARDRAILS.md` y `RESILIENCE_GUIDE.md`.
+### 🛡️ Seguridad
+- **Fix Crítico**: Mitigación del ataque de cadena de suministro en `aquasecurity/trivy-action`. Upgrade a `v0.35.0`.
+- **Hardening CI/CD**: Refuerzo de permisos en los flujos de GitHub Actions.
 
-## [2.2.0] - 2026-01-25
-### Añadido
-- **Empaquetado**: Generación de archivo ZIP distribuible para despliegue rápido.
-- **Estabilización**: Revisión de metadatos y documentación para el lanzamiento oficial.
+### ✨ Añadido
+- **🔍 Verificación de Recursos**: Nuevo script `check_resources.py` para monitoreo en tiempo real (CPU, RAM, Disco).
+- **📊 Health Dashboard**: Interfaz visual de diagnóstico para verificar la preparación del entorno antes de la ejecución.
+- **🧹 Deep Clean**: Comandos `make clean` y `hub clean` para purga total de recursos Docker (volúmenes e imágenes).
+- **🧩 Docker Profiles**: Soporte para carga selectiva de servicios mediante perfiles (ej: `case01`, `full`).
 
-## [2.1.0] - 2026-01-25
-### Corregido
-- **Estandarización Sistémica**: Todos los receptores internos (Go, Node, FastAPI, React, Sinatra, Flask) ahora escuchan en `/webhook` (o `/webhook.php`), eliminando errores 404 en n8n.
-- **Normalización de Datos**: Unificados los campos de envío de posts a `id`, `text` y `channel` en toda la matriz.
-- **Formateado de Código**: Aplicado `black` a todos los archivos Python para asegurar cumplimiento con el CI.
-- **Construcción de Imágenes**: Añadidas dependencias de compilación (`build-base`) en el Dockerfile de Ruby para evitar fallos de gemas nativas.
+### ⚙️ Cambiado
+- **🏎️ Optimización**: Límites granulares de CPU/RAM para los 20+ contenedores del ecosistema.
+- **📂 Alpine Migration**: Todos los servicios de destino ahora utilizan imágenes ligeras basadas en Alpine Linux para reducir la superficie de ataque.
 
-### Añadido
-- **Manual de Usuario**: Nueva `Guía Paso a Paso` detallada para principiantes en la carpeta `docs/`.
-- **Dashboard Maestro Funcional**: Los botones de "Probar Integración" ahora abren los verificadores reales de cada caso.
+---
 
+## 🏗️ [4.0.0] — 2026-02-18
 
-## [2.0.0] - 2026-01-25
-### Añadido
-- **Caso 07**: Integración completa Rust (Origen) -> n8n -> Ruby Sinatra (Destino).
-- **Caso 08**: Integración completa C# .NET (Origen) -> n8n -> Flask (Destino).
-- **Makefile**: Soporte para comandos rápidos (`make up-case-01`, `make help`, etc.).
-- **Documentación**: `README.md` estandarizado en cada carpeta de `cases/`.
-- **Dashboard**: `index.html` actualizado con botones para los 8 casos.
-- **Docs**: Guía de solución de problemas (`TROUBLESHOOTING.md`) y visión del proyecto (`INSIGHTS.md`).
+### 📂 Persistencia Políglota
+- **Integración Nativa**: Soporte para **8 motores de bases de datos** distintos: 🐬 MySQL, 🍃 MariaDB, 🐘 PostgreSQL, 📂 SQLite, 🍃 MongoDB, 🏎️ Redis, 👁️ Cassandra y 🏢 SQL Server.
+- **Auto-Provisionamiento**: Lógica inteligente de creación de esquemas y tablas en el primer arranque de cada receptor.
 
-### Cambiado
-- **Arquitectura**: Actualizada la matriz de integración para soportar 8 ejes.
-- **Setup**: `setup.py` mejorado para detectar entornos de Rust y .NET.
-- **Guía de Principiantes**: Expandida para incluir las nuevas tecnologías.
+### ✨ Añadido
+- **🖥️ Master Dashboard v2**: Visualización unificada del estado de las bases de datos y previsualización de posts en tiempo real.
+- **🔗 Nuevos Drivers**: Soporte para `pyodbc`, `cassandra-driver`, `pg`, y extensiones de Redis para PHP.
 
-## [1.0.0] - 2026-01-20
-### Añadido
-- Estructura base del proyecto con 6 casos iniciales.
-- Orquestación con docker-compose.
-- Dashboard unificado en `index.html`.
+---
+
+## 🛡️ [3.0.0] — 2026-02-11
+
+### 🏗️ Arquitectura de Resiliencia
+- **Guardrails Globales**: Implementación de **Idempotencia (SQLite)** y **Circuit Breaker** en todos los ejes tecnológicos.
+- **📥 Dead Letter Queue (DLQ)**: Sistema de captura de mensajes fallidos en todos los receptores.
+- **📚 Nueva Documentación**: Creación de `docs/GUARDRAILS.md` y guías técnicas de arquitectura profesional.
+
+---
+
+## 🛠️ [2.1.0] — 2026-01-25
+
+### 🔧 Corregido
+- **Estandarización de Endpoints**: Todos los receptores ahora escuchan de forma uniforme en `/webhook`.
+- **Normalización de Payload**: Los campos de envío se han estandarizado a `id`, `text` y `channel`.
+- **CI Fixes**: Aplicación de `black` a todo el repositorio y corrección de dependencias de Ruby en Docker.
+
+---
+
+## 🏁 [1.0.0] — 2026-01-20
+- Lanzamiento inicial del laboratorio con 6 casos de integración base.
+- Soporte para orquestación multi-contenedor mediante Docker Compose.
+
+---
+*Mantenido con rigor técnico por Vladimir Acuña*

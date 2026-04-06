@@ -4,8 +4,13 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker Hub](https://img.shields.io/badge/Docker-Ready-blue.svg?logo=docker&logoColor=white)](https://hub.docker.com/)
 [![Version](https://img.shields.io/badge/version-4.0.0-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
+[![Security: Hardened](https://img.shields.io/badge/Security-Hardened-🛡️?color=red&labelColor=black)](SECURITY.md)
 
-Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. El **Social Bot Scheduler** actúa como una **Matriz Tecnológica** donde **n8n** orquesta la comunicación entre bots emisores y receptores políglotas (Python, Go, Node.js, PHP, Ruby, Flask, FastAPI).
+Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. El **Social Bot Scheduler** actúa como una **Matriz Tecnológica** donde **n8n** orquesta la comunicación entre bots emisores y receptores políglotas.
+
+> [!NOTE]
+> **¿Qué significa "🛡️ Security: Hardened"?**
+> Este repositorio implementa una política de **Aislamiento Runtime**: Todos los servicios están limitados a `localhost`, usan imágenes base seguras con escaneos de vulnerabilidades manuales (Trivy) y no contienen secretos hardcodeados, mitigando riesgos de cadena de suministro.
 
 ---
 
@@ -120,7 +125,7 @@ El sistema no es solo una integración; es un catálogo vivo con **11 patrones a
 
 | Tipo | Documento |
 | :--- | :--- |
-| 🛡️ **Seguridad** | [docs/SECURITY.md](docs/SECURITY.md) \| [docs/RUNTIME_SECURITY.md](docs/RUNTIME_SECURITY.md) |
+| 🛡️ **Seguridad** | [SECURITY.md](SECURITY.md) \| [docs/RUNTIME_SECURITY.md](docs/RUNTIME_SECURITY.md) |
 | 🏗️ **Arquitectura** | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
 | 🎓 **Guías** | [docs/INSTALL.md](docs/INSTALL.md) \| [docs/VERIFICATION_GUIDE.md](docs/VERIFICATION_GUIDE.md) |
 | 🛠️ **Operación** | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) \| [n8n/README.md](n8n/README.md) |

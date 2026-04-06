@@ -1,31 +1,39 @@
-# Guía de Contribución
+# 🤝 Guía de Contribución
 
-¡Gracias por tu interés en contribuir a **Social Bot Scheduler**! Este proyecto es un laboratorio de ingeniería y agradecemos cualquier mejora que ayude a la comunidad a entender mejor la orquestación de sistemas.
-
-## ¿Cómo puedes contribuir?
-
-### 1. Reportar Errores (Bugs)
-Si encuentras algo que no funciona, abre un *Issue* describiendo:
-* El comportamiento esperado.
-* El comportamiento actual.
-* Pasos para reproducir el error.
-
-### 2. Proponer Mejoras
-¿Tienes una idea para un nuevo "Eje Tecnológico"? Abre una propuesta en los *Issues* con la etiqueta `enhancement`.
-
-### 3. Enviar Pull Requests
-1. Haz un *Fork* del repositorio.
-2. Crea una rama para tu mejora (`git checkout -b feature/nueva-mejora`).
-3. Realiza tus cambios y asegúrate de que el código sigue los estándares del proyecto.
-4. Envía un *Pull Request* detallando qué has cambiado y por qué.
-
-## Estándares de Código
-* **Documentación**: Cada nuevo caso debe incluir su propio README en su carpeta correspondiente.
-* **Docker**: Todos los servicios de destino deben ser containerizables.
-* **Simplicidad**: El código debe ser legible para principiantes, siguiendo el espíritu del laboratorio.
-
-## Ciclo de Desarrollo
-Seguimos el flujo de trabajo de GitFlow simplificado. La rama `main` siempre debe ser estable.
+¡Gracias por tu interés en fortalecer el **Social Bot Scheduler**! Este proyecto es un laboratorio de ingeniería y agradecemos cualquier mejora que ayude a la comunidad a dominar la orquestación de sistemas políglotas.
 
 ---
-*¡Hagamos que la automatización sea accesible para todos!*
+
+## 🚀 ¿Cómo puedes contribuir?
+
+### 1. 🐞 Reportar Errores (Bugs)
+Si encuentras un fallo técnico, por favor abre un **Issue** con:
+- **🎯 Comportamiento Esperado**: Qué debería haber pasado.
+- **❌ Comportamiento Actual**: Qué sucedió realmente.
+- **🛠️ Pasos para Reproducir**: Comandos o acciones que provocan el error.
+
+### 2. 💡 Proponer Mejoras
+¿Tienes una idea para un nuevo "Eje Tecnológico" o un motor de base de datos? Abre una propuesta con la etiqueta `enhancement`. Nos encantan los desafíos multi-stack.
+
+### 3. 📥 Enviar Pull Requests
+1. Haz un **Fork** de este repositorio.
+2. Crea una rama para tu mejora: `git checkout -b feature/nueva-mejora`.
+3. Realiza tus cambios asegurándote de seguir los estándares del proyecto.
+4. Envía un **Pull Request** detallando el impacto técnico de tu cambio.
+
+---
+
+## 📏 Estándares del Laboratorio
+
+- **📄 Documentación**: Todo caso de uso nuevo debe incluir su propio `README.md` con la matriz tecnológica correspondiente.
+- **🐳 Docker-First**: Cualquier servicio de destino debe ser fácilmente desplegable mediante contenedores.
+- **🧩 Simplicidad Industrial**: El código debe ser legible para principiantes, pero seguir patrones de diseño profesionales (Mediator, Circuit Breaker, etc.).
+- **🧪 Validación**: Asegúrate de que `hub.py doctor` pase sin errores tras tus cambios.
+
+---
+
+## 🛤️ Ciclo de Desarrollo
+Seguimos un flujo de trabajo simplificado basado en **GitFlow**. La rama `main` es el estándar de estabilidad del laboratorio.
+
+---
+*¡Construyamos juntos el futuro de la automatización agnóstica!*
