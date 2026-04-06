@@ -1,111 +1,96 @@
 # 🛡️ n8n Guardrails: Resiliencia y Seguridad
 
-Esta gu?a detalla los "Guardrails" implementados en la capa de **Bridge (n8n)** del ecosistema Social Bot Scheduler. Estos patrones aseguran que el sistema sea resistente a fallos, evite duplicados y maneje errores de forma robusta en **TODOS los 9 casos de integraci?n**.
+Esta guía detalla los **Guardrails** (mecanismos de protección) implementados en la capa del **Bridge (n8n)**. Estos patrones aseguran que el ecosistema sea resistente a fallos, evite duplicados y maneje errores de forma robusta en **TODOS los 9 casos de integración**.
 
 ---
 
-## 🏗️ Arquitectura de Resiliencia (v3.0.0)
+## 🏗️ Arquitectura de Resiliencia (v4.0.0)
 
-El sistema implementa una defensa en profundidad con 4 capas de protección:
+El sistema implementa una **defensa en profundidad** con 4 capas críticas de protección:
 
-1.  **Circuit Breaker**: Protege contra servicios caídos.
-2.  **Idempotencia**: Evita duplicados (SQLite).
-3.  **Reintentos**: Maneja fallos transitorios de red.
-4.  **Dead Letter Queue (DLQ)**: Captura fallos finales para análisis.
+1.  **⚡ Circuit Breaker**: Protege contra servicios externos caídos o saturados.
+2.  **✅ Idempotencia**: Evita el procesamiento de mensajes duplicados (basado en SQLite).
+3.  **🔄 Reintentos**: Gestiona fallos transitorios de red con backoff exponencial.
+4.  **📥 Dead Letter Queue (DLQ)**: Captura fallos definitivos para auditoría y recuperación.
 
-Todos los casos (01-09) utilizan scripts compartidos optimizados en `scripts/`.
+> [!IMPORTANT]
+> Todos los casos (01-09) comparten una lógica de protección centralizada ubicada en el directorio `scripts/`.
 
 ---
 
-## 1. Idempotencia (SQLite)
+## 1. ✅ Idempotencia (SQLite)
 
-**Estado**: ✅ Implementado GLOBALMENTE (Casos 01-09)
-**Script**: [`scripts/check_idempotency.py`](file:///c:/dev/social-bot-scheduler/scripts/check_idempotency.py)
-**Base de Datos**: `scripts/shared/fingerprints.db`
+- **Estado**: Operativo Globalmente (Casos 01-09)
+- **Script**: [`scripts/check_idempotency.py`](../scripts/check_idempotency.py)
+- **Motor**: SQLite (Transacciones atómicas y alta concurrencia)
 
-Mecanismo para evitar que un mismo mensaje sea procesado dos veces.
+Previene que un post sea procesado más de una vez, incluso si el emisor reintenta el envío por error.
+1. Genera un hash del mensaje.
+2. Verifica si el hash ya existe en la base de datos de huellas.
+3. Si existe, retorna `200 OK` inmediatamente sin disparar el flujo.
 
--   **Backend**: SQLite (Alta concurrencia, transacciones atómicas).
--   **TTL**: 24 horas (Limpieza automática de registros antiguos).
--   **Lógica**:
-    1.  Recibir Post ID + Canal.
-    2.  Verificar existencia en DB.
-    3.  Si existe -> **Ignorar** (200 OK).
-    4.  Si no existe -> **Registrar** y procesar.
+---
+
+## 2. ⚡ Circuit Breaker (Cortafuegos)
+
+- **Estado**: Operativo Globalmente (Casos 01-09)
+- **Script**: [`scripts/circuit_breaker.py`](../scripts/circuit_breaker.py)
+- **Almacenamiento**: `scripts/shared/circuit_state.json`
+
+Protege la salud del sistema abriendo el circuito si un destino falla repetidamente.
+
+| Estado | Descripción | Acción |
+| :--- | :--- | :--- |
+| 🟢 **CLOSED** | Funcionamiento normal. | Las peticiones fluyen hacia el destino. |
+| 🔴 **OPEN** | Fallo detectado (5 errores seguidos). | Peticiones rechazadas inmediatamente (Fail-Fast). |
+| 🟡 **HALF-OPEN** | Periodo de recuperación (5 minutos). | Se permite una petición de prueba para verificar salud. |
+
+---
+
+## 3. 📥 Dead Letter Queue (DLQ)
+
+- **Estado**: Operativo Globalmente (Casos 01-09)
+- **Endpoint**: `/errors` en cada microservicio de destino.
+
+Si una publicación falla tras agotar todos los reintentos, el payload completo se deriva al DLQ.
+- **Auditoría**: Los errores se registran en `errors.log` con el contexto completo del fallo.
+- **Recuperación**: Permite el reintento manual una vez solucionado el problema de infraestructura.
+
+---
+
+## 4. 🔄 Reintentos Automáticos
+
+Configurado nativamente en los nodos de **n8n**:
+- **Máximo de Reintentos**: 3
+- **Intervalo**: 1000ms con incremento exponencial.
+- **Objetivo**: Superar micro-cortes de red o latencias temporales de los receptores.
+
+---
+
+## 🧪 Verificación de Guardrails
+
+Puedes validar la salud de los mecanismos de protección mediante el CLI maestro:
 
 ```bash
-# Verificar manualmente
-python3 scripts/check_idempotency.py check "post-123_twitter" "01"
-```
+# Diagnóstico de salud general
+python hub.py doctor
 
----
-
-## 2. Circuit Breaker (Cortafuegos)
-
-**Estado**: ✅ Implementado GLOBALMENTE (Casos 01-09)
-**Script**: [`scripts/circuit_breaker.py`](file:///c:/dev/social-bot-scheduler/scripts/circuit_breaker.py)
-**Estado Compartido**: `scripts/shared/circuit_state.json`
-
-Protege el sistema dejando de enviar peticiones a un servicio que está fallando repetidamente.
-
-### Estados
--   🟢 **CLOSED**: Normal. Peticiones fluyen.
--   🔴 **OPEN**: Fallo detectado (5 errores seguidos). Peticiones rechazadas inmediatamente.
--   🟡 **HALF-OPEN**: Periodo de prueba (después de 5 min). Deja pasar 1 petición para ver si se recuperó.
-
-```bash
-# Verificar estado
-python3 scripts/circuit_breaker.py check "01"
-```
-
----
-
-## 3. Dead Letter Queue (DLQ)
-
-**Estado**: ✅ Implementado GLOBALMENTE (Casos 01-09)
-**Endpoint**: `/errors` en cada servicio de destino.
-
-Si un mensaje falla después de todos los reintentos y protecciones, se envía al DLQ para no perder datos.
-
--   **Destino**: Archivo de log `errors.log` en el contenedor de destino.
--   **Contenido**: JSON con el error original y el payload del mensaje.
-
----
-
-## 4. Reintentos Automáticos
-
-**Estado**: ✅ Configurado en todos los Workflows (Json)
-
-Cada nodo "HTTP Request" en n8n está configurado con:
--   **Retry on Fail**: `true`
--   **Max Retries**: 3
--   **Wait Between Retries**: 1000ms
-
----
-
-## 🧪 Cómo Verificar (Pruebas Reales)
-
-Para validar que estos sistemas funcionan, hemos creado un script de prueba end-to-end:
-
-```bash
-# Ejecutar test de scripts compartidos
+# Test específico de scripts de resiliencia
 ./scripts/test_shared_scripts.sh
 ```
 
-### Tabla de Cobertura
+---
 
-| Característica | Caso 01 | Caso 02 | Caso 03 | Caso 04 | Caso 05 | Caso 06 | Caso 07 | Caso 08 |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Idempotencia** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Circuit Breaker** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **DLQ** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Reintentos** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+## 📊 Matriz de Cobertura de Seguridad
+
+| Caso | Idempotencia | Circuit Breaker | DLQ | Reintentos |
+| :--- | :---: | :---: | :---: | :---: |
+| **01-08** | ✅ | ✅ | ✅ | ✅ |
+| **09 (Gateway)** | ✅ | ✅ | ✅ | ✅ |
+
+> [!TIP]
+> El Caso 09 añade una capa extra: **Autenticación X-API-Key** entre n8n y el Gateway de FastAPI.
 
 ---
 
-> [!NOTE]
-> Esta documentación refleja la implementación actual (v3.0.0) basada en scripts Python compartidos y SQLite, reemplazando las implementaciones anteriores basadas en JSON y caso único.
-
-
-### Caso 09
-El Caso 09 reutiliza todos los guardrails compartidos y a?ade autenticacion saliente desde n8n hacia FastAPI mediante `X-API-Key={{$env.INTEGRATION_API_KEY}}`.
+*Documentación de Resiliencia creada para Social Bot Scheduler v4.0*

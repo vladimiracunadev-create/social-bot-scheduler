@@ -1,45 +1,61 @@
-# Caso 01: 🐍 Python -> 🔗 n8n -> 🐘 PHP
+# 🧩 Caso 01: 🐍 Python -> 🌉 n8n -> 🐘 PHP
 
-Este eje tecnológico demuestra la integración entre un script de automatización en Python y un servidor web tradicional en PHP, orquestados por n8n.
+[![Language: Python](https://img.shields.io/badge/Language-Python-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Language: PHP](https://img.shields.io/badge/Language-PHP-777BB4?logo=php&logoColor=white)](https://www.php.net/)
+[![Database: MySQL](https://img.shields.io/badge/Database-MySQL-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
+
+Este eje tecnológico demuestra la integración fluida entre un script de automatización moderno en **Python** y un receptor web tradicional en **PHP**, orquestados por la potencia de **n8n**.
+
+---
 
 ## 🏗️ Arquitectura del Flujo
-1.  **Origen (Emisor)**: `bot.py` (Python 3.11)
-2.  **Puente (Orquestador)**: n8n (Nodo Webhook -> Nodo HTTP Request)
-3.  **Destino (Receptor)**: `index.php` (Apache/PHP 8.2)
 
-## 🐍 Funcionamiento: Origen (Python)
-El bot de Python actúa como un scheduler local:
-- **Lógica**: Carga posts desde `posts.json`, verifica si es el momento de publicarlos y los envía al webhook de n8n.
-- **Tecnologías**: 
-    - `pydantic`: Para validación de datos.
-    - `requests`: Para el envío HTTP POST.
-    - `dotenv`: Gestión de variables de entorno (URL del webhook).
-- **Ejecución**: Se corre con `python bot.py` desde la carpeta `origin/`.
+1.  **📤 Origen**: `bot.py` (Python 3.11 + Pydantic)
+2.  **🌉 Puente**: **n8n** (Webhook e Inyección HTTP)
+3.  **📥 Destino**: `index.php` (Apache 2.4 + PHP 8.2)
+4.  **📁 Persistencia**: **MySQL 8.0**
 
-## 🐘 Funcionamiento: Destino (PHP)
-El receptor es un script PHP ligero que actúa como verificador:
-- **Lógica**: Recibe el POST de n8n, valida que los campos `id`, `text` y `channel` existan, y los guarda en un archivo de texto plano.
-- **Log**: Los posts se almacenan en `dest/logs/social_bot.log`.
-- **Errores (DLQ)**: Los fallos persistentes se registran en `dest/logs/errors.log`.
-- **Dashboard**: `index.html` lee los logs vía AJAX para mostrarlos visualmente.
+---
 
-## 🛡️ Guardrails Implementados
+## 🐍 Origen: Python Local Bot
 
-Este caso incluye mecanismos de resiliencia:
+El bot de Python actúa como el cerebro programador del flujo:
+- **Lógica**: Lee `posts.json`, valida la estructura con **Pydantic** y dispara hacia n8n.
+- **Resiliencia**: Manejo de errores en el envío y logs locales de ejecución.
 
-### Reintentos Automáticos
-- El nodo HTTP Request en n8n está configurado con **3 reintentos** (backoff de 1 segundo).
-- Si el servidor PHP está caído, n8n intentará 3 veces antes de marcar el envío como fallido.
+> [!TIP]
+> Para ejecutar este caso de forma aislada:
+> ```bash
+> docker-compose --profile case01 up -d
+> ```
 
-### Dead Letter Queue (DLQ)
-- Si todos los reintentos fallan, el payload se envía al endpoint `/errors` del servidor PHP.
-- Los errores se registran en `dest/logs/errors.log` con timestamp, caso, error y payload completo.
-- Esto permite auditoría y reintentos manuales posteriores.
+---
 
-### Idempotencia (Futuro)
-- Actualmente, la idempotencia debe manejarse a nivel de aplicación (verificando IDs duplicados).
-- En versiones futuras, se implementará persistencia de fingerprints en n8n.
+## 🐘 Destino: PHP Collector
 
-## 🚦 Verificación
-- **URL Dashboard**: [http://localhost:8081](http://localhost:8081)
-- **Endpoint Webhook**: `POST /index.php`
+Un script PHP optimizado para recibir y persistir datos de auditoría:
+- **Lógica**: Valida los campos `id`, `text` y `channel`.
+- **Motor**: Almacena los resultados en una base de datos **MySQL**.
+- **Visualización**: El Dashboard maestro (`:8081`) consulta esta persistencia en tiempo real.
+
+---
+
+## 🛡️ Guardrails (Resiliencia)
+
+Este caso implementa patrones robustos para evitar la pérdida de datos:
+
+- **🔄 Reintentos**: n8n realiza hasta 3 reintentos automáticos con backoff exponencial.
+- **📥 DLQ (Dead Letter Queue)**: Si el destino falla tras los reintentos, el mensaje se deriva a una tabla de errores para inspección.
+- **✅ Idempotencia**: El sistema verifica el `post_hash` para evitar publicaciones duplicadas.
+
+---
+
+## 🚦 Verificación y Acceso
+
+- **🌐 Dashboard**: [http://localhost:8081](http://localhost:8081)
+- **⚙️ API Endpoint**: `POST /index.php`
+- **📂 Logs**: Mapeados en el volumen `dest/logs/`
+
+---
+
+*Desarrollado como parte del Social Bot Scheduler v4.0*

@@ -1,35 +1,48 @@
-# Roadmap — Social Bot Scheduler
+# 🛣️ Roadmap — Social Bot Scheduler
 
-Este documento describe la evolución y el futuro del proyecto.
+Este documento describe la evolución técnica y los objetivos estratégicos del proyecto.
+
+---
 
 ## ✅ Hitos Completados
 
-### v4.0.0 — "Persistencia Políglota" (Actual)
-- [x] Integración de 8 motores de bases de datos (SQL, NoSQL, KV).
-- [x] Dashboard dinámico con previsualización de datos en tiempo real.
-- [x] Auto-provisionamiento de esquemas en 8 lenguajes.
+### `v4.0.0` — "Persistencia Políglota" 🟢 Ready
+- [x] **8 Motores de BD**: Integración nativa con SQL (MySQL, PSQL, MSSQL), NoSQL (Mongo, Redis, Cassandra) y DuckDB.
+- [x] **Agnosticismo Total**: Casos prácticos en Rust, C#, Go y Laravel conectando a n8n.
+- [x] **Hardening de Seguridad**: Puertos bindeados a localhost y secretos vía variables.
+- [x] **Matrix Dashboard**: Visualización unificada de los 9 casos.
 
-### v3.0.0 — "Observabilidad Industrial"
-- [x] Matriz de 8 casos interoperables (Python, Go, Node, PHP, Rust, Ruby, C#, Laravel).
-- [x] Sistema de Resiliencia Global: Circuit Breaker, Idempotencia (SQLite), DLQ.
-- [x] Hub CLI centralizado para diagnósticos (`make doctor`).
-- [x] Infrastructure Monitoring: Prometheus + Grafana.
+### `v3.0.0` — "Observabilidad Industrial" 🟢 Ready
+- [x] **Stack CNCF**: Despliegue de Prometheus, Grafana y cAdvisor.
+- [x] **Resiliencia**: Implementación de Circuit Breaker e Idempotencia en los flujos.
+- [x] **CLI Facade**: Creación de `hub.py` para gestión simplificada del laboratorio.
 
-### v1.0 - v2.0
-- [x] Orquestación base con n8n.
-- [x] Dashboard unaificado.
-- [x] Dockerización completa.
+---
 
-## 🔮 Futuro (v4.0+)
+## 🚀 En Desarrollo (v4.1+)
 
-### Infraestructura Cloud
-- [ ] **Terraform**: IaC para despliegue en AWS (ECS Fargate).
-- [ ] **HTTPS/TLS**: Certificados automáticos con Traefik o Cert Manager.
+### 🌐 Conectividad Edge
+- [ ] **Caddy Integration**: Refinamiento del perfil `edge` para acceso remoto seguro.
+- [ ] **Auto-TLS**: Gestión de certificados locales para entornos de desarrollo.
 
-### Funcionalidad Extendida
-- [ ] **K8s Advanced**: Despliegue con Helm Charts y Auto-scaling.
-- [ ] **Auth Centralizada**: Keycloak o gestión de usuarios simple.
+---
 
-## Cómo contribuir
-Si quieres contribuir, revisa `CONTRIBUTING.md` y busca issues etiquetados como `roadmap`.
+## 🔮 Futuro (v5.0+)
+
+### ☁️ Cloud & Scalability
+- [ ] **Terraform**: IaC para despliegue en AWS ECS Fargate y Google Cloud Run.
+- [ ] **Kubernetes Advanced**: Helm Charts oficiales y políticas de red (NetworkPolicies) granulares.
+- [ ] **Auth Centralizada**: Integración de Authelia o Keycloak para proteger los dashboards.
+
+### 🧪 Innovación
+- [ ] **IA Agents Integration**: Casos de uso con LangChain/n8n AI para programar posts automáticamente.
+
+---
+
+## 🤝 Cómo Contribuir
+Si quieres sumar un nuevo lenguaje o motor de base de datos, revisa [CONTRIBUTING.md](CONTRIBUTING.md) y busca issues etiquetados como `roadmap`.
+
+---
+
+*Última actualización: Abril 2026*
 

@@ -65,7 +65,9 @@ def main() -> int:
                 "continuing with unauthenticated checks."
             )
     else:
-        print("[!] Placeholder credentials detected in .env; skipping authenticated API checks.")
+        print(
+            "[!] Placeholder credentials detected in .env; skipping authenticated API checks."
+        )
 
     workflows_response = session.get(f"{base_url}/api/v1/workflows", timeout=5)
     if workflows_response.status_code == 200:

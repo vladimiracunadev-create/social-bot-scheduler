@@ -1,41 +1,61 @@
-# Caso 05: 🐘 Laravel -> 🔗 n8n -> ⚛️ React
+# 🧩 Caso 05: 🐘 Laravel -> 🌉 n8n -> ⚛️ React
 
-Este eje tecnológico demuestra la convergencia entre el backend empresarial tradicional (Laravel) y el desarrollo de interfaces modernas de usuario (React).
+[![Language: PHP/Laravel](https://img.shields.io/badge/Language-Laravel-FF2D20?logo=laravel&logoColor=white)](https://laravel.com/)
+[![Language: React](https://img.shields.io/badge/Language-React-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![Database: MongoDB](https://img.shields.io/badge/Database-MongoDB-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+
+Este eje tecnológico demuestra la convergencia entre el backend empresarial tradicional (**Laravel**) y el desarrollo de interfaces de usuario modernas y reactivas (**React**).
+
+---
 
 ## 🏗️ Arquitectura del Flujo
-1.  **Origen (Emisor)**: `ArtisanPost.php` (PHP 8.2 / Simulación Artisan)
-2.  **Puente (Orquestador)**: n8n (Nodo Webhook -> Nodo HTTP Request)
-3.  **Destino (Receptor)**: `server.js` (Node.js) + `App.jsx` (React)
 
-## 🐘 Funcionamiento: Origen (Laravel)
-El origen simula cómo un framework de gran escala como Laravel gestionaría publicaciones:
-- **Lógica**: Utiliza una clase que imita un `Console Command`. Recorre un archivo `posts.json`, extrae los pendientes y los despacha.
-- **Tecnologías**: 
-    - `PHP Streams`: Envío HTTP nativo sin dependencias externas pesadas.
-    - `JSON Formatting`: Preservación de la estructura del post original.
-- **Ejecución**: Se corre con `php ArtisanPost.php` desde la carpeta `origin/`.
+1.  **📤 Origen**: `ArtisanPost.php` (PHP 8.2 / Simulación Artisan)
+2.  **🌉 Puente**: **n8n** (Webhook e Inyección HTTP)
+3.  **📥 Destino**: `server.js` (Node.js) + **React SPA**
+4.  **📁 Persistencia**: **MongoDB 6.0**
 
-## ⚛️ Funcionamiento: Destino (React)
-El receptor es un entorno fullstack de JavaScript:
-- **Backend (Node/Express)**: Recibe el post en `/webhook`, lo valida y lo persiste en `posts_react.log`.
-- **Frontend (React)**: Una Single Page Application (SPA) que consulta periódicamente los logs al backend y los muestra con una estética moderna.
-- **Interoperabilidad**: Demuestra cómo n8n puede alimentar directamente interfaces interactivas de usuario.
+---
 
+## 🐘 Origen: Laravel Artisan Simulator
 
-## 🛡️ Guardrails Implementados
+El origen simula cómo un framework de gran escala gestionaría tareas programadas:
+- **Lógica**: Utiliza una clase que imita un `Console Command`. Extrae publicaciones pendientes de `posts.json` y las despacha.
+- **Tecnología**: Implementación de **PHP Streams** para envíos HTTP eficientes y ligeros.
 
-Este caso incluye mecanismos de resiliencia en la capa de n8n:
+> [!TIP]
+> Para activar este entorno en el laboratorio:
+> ```bash
+> docker-compose --profile case05 up -d
+> ```
 
-### Reintentos Automáticos
-- El nodo HTTP Request está configurado con **3 reintentos** (backoff de 1 segundo).
-- Si el servicio de destino está caído, n8n intentará 3 veces antes de marcar el envío como fallido.
+---
 
-### Dead Letter Queue (DLQ)
-- Si todos los reintentos fallan, el payload se envía a un endpoint `/errors` del servicio de destino.
-- Los errores se registran con timestamp, caso, error y payload completo.
+## ⚛️ Destino: React & Node Fullstack Receptor
 
-Para más detalles, consulta la guía de [Guardrails](../../docs/GUARDRAILS.md).
+El receptor es un entorno de JavaScript moderno diseñado para la interacción en tiempo real:
+- **Backend (Node/Express)**: Recibe el post, lo valida y lo persiste en **MongoDB**.
+- **Frontend (React)**: Una **Single Page Application (SPA)** que visualiza los posts con una estética profesional y actualizaciones periódicas.
+- **Interoperabilidad**: Muestra cómo n8n puede alimentar directamente flujos de datos hacia interfaces dinámicas.
 
-## 🚦 Verificación
-- **URL Dashboard**: [http://localhost:8085](http://localhost:8085)
-- **Endpoint Webhook**: `POST /webhook` (Interno: 4000)
+---
+
+## 🛡️ Guardrails (Resiliencia)
+
+Este caso implementa protecciones para asegurar la disponibilidad de la interfaz:
+
+- **🔄 Reintentos Automáticos**: n8n reintenta el envío hasta 3 veces con backoff exponencial ante fallos del servidor Node.
+- **📥 Dead Letter Queue (DLQ)**: Los fallos críticos de entrega se registran para auditoría, permitiendo la recuperación de datos no visualizados.
+- **🔍 Integridad Documental**: MongoDB asegura que la estructura semi-estructurada de los posts se preserve correctamente.
+
+---
+
+## 🚦 Verificación y Acceso
+
+- **🌐 Dashboard**: [http://localhost:8085](http://localhost:8085)
+- **⚙️ API Endpoint**: `POST /webhook`
+- **📁 Datos**: Visibles a través de la interfaz SPA de React.
+
+---
+
+*Desarrollado como parte del Social Bot Scheduler v4.0*

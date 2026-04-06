@@ -105,15 +105,21 @@ def validate_compose(compose_file: Path) -> list[str]:
 
 def validate_dockerfile(path: Path) -> list[str]:
     issues: list[str] = []
-    for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+    for lineno, line in enumerate(
+        path.read_text(encoding="utf-8").splitlines(), start=1
+    ):
         if re.search(r"^\s*FROM\s+\S+:latest\b", line, flags=re.IGNORECASE):
-            issues.append(f"{path.relative_to(ROOT)}:{lineno} uses a mutable Docker base tag")
+            issues.append(
+                f"{path.relative_to(ROOT)}:{lineno} uses a mutable Docker base tag"
+            )
     return issues
 
 
 def main() -> int:
     if yaml is None:
-        print("[runtime-security] PyYAML is required. Install dependencies from requirements.txt first.")
+        print(
+            "[runtime-security] PyYAML is required. Install dependencies from requirements.txt first."
+        )
         return 2
 
     issues: list[str] = []

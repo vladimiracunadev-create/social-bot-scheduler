@@ -1,41 +1,61 @@
-# Caso 03: 🐹 Go -> 🔗 n8n -> 🍏 Node.js
+# 🧩 Caso 03: 🐹 Go -> 🌉 n8n -> 🟢 Node.js
 
-Este eje tecnológico muestra la potencia de un emisor de alto rendimiento escrito en Go comunicándose con un ecosistema flexible basado en Node.js.
+[![Language: Go](https://img.shields.io/badge/Language-Go-00ADD8?logo=go&logoColor=white)](https://go.dev/)
+[![Language: Node.js](https://img.shields.io/badge/Language-Node.js-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Database: PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+
+Este eje tecnológico muestra la potencia de un emisor concurrente escrito en **Go** comunicándose con un ecosistema flexible y asíncrono basado en **Node.js (Express)**.
+
+---
 
 ## 🏗️ Arquitectura del Flujo
-1.  **Origen (Emisor)**: `main.go` (Go 1.21) - Scheduler de alta concurrencia.
-2.  **Puente (Orquestador)**: n8n (Nodo Webhook -> Nodo HTTP Request)
-3.  **Destino (Receptor)**: `index.js` (Node.js 20 - Express)
 
-## 🐹 Funcionamiento: Origen (Go)
-El emisor en Go está diseñado para ser ligero y rápido:
-- **Lógica**: Lee un archivo `posts.json`, parsea las fechas y despacha los posts al webhook de n8n cuando llega el momento.
-- **Tecnologías**: 
-    - `net/http`: Cliente HTTP estándar.
-    - `encoding/json`: Para el manejo nativo de datos estructurados.
-- **Ejecución**: Se compila y ejecuta automáticamente, o manualmente con `go run main.go` desde `origin/`.
+1.  **📤 Origen**: `main.go` (Go 1.21) - Scheduler de alta concurrencia.
+2.  **🌉 Puente**: **n8n** (Webhook e Inyección HTTP)
+3.  **📥 Destino**: `index.js` (Node.js 20 + Express)
+4.  **📁 Persistencia**: **PostgreSQL 15**
 
-## 🍏 Funcionamiento: Destino (Node.js)
-El receptor utiliza Express para gestionar las peticiones entrantes:
-- **Tecnología**: Servidor Express con middleware `json` y `urlencoded`.
-- **Log**: Los posts se añaden a `social_bot_node.log` en formato legible.
-- **Dashboard**: Sirve una interfaz moderna en el puerto `3000` que permite "refrescar" y ver los posts recibidos en tiempo real.
+---
 
+## 🐹 Origen: Go Concurrent Scheduler
 
-## 🛡️ Guardrails Implementados
+El emisor en Go está diseñado para la máxima eficiencia y velocidad:
+- **Lógica**: Utiliza goroutines para el escaneo de `posts.json` y despacho inmediato.
+- **Tecnologías**: Cliente HTTP nativo de Go sin dependencias externas pesadas.
 
-Este caso incluye mecanismos de resiliencia en la capa de n8n:
+> [!TIP]
+> Para activar este flujo en el laboratorio:
+> ```bash
+> docker-compose --profile case03 up -d
+> ```
 
-### Reintentos Automáticos
-- El nodo HTTP Request está configurado con **3 reintentos** (backoff de 1 segundo).
-- Si el servicio de destino está caído, n8n intentará 3 veces antes de marcar el envío como fallido.
+---
 
-### Dead Letter Queue (DLQ)
-- Si todos los reintentos fallan, el payload se envía a un endpoint `/errors` del servicio de destino.
-- Los errores se registran con timestamp, caso, error y payload completo.
+## 🟢 Destino: Node.js Express Receptor
 
-Para más detalles, consulta la guía de [Guardrails](../../docs/GUARDRAILS.md).
+El receptor utiliza Express para gestionar eventos con la flexibilidad característica de Node:
+- **Tecnología**: Servidor Express con optimización de JSON parsing.
+- **Base de Datos**: Persistencia relacional avanzada en **PostgreSQL**.
+- **Dashboard**: Interfaz dinámica en el puerto `:8083` con recarga automática de datos.
 
-## 🚦 Verificación
-- **URL Dashboard**: [http://localhost:8083](http://localhost:8083)
-- **Endpoint Webhook**: `POST /webhook` (Interno: 3000)
+---
+
+## 🛡️ Guardrails (Resiliencia)
+
+Este caso implementa defensas contra fallos en cascada:
+
+- **🔄 Reintentos Automáticos**: n8n aplica una política de 3 reintentos con intervalo de 1s.
+- **📥 Dead Letter Queue (DLQ)**: Los eventos que fallan tras los reintentos se registran en una tabla de auditoría para recuperación manual.
+- **🔍 Validación de Schema**: El receptor Node valida rigurosamente el payload antes de la inserción en el PGSQL.
+
+---
+
+## 🚦 Verificación y Acceso
+
+- **🌐 Dashboard**: [http://localhost:8083](http://localhost:8083)
+- **⚙️ API Endpoint**: `POST /webhook`
+- **📂 Persistencia**: Accesible vía herramientas estándar de PostgreSQL.
+
+---
+
+*Desarrollado como parte del Social Bot Scheduler v4.0*

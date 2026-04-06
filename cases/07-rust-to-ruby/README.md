@@ -1,41 +1,61 @@
-# Caso 07: 🦀 Rust -> 🔗 n8n -> 💎 Ruby
+# 🧩 Caso 07: 🦀 Rust -> 🌉 n8n -> 💎 Ruby
 
-Este eje tecnológico combina la robustez y rendimiento de Rust con la elegancia sintáctica de Ruby a través del orquestador n8n.
+[![Language: Rust](https://img.shields.io/badge/Language-Rust-000000?logo=rust&logoColor=white)](https://www.rust-lang.org/)
+[![Language: Ruby](https://img.shields.io/badge/Language-Ruby-CC342D?logo=ruby&logoColor=white)](https://www.ruby-lang.org/)
+[![Database: Cassandra](https://img.shields.io/badge/Database-Cassandra-1287B1?logo=apache-cassandra&logoColor=white)](https://cassandra.apache.org/)
+
+Este eje tecnológico combina la robustez y el rendimiento de **Rust** con la elegancia sintáctica de **Ruby**, integrando un emisor fuertemente tipado con un receptor ágil basado en **Sinatra**.
+
+---
 
 ## 🏗️ Arquitectura del Flujo
-1.  **Origen (Emisor)**: `main.rs` (Rust 1.7x) - Utiliza serialización fuertemente tipada.
-2.  **Puente (Orquestador)**: n8n (Nodo Webhook -> Nodo HTTP Request)
-3.  **Destino (Receptor)**: `app.rb` (Ruby 3.2 / Sinatra)
 
-## 🦀 Funcionamiento: Origen (Rust)
-El emisor en Rust garantiza la integridad de los datos antes del envío:
-- **Lógica**: Utiliza estructuras (`structs`) para definir el esquema del post. Un bucle infinito envía datos de prueba simulando un flujo de producción.
-- **Tecnologías**: 
-    - `serde`: Serialización/Deserialización ultra rápida de JSON.
-    - `reqwest`: Cliente HTTP asíncrono/bloqueante para Rust.
-- **Ejecución**: Se corre con `cargo run` desde la carpeta `origin/`.
+1.  **📤 Origen**: `main.rs` (Rust 1.7x) - Emisor asíncrono de alto rendimiento.
+2.  **🌉 Puente**: **n8n** (Webhook e Inyección HTTP)
+3.  **📥 Destino**: `app.rb` (Ruby 3.2 / Sinatra)
+4.  **📁 Persistencia**: **Cassandra 4.1** (Columnar Distribuido)
 
-## 💎 Funcionamiento: Destino (Ruby)
-El receptor utiliza Sinatra, un micro-framework web DSL para Ruby:
-- **Tecnología**: Sinatra + Puma (servidor web).
-- **Almacenamiento**: Mantiene una lista circular de los últimos 20 posts en una variable global de memoria.
-- **Dashboard**: Utiliza plantillas ERB para generar el dashboard visual en el puerto `4567`.
+---
 
+## 🦀 Origen: Rust Safety Dispatcher
 
-## 🛡️ Guardrails Implementados
+El emisor en Rust garantiza la integridad de los datos antes del envío mediante su sistema de tipos:
+- **Lógica**: Utiliza estructuras (`structs`) y **Serde** para una serialización ultra rápida de los posts.
+- **Tecnología**: Cliente **Reqwest** asíncrono para despachos masivos sin bloqueo.
 
-Este caso incluye mecanismos de resiliencia en la capa de n8n:
+> [!TIP]
+> Para poner en marcha este caso:
+> ```bash
+> docker-compose --profile case07 up -d
+> ```
 
-### Reintentos Automáticos
-- El nodo HTTP Request está configurado con **3 reintentos** (backoff de 1 segundo).
-- Si el servicio de destino está caído, n8n intentará 3 veces antes de marcar el envío como fallido.
+---
 
-### Dead Letter Queue (DLQ)
-- Si todos los reintentos fallan, el payload se envía a un endpoint `/errors` del servicio de destino.
-- Los errores se registran con timestamp, caso, error y payload completo.
+## 💎 Destino: Ruby Sinatra Receptor
 
-Para más detalles, consulta la guía de [Guardrails](../../docs/GUARDRAILS.md).
+El receptor utiliza Sinatra para gestionar los eventos con una sintaxis limpia y minimalista:
+- **Tecnología**: **Sinatra DSL** ejecutándose sobre el servidor **Puma**.
+- **Persistencia**: Almacenamiento distribuido en **Cassandra**, ideal para flujos de datos de alta escritura.
+- **Dashboard**: Interfaz dinámica generada con plantillas **ERB**.
 
-## 🚦 Verificación
-- **URL Dashboard**: [http://localhost:8087](http://localhost:8087)
-- **Endpoint Webhook**: `POST /webhook` (Interno: 4567)
+---
+
+## 🛡️ Guardrails (Resiliencia)
+
+Este caso implementa defensas para garantizar entregas seguras en flujos de datos intensos:
+
+- **🔄 Reintentos Automáticos**: n8n reintenta el envío hasta 3 veces con backoff si el receptor Ruby no responde a tiempo.
+- **📥 Dead Letter Queue (DLQ)**: Los mensajes fallidos se registran en una cola persistente para evitar la pérdida de eventos críticos.
+- **⚡ Escrituras Masivas**: Cassandra permite absorber ráfagas de datos sin degradar la respuesta del receptor Ruby.
+
+---
+
+## 🚦 Verificación y Acceso
+
+- **🌐 Dashboard**: [http://localhost:8087](http://localhost:8087)
+- **⚙️ API Endpoint**: `POST /webhook`
+- **📂 Cluster**: El estado del anillo puede inspeccionarse con herramientas nativas de Cassandra.
+
+---
+
+*Desarrollado como parte del Social Bot Scheduler v4.0*

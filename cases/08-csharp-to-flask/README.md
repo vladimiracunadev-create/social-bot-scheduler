@@ -1,41 +1,61 @@
-# Caso 08: ❄️ C# (.NET) -> 🔗 n8n -> 🌶️ Flask
+# 🧩 Caso 08: 🔷 C# (.NET) -> 🌉 n8n -> 🌶️ Flask
 
-Este eje tecnológico integra el ecosistema empresarial de Microsoft .NET con la flexibilidad y ligereza de Python/Flask.
+[![Language: C#](https://img.shields.io/badge/Language-C%23-239120?logo=c-sharp&logoColor=white)](https://learn.microsoft.com/en-us/dotnet/csharp/)
+[![Language: Python/Flask](https://img.shields.io/badge/Language-Flask-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![Database: SQL Server](https://img.shields.io/badge/Database-SQL_Server-CC2927?logo=microsoft-sql-server&logoColor=white)](https://www.microsoft.com/sql-server/)
+
+Este eje tecnológico integra la robustez del ecosistema empresarial de **Microsoft .NET** con la agilidad y ligereza de un receptor basado en **Python/Flask**.
+
+---
 
 ## 🏗️ Arquitectura del Flujo
-1.  **Origen (Emisor)**: `Program.cs` (.NET 8.0) - Utiliza clientes HTTP nativos de alto rendimiento.
-2.  **Puente (Orquestador)**: n8n (Nodo Webhook -> Nodo HTTP Request)
-3.  **Destino (Receptor)**: `app.py` (Python 3.9 / Flask)
 
-## ❄️ Funcionamiento: Origen (C#)
-El emisor en C# demuestra la robustez del lenguaje corporativo por excelencia:
-- **Lógica**: Define una lista de objetos anónimos con posts de prueba, los serializa a JSON y los despacha mediante `HttpClient`.
-- **Tecnologías**: 
-    - `System.Net.Http`: Para comunicaciones web seguras y eficientes.
-    - `System.Text.Json`: Serialización nativa de alto rendimiento.
-- **Ejecución**: Se corre con `dotnet run` desde la carpeta `origin/`.
+1.  **📤 Origen**: `Program.cs` (.NET 8.0) - Emisor corporativo de alto rendimiento.
+2.  **🌉 Puente**: **n8n** (Webhook e Inyección HTTP)
+3.  **📥 Destino**: `app.py` (Python 3.9 / Flask)
+4.  **📁 Persistencia**: **SQL Server 2022** (Enterprise Relational)
 
-## 🌶️ Funcionamiento: Destino (Flask)
-El receptor utiliza Flask para ofrecer una API y un dashboard minimalista:
-- **Tecnología**: Flask (WSGI app).
-- **Procesamiento**: Recibe el POST en `/webhook`, extrae el texto y canal, y mantiene una lista en memoria de los posts recientes.
-- **Dashboard**: Utiliza el motor de plantillas `Jinja2` para renderizar `index.html` con los datos en tiempo real.
+---
 
+## 🔷 Origen: .NET Enterprise Dispatcher
 
-## 🛡️ Guardrails Implementados
+El emisor en C# demuestra la capacidad de integración de los lenguajes corporativos modernos:
+- **Lógica**: Define objetos anónimos tipados, los serializa con **System.Text.Json** y los despacha vía **HttpClient**.
+- **Tecnología**: Uso de inyección de dependencias y clientes HTTP optimizados para rendimiento masivo.
 
-Este caso incluye mecanismos de resiliencia en la capa de n8n:
+> [!TIP]
+> Para poner en marcha este entorno empresarial:
+> ```bash
+> docker-compose --profile case08 up -d
+> ```
 
-### Reintentos Automáticos
-- El nodo HTTP Request está configurado con **3 reintentos** (backoff de 1 segundo).
-- Si el servicio de destino está caído, n8n intentará 3 veces antes de marcar el envío como fallido.
+---
 
-### Dead Letter Queue (DLQ)
-- Si todos los reintentos fallan, el payload se envía a un endpoint `/errors` del servicio de destino.
-- Los errores se registran con timestamp, caso, error y payload completo.
+## 🌶️ Destino: Flask API & Dashboard
 
-Para más detalles, consulta la guía de [Guardrails](../../docs/GUARDRAILS.md).
+El receptor utiliza Flask para ofrecer un punto de entrada liviano y un dashboard de visualización rápida:
+- **Tecnología**: Framework **Flask** con motor de plantillas **Jinja2**.
+- **Procesamiento**: Recibe y procesa el evento asíncrono para persistirlo en el motor de base de datos.
+- **Base de Datos**: Gestión de datos relacionales complejos en **SQL Server**.
 
-## 🚦 Verificación
-- **URL Dashboard**: [http://localhost:8088](http://localhost:8088)
-- **Endpoint Webhook**: `POST /webhook` (Interno: 5000)
+---
+
+## 🛡️ Guardrails (Resiliencia)
+
+Este caso implementa defensas para asegurar la integridad de los datos empresariales:
+
+- **🔄 Reintentos Automáticos**: n8n aplica una política de 3 reintentos con intervalo de 1s ante latencias en el receptor Flask o SQL Server.
+- **📥 Dead Letter Queue (DLQ)**: Los mensajes que no logran persistirse se derivan a una cola de auditoría para su recuperación.
+- **🔍 Transaccionalidad**: SQL Server garantiza que los datos de los posts cumplan con todas las restricciones de integridad relacional.
+
+---
+
+## 🚦 Verificación y Acceso
+
+- **🌐 Dashboard**: [http://localhost:8088](http://localhost:8088)
+- **⚙️ API Endpoint**: `POST /webhook`
+- **📁 Auditoría**: Consultable mediante SQL Management Studio o Azure Data Studio conectando al puerto interno.
+
+---
+
+*Desarrollado como parte del Social Bot Scheduler v4.0*
