@@ -328,13 +328,15 @@ def limpiar_todo():
         log_audit("limpiar-todo", "FALLO", str(e))
 
 
-def gestionar_stack(accion, full=False):
+def gestionar_stack(accion, full=False, observability=False, edge=False):
     """
     Wrapper para controlar `docker-compose` desde el Hub.
 
     Args:
         accion (str): "up" para levantar servicios, "down" para detenerlos.
         full (bool): Si es True, activa el perfil 'full' para levantar todos los casos.
+        observability (bool): Activa el perfil 'observability' para Prometheus/Grafana/cAdvisor.
+        edge (bool): Activa el perfil 'edge' para el reverse proxy seguro opcional.
     """
     if accion == "up":
         # Ejecutar verificación de recursos antes de subir
@@ -345,8 +347,17 @@ def gestionar_stack(accion, full=False):
             pass
 
     cmd = ["docker-compose"]
-    if full and accion == "up":
-        cmd.extend(["--profile", "full"])
+    if accion == "up":
+        profiles = []
+        if full:
+            profiles.append("full")
+        if observability and not full:
+            profiles.append("observability")
+        if edge:
+            profiles.append("edge")
+
+        for profile in profiles:
+            cmd.extend(["--profile", profile])
 
     cmd.append(accion)
 
@@ -403,6 +414,16 @@ def main():
     up_parser.add_argument(
         "--full", action="store_true", help="Levanta TODOS los servicios (Perfil Full)"
     )
+    up_parser.add_argument(
+        "--observability",
+        action="store_true",
+        help="Activa Prometheus, Grafana y cAdvisor sin requerir el perfil full.",
+    )
+    up_parser.add_argument(
+        "--edge",
+        action="store_true",
+        help="Activa el reverse proxy HTTPS/basicauth opcional para acceso administrativo remoto.",
+    )
     subparsers.add_parser(
         "down", help="Detiene y mantiene los contenedores (docker-compose down)"
     )
@@ -421,7 +442,7 @@ def main():
     elif args.command == "doctor":
         ejecutar_doctor()
     elif args.command == "up":
-        gestionar_stack("up", args.full)
+        gestionar_stack("up", args.full, args.observability, args.edge)
     elif args.command == "down":
         gestionar_stack("down")
     elif args.command == "clean":

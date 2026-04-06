@@ -8,7 +8,7 @@ RUN go mod init social-bot-dest-go && \
 
 RUN go build -o main main.go
 
-FROM alpine:latest
+FROM alpine:3.20.6
 WORKDIR /root/
 COPY --from=builder /app/main .
 COPY index.html .

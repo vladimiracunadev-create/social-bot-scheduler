@@ -27,16 +27,16 @@ social-bot-scheduler/
 
 | Archivo | Importancia | Descripción |
 |---------|:-----------:|-------------|
-| `docker-compose.yml` | 🔴 **Crítico** | Define los servicios del ecosistema completo: 9 receptores, 8 bases de datos externas, n8n, Grafana, Prometheus, cAdvisor y el dashboard maestro. Contiene perfiles (`core`, `full`) para despliegue parcial o total. |
+| `docker-compose.yml` | 🔴 **Crítico** | Define los servicios del ecosistema completo: 9 receptores, 8 bases de datos externas, n8n, Grafana, Prometheus, cAdvisor, Caddy edge proxy y el dashboard maestro. Contiene perfiles `caseXX`, `full`, `observability` y `edge`. |
 | `docker-compose.dev.yml` | 🟡 Media | Override para desarrollo local. Añade hot-reload y puertos de depuración. |
 | `Dockerfile` | 🟡 Media | Imagen Docker para el dashboard maestro (`master-dashboard`). |
-| `Makefile` | 🟢 Alta | Automatización de comandos frecuentes: `make up`, `make clean`, `make nuke` (☢️ limpieza total). |
+| `Makefile` | 🟢 Alta | Automatización de comandos frecuentes: `make up`, `make up-secure`, `make up-observability`, `make up-edge`, `make clean` y `make nuke`. |
 
 ### Automatización y CLI
 
 | Archivo | Importancia | Descripción |
 |---------|:-----------:|-------------|
-| `hub.py` | 🔴 **Crítico** | **HUB CLI** — Centro de control del sistema. Permite diagnosticar, levantar, limpiar y auditar todo el ecosistema con un solo comando (`python hub.py up --full`). Es el "cerebro operacional" del proyecto. |
+| `hub.py` | 🔴 **Crítico** | **HUB CLI** — Centro de control del sistema. Permite diagnosticar, levantar, limpiar y auditar todo el ecosistema con comandos como `python hub.py up --full`, `--observability` o `--edge`. Es el "cerebro operacional" del proyecto. |
 | `hub.sh` | 🟡 Media | Wrapper Bash del HUB CLI para sistemas Linux/Mac. |
 | `hub.ps1` | 🟡 Media | Wrapper PowerShell del HUB CLI para Windows. |
 | `setup.py` | 🟢 Alta | Asistente interactivo de configuración inicial. Genera archivos `.env` con credenciales y URLs de webhook para cada caso. |

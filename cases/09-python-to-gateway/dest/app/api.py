@@ -53,7 +53,12 @@ class IntegrationRequestDTO(BaseModel):
 
 
 def validate_api_key(api_key: str | None) -> str:
-    expected = os.getenv("INTEGRATION_API_KEY", "SocialBotLocalKey2026!")
+    expected = os.getenv("INTEGRATION_API_KEY")
+    if not expected:
+        raise HTTPException(
+            status_code=503,
+            detail="INTEGRATION_API_KEY is not configured for the gateway",
+        )
     if not api_key or api_key != expected:
         raise HTTPException(status_code=401, detail="Missing or invalid X-API-Key")
     return api_key

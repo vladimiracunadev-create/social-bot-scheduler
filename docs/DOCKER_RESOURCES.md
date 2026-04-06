@@ -61,10 +61,13 @@ Para usuarios con recursos limitados, recomendamos la **Activación por Perfiles
 
 1.  **Novato (Ligero)**: `docker-compose --profile case01 up -d`
     *   *Consumo*: ~1.2 GB Disco / 1.5 GB RAM Total.
+    *   Si solo quieres el core del laboratorio, `make up-secure` deja fuera observabilidad y casos pesados.
 2.  **Reclutador (Estándar)**: Casos 01 al 06.
     *   *Consumo*: ~4.0 GB Disco / 8 GB RAM.
 3.  **Senior (Full Lab)**: Todos los casos + Infraestructura.
     *   *Consumo*: ~8.0 GB Disco / 16 GB RAM.
+4.  **Edge Controlado**: `make up-edge` además del modo base.
+    *   *Consumo*: añade ~50-100 MB de RAM para Caddy y no sustituye el hardening de producción.
 
 ---
 

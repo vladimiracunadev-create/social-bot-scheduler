@@ -1,143 +1,121 @@
 #!/bin/sh
-# ==============================================================================
-# 🔧 n8n Auto-Setup Script
-# ==============================================================================
-# Este script actúa como entrypoint personalizado del contenedor n8n.
-#
-# PROPÓSITO:
-# Eliminar la necesidad de configuración manual de n8n. Antes, el usuario
-# debía crear una cuenta, importar workflows uno por uno, y activarlos
-# manualmente desde la UI. Este script automatiza TODO ese proceso.
-#
-# CÓMO FUNCIONA:
-# 1. Arranca n8n en segundo plano (background)
-# 2. Espera a que n8n esté listo (polling al endpoint /healthz)
-# 3. Importa los 8 workflows desde /data/workflows/ usando la API REST
-# 4. Activa cada workflow importado para que escuchen webhooks
-# 5. Detiene el n8n de background y lo relanza en primer plano (foreground)
-#
-# RESULTADO:
-# Con un solo "docker-compose up -d", n8n arranca con los 8 workflows
-# importados y activos. Zero configuración manual.
-#
-# NOTA TÉCNICA:
-# Usamos la API REST de n8n (puerto 5678) porque la CLI "n8n import:workflow"
-# requiere que n8n NO esté corriendo, lo que complica el flujo. La API REST
-# permite importar y activar workflows mientras n8n está en ejecución.
-# ==============================================================================
 
 set -e
 
 WORKFLOWS_DIR="/data/workflows"
-N8N_URL="http://localhost:5678"
+N8N_URL="${N8N_INTERNAL_URL:-http://localhost:5678}"
+N8N_PUBLIC_URL="${N8N_EDITOR_BASE_URL:-${N8N_WEBHOOK_URL:-http://localhost:5678}}"
 MARKER_FILE="/home/node/.n8n/.workflows_imported"
+N8N_OWNER_EMAIL="${N8N_OWNER_EMAIL:-change-me@local.invalid}"
+N8N_OWNER_PASSWORD="${N8N_OWNER_PASSWORD:-ChangeMe-Local-Only!}"
 
-# --- Colores para logs claros (funciona en Docker logs) ---
 log_info() {
-    echo "[n8n-auto-setup] ✅ $1"
+    echo "[n8n-auto-setup] INFO  $1"
 }
 
 log_warn() {
-    echo "[n8n-auto-setup] ⚠️  $1"
+    echo "[n8n-auto-setup] WARN  $1"
 }
 
 log_step() {
-    echo "[n8n-auto-setup] 🔧 $1"
+    echo "[n8n-auto-setup] STEP  $1"
 }
 
-# --- Paso 1: Verificar si ya se importaron los workflows ---
-# Si el marcador existe, significa que una ejecución previa ya configuró todo.
-# Esto evita duplicar workflows cada vez que se reinicia el contenedor.
+contains_placeholder() {
+    echo "$1" | grep -qi "change-me\|local.invalid"
+}
+
+build_owner_payload() {
+    cat <<EOF
+{"email":"$N8N_OWNER_EMAIL","firstName":"Social","lastName":"Bot","password":"$N8N_OWNER_PASSWORD"}
+EOF
+}
+
+build_login_payload() {
+    cat <<EOF
+{"email":"$N8N_OWNER_EMAIL","password":"$N8N_OWNER_PASSWORD"}
+EOF
+}
+
+if contains_placeholder "$N8N_OWNER_EMAIL" || contains_placeholder "$N8N_OWNER_PASSWORD"; then
+    log_warn "N8N owner credentials still look like placeholders. Replace them in .env before sharing the lab."
+fi
+
 if [ -f "$MARKER_FILE" ]; then
-    log_info "Workflows ya importados previamente. Iniciando n8n normalmente..."
+    log_info "Workflows already imported. Starting n8n normally."
     exec n8n start
 fi
 
-# --- Paso 2: Arrancar n8n en background ---
-log_step "Iniciando n8n en segundo plano para auto-configuración..."
+log_step "Starting n8n in background for bootstrap."
 n8n start &
 N8N_PID=$!
 
-# --- Paso 3: Esperar a que n8n esté listo ---
-# n8n tarda unos segundos en inicializar su base de datos SQLite y
-# estar listo para recibir peticiones API. Hacemos polling cada 2 segundos.
-log_step "Esperando a que n8n esté listo..."
+log_step "Waiting for n8n health endpoint."
 MAX_RETRIES=30
 RETRY_COUNT=0
 
-while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+while [ "$RETRY_COUNT" -lt "$MAX_RETRIES" ]; do
     if wget -q --spider "$N8N_URL/healthz" 2>/dev/null; then
-        log_info "n8n está listo! (intento $((RETRY_COUNT + 1))/$MAX_RETRIES)"
+        log_info "n8n is ready on attempt $((RETRY_COUNT + 1))/$MAX_RETRIES."
         break
     fi
     RETRY_COUNT=$((RETRY_COUNT + 1))
     sleep 2
 done
 
-if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
-    log_warn "n8n no respondió tras $MAX_RETRIES intentos. Continuando de todos modos..."
-    # No salimos con error; dejamos que n8n siga intentando arrancar
-    wait $N8N_PID
+if [ "$RETRY_COUNT" -eq "$MAX_RETRIES" ]; then
+    log_warn "n8n did not become healthy in time. Handing control back to the main process."
+    wait "$N8N_PID"
     exit $?
 fi
 
-# --- Paso 4: Crear cuenta de owner automáticamente ---
-# n8n requiere un owner para funcionar. Creamos uno con credenciales
-# predeterminadas de laboratorio. El flag N8N_USER_MANAGEMENT_DISABLED=true
-# en docker-compose.yml ya desactiva la pantalla de login, pero necesitamos
-# un owner inicial para que la API funcione correctamente.
-log_step "Configurando cuenta de administrador..."
-SETUP_RESPONSE=$(wget -q -O - --post-data '{
-    "email": "admin@social-bot.local",
-    "firstName": "Social",
-    "lastName": "Bot",
-    "password": "SocialBot2026!"
-}' --header="Content-Type: application/json" "$N8N_URL/api/v1/owner/setup" 2>/dev/null || echo "already-setup")
+log_step "Creating owner account if needed."
+SETUP_RESPONSE=$(
+    wget -q -O - \
+        --post-data "$(build_owner_payload)" \
+        --header="Content-Type: application/json" \
+        "$N8N_URL/api/v1/owner/setup" 2>/dev/null || echo "already-setup"
+)
 
 if echo "$SETUP_RESPONSE" | grep -q "already-setup\|error"; then
-    log_info "Owner ya configurado o setup no requerido. Continuando..."
+    log_info "Owner already configured or setup endpoint no longer required."
 else
-    log_info "Owner creado: admin@social-bot.local"
+    log_info "Owner configured for $N8N_OWNER_EMAIL."
 fi
 
-# --- Paso 5: Obtener API Key para importar workflows ---
-# Autenticamos con el owner para obtener una cookie de sesión.
-# Usamos wget porque curl no está disponible en la imagen alpine de n8n.
-log_step "Autenticando para importar workflows..."
+log_step "Authenticating to import workflows."
 COOKIE_FILE="/tmp/n8n_cookies.txt"
 
-wget -q -O /dev/null --save-cookies "$COOKIE_FILE" --keep-session-cookies \
-    --post-data '{"email":"admin@social-bot.local","password":"SocialBot2026!"}' \
+wget -q -O /dev/null \
+    --save-cookies "$COOKIE_FILE" \
+    --keep-session-cookies \
+    --post-data "$(build_login_payload)" \
     --header="Content-Type: application/json" \
     "$N8N_URL/api/v1/login" 2>/dev/null || true
 
-# --- Paso 6: Importar todos los workflows ---
-# Iteramos sobre cada archivo JSON en /data/workflows/ y lo importamos
-# usando la API REST de n8n. Cada workflow se importa como un nuevo workflow.
-log_step "Importando workflows desde $WORKFLOWS_DIR..."
+log_step "Importing workflows from $WORKFLOWS_DIR."
 IMPORTED=0
 
 if [ -d "$WORKFLOWS_DIR" ]; then
     for workflow_file in "$WORKFLOWS_DIR"/*.json; do
         if [ -f "$workflow_file" ]; then
             WORKFLOW_NAME=$(basename "$workflow_file" .json)
-            log_step "  Importando: $WORKFLOW_NAME..."
+            log_step "Importing $WORKFLOW_NAME."
 
-            # Importar el workflow usando la API
-            IMPORT_RESPONSE=$(wget -q -O - \
-                --load-cookies "$COOKIE_FILE" \
-                --post-file="$workflow_file" \
-                --header="Content-Type: application/json" \
-                "$N8N_URL/api/v1/workflows" 2>/dev/null || echo "import-error")
+            IMPORT_RESPONSE=$(
+                wget -q -O - \
+                    --load-cookies "$COOKIE_FILE" \
+                    --post-file="$workflow_file" \
+                    --header="Content-Type: application/json" \
+                    "$N8N_URL/api/v1/workflows" 2>/dev/null || echo "import-error"
+            )
 
             if echo "$IMPORT_RESPONSE" | grep -q "import-error"; then
-                log_warn "  Error importando $WORKFLOW_NAME (puede que ya exista)"
+                log_warn "Import failed for $WORKFLOW_NAME (it may already exist)."
             else
-                # Extraer el ID del workflow importado para activarlo
                 WORKFLOW_ID=$(echo "$IMPORT_RESPONSE" | sed -n 's/.*"id":"\{0,1\}\([^",}]*\)"\{0,1\}.*/\1/p' | head -1)
 
                 if [ -n "$WORKFLOW_ID" ]; then
-                    # Activar el workflow
                     wget -q -O /dev/null \
                         --load-cookies "$COOKIE_FILE" \
                         --method=PATCH \
@@ -145,34 +123,22 @@ if [ -d "$WORKFLOWS_DIR" ]; then
                         --header="Content-Type: application/json" \
                         "$N8N_URL/api/v1/workflows/$WORKFLOW_ID" 2>/dev/null || true
 
-                    log_info "  ✓ $WORKFLOW_NAME importado y activado (ID: $WORKFLOW_ID)"
+                    log_info "$WORKFLOW_NAME imported and activated (ID: $WORKFLOW_ID)."
                     IMPORTED=$((IMPORTED + 1))
                 else
-                    log_warn "  No se pudo obtener ID para $WORKFLOW_NAME"
+                    log_warn "Could not extract an ID for $WORKFLOW_NAME."
                 fi
             fi
         fi
     done
 fi
 
-# --- Paso 7: Crear marcador de importación exitosa ---
-# Este archivo indica que los workflows ya fueron importados.
-# En reinicios futuros, el script saltará directamente al arranque normal.
-log_info "Importación completada: $IMPORTED workflows configurados"
+log_info "Workflow import completed: $IMPORTED configured."
 touch "$MARKER_FILE"
-
-# --- Paso 8: Limpiar archivos temporales ---
 rm -f "$COOKIE_FILE"
 
-# --- Resultado ---
-log_info "=========================================="
-log_info " n8n Auto-Setup Completado!"
-log_info " Workflows activos: $IMPORTED"
-log_info " UI: http://localhost:5678"
-log_info " Login: admin@social-bot.local / SocialBot2026!"
-log_info "=========================================="
+log_info "UI: $N8N_PUBLIC_URL"
+log_info "Owner email: $N8N_OWNER_EMAIL"
+log_info "Owner password is sourced from environment variables."
 
-# --- Paso 9: Mantener n8n en primer plano ---
-# Esperamos al proceso de n8n que está en background.
-# Esto es necesario para que Docker no piense que el contenedor terminó.
-wait $N8N_PID
+wait "$N8N_PID"

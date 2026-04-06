@@ -1,28 +1,38 @@
-version: '3.8'
-
 services:
-  # 🔗 El puente (n8n) - Compartido por todos los ejes
+  # Secure-default: local lab surfaces stay on loopback.
+  # Use `.env.demo.example` if you want reproducible demo credentials.
+
+  # n8n: admin surface, owner credentials come from `.env`
   n8n:
-    image: n8nio/n8n:2.7.5
+    image: ${N8N_IMAGE:-n8nio/n8n:2.7.5}
     container_name: social-bot-n8n
     deploy:
       resources:
         limits:
           memory: 1G
-          cpus: '0.50'
+          cpus: "0.50"
         reservations:
           memory: 512M
     ports:
-      - "5678:5678"
+      - "${HOST_BIND_IP:-127.0.0.1}:5678:5678"
     environment:
-      - WEBHOOK_URL=http://localhost:5678/
+      - WEBHOOK_URL=${N8N_WEBHOOK_URL:-http://localhost:5678/}
+      - N8N_EDITOR_BASE_URL=${N8N_EDITOR_BASE_URL:-http://localhost:5678}
+      - N8N_HOST=${N8N_HOST:-localhost}
+      - N8N_PORT=${N8N_PORT:-5678}
+      - N8N_PROTOCOL=${N8N_PROTOCOL:-http}
+      - N8N_PROXY_HOPS=${N8N_PROXY_HOPS:-0}
       - N8N_METRICS=true
-      - N8N_BASIC_AUTH_ACTIVE=false
+      - N8N_BASIC_AUTH_ACTIVE=${N8N_BASIC_AUTH_ACTIVE:-false}
+      - N8N_SECURE_COOKIE=${N8N_SECURE_COOKIE:-false}
       - N8N_DIAGNOSTICS_ENABLED=false
       - N8N_PERSONALIZATION_ENABLED=false
       - N8N_TEMPLATES_ENABLED=false
-      - GENERIC_TIMEZONE=America/Santiago
-      - INTEGRATION_API_KEY=${INTEGRATION_API_KEY}
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY:-change-me-local-only-32-characters-min}
+      - N8N_OWNER_EMAIL=${N8N_OWNER_EMAIL:-change-me@local.invalid}
+      - N8N_OWNER_PASSWORD=${N8N_OWNER_PASSWORD:-ChangeMe-Local-Only!}
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE:-America/Santiago}
+      - INTEGRATION_API_KEY=${INTEGRATION_API_KEY:-change-me-integration-key}
     volumes:
       - ./n8n/data:/home/node/.n8n
       - ./scripts:/data/scripts:ro
@@ -31,7 +41,7 @@ services:
     networks:
       - bot-network
 
-  # 🏠 Dashboard Maestro
+  # Dashboard maestro: local-only by default, keeps the browser-based lab usable
   master-dashboard:
     image: php:8.2-apache
     container_name: social-bot-master
@@ -39,16 +49,46 @@ services:
       resources:
         limits:
           memory: 128M
-          cpus: '0.10'
+          cpus: "0.10"
     ports:
-      - "8080:80"
+      - "${HOST_BIND_IP:-127.0.0.1}:8080:80"
     volumes:
-      - ./index.html:/var/www/html/index.html
-      - ./resources.json:/var/www/html/resources.json
+      - ./index.html:/var/www/html/index.html:ro
+      - ./resources.json:/var/www/html/resources.json:ro
     networks:
       - bot-network
 
-  # 🐘 Caso 01: Destino PHP
+  # Optional edge profile: reverse proxy with HTTPS and basic auth for remote admin access
+  edge-proxy:
+    image: ${EDGE_PROXY_IMAGE:-caddy:2.10.2-alpine}
+    container_name: social-bot-edge-proxy
+    profiles: ["edge"]
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.10"
+    ports:
+      - "${EDGE_BIND_IP:-127.0.0.1}:80:80"
+      - "${EDGE_BIND_IP:-127.0.0.1}:443:443"
+      - "${EDGE_BIND_IP:-127.0.0.1}:443:443/udp"
+    environment:
+      - EDGE_N8N_HOST=${EDGE_N8N_HOST:-n8n.localhost}
+      - EDGE_GRAFANA_HOST=${EDGE_GRAFANA_HOST:-grafana.localhost}
+      - EDGE_CASE09_HOST=${EDGE_CASE09_HOST:-gateway.localhost}
+      - EDGE_BASIC_AUTH_USER=${EDGE_BASIC_AUTH_USER:-labadmin}
+      - EDGE_BASIC_AUTH_HASH=${EDGE_BASIC_AUTH_HASH:-}
+    entrypoint: ["/bin/sh", "/edge/start-caddy.sh"]
+    volumes:
+      - ./edge:/edge:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - bot-network
+    depends_on:
+      - n8n
+
+  # Case 01: destino PHP
   dest-php:
     image: php:8.2-apache
     container_name: social-bot-dest-php
@@ -57,9 +97,9 @@ services:
       resources:
         limits:
           memory: 128M
-          cpus: '0.10'
+          cpus: "0.10"
     ports:
-      - "8081:80"
+      - "${HOST_BIND_IP:-127.0.0.1}:8081:80"
     volumes:
       - ./cases/01-python-to-php/dest:/var/www/html
     networks:
@@ -68,9 +108,11 @@ services:
       - DB_HOST=db-mysql
       - DB_NAME=social_bot
       - DB_USER=root
-      - DB_PASS=bot-secret
+      - DB_PASS=${CASE01_DB_PASSWORD:-change-me-case01-local}
+    depends_on:
+      - db-mysql
 
-  # 🐹 Caso 02: Destino Go
+  # Case 02: destino Go
   dest-go:
     build: ./cases/02-python-to-go/dest
     container_name: social-bot-dest-go
@@ -79,18 +121,20 @@ services:
       resources:
         limits:
           memory: 64M
-          cpus: '0.05'
+          cpus: "0.05"
     ports:
-      - "8082:8080"
+      - "${HOST_BIND_IP:-127.0.0.1}:8082:8080"
     networks:
       - bot-network
     environment:
       - DB_HOST=db-mariadb
       - DB_NAME=social_bot
       - DB_USER=root
-      - DB_PASS=bot-secret
+      - DB_PASS=${CASE02_DB_PASSWORD:-change-me-case02-local}
+    depends_on:
+      - db-mariadb
 
-  # 🍏 Caso 03: Destino Node.js
+  # Case 03: destino Node.js
   dest-node:
     build: ./cases/03-go-to-node/dest
     container_name: social-bot-dest-node
@@ -99,18 +143,20 @@ services:
       resources:
         limits:
           memory: 128M
-          cpus: '0.10'
+          cpus: "0.10"
     ports:
-      - "8083:3000"
+      - "${HOST_BIND_IP:-127.0.0.1}:8083:3000"
     networks:
       - bot-network
     environment:
       - DB_HOST=db-postgres
       - DB_NAME=social_bot
       - DB_USER=postgres
-      - DB_PASS=bot-secret
+      - DB_PASS=${CASE03_DB_PASSWORD:-change-me-case03-local}
+    depends_on:
+      - db-postgres
 
-  # 🐍 Caso 04: Destino FastAPI
+  # Case 04: destino FastAPI
   dest-fastapi:
     build: ./cases/04-node-to-fastapi/dest
     container_name: social-bot-dest-fastapi
@@ -119,13 +165,13 @@ services:
       resources:
         limits:
           memory: 128M
-          cpus: '0.10'
+          cpus: "0.10"
     ports:
-      - "8084:8000"
+      - "${HOST_BIND_IP:-127.0.0.1}:8084:8000"
     networks:
       - bot-network
 
-  # ⚛️ Caso 05: Destino React (Node)
+  # Case 05: destino React (Node)
   dest-react:
     image: node:20-alpine
     container_name: social-bot-dest-react
@@ -135,9 +181,9 @@ services:
       resources:
         limits:
           memory: 128M
-          cpus: '0.10'
+          cpus: "0.10"
     ports:
-      - "8085:4000"
+      - "${HOST_BIND_IP:-127.0.0.1}:8085:4000"
     volumes:
       - ./cases/05-laravel-to-react/dest:/app
     command: sh -c "npm install express cors && node server.js"
@@ -146,8 +192,10 @@ services:
     environment:
       - DB_HOST=db-mongodb
       - DB_NAME=social_bot
+    depends_on:
+      - db-mongodb
 
-  # 🐘 Caso 06: Destino Symfony (PHP)
+  # Case 06: destino Symfony (PHP)
   dest-symfony:
     image: php:8.2-apache
     container_name: social-bot-dest-symfony
@@ -156,17 +204,19 @@ services:
       resources:
         limits:
           memory: 128M
-          cpus: '0.10'
+          cpus: "0.10"
     ports:
-      - "8086:80"
+      - "${HOST_BIND_IP:-127.0.0.1}:8086:80"
     volumes:
       - ./cases/06-go-to-symfony/dest:/var/www/html
     networks:
       - bot-network
     environment:
       - DB_HOST=db-redis
+    depends_on:
+      - db-redis
 
-  # 💎 Caso 07: Destino Ruby (Sinatra)
+  # Case 07: destino Ruby (Sinatra)
   dest-ruby:
     build: ./cases/07-rust-to-ruby/dest
     container_name: social-bot-dest-ruby
@@ -175,15 +225,17 @@ services:
       resources:
         limits:
           memory: 128M
-          cpus: '0.10'
+          cpus: "0.10"
     ports:
-      - "8087:4567"
+      - "${HOST_BIND_IP:-127.0.0.1}:8087:4567"
     networks:
       - bot-network
     environment:
       - DB_HOST=db-cassandra
+    depends_on:
+      - db-cassandra
 
-  # 🌶️ Caso 08: Destino Flask (Python)
+  # Case 08: destino Flask (Python)
   dest-flask:
     build: ./cases/08-csharp-to-flask/dest
     container_name: social-bot-dest-flask
@@ -192,14 +244,16 @@ services:
       resources:
         limits:
           memory: 128M
-          cpus: '0.10'
+          cpus: "0.10"
     ports:
-      - "8088:5000"
+      - "${HOST_BIND_IP:-127.0.0.1}:8088:5000"
     networks:
       - bot-network
     environment:
       - DB_HOST=db-mssql
-      - DB_PASS=Bot-Secret-2026!
+      - DB_PASS=${CASE08_DB_PASSWORD:-ChangeMe-Case08-Local!}
+    depends_on:
+      - db-mssql
 
   # Case 09: Integration Gateway (FastAPI + DuckDB)
   dest-gateway-09:
@@ -210,66 +264,72 @@ services:
       resources:
         limits:
           memory: 256M
-          cpus: '0.20'
+          cpus: "0.20"
     ports:
-      - "8090:8000"
+      - "${HOST_BIND_IP:-127.0.0.1}:8090:8000"
     volumes:
       - ./cases/09-python-to-gateway/dest/data:/app/data
       - ./cases/09-python-to-gateway/dest/logs:/app/logs
     environment:
-      - INTEGRATION_API_KEY=${INTEGRATION_API_KEY}
-      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - INTEGRATION_API_KEY=${INTEGRATION_API_KEY:-change-me-integration-key}
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
     networks:
       - bot-network
 
-  # Prometheus (Metrics)
+  # Observability: optional profile, local-only by default
   prometheus:
-    image: prom/prometheus:latest
+    image: ${PROMETHEUS_IMAGE:-prom/prometheus:v2.54.1}
     container_name: social-bot-prometheus
+    profiles: ["observability", "full"]
     deploy:
       resources:
         limits:
           memory: 256M
-          cpus: '0.25'
+          cpus: "0.25"
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     ports:
-      - "9090:9090"
+      - "${HOST_BIND_IP:-127.0.0.1}:9090:9090"
     networks:
       - bot-network
 
-  # 📈 Grafana (Visualización)
+  # Grafana: admin surface, only enabled through observability/full profiles
   grafana:
-    image: grafana/grafana:latest
+    image: ${GRAFANA_IMAGE:-grafana/grafana:11.2.0}
     container_name: social-bot-grafana
+    profiles: ["observability", "full"]
     deploy:
       resources:
         limits:
           memory: 512M
-          cpus: '0.25'
+          cpus: "0.25"
     ports:
-      - "3000:3000"
+      - "${HOST_BIND_IP:-127.0.0.1}:3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-ChangeMe-Grafana-Local!}
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_USERS_ALLOW_SIGN_UP=false
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
     networks:
       - bot-network
     depends_on:
       - prometheus
 
-  # 🐳 cAdvisor (Métricas de Contenedores)
+  # cAdvisor: host-mount observer, intentionally NOT started by default
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
+    image: ${CADVISOR_IMAGE:-gcr.io/cadvisor/cadvisor:v0.49.1}
     container_name: social-bot-cadvisor
+    profiles: ["observability", "full"]
     deploy:
       resources:
         limits:
           memory: 128M
-          cpus: '0.10'
+          cpus: "0.10"
     ports:
-      - "8089:8080"
+      - "${HOST_BIND_IP:-127.0.0.1}:8089:8080"
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
@@ -281,9 +341,9 @@ services:
     networks:
       - bot-network
 
-  # --- DATABASES FOR DESTINATIONS ---
+  # --- Databases for destinations ---
 
-  # 🐬 MySQL (Case 01)
+  # MySQL (Case 01)
   db-mysql:
     image: mysql:8.0-oracle
     container_name: social-bot-db-mysql
@@ -292,14 +352,14 @@ services:
       resources:
         limits:
           memory: 512M
-          cpus: '0.25'
+          cpus: "0.25"
     environment:
-      - MYSQL_ROOT_PASSWORD=bot-secret
+      - MYSQL_ROOT_PASSWORD=${CASE01_DB_PASSWORD:-change-me-case01-local}
       - MYSQL_DATABASE=social_bot
     networks:
       - bot-network
 
-  # 🦭 MariaDB (Case 02)
+  # MariaDB (Case 02)
   db-mariadb:
     image: mariadb:10.11
     container_name: social-bot-db-mariadb
@@ -308,14 +368,14 @@ services:
       resources:
         limits:
           memory: 256M
-          cpus: '0.25'
+          cpus: "0.25"
     environment:
-      - MARIADB_ROOT_PASSWORD=bot-secret
+      - MARIADB_ROOT_PASSWORD=${CASE02_DB_PASSWORD:-change-me-case02-local}
       - MARIADB_DATABASE=social_bot
     networks:
       - bot-network
 
-  # 🐘 PostgreSQL (Case 03)
+  # PostgreSQL (Case 03)
   db-postgres:
     image: postgres:15-alpine
     container_name: social-bot-db-postgres
@@ -324,14 +384,14 @@ services:
       resources:
         limits:
           memory: 256M
-          cpus: '0.25'
+          cpus: "0.25"
     environment:
-      - POSTGRES_PASSWORD=bot-secret
+      - POSTGRES_PASSWORD=${CASE03_DB_PASSWORD:-change-me-case03-local}
       - POSTGRES_DB=social_bot
     networks:
       - bot-network
 
-  # 🍃 MongoDB (Case 05)
+  # MongoDB (Case 05)
   db-mongodb:
     image: mongo:6.0
     container_name: social-bot-db-mongodb
@@ -340,13 +400,13 @@ services:
       resources:
         limits:
           memory: 256M
-          cpus: '0.25'
+          cpus: "0.25"
     environment:
       - MONGO_INITDB_DATABASE=social_bot
     networks:
       - bot-network
 
-  # 🔴 Redis (Case 06)
+  # Redis (Case 06)
   db-redis:
     image: redis:7-alpine
     container_name: social-bot-db-redis
@@ -355,11 +415,11 @@ services:
       resources:
         limits:
           memory: 64M
-          cpus: '0.05'
+          cpus: "0.05"
     networks:
       - bot-network
 
-  # 👁️ Cassandra (Case 07) - REDUCED
+  # Cassandra (Case 07) - reduced
   db-cassandra:
     image: cassandra:4.1
     container_name: social-bot-db-cassandra
@@ -368,27 +428,27 @@ services:
       resources:
         limits:
           memory: 2G
-          cpus: '0.50'
+          cpus: "0.50"
         reservations:
           memory: 1G
     networks:
       - bot-network
 
-  # 🏢 SQL Server (Case 08) - REDUCED
+  # SQL Server (Case 08) - pinned to a concrete Microsoft Container Registry tag
   db-mssql:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: ${MSSQL_IMAGE:-mcr.microsoft.com/mssql/server:2022-CU24-ubuntu-22.04}
     container_name: social-bot-db-mssql
     profiles: ["case08", "full"]
     deploy:
       resources:
         limits:
           memory: 2G
-          cpus: '0.50'
+          cpus: "0.50"
         reservations:
           memory: 1G
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=Bot-Secret-2026!
+      - MSSQL_SA_PASSWORD=${CASE08_DB_PASSWORD:-ChangeMe-Case08-Local!}
     networks:
       - bot-network
 
@@ -397,5 +457,6 @@ networks:
     driver: bridge
 
 volumes:
-  n8n_data:
   grafana_data:
+  caddy_data:
+  caddy_config:

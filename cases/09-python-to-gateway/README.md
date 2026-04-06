@@ -6,10 +6,12 @@ Caso de integracion donde un bot Python publica un payload operativo hacia n8n, 
 
 `Python bot -> n8n webhook -> FastAPI gateway -> DuckDB -> dashboard`
 
-## Credenciales de desarrollo
+## Secretos y modo de ejecucion
 
-- `INTEGRATION_API_KEY=SocialBotLocalKey2026!`
-- `GITHUB_TOKEN=` opcional para modo real
+- `INTEGRATION_API_KEY` es obligatorio. El gateway ya no acepta una clave demo embebida en el codigo.
+- `GITHUB_TOKEN` es opcional y solo habilita el modo real del proveedor.
+- Para laboratorio local puedes copiar `.env.demo.example` a `.env`.
+- Para un arranque mas seguro usa `.env.example`, define tus propios valores y mantén los puertos en `127.0.0.1`.
 
 ## Demo
 

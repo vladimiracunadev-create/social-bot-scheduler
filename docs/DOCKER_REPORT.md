@@ -19,11 +19,11 @@ Este documento detalla el estado actual y el uso de disco de los procesos, imág
 | Imagen | ID | Uso de Disco | Tamaño Contenido |
 | :--- | :--- | :--- | :--- |
 | `n8nio/n8n:2.7.5` | `9220846479a4` | 1.73 GB | 248 MB |
-| `grafana/grafana:latest` | `9e1e77ade304` | 995 MB | 210 MB |
+| `grafana/grafana:11.2.0` | `9e1e77ade304` | 995 MB | 210 MB |
 | `php:8.2-apache` | `46d9dd4b58c0` | 714 MB | 183 MB |
-| `prom/prometheus:latest` | `1f0f50f06aca` | 503 MB | 134 MB |
+| `prom/prometheus:v2.54.1` | `1f0f50f06aca` | 503 MB | 134 MB |
 | `node:20-alpine` | `09e2b3d97260` | 192 MB | 48.3 MB |
-| `alpine:latest` | `25109184c71b` | 13.1 MB | 3.95 MB |
+| `alpine:3.20.6` | `25109184c71b` | 13.1 MB | 3.95 MB |
 
 ### Casos de Integración (Destinos)
 

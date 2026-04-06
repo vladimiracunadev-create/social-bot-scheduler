@@ -50,10 +50,13 @@ Usamos Python para nuestros asistentes automáticos.
 Ahora vamos a encender los servidores. El asistente te dio un comando al final, pero aquí te lo explicamos.
 
 En tu terminal (dentro de la carpeta del proyecto):
-docker-compose up -d n8n dest-php
+```bash
+cp .env.example .env
+docker-compose --profile case01 up -d n8n master-dashboard dest-php
 ```
 -   `up -d`: Significa "levántate en segundo plano" (detached).
 -   `n8n`: Es el servicio "puente".
+-   `master-dashboard`: Mantiene visible el estado general del laboratorio.
 -   `dest-php`: Es el servidor destino.
 -   **Nota**: Docker también descargará automáticamente el motor de base de datos necesario (ej: MySQL para el Caso 01).
 
@@ -78,7 +81,7 @@ A diferencia de antes, **ya no necesitas configurar n8n manualmente**. El sistem
 
 1.  Abre tu navegador en: [http://localhost:5678](http://localhost:5678)
 2.  Deberías ver la interfaz de n8n con los workflows ya importados.
-3.  Si te pide login, usa: `admin@social-bot.local` / `SocialBot2026!`
+3.  Si te pide login, usa las credenciales definidas en `N8N_OWNER_EMAIL` y `N8N_OWNER_PASSWORD` dentro de tu `.env` actual.
 
 > **Nota**: Si es la primera vez que arrancas n8n, espera unos 30 segundos para que termine la auto-configuración.
 

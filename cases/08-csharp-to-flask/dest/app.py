@@ -33,7 +33,7 @@ import time
 # CONFIGURACIÓN DE BASE DE DATOS (SQL Server)
 # ==================================================================================================
 DB_HOST = os.getenv("DB_HOST", "db-mssql")
-DB_PASS = os.getenv("DB_PASS", "Bot-Secret-2026!")
+DB_PASS = os.getenv("DB_PASS", "ChangeMe-Case08-Local!")
 DB_NAME = "social_bot"
 
 

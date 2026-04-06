@@ -20,7 +20,7 @@
 $dbHost = getenv('DB_HOST') ?: 'localhost';
 $dbName = getenv('DB_NAME') ?: 'social_bot';
 $dbUser = getenv('DB_USER') ?: 'root';
-$dbPass = getenv('DB_PASS') ?: 'bot-secret';
+$dbPass = getenv('DB_PASS') ?: 'change-me-case01-local';
 
 try {
     $pdo = new PDO("mysql:host=$dbHost;charset=utf8mb4", $dbUser, $dbPass);

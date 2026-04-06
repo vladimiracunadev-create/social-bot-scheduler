@@ -138,6 +138,7 @@ git clone https://github.com/vladimiracunadev-create/social-bot-scheduler.git
 cd social-bot-scheduler
 
 # Levantar todo (n8n se auto-configura con los 9 workflows)
+cp .env.demo.example .env
 docker-compose up -d
 
 # Esperar ~30s y verificar
@@ -150,7 +151,7 @@ make demo
 ```
 
 > **Zero configuración manual**: No necesitas crear cuentas en n8n ni importar workflows.
-> Credenciales de lab: `admin@social-bot.local` / `SocialBot2026!`
+> Las credenciales del laboratorio quedan definidas por tu `.env` activo.
 
 ---
 

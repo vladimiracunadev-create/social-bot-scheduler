@@ -1,22 +1,25 @@
-version: '3.8'
-
 services:
   n8n:
-    image: n8nio/n8n:latest
+    image: ${N8N_IMAGE:-n8nio/n8n:2.7.5}
     ports:
-      - "5678:5678"
+      - "${HOST_BIND_IP:-127.0.0.1}:5678:5678"
     environment:
-      - N8N_BASIC_AUTH_ACTIVE=false
+      - N8N_BASIC_AUTH_ACTIVE=${N8N_BASIC_AUTH_ACTIVE:-false}
+      - N8N_SECURE_COOKIE=${N8N_SECURE_COOKIE:-false}
+      - N8N_HOST=${N8N_HOST:-localhost}
+      - N8N_PORT=${N8N_PORT:-5678}
+      - N8N_PROTOCOL=${N8N_PROTOCOL:-http}
+      - N8N_PROXY_HOPS=${N8N_PROXY_HOPS:-0}
+      - N8N_OWNER_EMAIL=${N8N_OWNER_EMAIL:-change-me@local.invalid}
+      - N8N_OWNER_PASSWORD=${N8N_OWNER_PASSWORD:-ChangeMe-Local-Only!}
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY:-change-me-local-only-32-characters-min}
     volumes:
-      - n8n_data:/home/node/.local/share/n8n
+      - ./n8n/data:/home/node/.local/share/n8n
 
   hub:
     build: .
     environment:
-      - NO_PUBLIC_POSTING=true
-      - DRY_RUN=true
+      - NO_PUBLIC_POSTING=${NO_PUBLIC_POSTING:-true}
+      - DRY_RUN=${DRY_RUN:-true}
     volumes:
       - .:/app
-
-volumes:
-  n8n_data:

@@ -77,8 +77,9 @@ Si encuentras problemas al levantar los contenedores o ejecutar los bots, consul
 
 **Causa**: El auto-setup no pudo crear la cuenta en el primer arranque.
 **Solución**:
--   Usa estas credenciales de laboratorio: `admin@social-bot.local` / `SocialBot2026!`
+-   Usa las credenciales declaradas en `N8N_OWNER_EMAIL` y `N8N_OWNER_PASSWORD` de tu `.env`.
 -   Si no funcionan, crea una cuenta manualmente — los workflows ya estarán importados.
+-   Si estás usando el perfil `edge`, verifica también `N8N_HOST`, `N8N_PORT`, `N8N_PROTOCOL`, `N8N_PROXY_HOPS`, `N8N_WEBHOOK_URL` y `N8N_EDITOR_BASE_URL`.
 
 ### ❌ Síntoma: El bot dice "Payload sent" pero el Dashboard está vacío
 
@@ -88,6 +89,20 @@ Si encuentras problemas al levantar los contenedores o ejecutar los bots, consul
 3.  **Logs de n8n**: Mira la pestaña "Executions" en n8n para ver si hay errores en el nodo HTTP Request.
 4.  **Guardrails - Idempotencia**: Si el payload ha sido enviado antes, n8n lo ignorará silenciosamente. Verifica si estás enviando el mismo contenido exacto en poco tiempo.
 5.  **Guardrails - Circuit Breaker**: Si el proveedor (X, Facebook, etc.) está caído, el mensaje se moverá al **DLQ**. Revisa los logs de errores.
+
+### ❌ Síntoma: `edge-proxy` falla al arrancar
+
+**Causa**: `EDGE_BASIC_AUTH_HASH` no está definido o no es un hash bcrypt válido.
+**Solución**:
+1.  Genera un hash:
+    ```bash
+    docker run --rm caddy:2.10.2-alpine caddy hash-password --plaintext 'TuPasswordFuerte'
+    ```
+2.  Copia el resultado en `EDGE_BASIC_AUTH_HASH`.
+3.  Reinicia el perfil:
+    ```bash
+    make up-edge
+    ```
 
 ---
 

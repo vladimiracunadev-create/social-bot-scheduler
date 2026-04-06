@@ -1,23 +1,12 @@
-# 🛡️ Seguridad y Buenas Prácticas
+# Seguridad y buenas practicas
 
-La seguridad es primordial al manejar automatizaciones que interactúan con plataformas externas.
+Resumen operativo para este laboratorio:
 
-## Gestión de Secretos
-- **Nunca** subas tu archivo `.env` o archivos con claves reales al repositorio.
-- Utiliza **Kubernetes Secrets** o sistemas de gestión de secretos (como AWS Secrets Manager o Vault) en entornos de producción.
+- usa `.env.example` para un arranque local mas seguro
+- usa `.env.demo.example` solo para demos en localhost
+- usa `make up-edge` solo cuando realmente necesites acceso remoto controlado y ya tengas `EDGE_BASIC_AUTH_HASH`
+- no expongas n8n, Grafana, Prometheus, cAdvisor ni los dashboards de casos a Internet
+- trata `cAdvisor` como perfil de alto privilegio por sus montajes del host
+- no reutilices credenciales demo fuera de un entorno controlado
 
-## Protección del Webhook
-- Tu instancia de n8n debe estar protegida.
-- Utiliza URLs con tokens de autenticación únicos generados por n8n.
-- Limita el acceso por IP si tu infraestructura lo permite.
-
-## Validación de Datos
-El bot realiza una validación básica de tipos, pero se recomienda:
-- Validar la integridad del archivo `posts.json` antes de levantarlo en producción.
-- Configurar alertas en n8n para detectar fallos en la publicación final después de que el bot entregue el payload.
-
-## Reporte de Vulnerabilidades
-Si encuentras un problema de seguridad, por favor abre un **Issue** con la etiqueta `security` o contacta al mantenedor directamente.
-
-## Hardening Técnico
-Para detalles sobre nuestra estrategia de imágenes Docker no-root, aislamiento con `venv` y el pipeline de escaneo continuo, consulta el archivo principal de [Seguridad](../SECURITY.md).
+Para el detalle completo de la postura de runtime, secretos, edge profile y supply chain, consulta [SECURITY.md](../SECURITY.md) y [RUNTIME_SECURITY.md](RUNTIME_SECURITY.md).

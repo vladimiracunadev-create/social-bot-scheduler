@@ -1,40 +1,134 @@
-# Seguridad
+# Security
 
-Gracias por tomar en cuenta la seguridad de este proyecto.
+Este repositorio es un **laboratorio local** con multiples servicios, paneles administrativos, motores de base de datos y componentes de observabilidad. El objetivo del hardening es reducir riesgo sin romper el valor demostrativo del stack.
 
-## Versiones Soportadas
+## Postura actual
 
-| Versión | Soportado |
-| ------- | --------- |
-| 3.0.x   | ✅ |
-| 2.1.x   | ❌ |
-| < 2.0   | ❌ |
+### Secure-default
 
-## Cómo reportar una vulnerabilidad
+`docker-compose.yml` ahora aplica estos defaults:
 
-Si encuentra una vulnerabilidad, envíe un correo a **maintainer@example.com** con la siguiente información:
-- Resumen claro del problema.
-- Pasos para reproducirlo (si aplica).
-- Impacto potencial y, si es posible, una prueba de concepto mínima.
+- puertos publicados solo en `127.0.0.1`
+- secretos y passwords por variables de entorno
+- observabilidad fuera del arranque por defecto
+- Grafana con credenciales parametrizadas
+- n8n con owner bootstrap desde variables, no desde credenciales fijas en compose
+- Caso 09 sin API key demo embebida en codigo
+- SQL Server fijado a un tag concreto de MCR
+- guardrails CI contra regresiones de `latest`, puertos inseguros y secretos hardcodeados
 
-Por favor, **no** divulgue públicamente la vulnerabilidad hasta que se haya coordinado un arreglo o hasta que los mantenedores indiquen lo contrario.
+### Demo-local
 
-## Detalles Técnicos de Hardening
+`.env.demo.example` existe para workshops y demos reproducibles. Este modo:
 
-Este repositorio implementa una estrategia de **Defensa en Profundidad** para garantizar un entorno de ejecución seguro y libre de vulnerabilidades.
+- sigue siendo solo para localhost
+- conserva credenciales de laboratorio conocidas
+- activa el perfil `full`
+- no debe reutilizarse en Internet, cloud publica ni entornos compartidos
 
-### 🛡️ Estrategia de Imágenes Docker (Dual-Layer Patching)
-Nuestras imágenes utilizan un diseño multi-etapa avanzado para eliminar vulnerabilidades (CVEs):
-1.  **Aislamiento en App (Virtual Environment)**: La aplicación se instala en un `venv` aislado (`/opt/venv`). Las dependencias críticas como `wheel` y `jaraco.context` están estrictamente bloqueadas a versiones parchadas.
-2.  **Hardening del Sistema Base**: En la etapa final del build, realizamos un parcheo activo de los paquetes del sistema (`pip`, `setuptools`, `wheel`) preinstalados en la imagen base `slim-bookworm`.
-3.  **Usuario no-root**: Ejecución forzada con el usuario `botuser` (UID 1000) para minimizar el impacto en caso de compromiso.
+### Edge profile
 
-### 🔍 Auditoría Continua (Triple Scan)
-Cada cambio en el código activa un pipeline de CI enriquecido con:
--   **Trivy**: Escaneo de vulnerabilidades en el SO y librerías de la imagen final (Exit code 1 en fallos críticos).
--   **pip-audit**: Auditoría profunda de vulnerabilidades en el árbol de dependencias de Python.
--   **Gitleaks**: Búsqueda proactiva de secretos, llaves API y tokens en el historial de git.
+Existe un perfil `edge` opcional para acceso administrativo remoto controlado. Este modo:
 
-### 🏗️ Aislamiento de Red y Kubernetes
--   **Zero Trust Networking**: `NetworkPolicies` de denegación por defecto (Egress whitelist solo para destinos aprobados).
--   **Validación de Entradas**: El HUB CLI (`hub.py`) valida nombres de casos mediante expresiones regulares estrictas para prevenir Path Traversal y RCE.
+- no arranca por defecto
+- usa Caddy con HTTPS y basic auth
+- requiere configurar `EDGE_BASIC_AUTH_HASH` antes de activarlo
+- esta pensado para `n8n`, `Grafana` y el gateway del Caso 09
+- no sustituye un hardening de produccion completo
+
+## Componentes sensibles
+
+### Superficies administrativas
+
+- `n8n`
+- `Grafana`
+- `Prometheus`
+- `master-dashboard`
+- dashboards expuestos por cada caso
+
+### Superficies de alto riesgo
+
+- `cAdvisor`: monta `/`, `/sys`, `/var/lib/docker`, `/var/run` y `dev/kmsg`
+- `n8n/data`: persiste estado, credenciales internas y ejecuciones
+- `.env`: puede contener tokens reales y passwords de laboratorio
+
+## Lo que no debe exponerse a Internet
+
+No publiques directamente estos puertos:
+
+- `5678`
+- `3000`
+- `9090`
+- `8089`
+- `8080`
+- `8081` a `8090`
+
+Si necesitas acceso remoto, usa como minimo:
+
+- reverse proxy con TLS
+- autenticacion fuerte
+- filtrado por IP
+- secretos no demo
+- rotacion de credenciales
+- segmentacion de red
+
+## Secretos
+
+Usa una de estas plantillas:
+
+- `.env.example` para `secure-default`
+- `.env.demo.example` para `demo-local`
+
+Si activas el perfil `edge`, define tambien:
+
+- `EDGE_BASIC_AUTH_USER`
+- `EDGE_BASIC_AUTH_HASH`
+- `EDGE_N8N_HOST`
+- `EDGE_GRAFANA_HOST`
+- `EDGE_CASE09_HOST`
+- `N8N_HOST`
+- `N8N_PORT`
+- `N8N_PROTOCOL`
+- `N8N_PROXY_HOPS`
+
+Nunca subas:
+
+- `.env`
+- `.env.local`
+- `.env.prod`
+- tokens reales de GitHub o redes sociales
+
+## Imagenes y supply chain
+
+El stack reduce tags mutables donde era viable sin romper compatibilidad:
+
+- `n8nio/n8n:2.7.5`
+- `prom/prometheus:v2.54.1`
+- `grafana/grafana:11.2.0`
+- `gcr.io/cadvisor/cadvisor:v0.49.1`
+- `mcr.microsoft.com/mssql/server:2022-CU24-ubuntu-22.04`
+- `caddy:2.10.2-alpine`
+- `alpine:3.20.6` en el destino Go del Caso 02
+
+El pipeline CI valida estas reglas con `scripts/check_runtime_security.py`.
+
+## Reporte de vulnerabilidades
+
+Si encuentras una vulnerabilidad:
+
+1. No la divulgues publicamente antes de coordinar un fix.
+2. Abre un issue privado o contacta al mantenedor con:
+   - resumen del problema
+   - impacto
+   - pasos de reproduccion
+   - alcance
+   - propuesta minima de mitigacion si la tienes
+
+## Recomendaciones operativas
+
+- Usa `make up-secure` para el core local.
+- Usa `make up-observability` solo cuando necesites metricas.
+- Usa `make up-edge` solo cuando realmente necesites acceso administrativo remoto controlado.
+- Usa `make up` o `.env.demo.example` solo para demos locales controladas.
+- Si cambias credenciales de n8n tras el primer arranque, recrea su estado persistente.
+- Trata cualquier copia del repo con `.env.demo.example` como material de laboratorio, no como base de despliegue real.

@@ -173,7 +173,7 @@ graph TD
 | **MongoDB** | 05 | Documental (NoSQL) | `mongo:6.0` | Catálogos, datos semi-estructurados |
 | **Redis** | 06 | Clave-Valor (In-Memory) | `redis:7-alpine` | Caché, sesiones, colas |
 | **Cassandra** | 07 | Columnar distribuido | `cassandra:4.1` | Escrituras masivas, IoT, time-series |
-| **SQL Server** | 08 | Relacional enterprise | `mssql/server:2022-latest` | Ecosistemas corporativos Microsoft |
+| **SQL Server** | 08 | Relacional enterprise | `mssql/server:2022-CU24-ubuntu-22.04` | Ecosistemas corporativos Microsoft |
 
 **Por qué importa**: Demuestra que la arquitectura puede operar con cualquier motor de datos sin que el puente (n8n) necesite saber qué base usa cada destino. Cada receptor es dueño de su propia persistencia.
 
@@ -287,7 +287,7 @@ Stage 2 (final):    python:3.11-slim → solo runtime, sin herramientas de compi
 | `listar-casos` | Enumera los 9 casos con su stack tecnol?gico | `listar_casos()` |
 | `ejecutar <caso>` | Lanza un caso con validación de seguridad | `ejecutar_caso()` |
 | `doctor` | Diagnóstico de salud del entorno | `ejecutar_doctor()` |
-| `up [--full]` | Levanta infraestructura Docker | `gestionar_stack()` |
+| `up [--full] [--observability] [--edge]` | Levanta infraestructura Docker | `gestionar_stack()` |
 | `down` | Detiene los contenedores | `gestionar_stack()` |
 | `clean` | Limpieza profunda de Docker | `limpiar_todo()` |
 
@@ -322,7 +322,7 @@ Stage 2 (final):    python:3.11-slim → solo runtime, sin herramientas de compi
 Para facilitar el despliegue, el contenedor de n8n utiliza un entrypoint personalizado (`scripts/n8n_auto_setup.sh`) que realiza las siguientes acciones al primer arranque:
 
 1. **Polling de Salud**: Espera a que la API de n8n esté disponible.
-2. **Configuración de Admin**: Crea automáticamente la cuenta `admin@social-bot.local`.
+2. **Configuración de Admin**: Crea automáticamente la cuenta owner usando `N8N_OWNER_EMAIL` y `N8N_OWNER_PASSWORD` desde `.env`.
 3. **Importación REST**: Autentica y utiliza la API de n8n para importar los 9 archivos JSON desde `n8n/workflows/`.
 4. **Activación Forzada**: Activa cada flujo individualmente para que los Webhooks queden registrados.
 
@@ -352,9 +352,12 @@ sequenceDiagram
 Cada caso es independiente pero comparte el mismo "Puente" (n8n). El **Master Launcher** (`setup.py`) orquesta la configuración de variables de entorno para asegurar que el emisor de un caso hable con el receptor del mismo caso sin conflictos de red.
 
 El despliegue soporta múltiples estrategias:
-- **Local**: `docker-compose up -d` (o `make up` para el stack completo).
+- **Local / Secure-default**: `docker-compose up -d` o `make up-secure`.
+- **Demo local completa**: `make up` con `.env.demo.example`.
 - **Kubernetes**: `kubectl apply -k k8s/overlays/prod/` (o `make deploy`).
 - **Selectivo**: Perfiles Docker Compose (`--profile case01`) para levantar solo un caso.
+- **Observabilidad**: `make up-observability`.
+- **Edge profile**: `make up-edge` para publicar `n8n`, `Grafana` y el gateway del Caso 09 detras de Caddy con HTTPS y basic auth.
 
 ---
 

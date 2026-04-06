@@ -24,7 +24,7 @@ const { Pool } = require('pg');
 const pool = new Pool({
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASS || 'bot-secret',
+    password: process.env.DB_PASS || 'change-me-case03-local',
     database: process.env.DB_NAME || 'social_bot',
     port: 5432,
 });
