@@ -11,8 +11,9 @@ Este caso incluye mecanismos de resiliencia en la capa de n8n:
 - Los errores se registran con timestamp, caso, error y payload completo.
 - Esto permite auditoría y reintentos manuales posteriores.
 
-### Idempotencia (Futuro)
-- Actualmente, la idempotencia debe manejarse a nivel de aplicación (verificando IDs duplicados).
-- En versiones futuras, se implementará persistencia de fingerprints en n8n.
+### Idempotencia
+- Implementada globalmente en todos los casos (01-09) mediante `scripts/check_idempotency.py`.
+- Genera un hash del payload y lo persiste en SQLite (`fingerprints.db`).
+- Si el hash ya existe, retorna `200 OK` sin reenviar el mensaje.
 
 Para más detalles, consulta la guía de [Guardrails](../../docs/GUARDRAILS.md).

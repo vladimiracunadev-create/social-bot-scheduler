@@ -52,7 +52,9 @@ services:
           cpus: "0.10"
     ports:
       - "${HOST_BIND_IP:-127.0.0.1}:8080:80"
+    command: sh -c "a2enmod headers && apache2-foreground"
     volumes:
+      - ./apache/security-headers.conf:/etc/apache2/conf-enabled/security-headers.conf:ro
       - ./index.html:/var/www/html/index.html:ro
       - ./resources.json:/var/www/html/resources.json:ro
     networks:
@@ -100,7 +102,9 @@ services:
           cpus: "0.10"
     ports:
       - "${HOST_BIND_IP:-127.0.0.1}:8081:80"
+    command: sh -c "a2enmod headers && apache2-foreground"
     volumes:
+      - ./apache/security-headers.conf:/etc/apache2/conf-enabled/security-headers.conf:ro
       - ./cases/01-python-to-php/dest:/var/www/html
     networks:
       - bot-network
@@ -207,7 +211,9 @@ services:
           cpus: "0.10"
     ports:
       - "${HOST_BIND_IP:-127.0.0.1}:8086:80"
+    command: sh -c "a2enmod headers && apache2-foreground"
     volumes:
+      - ./apache/security-headers.conf:/etc/apache2/conf-enabled/security-headers.conf:ro
       - ./cases/06-go-to-symfony/dest:/var/www/html
     networks:
       - bot-network

@@ -3,7 +3,7 @@
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker Hub](https://img.shields.io/badge/Docker-Ready-blue.svg?logo=docker&logoColor=white)](https://hub.docker.com/)
-[![Version](https://img.shields.io/badge/version-4.0.0-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
+[![Version](https://img.shields.io/badge/version-4.2.0-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
 [![Security: Hardened](https://img.shields.io/badge/Security-Hardened-🛡️?color=red&labelColor=black)](SECURITY.md)
 
 Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. El **Social Bot Scheduler** actúa como una **Matriz Tecnológica** donde **n8n** orquesta la comunicación entre bots emisores y receptores políglotas.
@@ -75,13 +75,18 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 ## 🛡️ Modelo de Seguridad Runtime
 
 > [!IMPORTANT]
-> A partir de la v4.0.0, la seguridad `secure-by-default` es la prioridad del laboratorio.
+> A partir de la v4.2.0, el laboratorio ha pasado por una auditoría completa de 8 capas (contenedor, red, credenciales, servidor web, herramientas, autenticación, CI/CD y cadena de suministro).
 
-### ✅ Qué es más seguro ahora:
+### ✅ Qué está protegido:
 - **Binding de Red**: Todos los contenedores se publican únicamente en `127.0.0.1`.
-- **Secretos**: Las contraseñas (DB, Grafana, API Keys) se gestionan vía `.env` y no están hardcodeadas en el Compose.
-- **Opt-in Observability**: Grafana y Prometheus ya no arrancan por defecto para minimizar la superficie de exposición.
-- **Caddy Edge Proxy**: Opción de publicar servicios vía HTTPS con Basic Auth si se requiere acceso remoto controlado.
+- **Secretos**: Contraseñas y API Keys gestionadas vía `.env`, nunca hardcodeadas. Gitleaks detecta fugas en el historial.
+- **Opt-in Observability**: Grafana y Prometheus solo se activan con `--profile observability`.
+- **HTTP Security Headers**: Todos los servicios Apache sirven `X-Frame-Options`, `X-Content-Type-Options`, `Content-Security-Policy`, `Referrer-Policy` y `Permissions-Policy`. Listado de directorios deshabilitado.
+- **Caddy Edge Proxy**: HTTPS + Basic Auth + HSTS + CSP + Permissions-Policy completos.
+- **Supply Chain**: Trivy v0.35.0, pip-audit, Gitleaks, detección de Unicode bidi (CVE-2021-42574) y ofuscación base64 en CI.
+- **Dependabot**: PRs automáticos para 11 ecosistemas (pip, docker, gomod, cargo, npm, github-actions).
+- **Line endings**: `.gitattributes` garantiza LF en scripts shell para evitar `bad interpreter` en contenedores Linux.
+- **Proceso no-root**: Todos los contenedores corren como usuario sin privilegios.
 
 ---
 

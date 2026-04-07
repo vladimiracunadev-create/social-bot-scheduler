@@ -4,6 +4,30 @@ Todos los cambios notables en este proyecto se documentan sistemáticamente en e
 
 ---
 
+## 🔒 [4.2.0] — 2026-04-06
+
+### 🛡️ Seguridad — Auditoría de 8 Capas
+
+- **HTTP Security Headers (Capa 4)**: Los tres servicios `php:8.2-apache` (`master-dashboard`, `dest-php`, `dest-symfony`) ahora sirven `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Content-Security-Policy` y `Permissions-Policy`. Se deshabilita el listado de directorios (`Options -Indexes`). Implementado vía `apache/security-headers.conf` montado en `:ro`.
+- **CSP + Permissions-Policy en Edge Proxy (Capa 4)**: El proxy Caddy ya incluía HSTS, X-Frame-Options, etc. Se añaden los dos headers faltantes: `Content-Security-Policy` y `Permissions-Policy`.
+- **Dependabot (Capa 7)**: Configurado `.github/dependabot.yml` con 11 ecosistemas: `github-actions`, `pip` (hub + 3 cases), `docker`, `gomod` (3 cases), `cargo`, `npm` (2 cases). Abre PRs automáticos ante versiones vulnerables.
+- **Line endings LF (Capa 8)**: Creado `.gitattributes` para garantizar que todos los scripts shell, Python, Go, Ruby, Rust y JS se almacenen con LF en Git, independientemente del OS del colaborador. Evita el error `bad interpreter: \r` al ejecutar scripts en contenedores Linux desde un clon Windows.
+- **Detección de Unicode bidi/CVE-2021-42574 (Capa 8)**: Nuevo job `supply-chain-checks` en CI que escanea el código fuente completo en busca de caracteres de control bidireccionales (Trojan Source) usando Python puro, sin dependencias externas.
+- **Detección de ofuscación base64+eval (Capa 8)**: El mismo job detecta patrones `eval(b64decode(...))` y equivalentes en Python, JS, Ruby, PHP y Shell.
+
+### ✨ Añadido
+- `apache/security-headers.conf` — configuración Apache de hardening (headers + `-Indexes`).
+- `.gitattributes` — normalización de line endings por tipo de archivo.
+- `.github/dependabot.yml` — actualizaciones automáticas de dependencias para 11 ecosistemas.
+
+### ⚙️ Cambiado
+- `docker-compose.yml` — `master-dashboard`, `dest-php` y `dest-symfony` montan `apache/security-headers.conf` y ejecutan `a2enmod headers` al arrancar.
+- `edge/start-caddy.sh` — añadidos `Content-Security-Policy` y `Permissions-Policy` al bloque de headers.
+- `.github/workflows/ci-cd.yml` — nuevo job `supply-chain-checks` (bidi + obfuscación), precede a `build-and-push`.
+- `SECURITY.md` — reemplazado por resultados completos de auditoría de 8 capas con estado por punto, riesgos aceptados documentados y tabla de pendientes priorizados.
+
+---
+
 ## 🚀 [4.1.0] — 2026-03-24
 
 ### 🛡️ Seguridad

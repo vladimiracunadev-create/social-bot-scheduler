@@ -12,7 +12,10 @@ Este proyecto es un **laboratorio de ingeniería** y, como tal, tiene ciertas de
 
 ## 3. Seguridad
 -   **Secretos en .env**: Aunque el `.env` no se sube al repo, en un entorno de producción real se recomienda usar un Secret Manager (AWS Secrets Manager, HashiCorp Vault).
--   **Tráfico HTTP**: La comunicación interna entre contenedores es HTTP (puerto 80). En una red pública debería ser HTTPS/TLS.
+-   **Tráfico HTTP interno**: La comunicación entre contenedores es HTTP dentro de la red Docker interna (`bot-network`). No está expuesto a la red local gracias al binding `127.0.0.1`. El perfil `edge` añade TLS en el borde con Caddy.
+-   **HTTP Security Headers** *(resuelto en v4.2.0)*: Todos los servicios Apache y el proxy Caddy sirven el conjunto completo de headers de seguridad (CSP, X-Frame-Options, Permissions-Policy, etc.).
+-   **Fallback de credenciales**: Los valores `change-me-*` en `docker-compose.yml` permiten arrancar el lab sin `.env`. El script `n8n_auto_setup.sh` emite un warning. Riesgo local aceptado — nunca exponer sin el perfil `edge` autenticado.
+-   **Lock file con hashes**: `requirements.txt` no incluye hashes SHA. `pip-audit` detecta CVEs en CI. Solución completa: `pip-compile --generate-hashes` (pendiente P-01).
 
 ## 4. Orquestación
 -   **Docker Compose**: Ideal para desarrollo y pruebas. Para producción, se recomienda trasladar los manifiestos de Kubernetes (`k8s/`) a un clúster real (EKS/AKS).

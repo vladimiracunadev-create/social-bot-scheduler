@@ -9,10 +9,33 @@ Esta guía detalla los procedimientos para validar la integridad, seguridad y fu
 > [!IMPORTANT]
 > **Mitigación Trivy**: Asegúrate de que el flujo de CI/CD esté utilizando la versión **`v0.35.0`** o superior para evitar vulnerabilidades de "tag-poisoning".
 
-### Ejecutar Diagnóstico de Hardening
+### 1a. Diagnóstico de Hardening (compose/Dockerfiles)
 Valida que la configuración de Docker y los secretos sigan los estándares del proyecto:
 ```bash
 python scripts/check_runtime_security.py
+```
+
+### 1b. Detección de Unicode bidi y ofuscación (supply chain)
+Escanea el código fuente en busca de caracteres de control bidireccionales (CVE-2021-42574) y patrones de ofuscación `eval+base64`:
+```bash
+# El CI ejecuta esto automáticamente en el job supply-chain-checks.
+# Para ejecutarlo localmente:
+python - <<'PYEOF'
+import sys, pathlib, re
+BIDI = re.compile(r'[\u202a-\u202e\u2066-\u2069\u200f\u061c]')
+EXTS = {'.py', '.js', '.go', '.rb', '.rs', '.sh', '.php'}
+hits = [f'{p}:{n}' for p in pathlib.Path('.').rglob('*')
+        if p.suffix in EXTS and p.is_file()
+        for n, l in enumerate(p.read_text(errors='replace').splitlines(), 1)
+        if BIDI.search(l)]
+print('FAIL:', hits) if hits else print('OK: no bidi chars')
+PYEOF
+```
+
+### 1c. Verificar security headers en producción local
+Con el stack levantado, confirma que los headers estén activos:
+```bash
+curl -sI http://localhost:8080 | grep -E "X-Frame|X-Content|Content-Security|Permissions|Referrer"
 ```
 
 ---

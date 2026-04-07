@@ -1,0 +1,109 @@
+version: 2
+updates:
+  # GitHub Actions — detecta nuevas versiones de actions usadas en workflows
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # Python (pip) — dependencias del hub principal y scripts
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # Python — Case 01 origin
+  - package-ecosystem: "pip"
+    directory: "/cases/01-python-to-php/origin"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # Python — Case 02 origin
+  - package-ecosystem: "pip"
+    directory: "/cases/02-python-to-go/origin"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # Python — Case 09 destination (FastAPI gateway)
+  - package-ecosystem: "pip"
+    directory: "/cases/09-python-to-gateway/dest"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # Docker — imágenes base en Dockerfiles de los casos
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # Go — Case 02 destination
+  - package-ecosystem: "gomod"
+    directory: "/cases/02-python-to-go/dest"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # Go — Case 03 origin
+  - package-ecosystem: "gomod"
+    directory: "/cases/03-go-to-node/origin"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # Go — Case 06 origin
+  - package-ecosystem: "gomod"
+    directory: "/cases/06-go-to-symfony/origin"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # Rust — Case 07 origin
+  - package-ecosystem: "cargo"
+    directory: "/cases/07-rust-to-ruby/origin"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # npm — Case 03 destination (Node.js)
+  - package-ecosystem: "npm"
+    directory: "/cases/03-go-to-node/dest"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # npm — Case 04 origin (Node.js)
+  - package-ecosystem: "npm"
+    directory: "/cases/04-node-to-fastapi/origin"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"

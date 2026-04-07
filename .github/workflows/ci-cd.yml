@@ -11,6 +11,69 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  supply-chain-checks:
+    name: Supply Chain — Bidi & Obfuscation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect Unicode bidirectional control characters (CVE-2021-42574)
+        run: |
+          python - <<'PYEOF'
+          import sys, pathlib, re
+
+          # Trojan Source bidi characters (U+202A-U+202E, U+2066-U+2069, U+200F, U+061C)
+          BIDI_PATTERN = re.compile(
+              r'[\u202a-\u202e\u2066-\u2069\u200f\u061c]'
+          )
+          EXTENSIONS = {'.py', '.js', '.go', '.rb', '.rs', '.sh', '.php', '.ts', '.cs'}
+          hits = []
+          for path in pathlib.Path('.').rglob('*'):
+              if path.suffix in EXTENSIONS and path.is_file():
+                  try:
+                      text = path.read_text(encoding='utf-8', errors='replace')
+                      for lineno, line in enumerate(text.splitlines(), 1):
+                          if BIDI_PATTERN.search(line):
+                              hits.append(f'{path}:{lineno}: bidi character detected')
+                  except OSError:
+                      pass
+          if hits:
+              print('FAIL: Unicode bidi control characters found (CVE-2021-42574):')
+              for h in hits:
+                  print(' ', h)
+              sys.exit(1)
+          print('OK: No bidi characters found')
+          PYEOF
+
+      - name: Detect base64-encoded execution patterns
+        run: |
+          python - <<'PYEOF'
+          import sys, pathlib, re
+
+          # eval/exec/system called with a base64-decoded string — classic obfuscation
+          OBFUS_PATTERN = re.compile(
+              r'(eval|exec|system)\s*\([^)]*b64decode|base64\.b64decode[^)]*\)\s*\)',
+              re.IGNORECASE,
+          )
+          EXTENSIONS = {'.py', '.js', '.rb', '.php', '.sh'}
+          hits = []
+          for path in pathlib.Path('.').rglob('*'):
+              if path.suffix in EXTENSIONS and path.is_file():
+                  try:
+                      text = path.read_text(encoding='utf-8', errors='replace')
+                      for lineno, line in enumerate(text.splitlines(), 1):
+                          if OBFUS_PATTERN.search(line):
+                              hits.append(f'{path}:{lineno}: potential base64 obfuscation')
+                  except OSError:
+                      pass
+          if hits:
+              print('FAIL: Potential code obfuscation patterns found:')
+              for h in hits:
+                  print(' ', h)
+              sys.exit(1)
+          print('OK: No obfuscation patterns found')
+          PYEOF
+
   matrix-integrity:
     name: Matrix Integrity (01-08)
     runs-on: ubuntu-latest
@@ -204,6 +267,7 @@ jobs:
   build-and-push:
     name: Build & Push to GHCR
     needs:
+      - supply-chain-checks
       - matrix-integrity
       - runtime-security
       - python-cases

@@ -9,14 +9,16 @@
 ```
 social-bot-scheduler/
 ├── 🏠 Raíz ................... Configuración, orquestación y entrada principal
-├── 📦 cases/ ................. 8 Casos de Integración (Origen → n8n → Destino)
+├── 🛡️ apache/ ................ Config Apache de hardening (security headers)
+├── 📦 cases/ ................. 9 Casos de Integración (Origen → n8n → Destino)
 ├── 📚 docs/ .................. Documentación técnica y guías
+├── 🌐 edge/ .................. Caddy reverse proxy (perfil edge)
 ├── 🔄 n8n/ ................... Workflows de orquestación (JSON exportados)
 ├── 📊 grafana/ ............... Dashboards y datasources de monitoreo
 ├── 📈 prometheus/ ............ Configuración de métricas
 ├── ☸️ k8s/ ................... Manifiestos de Kubernetes (producción)
 ├── 📝 articulo/ .............. Artículo técnico para LinkedIn
-└── 🔧 .github/ ............... CI/CD (GitHub Actions)
+└── 🔧 .github/ ............... CI/CD (GitHub Actions) + Dependabot
 ```
 
 ---
@@ -29,8 +31,9 @@ social-bot-scheduler/
 |---------|:-----------:|-------------|
 | `docker-compose.yml` | 🔴 **Crítico** | Define los servicios del ecosistema completo: 9 receptores, 8 bases de datos externas, n8n, Grafana, Prometheus, cAdvisor, Caddy edge proxy y el dashboard maestro. Contiene perfiles `caseXX`, `full`, `observability` y `edge`. |
 | `docker-compose.dev.yml` | 🟡 Media | Override para desarrollo local. Añade hot-reload y puertos de depuración. |
-| `Dockerfile` | 🟡 Media | Imagen Docker para el dashboard maestro (`master-dashboard`). |
+| `Dockerfile` | 🟡 Media | Imagen Docker multi-stage para el hub. Corre como `botuser` (no-root). |
 | `Makefile` | 🟢 Alta | Automatización de comandos frecuentes: `make up`, `make up-secure`, `make up-observability`, `make up-edge`, `make clean` y `make nuke`. |
+| `.gitattributes` | 🟢 Alta | Normalización de line endings por tipo de archivo. Scripts shell/Python/Go → LF; scripts Windows → CRLF. Evita errores `bad interpreter` en contenedores Linux al clonar en Windows. |
 
 ### Automatización y CLI
 
@@ -237,7 +240,17 @@ cases/XX-origen-to-destino/
 
 | Archivo/Dir | Descripción |
 |-------------|-------------|
-| `.github/workflows/` | GitHub Actions: linting (Black, ESLint), tests, auditoría de seguridad (Trivy, Gitleaks, pip-audit), y deploy automático. |
+| `.github/workflows/ci-cd.yml` | Pipeline principal: linting, tests, auditoría de seguridad (Trivy, Gitleaks, pip-audit), detección de bidi/ofuscación (`supply-chain-checks`) y deploy a GHCR. |
+| `.github/workflows/wiki-sync.yml` | Sincronización de `docs/wiki/` al GitHub Wiki. |
+| `.github/dependabot.yml` | Actualizaciones automáticas de dependencias para 11 ecosistemas: `github-actions`, `pip` (hub + 3 cases), `docker`, `gomod` (3 cases), `cargo`, `npm` (2 cases). Abre PRs con `security` label. |
+
+---
+
+## 🛡️ Hardening (`apache/`)
+
+| Archivo | Descripción |
+|---------|-------------|
+| `apache/security-headers.conf` | Configuración Apache de hardening montada en todos los servicios `php:8.2-apache`. Configura `X-Frame-Options`, `X-Content-Type-Options`, `Content-Security-Policy`, `Referrer-Policy`, `Permissions-Policy` y deshabilita el listado de directorios (`Options -Indexes`). Requiere `mod_headers` (habilitado vía `command: sh -c "a2enmod headers && apache2-foreground"`). |
 
 ---
 

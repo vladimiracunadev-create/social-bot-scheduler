@@ -33,6 +33,15 @@ El sistema se rige por tres pilares fundamentales:
 > 2.  **Etiquetas Seguras**: El CI/CD utiliza exclusivamente **`v0.35.0`** o superiores, validadas contra firmas oficiales.
 > 3.  **Auditoría de Imágenes**: Todas las imágenes base (Alpine, Ubuntu, Microsoft) están ancladas a versiones específicas para evitar ataques de inyección en tiempo de construcción.
 
+### Medidas adicionales (v4.2.0)
+
+| Control | Implementación | Protege contra |
+| :--- | :--- | :--- |
+| **Unicode bidi scan** | Job `supply-chain-checks` en CI (Python puro) | CVE-2021-42574 "Trojan Source" — código malicioso camuflado con caracteres invisibles |
+| **Obfuscation scan** | Mismo job — detecta `eval(b64decode(...))` | Base64-encoded payloads ejecutados dinámicamente |
+| **Dependabot** | `.github/dependabot.yml` — 11 ecosistemas | Versiones de dependencias con CVEs conocidos |
+| **Line endings** | `.gitattributes` — `*.sh eol=lf` | Scripts con CRLF que fallan con `bad interpreter` dentro de contenedores Linux |
+
 ---
 
 ## 🕸️ Aislamiento de Red y Puertos
@@ -62,11 +71,34 @@ El sistema orquesta más de 40 variables de entorno críticas que deben gestiona
 
 ## ⚙️ Guardrails de Validación Automática
 
-El script `scripts/check_runtime_security.py` actúa como un centinela que bloquea el arranque o el CI si detecta:
+El script `scripts/check_runtime_security.py` actúa como un centinela que bloquea el CI si detecta:
 - ❌ Uso de etiquetas `:latest` en Compose o Dockerfiles.
 - ❌ Puertos publicados sin vinculación local explícita.
 - ❌ Secretos detectados en plano en la configuración del runtime.
 - ❌ Ausencia de perfiles de seguridad en componentes críticos.
 
+El job `supply-chain-checks` (CI) bloquea el pipeline si detecta:
+- ❌ Caracteres Unicode bidireccionales en archivos de código fuente.
+- ❌ Patrones de ofuscación con `eval` + `base64` en Python, JS, Ruby, PHP o Shell.
+
 ---
-*Modelo de seguridad operativa v4.0 — Social Bot Scheduler*
+
+## 🌐 HTTP Security Headers (v4.2.0)
+
+Todos los servicios web del laboratorio sirven el conjunto completo de headers de seguridad:
+
+| Header | Valor | Protege contra |
+| :--- | :--- | :--- |
+| `X-Frame-Options` | `SAMEORIGIN` | Clickjacking |
+| `X-Content-Type-Options` | `nosniff` | MIME sniffing |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` | Fuga de información a terceros |
+| `Content-Security-Policy` | `default-src 'self'; ...` | XSS, inyección de recursos externos |
+| `Permissions-Policy` | `geolocation=(), camera=(), ...` | Abuso de APIs del navegador |
+| `Strict-Transport-Security` | `max-age=31536000` | Downgrade a HTTP (solo en edge HTTPS) |
+
+**Implementación**:
+- **Apache** (`master-dashboard`, `dest-php`, `dest-symfony`): `apache/security-headers.conf` montado en `/etc/apache2/conf-enabled/` con `mod_headers`.
+- **Caddy** (perfil `edge`): bloque `header {}` en `edge/start-caddy.sh`.
+
+---
+*Modelo de seguridad operativa v4.2 — Social Bot Scheduler*

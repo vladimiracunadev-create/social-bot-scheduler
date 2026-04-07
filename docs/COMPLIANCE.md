@@ -25,4 +25,21 @@ Este software incluye mecanismos de seguridad por diseño para comportamiento é
 - **Logs de Auditoría**: Registra todas las operaciones para trazabilidad.
 
 ---
-*Ingeniería con Ética.*
+
+## 5. Cumplimiento OWASP Top 10 (v4.2.0)
+
+| OWASP Categoría | Control Implementado | Estado |
+| :--- | :--- | :---: |
+| **A01 — Broken Access Control** | Binding `127.0.0.1`; autenticación en n8n y edge proxy | ✅ |
+| **A02 — Cryptographic Failures** | TLS via Caddy edge; secrets en `.env` nunca en repo | ✅ |
+| **A03 — Injection** | Pydantic valida inputs; SQL parametrizado en destinos | ✅ |
+| **A05 — Security Misconfiguration** | HTTP security headers completos; `Options -Indexes`; `display_errors Off`; perfiles opt-in para observabilidad | ✅ |
+| **A06 — Vulnerable Components** | pip-audit, Trivy, Gitleaks, Dependabot, supply-chain-checks en CI | ✅ |
+| **A08 — Software/Data Integrity** | Gitleaks, bidi scan, ofuscation scan; `.gitattributes` LF; Trivy image scan | ✅ |
+| **A09 — Logging/Monitoring Failures** | Audit log en `hub.audit.log`; DLQ con registro completo; Prometheus/Grafana opt-in | ✅ |
+
+> [!NOTE]
+> Para una evaluación OWASP completa en producción, revisar también A04 (Insecure Design), A07 (Auth failures con MFA), y A10 (SSRF) según el contexto de despliegue.
+
+---
+*Ingeniería con Ética — Auditoría OWASP v4.2.0*

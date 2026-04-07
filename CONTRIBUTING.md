@@ -29,6 +29,9 @@ Si encuentras un fallo técnico, por favor abre un **Issue** con:
 - **🐳 Docker-First**: Cualquier servicio de destino debe ser fácilmente desplegable mediante contenedores.
 - **🧩 Simplicidad Industrial**: El código debe ser legible para principiantes, pero seguir patrones de diseño profesionales (Mediator, Circuit Breaker, etc.).
 - **🧪 Validación**: Asegúrate de que `hub.py doctor` pase sin errores tras tus cambios.
+- **🔒 Seguridad**: Ejecuta `python scripts/check_runtime_security.py` antes de hacer push para verificar que no hay tags `:latest`, puertos mal bindeados o secretos expuestos.
+- **📝 Line endings**: El repositorio usa `.gitattributes` para forzar LF en scripts shell y archivos de código. Si contribuyes desde Windows, configura tu editor para respetar estos ajustes. **Nunca edites scripts `.sh` con CRLF** — fallarán dentro de los contenedores Linux con el error `bad interpreter`.
+- **🛡️ Headers**: Si añades un nuevo servicio web Apache, monta `apache/security-headers.conf` en `/etc/apache2/conf-enabled/` e incluye `command: sh -c "a2enmod headers && apache2-foreground"` en el Compose.
 
 ---
 

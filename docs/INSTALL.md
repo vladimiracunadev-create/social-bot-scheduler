@@ -54,7 +54,20 @@ Si necesitas exponer el laboratorio de forma controlada mediante un **Reverse Pr
 
 ---
 
-## 🐍 4. Instalación del Entorno de Scripting (Local)
+## 🔒 4. Nota para usuarios Windows
+
+El repositorio incluye `.gitattributes` que fuerza LF en scripts shell, Python, Go y otros archivos de código. Git aplica esta conversión automáticamente al clonar. Sin embargo, si tu editor convierte archivos `.sh` a CRLF, los scripts fallarán dentro de los contenedores Linux con:
+
+```
+/bin/sh^M: bad interpreter: No such file or directory
+```
+
+**Solución**: configura tu editor para respetar `.gitattributes`, o comprueba los line endings antes de hacer push:
+```bash
+git diff --check
+```
+
+## 🐍 5. Instalación del Entorno de Scripting (Local)
 
 Para ejecutar o depurar los bots (`origin`) fuera de Docker (recomendado para desarrollo rápido):
 
@@ -70,7 +83,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🚢 5. Consideraciones para Kubernetes
+## 🚢 6. Consideraciones para Kubernetes
 
 Aunque el laboratorio se valida principalmente en Docker, incluimos manifiestos en `k8s/` para entornos de orquestación.
 
