@@ -55,6 +55,49 @@ Si decides hacer un `docker-compose --profile full pull`, este es el impacto en 
 
 ---
 
+## 📊 Consumo de RAM por Caso (Activación Selectiva)
+
+> [!TIP]
+> Cada caso se levanta con `docker-compose --profile caseXX up -d`. Las cifras incluyen el **núcleo siempre activo** (`n8n` 1 GB + `master-dashboard` 128 MB ≈ **1.13 GB**). Si ya tienes el núcleo arriba, súmale solo la columna *Δ Caso*.
+
+| Caso | Receptor | Δ Receptor | Base de Datos | Δ DB | **Δ Caso** | **Total con núcleo** | Categoría |
+| :---: | :--- | :---: | :--- | :---: | :---: | :---: | :---: |
+| **01** | PHP | 128 MB | MySQL | 512 MB | **640 MB** | ~1.75 GB | 🟢 Ligero |
+| **02** | Go | 64 MB | MariaDB | 256 MB | **320 MB** | ~1.45 GB | 🟢 Ligero |
+| **03** | Node.js | 128 MB | PostgreSQL | 256 MB | **384 MB** | ~1.5 GB | 🟢 Ligero |
+| **04** | FastAPI | 128 MB | SQLite (embebida) | 0 MB | **128 MB** | ~1.25 GB | 🟢 Ligero |
+| **05** | React + Node | 128 MB | MongoDB | 256 MB | **384 MB** | ~1.5 GB | 🟢 Ligero |
+| **06** | Symfony | 128 MB | Redis | 64 MB | **192 MB** | ~1.3 GB | 🟢 Ligero |
+| **07** | Ruby | 128 MB | Cassandra | **2 GB** | **2.13 GB** | ~3.25 GB | 🔴 Pesado |
+| **08** | Flask | 128 MB | SQL Server | **2 GB** | **2.13 GB** | ~3.25 GB | 🔴 Pesado |
+| **09** | FastAPI Gateway | 256 MB | DuckDB (embebida) | 0 MB | **256 MB** | ~1.4 GB | 🟢 Ligero |
+
+> [!IMPORTANT]
+> **Casos 07 y 08** son los únicos "pesados" del laboratorio: cada uno consume **~3.25 GB** por culpa de Cassandra/SQL Server. Si tu máquina tiene <8 GB de RAM disponibles, evita ejecutarlos en paralelo con otros casos.
+
+### 🎯 Combinaciones recomendadas según RAM disponible
+
+| RAM libre | Combinación sugerida | Total estimado |
+| :---: | :--- | :---: |
+| **2 GB** | Solo núcleo + 1 caso ligero (ej. case04) | ~1.25 GB |
+| **4 GB** | Núcleo + 3-4 casos ligeros (01, 02, 04, 06) | ~2.5 GB |
+| **8 GB** | Núcleo + todos los ligeros (01-06, 09) | ~4 GB |
+| **16 GB** | `--profile full` (incluye 07/08 y observabilidad) | ~10 GB |
+
+### ➕ Componentes opcionales
+
+| Servicio | RAM | Cuándo se añade |
+| :--- | :---: | :--- |
+| Prometheus | 256 MB | `--profile observability` o `full` |
+| Grafana | 512 MB | `--profile observability` o `full` |
+| cAdvisor | 128 MB | `--profile observability` o `full` |
+| Caddy edge proxy | ~80 MB | `--profile edge` |
+
+> [!NOTE]
+> Los [casos planificados 10–20](PLANNED_CASES.md) no se contabilizan aquí (no tienen perfiles aún). Estimación bruta si todos se implementaran: **+6 a +8 GB adicionales** por la incorporación de Kafka, ClickHouse, CockroachDB, Neo4j, XTDB y Firebase Emulator.
+
+---
+
 ## 🚦 Decisión de Implementación: ¿Todo o Caso a Caso?
 
 Para usuarios con recursos limitados, recomendamos la **Activación por Perfiles** (`profiles`):

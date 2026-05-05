@@ -168,6 +168,23 @@
             display: inline-block;
         }
 
+        .ram-tag {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            background: rgba(34, 197, 94, 0.08);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            margin-left: 0.4rem;
+            display: inline-block;
+        }
+        .ram-tag.heavy {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
         .db-records {
             margin-top: 1rem;
             font-size: 0.8rem;
@@ -440,7 +457,7 @@
                 <span class="case-id">CASE-01</span>
                 <span class="case-status" id="status-01">READY</span>
             </div>
-            <h3 class="case-title">Python ➔ n8n ➔ PHP</h3>
+            <h3 class="case-title">Python ➔ n8n ➔ PHP <span class="ram-tag" title="Núcleo (1.13 GB) + caso (640 MB)">💾 ~1.75 GB</span></h3>
             <div class="db-tag">🗄️ Database: MySQL</div>
             <div class="tech-stack">
                 <span class="tech-tag">FastAPI</span>
@@ -458,7 +475,7 @@
                 <span class="case-id">CASE-02</span>
                 <span class="case-status" id="status-02">READY</span>
             </div>
-            <h3 class="case-title">Python ➔ n8n ➔ Go</h3>
+            <h3 class="case-title">Python ➔ n8n ➔ Go <span class="ram-tag" title="Núcleo (1.13 GB) + caso (320 MB)">💾 ~1.45 GB</span></h3>
             <div class="db-tag">🗄️ Database: MariaDB</div>
             <div class="tech-stack">
                 <span class="tech-tag">Requests</span>
@@ -476,7 +493,7 @@
                 <span class="case-id">CASE-03</span>
                 <span class="case-status" id="status-03">READY</span>
             </div>
-            <h3 class="case-title">Go ➔ n8n ➔ Node.js</h3>
+            <h3 class="case-title">Go ➔ n8n ➔ Node.js <span class="ram-tag" title="Núcleo (1.13 GB) + caso (384 MB)">💾 ~1.5 GB</span></h3>
             <div class="db-tag">🗄️ Database: PostgreSQL</div>
             <div class="tech-stack">
                 <span class="tech-tag">Go Net/Http</span>
@@ -494,7 +511,7 @@
                 <span class="case-id">CASE-04</span>
                 <span class="case-status" id="status-04">READY</span>
             </div>
-            <h3 class="case-title">Node.js ➔ n8n ➔ FastAPI</h3>
+            <h3 class="case-title">Node.js ➔ n8n ➔ FastAPI <span class="ram-tag" title="Núcleo (1.13 GB) + caso (128 MB), SQLite embebida">💾 ~1.25 GB</span></h3>
             <div class="db-tag">🗄️ Database: SQLite</div>
             <div class="tech-stack">
                 <span class="tech-tag">Axios</span>
@@ -512,7 +529,7 @@
                 <span class="case-id">CASE-05</span>
                 <span class="case-status" id="status-05">READY</span>
             </div>
-            <h3 class="case-title">Laravel ➔ n8n ➔ React</h3>
+            <h3 class="case-title">Laravel ➔ n8n ➔ React <span class="ram-tag" title="Núcleo (1.13 GB) + caso (384 MB)">💾 ~1.5 GB</span></h3>
             <div class="db-tag">🗄️ Database: MongoDB</div>
             <div class="tech-stack">
                 <span class="tech-tag">Artisan CLI</span>
@@ -530,7 +547,7 @@
                 <span class="case-id">CASE-06</span>
                 <span class="case-status" id="status-06">READY</span>
             </div>
-            <h3 class="case-title">Go ➔ n8n ➔ Symfony</h3>
+            <h3 class="case-title">Go ➔ n8n ➔ Symfony <span class="ram-tag" title="Núcleo (1.13 GB) + caso (192 MB)">💾 ~1.3 GB</span></h3>
             <div class="db-tag">🗄️ Database: Redis</div>
             <div class="tech-stack">
                 <span class="tech-tag">Go Compiler</span>
@@ -548,7 +565,7 @@
                 <span class="case-id">CASE-07</span>
                 <span class="case-status" id="status-07">READY</span>
             </div>
-            <h3 class="case-title">Rust ➔ n8n ➔ Ruby</h3>
+            <h3 class="case-title">Rust ➔ n8n ➔ Ruby <span class="ram-tag heavy" title="Núcleo (1.13 GB) + caso (2.13 GB) — Cassandra es el cuello de botella">💾 ~3.25 GB ⚠️</span></h3>
             <div class="db-tag">🗄️ Database: Cassandra</div>
             <div class="tech-stack">
                 <span class="tech-tag">Reqwest</span>
@@ -566,7 +583,7 @@
                 <span class="case-id">CASE-08</span>
                 <span class="case-status" id="status-08">READY</span>
             </div>
-            <h3 class="case-title">C# ➔ n8n ➔ Flask</h3>
+            <h3 class="case-title">C# ➔ n8n ➔ Flask <span class="ram-tag heavy" title="Núcleo (1.13 GB) + caso (2.13 GB) — SQL Server es el cuello de botella">💾 ~3.25 GB ⚠️</span></h3>
             <div class="db-tag">🗄️ Database: SQL Server</div>
             <div class="tech-stack">
                 <span class="tech-tag">.NET 6.0</span>
@@ -585,7 +602,7 @@
                 <span class="case-id">CASE-09</span>
                 <span class="case-status" id="status-09">READY</span>
             </div>
-            <h3 class="case-title">Python ? n8n ? FastAPI Gateway</h3>
+            <h3 class="case-title">Python ➔ n8n ➔ FastAPI Gateway <span class="ram-tag" title="Núcleo (1.13 GB) + caso (256 MB), DuckDB embebida">💾 ~1.4 GB</span></h3>
             <div class="db-tag">Database: DuckDB</div>
             <div class="tech-stack">
                 <span class="tech-tag">Python Bot</span>
