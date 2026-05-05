@@ -340,6 +340,95 @@
             color: #f59e0b;
         }
 
+        .case-status.status-offline {
+            background: rgba(239, 68, 68, 0.12);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+        .case-status.status-checking {
+            background: rgba(148, 163, 184, 0.15);
+            color: #94a3b8;
+        }
+        .btn-test.btn-show-cmd {
+            background: #f59e0b;
+            color: #1a1a1a;
+        }
+        .btn-test.btn-show-cmd:hover {
+            background: #fbbf24;
+        }
+
+        /* Modal for docker-compose command */
+        .cmd-modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .cmd-modal-backdrop.open { display: flex; }
+        .cmd-modal {
+            background: #1a1a1a;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            max-width: 640px;
+            width: 100%;
+            padding: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7);
+        }
+        .cmd-modal h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            color: #f1f5f9;
+        }
+        .cmd-modal p.sub {
+            margin: 0 0 1rem 0;
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        .cmd-modal pre {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            padding: 0.9rem 1rem;
+            font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+            font-size: 0.88rem;
+            color: #4ade80;
+            margin: 0 0 1rem 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .cmd-modal-actions {
+            display: flex;
+            gap: 0.6rem;
+            justify-content: flex-end;
+        }
+        .cmd-modal-actions button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .cmd-btn-copy {
+            background: #6366f1;
+            color: white;
+        }
+        .cmd-btn-copy.copied { background: #22c55e; }
+        .cmd-btn-close {
+            background: #334155;
+            color: #f1f5f9;
+        }
+        .cmd-modal .est-ram {
+            margin: 0 0 1rem 0;
+            font-size: 0.8rem;
+            color: #fb923c;
+        }
+
         .case-status.status-planned {
             background: rgba(251, 146, 60, 0.15);
             color: #fb923c;
@@ -625,7 +714,7 @@
                 <span class="case-id">CASE-10</span>
                 <span class="case-status status-planned">PLANNED</span>
             </div>
-            <h3 class="case-title">Java (Spring) ➔ n8n ➔ Kotlin (Ktor)</h3>
+            <h3 class="case-title">Java (Spring) ➔ n8n ➔ Kotlin (Ktor) <span class="ram-tag" title="Estimado, sin medir">💾 ~2.15 GB</span></h3>
             <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
             <div class="db-tag">Database: PostgreSQL</div>
             <div class="tech-stack">
@@ -642,7 +731,7 @@
                 <span class="case-id">CASE-11</span>
                 <span class="case-status status-planned">PLANNED</span>
             </div>
-            <h3 class="case-title">Elixir (Phoenix) ➔ n8n ➔ Erlang (Cowboy)</h3>
+            <h3 class="case-title">Elixir (Phoenix) ➔ n8n ➔ Erlang (Cowboy) <span class="ram-tag" title="Estimado, sin medir">💾 ~1.5 GB</span></h3>
             <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
             <div class="db-tag">Database: Mnesia</div>
             <div class="tech-stack">
@@ -659,7 +748,7 @@
                 <span class="case-id">CASE-12</span>
                 <span class="case-status status-planned">PLANNED</span>
             </div>
-            <h3 class="case-title">Python (LLM) ➔ n8n ➔ FastAPI + RAG</h3>
+            <h3 class="case-title">Python (LLM) ➔ n8n ➔ FastAPI + RAG <span class="ram-tag" title="Estimado, sin medir">💾 ~2.65 GB</span></h3>
             <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
             <div class="db-tag">Database: pgvector</div>
             <div class="tech-stack">
@@ -676,7 +765,7 @@
                 <span class="case-id">CASE-13</span>
                 <span class="case-status status-planned">PLANNED</span>
             </div>
-            <h3 class="case-title">Node + Kafka ➔ n8n ➔ Go consumer</h3>
+            <h3 class="case-title">Node + Kafka ➔ n8n ➔ Go consumer <span class="ram-tag heavy" title="Estimado, Kafka es pesado">💾 ~3.35 GB ⚠️</span></h3>
             <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
             <div class="db-tag">Database: ClickHouse</div>
             <div class="tech-stack">
@@ -693,7 +782,7 @@
                 <span class="case-id">CASE-14</span>
                 <span class="case-status status-planned">PLANNED</span>
             </div>
-            <h3 class="case-title">Next.js 15 ➔ n8n ➔ Supabase Edge Fn</h3>
+            <h3 class="case-title">Next.js 15 ➔ n8n ➔ Supabase Edge Fn <span class="ram-tag heavy" title="Estimado, Supabase local stack es pesado">💾 ~3.4 GB ⚠️</span></h3>
             <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
             <div class="db-tag">Database: Supabase (Postgres + RLS)</div>
             <div class="tech-stack">
@@ -710,7 +799,7 @@
                 <span class="case-id">CASE-15</span>
                 <span class="case-status status-planned">PLANNED</span>
             </div>
-            <h3 class="case-title">Go (gRPC) ➔ n8n ➔ Python (gRPC)</h3>
+            <h3 class="case-title">Go (gRPC) ➔ n8n ➔ Python (gRPC) <span class="ram-tag" title="Estimado, sin medir">💾 ~2.0 GB</span></h3>
             <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
             <div class="db-tag">Database: CockroachDB</div>
             <div class="tech-stack">
@@ -727,7 +816,7 @@
                 <span class="case-id">CASE-16</span>
                 <span class="case-status status-planned">PLANNED</span>
             </div>
-            <h3 class="case-title">Apollo (GraphQL) ➔ n8n ➔ Hasura</h3>
+            <h3 class="case-title">Apollo (GraphQL) ➔ n8n ➔ Hasura <span class="ram-tag" title="Estimado, sin medir">💾 ~1.9 GB</span></h3>
             <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
             <div class="db-tag">Database: TimescaleDB</div>
             <div class="tech-stack">
@@ -744,7 +833,7 @@
                 <span class="case-id">CASE-17</span>
                 <span class="case-status status-planned">PLANNED</span>
             </div>
-            <h3 class="case-title">Rust (MQTT) ➔ n8n ➔ Node (MQTT)</h3>
+            <h3 class="case-title">Rust (MQTT) ➔ n8n ➔ Node (MQTT) <span class="ram-tag" title="Estimado, sin medir">💾 ~1.85 GB</span></h3>
             <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
             <div class="db-tag">Database: InfluxDB</div>
             <div class="tech-stack">
@@ -761,7 +850,7 @@
                 <span class="case-id">CASE-18</span>
                 <span class="case-status status-planned">PLANNED</span>
             </div>
-            <h3 class="case-title">Zig ➔ n8n ➔ Crystal (Kemal)</h3>
+            <h3 class="case-title">Zig ➔ n8n ➔ Crystal (Kemal) <span class="ram-tag" title="Estimado, sin medir">💾 ~1.75 GB</span></h3>
             <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
             <div class="db-tag">Database: Neo4j</div>
             <div class="tech-stack">
@@ -778,7 +867,7 @@
                 <span class="case-id">CASE-19</span>
                 <span class="case-status status-planned">PLANNED</span>
             </div>
-            <h3 class="case-title">F# (.NET) ➔ n8n ➔ Clojure (Ring)</h3>
+            <h3 class="case-title">F# (.NET) ➔ n8n ➔ Clojure (Ring) <span class="ram-tag" title="Estimado, sin medir">💾 ~2.65 GB</span></h3>
             <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
             <div class="db-tag">Database: XTDB</div>
             <div class="tech-stack">
@@ -795,7 +884,7 @@
                 <span class="case-id">CASE-20</span>
                 <span class="case-status status-planned">PLANNED</span>
             </div>
-            <h3 class="case-title">Swift (Vapor) ➔ n8n ➔ Dart (Shelf)</h3>
+            <h3 class="case-title">Swift (Vapor) ➔ n8n ➔ Dart (Shelf) <span class="ram-tag" title="Estimado, sin medir">💾 ~2.55 GB</span></h3>
             <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
             <div class="db-tag">Database: Firebase Emulator</div>
             <div class="tech-stack">
@@ -819,6 +908,20 @@
         </div>
     </div>
 
+    <!-- Modal: comando docker-compose para levantar el caso -->
+    <div class="cmd-modal-backdrop" id="cmd-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="cmd-modal-title">
+        <div class="cmd-modal">
+            <h3 id="cmd-modal-title">⚙️ Levantar caso <span id="cmd-modal-case"></span></h3>
+            <p class="sub">Este caso está apagado. Ejecuta el siguiente comando en una terminal del repositorio para levantarlo:</p>
+            <p class="est-ram" id="cmd-modal-ram"></p>
+            <pre id="cmd-modal-cmd"></pre>
+            <div class="cmd-modal-actions">
+                <button class="cmd-btn-close" id="cmd-modal-close">Cerrar</button>
+                <button class="cmd-btn-copy" id="cmd-modal-copy">📋 Copiar</button>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <p>&copy; 2026 Social Bot Scheduler - Laboratorio de Automatización</p>
     </footer>
@@ -830,15 +933,15 @@
         // Cada caso define su webhook path en n8n y el puerto donde corre el destino.
         // El flujo real es: POST → n8n webhook → n8n procesa → n8n envía al destino.
         const CASES = {
-            '01': { webhook: 'social-bot-scheduler-php', port: 8081, origin: 'Python', dest: 'PHP' },
-            '02': { webhook: 'social-bot-scheduler-go', port: 8082, origin: 'Python', dest: 'Go' },
-            '03': { webhook: 'social-bot-scheduler-node', port: 8083, origin: 'Go', dest: 'Node.js' },
-            '04': { webhook: 'social-bot-scheduler-fastapi', port: 8084, origin: 'Node.js', dest: 'FastAPI' },
-            '05': { webhook: 'social-bot-scheduler-react', port: 8085, origin: 'Laravel', dest: 'React' },
-            '06': { webhook: 'social-bot-scheduler-symfony', port: 8086, origin: 'Go', dest: 'Symfony' },
-            '07': { webhook: 'social-bot-scheduler-ruby', port: 8087, origin: 'Rust', dest: 'Ruby' },
-            '08': { webhook: 'social-bot-scheduler-flask', port: 8088, origin: 'C#', dest: 'Flask' },
-            '09': { webhook: 'social-bot-scheduler-gateway', port: 8090, origin: 'Python', dest: 'FastAPI Gateway' }
+            '01': { webhook: 'social-bot-scheduler-php',     port: 8081, origin: 'Python', dest: 'PHP',             ram: '~1.75 GB' },
+            '02': { webhook: 'social-bot-scheduler-go',      port: 8082, origin: 'Python', dest: 'Go',              ram: '~1.45 GB' },
+            '03': { webhook: 'social-bot-scheduler-node',    port: 8083, origin: 'Go',     dest: 'Node.js',         ram: '~1.5 GB'  },
+            '04': { webhook: 'social-bot-scheduler-fastapi', port: 8084, origin: 'Node.js',dest: 'FastAPI',         ram: '~1.25 GB' },
+            '05': { webhook: 'social-bot-scheduler-react',   port: 8085, origin: 'Laravel',dest: 'React',           ram: '~1.5 GB'  },
+            '06': { webhook: 'social-bot-scheduler-symfony', port: 8086, origin: 'Go',     dest: 'Symfony',         ram: '~1.3 GB'  },
+            '07': { webhook: 'social-bot-scheduler-ruby',    port: 8087, origin: 'Rust',   dest: 'Ruby',            ram: '~3.25 GB ⚠️ pesado (Cassandra)' },
+            '08': { webhook: 'social-bot-scheduler-flask',   port: 8088, origin: 'C#',     dest: 'Flask',           ram: '~3.25 GB ⚠️ pesado (SQL Server)' },
+            '09': { webhook: 'social-bot-scheduler-gateway', port: 8090, origin: 'Python', dest: 'FastAPI Gateway', ram: '~1.4 GB'  }
         };
 
         const N8N_BASE = 'http://localhost:5678';
@@ -1138,6 +1241,134 @@
             const btn = document.getElementById(`btn-${id}`);
             if (btn) btn.addEventListener('click', () => runCase(id));
         }
+
+        // ==============================================================================
+        // OFFLINE DETECTION + DOCKER COMMAND MODAL (B+C)
+        // ==============================================================================
+        // Cada N segundos comprobamos si el receptor de cada caso responde.
+        // Si está apagado mostramos OFFLINE y el botón se transforma en
+        // "Mostrar comando para levantarlo" (modal con docker-compose + copy).
+        // Sin backend: el navegador no puede ejecutar docker, solo mostrar el comando.
+
+        const HEALTH_CHECK_INTERVAL_MS = 20000;
+        const HEALTH_CHECK_TIMEOUT_MS = 2500;
+
+        async function pingCaseReceiver(caseId) {
+            const cfg = CASES[caseId];
+            if (!cfg) return false;
+            const ctrl = new AbortController();
+            const timer = setTimeout(() => ctrl.abort(), HEALTH_CHECK_TIMEOUT_MS);
+            try {
+                // mode:'no-cors' evita CORS — opaque response, pero un 'fetch' que
+                // resuelve sin error indica que el puerto está abierto.
+                await fetch(`http://localhost:${cfg.port}/`, {
+                    method: 'GET',
+                    mode: 'no-cors',
+                    cache: 'no-store',
+                    signal: ctrl.signal
+                });
+                return true;
+            } catch (e) {
+                return false;
+            } finally {
+                clearTimeout(timer);
+            }
+        }
+
+        function setOfflineMode(caseId) {
+            const card = document.querySelector(`.case-card[data-case="${caseId}"]`);
+            if (!card || card.dataset.planned === 'true') return;
+            const status = card.querySelector('.case-status');
+            const btn = card.querySelector('.btn-test');
+            if (status) {
+                status.textContent = 'OFFLINE';
+                status.className = 'case-status status-offline';
+            }
+            if (btn) {
+                btn.classList.add('btn-show-cmd');
+                btn.textContent = '⚙️ Mostrar comando para levantarlo';
+                btn.disabled = false;
+                // Re-bind click: open modal in lieu of running the case
+                const newBtn = btn.cloneNode(true);
+                btn.parentNode.replaceChild(newBtn, btn);
+                newBtn.addEventListener('click', () => openCmdModal(caseId));
+            }
+        }
+
+        function setReadyMode(caseId) {
+            const card = document.querySelector(`.case-card[data-case="${caseId}"]`);
+            if (!card || card.dataset.planned === 'true') return;
+            const status = card.querySelector('.case-status');
+            const btn = card.querySelector('.btn-test');
+            if (status) {
+                status.textContent = 'READY';
+                status.className = 'case-status';
+            }
+            if (btn && btn.classList.contains('btn-show-cmd')) {
+                btn.classList.remove('btn-show-cmd');
+                btn.textContent = caseId === '09' ? 'Probar Integracion' : '🔗 Probar Integración';
+                const newBtn = btn.cloneNode(true);
+                btn.parentNode.replaceChild(newBtn, btn);
+                newBtn.addEventListener('click', () => runCase(caseId));
+            }
+        }
+
+        function openCmdModal(caseId) {
+            const cfg = CASES[caseId];
+            if (!cfg) return;
+            const cmd = `docker-compose --profile case${caseId} up -d`;
+            document.getElementById('cmd-modal-case').textContent = `${caseId} (${cfg.origin} → ${cfg.dest})`;
+            document.getElementById('cmd-modal-ram').textContent = `💾 Estimado: ${cfg.ram} (núcleo n8n+dashboard incluido)`;
+            document.getElementById('cmd-modal-cmd').textContent = cmd;
+            const copyBtn = document.getElementById('cmd-modal-copy');
+            copyBtn.classList.remove('copied');
+            copyBtn.textContent = '📋 Copiar';
+            document.getElementById('cmd-modal-backdrop').classList.add('open');
+        }
+
+        function closeCmdModal() {
+            document.getElementById('cmd-modal-backdrop').classList.remove('open');
+        }
+
+        async function copyCmdToClipboard() {
+            const text = document.getElementById('cmd-modal-cmd').textContent;
+            const btn = document.getElementById('cmd-modal-copy');
+            try {
+                await navigator.clipboard.writeText(text);
+                btn.textContent = '✅ Copiado';
+                btn.classList.add('copied');
+            } catch (e) {
+                // Fallback: select text so user can Ctrl+C manually
+                const range = document.createRange();
+                range.selectNodeContents(document.getElementById('cmd-modal-cmd'));
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+                btn.textContent = '⚠️ Selecciona y copia (Ctrl+C)';
+            }
+        }
+
+        document.getElementById('cmd-modal-close').addEventListener('click', closeCmdModal);
+        document.getElementById('cmd-modal-copy').addEventListener('click', copyCmdToClipboard);
+        document.getElementById('cmd-modal-backdrop').addEventListener('click', (e) => {
+            if (e.target.id === 'cmd-modal-backdrop') closeCmdModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeCmdModal();
+        });
+
+        async function refreshHealthForAll() {
+            const checks = Object.keys(CASES).map(async (id) => {
+                const online = await pingCaseReceiver(id);
+                if (online) setReadyMode(id);
+                else setOfflineMode(id);
+            });
+            await Promise.all(checks);
+        }
+
+        // First check on load + periodic refresh
+        refreshHealthForAll();
+        setInterval(refreshHealthForAll, HEALTH_CHECK_INTERVAL_MS);
     </script>
 </body>
 
