@@ -1,0 +1,21 @@
+id: "13"
+name: "Node.js -> n8n + Kafka -> Go consumer -> ClickHouse"
+path: "cases/13-node-to-go-kafka"
+status: "planned"
+origin:
+  language: "node"
+  framework: "kafkajs"
+  entrypoint: "origin/producer.js"
+destination:
+  language: "go"
+  framework: "kafka-go"
+  port: 8093
+  url: "http://localhost:8093"
+broker:
+  engine: "kafka"
+  mode: "KRaft"
+database:
+  engine: "clickhouse"
+  version: "24"
+stack: ["node", "kafkajs", "n8n", "kafka", "go", "clickhouse", "streaming", "cqrs"]
+description: "Event streaming real con Kafka + sink columnar ClickHouse. Patron CQRS."

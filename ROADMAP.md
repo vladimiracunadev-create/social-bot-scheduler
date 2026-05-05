@@ -47,6 +47,21 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 
 ## 🔮 Futuro (v5.0+)
 
+### 🧩 Expansión de la Matriz Tecnológica (casos 10-14 — scaffolding ya creado)
+- [ ] **Caso 10 — JVM**: Java (Spring Boot) → Kotlin (Ktor) + PostgreSQL. Cubre el hueco enterprise JVM.
+- [ ] **Caso 11 — BEAM**: Elixir (Phoenix) → Erlang (Cowboy) + Mnesia. Modelo de actores y supervisión OTP.
+- [ ] **Caso 12 — RAG/IA**: Python LLM → FastAPI + pgvector. Pipeline embeddings + retrieval semántico.
+- [ ] **Caso 13 — Streaming**: Node + Kafka → Go consumer + ClickHouse. Event streaming real + OLAP columnar.
+- [ ] **Caso 14 — BaaS**: Next.js 15 → Supabase (Edge Functions + RLS + Realtime). Primer caso BaaS de la matriz.
+
+### 🧪 Casos exploratorios (sin scaffolding aún)
+- [ ] **gRPC Go ↔ Python** + CockroachDB (protocolo binario + SQL distribuido).
+- [ ] **GraphQL Apollo ↔ Hasura** + TimescaleDB (gateway API + series temporales).
+- [ ] **MQTT Rust ↔ Node** + InfluxDB (IoT/telemetría).
+- [ ] **Zig ↔ Crystal** + Neo4j (lenguajes emergentes + grafos).
+- [ ] **F# ↔ Clojure** + XTDB (funcional puro + DB inmutable temporal).
+- [ ] **Swift Vapor ↔ Dart Shelf** + Firebase (stack mobile-backend).
+
 ### ☁️ Cloud Native & Scalability
 - [ ] **Terraform/IaC**: Despliegue automatizado en AWS ECS Fargate y Google Cloud Run.
 - [ ] **Kubernetes Heavy**: Helm Charts oficiales y NetworkPolicies granulares.

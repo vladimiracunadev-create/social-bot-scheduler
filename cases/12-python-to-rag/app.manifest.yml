@@ -1,0 +1,19 @@
+id: "12"
+name: "Python (LLM) -> n8n -> FastAPI + RAG"
+path: "cases/12-python-to-rag"
+status: "planned"
+origin:
+  language: "python"
+  framework: "sentence-transformers"
+  entrypoint: "origin/embed_producer.py"
+destination:
+  language: "python"
+  framework: "fastapi"
+  port: 8092
+  url: "http://localhost:8092"
+database:
+  engine: "postgresql"
+  extension: "pgvector"
+  alternative: "qdrant"
+stack: ["python", "fastapi", "n8n", "pgvector", "sentence-transformers", "rag", "embeddings"]
+description: "Pipeline RAG: chunking, embeddings, indexacion vectorial y retrieval semantico."

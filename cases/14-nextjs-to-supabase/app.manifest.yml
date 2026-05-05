@@ -1,0 +1,20 @@
+id: "14"
+name: "Next.js -> n8n -> Supabase (BaaS)"
+path: "cases/14-nextjs-to-supabase"
+status: "planned"
+origin:
+  language: "typescript"
+  framework: "nextjs-15-app-router"
+  entrypoint: "origin/app/page.tsx"
+destination:
+  language: "typescript"
+  framework: "supabase-edge-functions"
+  runtime: "deno"
+  port: 8094
+  url: "http://localhost:8094"
+database:
+  engine: "postgresql"
+  managed_by: "supabase-cli-local"
+  features: ["row-level-security", "realtime", "storage", "auth"]
+stack: ["nextjs", "react", "n8n", "supabase", "deno", "postgresql", "realtime", "rls", "baas"]
+description: "Primer caso BaaS: Supabase local con RLS, Realtime y Edge Functions Deno."

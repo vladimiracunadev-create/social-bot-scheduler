@@ -70,6 +70,19 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 | **08** | `C# (.NET)` | **n8n** | `Flask` | 🏢 **SQL Server** | `case08` |
 | **09** | `Python` | **n8n** | `FastAPI Gateway` | 🦆 **DuckDB** | `case09` |
 
+### 🚧 Casos planificados (v5.0 — pendientes de implementación)
+
+| ID | 📤 Origen (Emisor) | 🌉 Puente | 📥 Destino (Receptor) | 📁 Persistencia | 📌 Estado |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **10** | `Java (Spring Boot)` | **n8n** | `Kotlin (Ktor)` | 🐘 **PostgreSQL** | 🚧 Planned |
+| **11** | `Elixir (Phoenix)` | **n8n** | `Erlang (Cowboy)` | 🟣 **Mnesia** | 🚧 Planned |
+| **12** | `Python (LLM)` | **n8n** | `FastAPI + RAG` | 🧠 **pgvector** | 🚧 Planned |
+| **13** | `Node.js + Kafka` | **n8n** | `Go consumer` | 🟡 **ClickHouse** | 🚧 Planned |
+| **14** | `Next.js 15` | **n8n** | `Supabase Edge Fn` | 🟢 **Supabase (Postgres + RLS)** | 🚧 Planned |
+
+> [!NOTE]
+> Los casos 10-14 contienen únicamente scaffolding y documentación de diseño. Su implementación está en el [ROADMAP.md](ROADMAP.md).
+
 ---
 
 ## 🛡️ Modelo de Seguridad Runtime

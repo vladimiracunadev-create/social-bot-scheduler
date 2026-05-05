@@ -1,0 +1,18 @@
+id: "10"
+name: "Java (Spring Boot) -> n8n -> Kotlin (Ktor)"
+path: "cases/10-java-to-kotlin"
+status: "planned"
+origin:
+  language: "java"
+  framework: "spring-boot"
+  entrypoint: "origin/OrderPublisher.java"
+destination:
+  language: "kotlin"
+  framework: "ktor"
+  port: 8090
+  url: "http://localhost:8090"
+database:
+  engine: "postgresql"
+  version: "16"
+stack: ["java", "spring-boot", "n8n", "kotlin", "ktor", "postgresql"]
+description: "Cobertura JVM: integracion entre Spring Boot (bloqueante) y Ktor (no-bloqueante con corrutinas)."

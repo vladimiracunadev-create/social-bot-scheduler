@@ -1,0 +1,18 @@
+id: "11"
+name: "Elixir (Phoenix) -> n8n -> Erlang (Cowboy)"
+path: "cases/11-elixir-to-erlang"
+status: "planned"
+origin:
+  language: "elixir"
+  framework: "phoenix"
+  entrypoint: "origin/lib/publisher.ex"
+destination:
+  language: "erlang"
+  framework: "cowboy"
+  port: 8091
+  url: "http://localhost:8091"
+database:
+  engine: "mnesia"
+  notes: "DB nativa BEAM; alternativa ETS para hot storage"
+stack: ["elixir", "phoenix", "n8n", "erlang", "cowboy", "mnesia", "otp"]
+description: "Modelo de actores BEAM: concurrencia masiva, supervision OTP, let-it-crash."
