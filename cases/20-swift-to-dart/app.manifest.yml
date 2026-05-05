@@ -1,0 +1,19 @@
+id: "20"
+name: "Swift (Vapor) -> n8n -> Dart (Shelf) -> Firebase Emulator"
+path: "cases/20-swift-to-dart"
+status: "planned"
+origin:
+  language: "swift"
+  framework: "vapor-4"
+  entrypoint: "origin/Sources/Publisher/main.swift"
+destination:
+  language: "dart"
+  framework: "shelf"
+  port: 8100
+  url: "http://localhost:8100"
+database:
+  engine: "firestore"
+  managed_by: "firebase-emulator-suite-local"
+  features: ["firestore", "auth", "cloud-functions", "storage"]
+stack: ["swift", "vapor", "n8n", "dart", "shelf", "firebase", "firestore", "mobile-backend"]
+description: "Stack mobile-backend con Swift y Dart server-side + Firebase emulado local."

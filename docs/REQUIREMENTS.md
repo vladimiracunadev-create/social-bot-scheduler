@@ -14,6 +14,9 @@ Ejecutar más de 20 contenedores simultáneamente (incluyendo 8 motores de bases
 | **RAM** | 4 GB | 8 GB | **16 GB** |
 | **Disco** | 2 GB | 5 GB | **8-10 GB** |
 
+> [!NOTE]
+> **Casos planificados 10–20** (ver [PLANNED_CASES.md](PLANNED_CASES.md)): si todos se implementaran, la estimación crecería a **24+ GB RAM** y **15+ GB disco** por la adición de Kafka, ClickHouse, CockroachDB, Neo4j, XTDB, Firebase Emulator y stacks Swift/Hasura.
+
 ---
 
 ## ⚡ Notas de Gestión de Recursos

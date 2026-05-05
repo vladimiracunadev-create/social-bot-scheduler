@@ -6,7 +6,7 @@ Esta guía detalla la implementación de los mecanismos de defensa y recuperaci�
 
 ## 📊 Cobertura de Resiliencia
 
-El 100% de los **9 casos de integración** cuentan con el siguiente stack de resiliencia:
+El 100% de los **9 casos de integración implementados** cuentan con el siguiente stack de resiliencia (los [casos planificados 10–20](../PLANNED_CASES.md) deberán incorporarlo en su implementación futura):
 
 | Mecanismo | Propósito Técnico | Estado |
 | :--- | :--- | :---: |

@@ -79,9 +79,15 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 | **12** | `Python (LLM)` | **n8n** | `FastAPI + RAG` | 🧠 **pgvector** | 🚧 Planned |
 | **13** | `Node.js + Kafka` | **n8n** | `Go consumer` | 🟡 **ClickHouse** | 🚧 Planned |
 | **14** | `Next.js 15` | **n8n** | `Supabase Edge Fn` | 🟢 **Supabase (Postgres + RLS)** | 🚧 Planned |
+| **15** | `Go (gRPC)` | **n8n** | `Python (gRPC)` | 🪳 **CockroachDB** | 🚧 Planned |
+| **16** | `Apollo (GraphQL)` | **n8n** | `Hasura` | 📈 **TimescaleDB** | 🚧 Planned |
+| **17** | `Rust (MQTT)` | **n8n** | `Node (MQTT)` | 📊 **InfluxDB** | 🚧 Planned |
+| **18** | `Zig` | **n8n** | `Crystal (Kemal)` | 🕸️ **Neo4j** | 🚧 Planned |
+| **19** | `F# (.NET)` | **n8n** | `Clojure (Ring)` | ⏳ **XTDB** | 🚧 Planned |
+| **20** | `Swift (Vapor)` | **n8n** | `Dart (Shelf)` | 🔥 **Firebase Emul.** | 🚧 Planned |
 
 > [!NOTE]
-> Los casos 10-14 contienen únicamente scaffolding y documentación de diseño. Su implementación está en el [ROADMAP.md](ROADMAP.md).
+> Los casos 10–20 contienen únicamente scaffolding y documentación de diseño. Ver [docs/PLANNED_CASES.md](docs/PLANNED_CASES.md) como single source of truth, y [ROADMAP.md](ROADMAP.md) para priorización.
 
 ---
 

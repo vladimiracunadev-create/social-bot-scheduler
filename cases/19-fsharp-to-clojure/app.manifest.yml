@@ -1,0 +1,19 @@
+id: "19"
+name: "F# (.NET) -> n8n -> Clojure (Ring/Reitit) -> XTDB"
+path: "cases/19-fsharp-to-clojure"
+status: "planned"
+origin:
+  language: "fsharp"
+  runtime: "dotnet-9"
+  entrypoint: "origin/Publisher.fs"
+destination:
+  language: "clojure"
+  framework: "ring+reitit"
+  port: 8099
+  url: "http://localhost:8099"
+database:
+  engine: "xtdb"
+  version: "2.x"
+  features: ["bitemporal", "datalog", "sql"]
+stack: ["fsharp", "dotnet", "n8n", "clojure", "ring", "reitit", "xtdb", "functional", "bitemporal"]
+description: "Paradigma funcional puro multi-runtime + DB bitemporal inmutable."

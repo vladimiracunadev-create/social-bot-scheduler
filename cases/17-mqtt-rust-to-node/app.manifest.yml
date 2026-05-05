@@ -1,0 +1,23 @@
+id: "17"
+name: "Rust (MQTT pub) -> n8n -> Node (sub) -> InfluxDB"
+path: "cases/17-mqtt-rust-to-node"
+status: "planned"
+origin:
+  language: "rust"
+  protocol: "mqtt"
+  library: "rumqttc"
+  entrypoint: "origin/publisher.rs"
+destination:
+  language: "node"
+  protocol: "mqtt"
+  port: 8097
+  url: "http://localhost:8097"
+broker:
+  engine: "mosquitto"
+  version: "2.x"
+  qos: 1
+database:
+  engine: "influxdb"
+  version: "2.x"
+stack: ["rust", "mqtt", "mosquitto", "n8n", "node", "influxdb", "iot", "telemetry"]
+description: "Patron pub/sub IoT con MQTT, broker Mosquitto y persistencia time-series."

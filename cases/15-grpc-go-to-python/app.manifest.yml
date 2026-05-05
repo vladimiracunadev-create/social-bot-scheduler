@@ -1,0 +1,19 @@
+id: "15"
+name: "Go (gRPC server) -> n8n -> Python (gRPC client)"
+path: "cases/15-grpc-go-to-python"
+status: "planned"
+origin:
+  language: "go"
+  protocol: "grpc"
+  entrypoint: "origin/server.go"
+destination:
+  language: "python"
+  protocol: "grpc"
+  framework: "fastapi+grpcio"
+  port: 8095
+  url: "http://localhost:8095"
+database:
+  engine: "cockroachdb"
+  notes: "SQL distribuido, Postgres wire-compatible"
+stack: ["go", "grpc", "protobuf", "n8n", "python", "fastapi", "cockroachdb"]
+description: "Protocolo binario gRPC + persistencia SQL distribuida con consenso Raft."

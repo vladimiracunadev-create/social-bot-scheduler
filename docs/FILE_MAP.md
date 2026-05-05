@@ -10,7 +10,7 @@
 social-bot-scheduler/
 ├── 🏠 Raíz ................... Configuración, orquestación y entrada principal
 ├── 🛡️ apache/ ................ Config Apache de hardening (security headers)
-├── 📦 cases/ ................. 9 Casos de Integración (Origen → n8n → Destino)
+├── 📦 cases/ ................. 9 Casos implementados + 11 planificados (ver docs/PLANNED_CASES.md)
 ├── 📚 docs/ .................. Documentación técnica y guías
 ├── 🌐 edge/ .................. Caddy reverse proxy (perfil edge)
 ├── 🔄 n8n/ ................... Workflows de orquestación (JSON exportados)
@@ -83,7 +83,7 @@ social-bot-scheduler/
 | `SECURITY.md` | 🟢 Alta | Política de seguridad: cómo reportar vulnerabilidades de forma responsable. |
 | `LICENSE` | 🟡 Media | Licencia del proyecto (MIT/Apache). |
 | `NOTICE` | 🟢 Baja | Atribuciones legales de dependencias de terceros. |
-| `index.html` | 🟢 Alta | **Dashboard Maestro** — Interfaz web unificada que muestra el estado de los 9 casos en tiempo real. |
+| `index.html` | 🟢 Alta | **Dashboard Maestro** — Interfaz web unificada que muestra el estado de los 9 casos implementados en tiempo real, más placeholders para los 11 casos planificados. |
 | `llms.txt` | 🟢 Baja | Metadatos del proyecto optimizados para consumo por modelos de lenguaje (LLMs). |
 | `COMO_ACTIVAR_WORKFLOWS.md` | 🟢 Alta | Guía paso a paso para importar y activar los workflows de n8n. |
 | `IMPORT_WORKFLOWS.md` | 🟡 Media | Documentación técnica del proceso de importación de workflows. |

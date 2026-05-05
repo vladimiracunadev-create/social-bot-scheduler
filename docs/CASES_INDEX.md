@@ -46,5 +46,25 @@ Descubre por que hemos elegido estas combinaciones y que beneficios aporta cada 
 
 ---
 
+## Casos Planificados (10-20)
+
+Existen **11 casos adicionales** con scaffolding y documentación de diseño, pero **sin implementacion funcional** todavia. Ver el documento dedicado: [PLANNED_CASES.md](PLANNED_CASES.md).
+
+| ID | Flujo (resumen) | DB | Categoria |
+| :--- | :--- | :--- | :--- |
+| 10 | Java (Spring) -> Kotlin (Ktor) | PostgreSQL | JVM |
+| 11 | Elixir -> Erlang | Mnesia | BEAM / Actores |
+| 12 | Python LLM -> FastAPI RAG | pgvector | IA / RAG |
+| 13 | Node + Kafka -> Go | ClickHouse | Streaming |
+| 14 | Next.js -> Supabase | Postgres + RLS | BaaS |
+| 15 | Go gRPC -> Python gRPC | CockroachDB | Protobuf |
+| 16 | Apollo GraphQL -> Hasura | TimescaleDB | GraphQL |
+| 17 | Rust MQTT -> Node | InfluxDB | IoT |
+| 18 | Zig -> Crystal | Neo4j | Grafos |
+| 19 | F# -> Clojure | XTDB | Bitemporal |
+| 20 | Swift Vapor -> Dart Shelf | Firebase emulator | Mobile-backend |
+
+---
+
 ## El Rol de n8n
 En todos los casos, **n8n** actua como la capa de abstraccion y resiliencia. En el Caso 09, ademas de mantener guardrails, inyecta `X-API-Key` desde entorno para proteger el gateway sin exponer secretos en el payload.

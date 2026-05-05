@@ -1,0 +1,18 @@
+id: "16"
+name: "Apollo Server (GraphQL) -> n8n -> Hasura -> TimescaleDB"
+path: "cases/16-graphql-to-hasura"
+status: "planned"
+origin:
+  language: "typescript"
+  framework: "apollo-server-v4"
+  entrypoint: "origin/server.ts"
+destination:
+  language: "n/a"
+  framework: "hasura"
+  port: 8096
+  url: "http://localhost:8096"
+database:
+  engine: "timescaledb"
+  notes: "Extension Postgres para series temporales"
+stack: ["typescript", "graphql", "apollo", "n8n", "hasura", "timescaledb", "postgresql"]
+description: "GraphQL schema-first (Apollo) vs DB-first (Hasura) con persistencia time-series."

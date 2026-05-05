@@ -1,6 +1,6 @@
 # 🧩 Índice de la Matriz Tecnológica
 
-Bienvenidos a la cartografía del **Social Bot Scheduler**. Este laboratorio se compone de 9 ejes de integración que demuestran la ductilidad de la orquestación moderna.
+Bienvenidos a la cartografía del **Social Bot Scheduler**. Este laboratorio se compone de **9 ejes de integración implementados** y **11 casos planificados adicionales** (ver [PLANNED_CASES](../PLANNED_CASES.md)) que demuestran la ductilidad de la orquestación moderna.
 
 ---
 
@@ -17,6 +17,7 @@ Bienvenidos a la cartografía del **Social Bot Scheduler**. Este laboratorio se 
 | **07** | Rust -> **n8n** -> Ruby | `8087` | 👁️ **Cassandra**| 🔴 Avanzado |
 | **08** | C# (.NET) -> **n8n** -> Flask | `8088` | 🏢 **SQL Server**| 🔴 Avanzado |
 | **09** | Python -> **n8n** -> FastAPI Gateway| `8090` | 🦆 **DuckDB** | 🔴 Avanzado |
+| **10–20** | 🚧 *Casos planificados (JVM, BEAM, RAG, Kafka, Supabase, gRPC, GraphQL, MQTT, Zig/Crystal, F#/Clojure, Swift/Dart)* | `8090–8100` | *11 nuevos motores* | 📐 Diseñado |
 
 ---
 

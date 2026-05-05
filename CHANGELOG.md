@@ -4,6 +4,36 @@ Todos los cambios notables en este proyecto se documentan sistemáticamente en e
 
 ---
 
+## 🚧 [Unreleased] — Roadmap v5.0
+
+### ✨ Añadido — Scaffolding de 11 casos planificados (cases 10–20)
+
+Se incorpora la documentación de diseño y estructura de carpetas para 11 nuevos casos de integración. **Sin implementación funcional**: solo `README.md`, `app.manifest.yml` (con `status: planned`) y carpetas `origin/` + `dest/`.
+
+| ID | Stack | Categoría |
+| :--- | :--- | :--- |
+| 10 | Java (Spring Boot) → Kotlin (Ktor) + PostgreSQL | JVM |
+| 11 | Elixir (Phoenix) → Erlang (Cowboy) + Mnesia | BEAM / Actores |
+| 12 | Python LLM → FastAPI + pgvector | RAG / IA |
+| 13 | Node + Kafka → Go + ClickHouse | Streaming / OLAP |
+| 14 | Next.js 15 → Supabase Edge Functions | BaaS |
+| 15 | Go gRPC → Python gRPC + CockroachDB | Protobuf / SQL distribuido |
+| 16 | Apollo GraphQL → Hasura + TimescaleDB | GraphQL / Time-series |
+| 17 | Rust MQTT → Node MQTT + InfluxDB | IoT / Pub-Sub |
+| 18 | Zig → Crystal + Neo4j | Lenguajes emergentes / Grafos |
+| 19 | F# (.NET) → Clojure + XTDB | Funcional / Bitemporal |
+| 20 | Swift Vapor → Dart Shelf + Firebase emulator | Mobile-backend |
+
+### 📚 Documentación
+
+- Nuevo: `docs/PLANNED_CASES.md` — single source of truth de la matriz planificada.
+- Actualizado: `README.md`, `ROADMAP.md`, `CHANGELOG.md`, `index.html` y 10+ MD del catálogo (`docs/CASES_INDEX.md`, `docs/wiki/Cases-Index.md`, `docs/FILE_MAP.md`, `docs/INSTALL.md`, `docs/REQUIREMENTS.md`, `docs/INSIGHTS.md`, `docs/GUARDRAILS.md`, `docs/wiki/Resilience.md`, `docs/wiki/Home.md`, `docs/wiki/Usage-Guide.md`, `COMO_ACTIVAR_WORKFLOWS.md`) con referencias cruzadas a los casos planificados.
+
+> [!NOTE]
+> No se ha modificado `docker-compose.yml`, scripts ni código fuente. Los perfiles `case10`–`case20` no existen aún — su implementación se planifica en bloques (Tier 1 → Tier 2 → Tier 3).
+
+---
+
 ## 🔒 [4.2.0] — 2026-04-06
 
 ### 🛡️ Seguridad — Auditoría de 8 Capas

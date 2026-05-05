@@ -54,13 +54,19 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 - [ ] **Caso 13 — Streaming**: Node + Kafka → Go consumer + ClickHouse. Event streaming real + OLAP columnar.
 - [ ] **Caso 14 — BaaS**: Next.js 15 → Supabase (Edge Functions + RLS + Realtime). Primer caso BaaS de la matriz.
 
-### 🧪 Casos exploratorios (sin scaffolding aún)
-- [ ] **gRPC Go ↔ Python** + CockroachDB (protocolo binario + SQL distribuido).
-- [ ] **GraphQL Apollo ↔ Hasura** + TimescaleDB (gateway API + series temporales).
-- [ ] **MQTT Rust ↔ Node** + InfluxDB (IoT/telemetría).
-- [ ] **Zig ↔ Crystal** + Neo4j (lenguajes emergentes + grafos).
-- [ ] **F# ↔ Clojure** + XTDB (funcional puro + DB inmutable temporal).
-- [ ] **Swift Vapor ↔ Dart Shelf** + Firebase (stack mobile-backend).
+### 🧩 Tier 2/3 — Scaffolding también creado (cases 15-20)
+- [ ] **Caso 15 — gRPC**: Go server ↔ Python client + CockroachDB (protocolo binario + SQL distribuido).
+- [ ] **Caso 16 — GraphQL**: Apollo Server ↔ Hasura + TimescaleDB (schema-first vs DB-first + series temporales).
+- [ ] **Caso 17 — IoT**: Rust MQTT publisher ↔ Node subscriber + InfluxDB (pub/sub + telemetría).
+- [ ] **Caso 18 — Grafos**: Zig ↔ Crystal (Kemal) + Neo4j (lenguajes emergentes sin GC + Cypher).
+- [ ] **Caso 19 — Funcional**: F# (.NET) ↔ Clojure (Ring/Reitit) + XTDB (paradigma puro + DB bitemporal).
+- [ ] **Caso 20 — Mobile-backend**: Swift Vapor ↔ Dart Shelf + Firebase emulator local.
+
+### 🧪 Casos exploratorios (sin scaffolding — solo brainstorm)
+- [ ] WebAssembly: Rust → WASM module → Wasmtime/Wasmer host runtime.
+- [ ] Blockchain: Solidity contract → Web3 listener.
+- [ ] CRDT collaborative: Yjs / Automerge sobre WebSocket.
+- [ ] OpenTelemetry: pipeline completo de traces, metrics y logs.
 
 ### ☁️ Cloud Native & Scalability
 - [ ] **Terraform/IaC**: Despliegue automatizado en AWS ECS Fargate y Google Cloud Run.

@@ -25,7 +25,7 @@ Si es la primera vez que inicias el contenedor, n8n solicitará la creación de 
 
 ## 📥 Paso 3: Importación de la Matriz
 
-Para cada uno de los **9 casos de integración**, debes realizar el siguiente proceso:
+Para cada uno de los **9 casos de integración implementados**, debes realizar el siguiente proceso (los [11 casos planificados](docs/PLANNED_CASES.md) aún no tienen workflows que importar):
 
 1.  **Añadir Flujo**: Haz clic en el botón **"+" (Add workflow)**.
 2.  **Importar**: En el menú superior derecho (**⋮**), selecciona **"Import from file"**.

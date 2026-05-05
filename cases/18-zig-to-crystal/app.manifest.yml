@@ -1,0 +1,18 @@
+id: "18"
+name: "Zig -> n8n -> Crystal (Kemal) -> Neo4j"
+path: "cases/18-zig-to-crystal"
+status: "planned"
+origin:
+  language: "zig"
+  entrypoint: "origin/publisher.zig"
+destination:
+  language: "crystal"
+  framework: "kemal"
+  port: 8098
+  url: "http://localhost:8098"
+database:
+  engine: "neo4j"
+  version: "5.x"
+  query_language: "cypher"
+stack: ["zig", "n8n", "crystal", "kemal", "neo4j", "graph-database"]
+description: "Lenguajes emergentes (Zig sin GC, Crystal Ruby-like) + base de grafos."

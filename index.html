@@ -323,6 +323,26 @@
             color: #f59e0b;
         }
 
+        .case-status.status-planned {
+            background: rgba(251, 146, 60, 0.15);
+            color: #fb923c;
+            border: 1px dashed #fb923c;
+        }
+        .case-card[data-planned="true"] {
+            opacity: 0.78;
+            border-style: dashed;
+        }
+        .case-card[data-planned="true"] .btn-test {
+            cursor: not-allowed;
+            background: #6b7280;
+            opacity: 0.6;
+        }
+        .planned-banner {
+            font-size: 0.75rem;
+            color: #fb923c;
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
         .status-pass {
             background: rgba(34, 197, 94, 0.1);
             color: #22c55e;
@@ -575,6 +595,198 @@
             <button class="btn-test" id="btn-09">Probar Integracion</button>
             <div class="db-records" id="db-records-09" style="display:none"></div>
             <div class="case-result" id="result-09"></div>
+        </div>
+
+        <!-- =====================================================
+             CASOS PLANIFICADOS (10-20) — Sin implementación aún
+             Ver docs/PLANNED_CASES.md
+             ===================================================== -->
+
+        <!-- Case 10: Java -> Kotlin -->
+        <div class="case-card" data-case="10" data-planned="true">
+            <div class="case-header">
+                <span class="case-id">CASE-10</span>
+                <span class="case-status status-planned">PLANNED</span>
+            </div>
+            <h3 class="case-title">Java (Spring) ➔ n8n ➔ Kotlin (Ktor)</h3>
+            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <div class="db-tag">Database: PostgreSQL</div>
+            <div class="tech-stack">
+                <span class="tech-tag">JVM</span>
+                <span class="tech-tag">Spring Boot</span>
+                <span class="tech-tag">Ktor + Coroutines</span>
+            </div>
+            <button class="btn-test" disabled>No disponible</button>
+        </div>
+
+        <!-- Case 11: Elixir -> Erlang -->
+        <div class="case-card" data-case="11" data-planned="true">
+            <div class="case-header">
+                <span class="case-id">CASE-11</span>
+                <span class="case-status status-planned">PLANNED</span>
+            </div>
+            <h3 class="case-title">Elixir (Phoenix) ➔ n8n ➔ Erlang (Cowboy)</h3>
+            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <div class="db-tag">Database: Mnesia</div>
+            <div class="tech-stack">
+                <span class="tech-tag">BEAM VM</span>
+                <span class="tech-tag">OTP</span>
+                <span class="tech-tag">Actor Model</span>
+            </div>
+            <button class="btn-test" disabled>No disponible</button>
+        </div>
+
+        <!-- Case 12: Python -> RAG -->
+        <div class="case-card" data-case="12" data-planned="true">
+            <div class="case-header">
+                <span class="case-id">CASE-12</span>
+                <span class="case-status status-planned">PLANNED</span>
+            </div>
+            <h3 class="case-title">Python (LLM) ➔ n8n ➔ FastAPI + RAG</h3>
+            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <div class="db-tag">Database: pgvector</div>
+            <div class="tech-stack">
+                <span class="tech-tag">RAG</span>
+                <span class="tech-tag">Embeddings</span>
+                <span class="tech-tag">FastAPI</span>
+            </div>
+            <button class="btn-test" disabled>No disponible</button>
+        </div>
+
+        <!-- Case 13: Node + Kafka -> Go -->
+        <div class="case-card" data-case="13" data-planned="true">
+            <div class="case-header">
+                <span class="case-id">CASE-13</span>
+                <span class="case-status status-planned">PLANNED</span>
+            </div>
+            <h3 class="case-title">Node + Kafka ➔ n8n ➔ Go consumer</h3>
+            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <div class="db-tag">Database: ClickHouse</div>
+            <div class="tech-stack">
+                <span class="tech-tag">Kafka</span>
+                <span class="tech-tag">Streaming</span>
+                <span class="tech-tag">OLAP</span>
+            </div>
+            <button class="btn-test" disabled>No disponible</button>
+        </div>
+
+        <!-- Case 14: Next.js -> Supabase -->
+        <div class="case-card" data-case="14" data-planned="true">
+            <div class="case-header">
+                <span class="case-id">CASE-14</span>
+                <span class="case-status status-planned">PLANNED</span>
+            </div>
+            <h3 class="case-title">Next.js 15 ➔ n8n ➔ Supabase Edge Fn</h3>
+            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <div class="db-tag">Database: Supabase (Postgres + RLS)</div>
+            <div class="tech-stack">
+                <span class="tech-tag">BaaS</span>
+                <span class="tech-tag">RLS</span>
+                <span class="tech-tag">Realtime</span>
+            </div>
+            <button class="btn-test" disabled>No disponible</button>
+        </div>
+
+        <!-- Case 15: Go gRPC -> Python gRPC -->
+        <div class="case-card" data-case="15" data-planned="true">
+            <div class="case-header">
+                <span class="case-id">CASE-15</span>
+                <span class="case-status status-planned">PLANNED</span>
+            </div>
+            <h3 class="case-title">Go (gRPC) ➔ n8n ➔ Python (gRPC)</h3>
+            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <div class="db-tag">Database: CockroachDB</div>
+            <div class="tech-stack">
+                <span class="tech-tag">gRPC</span>
+                <span class="tech-tag">Protobuf</span>
+                <span class="tech-tag">SQL distribuido</span>
+            </div>
+            <button class="btn-test" disabled>No disponible</button>
+        </div>
+
+        <!-- Case 16: GraphQL -> Hasura -->
+        <div class="case-card" data-case="16" data-planned="true">
+            <div class="case-header">
+                <span class="case-id">CASE-16</span>
+                <span class="case-status status-planned">PLANNED</span>
+            </div>
+            <h3 class="case-title">Apollo (GraphQL) ➔ n8n ➔ Hasura</h3>
+            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <div class="db-tag">Database: TimescaleDB</div>
+            <div class="tech-stack">
+                <span class="tech-tag">GraphQL</span>
+                <span class="tech-tag">Hasura</span>
+                <span class="tech-tag">Time-series</span>
+            </div>
+            <button class="btn-test" disabled>No disponible</button>
+        </div>
+
+        <!-- Case 17: Rust MQTT -> Node -->
+        <div class="case-card" data-case="17" data-planned="true">
+            <div class="case-header">
+                <span class="case-id">CASE-17</span>
+                <span class="case-status status-planned">PLANNED</span>
+            </div>
+            <h3 class="case-title">Rust (MQTT) ➔ n8n ➔ Node (MQTT)</h3>
+            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <div class="db-tag">Database: InfluxDB</div>
+            <div class="tech-stack">
+                <span class="tech-tag">MQTT 5.0</span>
+                <span class="tech-tag">IoT</span>
+                <span class="tech-tag">Pub-Sub</span>
+            </div>
+            <button class="btn-test" disabled>No disponible</button>
+        </div>
+
+        <!-- Case 18: Zig -> Crystal -->
+        <div class="case-card" data-case="18" data-planned="true">
+            <div class="case-header">
+                <span class="case-id">CASE-18</span>
+                <span class="case-status status-planned">PLANNED</span>
+            </div>
+            <h3 class="case-title">Zig ➔ n8n ➔ Crystal (Kemal)</h3>
+            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <div class="db-tag">Database: Neo4j</div>
+            <div class="tech-stack">
+                <span class="tech-tag">Zig (no GC)</span>
+                <span class="tech-tag">Crystal</span>
+                <span class="tech-tag">Cypher / Grafos</span>
+            </div>
+            <button class="btn-test" disabled>No disponible</button>
+        </div>
+
+        <!-- Case 19: F# -> Clojure -->
+        <div class="case-card" data-case="19" data-planned="true">
+            <div class="case-header">
+                <span class="case-id">CASE-19</span>
+                <span class="case-status status-planned">PLANNED</span>
+            </div>
+            <h3 class="case-title">F# (.NET) ➔ n8n ➔ Clojure (Ring)</h3>
+            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <div class="db-tag">Database: XTDB</div>
+            <div class="tech-stack">
+                <span class="tech-tag">Funcional puro</span>
+                <span class="tech-tag">Bitemporal</span>
+                <span class="tech-tag">Datalog</span>
+            </div>
+            <button class="btn-test" disabled>No disponible</button>
+        </div>
+
+        <!-- Case 20: Swift -> Dart -->
+        <div class="case-card" data-case="20" data-planned="true">
+            <div class="case-header">
+                <span class="case-id">CASE-20</span>
+                <span class="case-status status-planned">PLANNED</span>
+            </div>
+            <h3 class="case-title">Swift (Vapor) ➔ n8n ➔ Dart (Shelf)</h3>
+            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <div class="db-tag">Database: Firebase Emulator</div>
+            <div class="tech-stack">
+                <span class="tech-tag">Mobile-backend</span>
+                <span class="tech-tag">Firestore</span>
+                <span class="tech-tag">Vapor 4</span>
+            </div>
+            <button class="btn-test" disabled>No disponible</button>
         </div>
     </main>
 
