@@ -1,0 +1,13 @@
+{
+  "name": "social-bot-case04-origin",
+  "version": "1.0.0",
+  "description": "Emisor Node.js para case 04 (Node -> n8n -> FastAPI).",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.7"
+  }
+}

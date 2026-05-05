@@ -1,12 +1,11 @@
 FROM golang:1.21-alpine AS builder
 WORKDIR /app
+COPY go.mod ./
 COPY main.go .
 COPY index.html .
 
-RUN go mod init social-bot-dest-go && \
-    go get github.com/go-sql-driver/mysql
-
-RUN go build -o main main.go
+# go mod tidy generates go.sum on the fly so the repo doesn't need to ship one.
+RUN go mod tidy && go build -o main main.go
 
 FROM alpine:3.20.6
 WORKDIR /root/
