@@ -260,18 +260,35 @@ def validate_case(case: CaseExpectation) -> list[str]:
     return errors
 
 
+def is_planned_case(case_dir: Path) -> bool:
+    manifest_path = case_dir / "app.manifest.yml"
+    if not manifest_path.exists():
+        return False
+    try:
+        manifest = load_manifest(case_dir)
+    except OSError:
+        return False
+    return manifest.get("status") == "planned"
+
+
 def main() -> int:
     errors: list[str] = []
 
-    existing_case_dirs = sorted(
-        path.name for path in CASES_DIR.iterdir() if path.is_dir()
+    all_case_dirs = sorted(
+        path for path in CASES_DIR.iterdir() if path.is_dir()
+    )
+    implemented_case_dirs = sorted(
+        path.name for path in all_case_dirs if not is_planned_case(path)
+    )
+    planned_case_dirs = sorted(
+        path.name for path in all_case_dirs if is_planned_case(path)
     )
     expected_case_dirs = sorted(case.slug for case in EXPECTED_CASES)
 
-    if existing_case_dirs != expected_case_dirs:
+    if implemented_case_dirs != expected_case_dirs:
         errors.append(
-            "cases/: expected matrix does not match current directories "
-            f"(expected={expected_case_dirs}, actual={existing_case_dirs})"
+            "cases/: implemented matrix does not match expected directories "
+            f"(expected={expected_case_dirs}, actual_implemented={implemented_case_dirs})"
         )
 
     for case in EXPECTED_CASES:
@@ -284,6 +301,8 @@ def main() -> int:
         return 1
 
     print("Matrix validation passed for cases 01-09.")
+    if planned_case_dirs:
+        print(f"Skipped {len(planned_case_dirs)} planned cases: {', '.join(planned_case_dirs)}")
     return 0
 
 
