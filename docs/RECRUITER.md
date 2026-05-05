@@ -10,9 +10,10 @@
 **Social Bot Scheduler** es un laboratorio de ingeniería de software que demuestra **interoperabilidad multi-lenguaje y persistencia políglota a escala industrial**. 
 
 ### 💎 Diferenciadores de Valor
-- **Agnoticismo Tecnológico**: Integración fluida de 8 lenguajes (Python, Go, Node, Rust, etc.) y 8 motores de bases de datos.
-- **Resiliencia Enterprise**: Implementación nativa de patrones de tolerancia a fallos (Circuit Breakers, Idempotencia).
-- **Seguridad Proactiva**: Mitigación en tiempo real de ataques de cadena de suministro (vulnerabilidad Trivy mitigada).
+- **Agnoticismo Tecnológico**: 9 casos implementados con 7+ lenguajes (Python, Go, Node, PHP/Laravel, Rust, Ruby, C#) sobre 9 motores de bases de datos heterogéneos. Roadmap escalado a 20 casos cubriendo JVM, BEAM, RAG/IA, streaming, BaaS, gRPC, GraphQL, IoT, funcional puro y mobile-backend (ver [PLANNED_CASES](PLANNED_CASES.md)).
+- **Resiliencia Enterprise**: Implementación nativa de patrones de tolerancia a fallos (Circuit Breakers, Idempotencia, DLQ).
+- **Seguridad Proactiva**: Mitigación en tiempo real de ataques de cadena de suministro (vulnerabilidad Trivy mitigada vía pin a v0.35.0, única versión protegida por immutable releases).
+- **Master Dashboard interactivo (v4.3.0)**: detección client-side del estado de los contenedores por caso, modal con el comando `docker-compose` listo para copiar, badges de RAM y contadores live — sin añadir backend privilegiado.
 - **Kubernetes Ready**: Manifiestos de despliegue y hardening para clústeres de orquestación modernos.
 
 ---

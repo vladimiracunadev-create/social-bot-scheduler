@@ -6,6 +6,15 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 
 ## ✅ Hitos Completados
 
+### `v4.3.0` — "Master Dashboard Interactivo" 🎛️ Ready
+- [x] **Detección automática de OFFLINE/READY** por caso vía ping cada 20 s.
+- [x] **Modal con `docker-compose --profile caseXX up -d`** + copy-to-clipboard cuando un caso está caído.
+- [x] **Barra global Docker** con contadores live + última comprobación + botón Re-comprobar.
+- [x] **Toast notifications** para transiciones online↔offline.
+- [x] **Badges de RAM** en cada una de las 20 tarjetas (9 implementadas + 11 planificadas).
+- [x] **Doc `DOCKER_RESOURCES.md`** con desglose por caso y estimaciones.
+- [x] **Fix Dependabot**: añadidos los 4 manifiestos faltantes (go.mod, package.json) + validador tolera casos planificados.
+
 ### `v4.2.0` — "Auditoría de Seguridad de 8 Capas" 🛡️ Ready
 - [x] **HTTP Security Headers**: `X-Frame-Options`, `X-Content-Type-Options`, `Content-Security-Policy`, `Referrer-Policy`, `Permissions-Policy` y `Options -Indexes` en todos los servicios Apache y en el edge proxy Caddy.
 - [x] **Dependabot**: Configurado para 11 ecosistemas (pip, docker, gomod, cargo, npm, github-actions).

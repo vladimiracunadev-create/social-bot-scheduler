@@ -23,6 +23,9 @@ Usamos Python para nuestros asistentes automáticos.
 ### 3. Editor de Código (Opcional pero recomendado)
 -   **Visual Studio Code**: [Descargar aquí](https://code.visualstudio.com/).
 
+> [!TIP]
+> **¿Vas perdido?** Una vez levantado `n8n` + el dashboard (paso siguiente), abre **`http://localhost:8080`** — el **Master Dashboard** te dirá *en vivo* qué casos están encendidos y cuáles apagados, y para cada caso apagado te muestra el comando `docker-compose` exacto que necesitas ejecutar (con copy-to-clipboard). No necesitas memorizar comandos. Ver [HEALTH_CHECK.md](HEALTH_CHECK.md#diagnóstico-desde-el-master-dashboard-v430).
+
 ---
 
 ## 🚀 Fase 2: Descargar y Preparar

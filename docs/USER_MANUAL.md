@@ -36,3 +36,17 @@ Para un funcionamiento continuo, se recomienda programar su ejecución mediante 
 
 ## Integración con n8n
 El payload enviado al webhook tiene la misma estructura que el objeto del JSON. En n8n, registra un nodo "Webhook" de tipo POST y usa los datos para distribuirlos a tus nodos sociales.
+
+## 🎛️ Master Dashboard (v4.3.0)
+
+`http://localhost:8080` es la entrada visual al laboratorio. A partir de v4.3.0:
+
+- Cada caso muestra **estado en vivo** (`READY` / `OFFLINE`) detectado por el navegador cada 20 s.
+- Si un caso está apagado, el botón **"Probar Integración"** se transforma en **"⚙️ Mostrar comando para levantarlo"** y abre un modal con:
+  - El comando exacto: `docker-compose --profile caseXX up -d`
+  - La **RAM estimada** que consumirá (núcleo + caso)
+  - Un botón **📋 Copiar** al portapapeles
+- La **barra Docker** en la cabecera resume cuántos casos están READY/OFFLINE/PLANNED y el `Última comprobación: HH:MM:SS`.
+- El botón **🔄 Re-comprobar** permite forzar un ciclo manual sin esperar al intervalo.
+
+> El dashboard nunca ejecuta `docker` por ti — sólo te muestra el comando exacto. Mantiene la postura "Hardened" (sin backend privilegiado).

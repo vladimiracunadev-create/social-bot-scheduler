@@ -423,6 +423,97 @@
             background: #334155;
             color: #f1f5f9;
         }
+        /* Docker health bar + toasts + section divider */
+        .docker-bar {
+            max-width: 1100px;
+            margin: 1.5rem auto 0;
+            padding: 0.7rem 1rem;
+            background: rgba(0,0,0,0.25);
+            border: 1px solid var(--border);
+            border-radius: 0.6rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+        .docker-bar .pill {
+            padding: 0.25rem 0.7rem;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.78rem;
+            border: 1px solid transparent;
+        }
+        .pill-ready    { background: rgba(34,197,94,0.12); color: #4ade80; border-color: rgba(34,197,94,0.3); }
+        .pill-offline  { background: rgba(239,68,68,0.12); color: #f87171; border-color: rgba(239,68,68,0.3); }
+        .pill-planned  { background: rgba(251,146,60,0.12); color: #fb923c; border-color: rgba(251,146,60,0.3); }
+        .pill-checking { background: rgba(148,163,184,0.15); color: #94a3b8; }
+        .docker-bar .checked-info {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .docker-bar button.recheck {
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            border: 1px solid #475569;
+            background: #1e293b;
+            color: #f1f5f9;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .docker-bar button.recheck:hover { background: #334155; }
+        .docker-bar button.recheck:disabled { opacity: 0.6; cursor: progress; }
+
+        .section-divider {
+            grid-column: 1 / -1;
+            margin: 1rem 0 0 0;
+            padding: 0.6rem 0.9rem;
+            border-top: 1px dashed #334155;
+            color: #fb923c;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+
+        /* Toast notifications */
+        .toast-stack {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 2000;
+            max-width: 360px;
+        }
+        .toast {
+            padding: 0.7rem 0.9rem;
+            border-radius: 8px;
+            background: #1e293b;
+            border-left: 3px solid #6366f1;
+            color: #f1f5f9;
+            font-size: 0.85rem;
+            box-shadow: 0 10px 25px -10px rgba(0,0,0,0.6);
+            animation: toast-in 0.18s ease-out;
+        }
+        .toast.success { border-left-color: #22c55e; }
+        .toast.error   { border-left-color: #ef4444; }
+        .toast.warn    { border-left-color: #f59e0b; }
+        .toast.info    { border-left-color: #6366f1; }
+        @keyframes toast-in {
+            from { transform: translateX(20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .toast.fade-out {
+            animation: toast-out 0.25s ease-in forwards;
+        }
+        @keyframes toast-out {
+            to { transform: translateX(20px); opacity: 0; }
+        }
+
         .cmd-modal .est-ram {
             margin: 0 0 1rem 0;
             font-size: 0.8rem;
@@ -538,6 +629,23 @@
         <span class="summary-stat status-pass" id="stat-pass">✅ Pass: 0</span>
         <span class="summary-stat status-fail" id="stat-fail">❌ Fail: 0</span>
     </div>
+
+    <!-- Docker health bar (live counts of READY / OFFLINE / PLANNED) -->
+    <div class="docker-bar" id="docker-bar" aria-live="polite">
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+            <strong style="color: var(--text-secondary); font-weight: 600; margin-right: 0.3rem;">🐳 Docker:</strong>
+            <span class="pill pill-ready"    id="pill-ready">🟢 0 READY</span>
+            <span class="pill pill-offline"  id="pill-offline">🔴 0 OFFLINE</span>
+            <span class="pill pill-planned"  id="pill-planned">🚧 11 PLANNED</span>
+        </div>
+        <div style="display: flex; gap: 0.7rem; align-items: center;">
+            <span class="checked-info" id="last-checked">Verificando...</span>
+            <button class="recheck" id="btn-recheck" type="button">🔄 Re-comprobar</button>
+        </div>
+    </div>
+
+    <!-- Toast stack -->
+    <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="true"></div>
 
     <main id="cases-container">
         <!-- Case 01 -->
@@ -702,6 +810,8 @@
             <div class="db-records" id="db-records-09" style="display:none"></div>
             <div class="case-result" id="result-09"></div>
         </div>
+
+        <div class="section-divider">🚧 CASOS PLANIFICADOS (10–20) — solo scaffolding y documentación de diseño · ver <a href="docs/PLANNED_CASES.md" style="color:#fb923c;">PLANNED_CASES.md</a></div>
 
         <!-- =====================================================
              CASOS PLANIFICADOS (10-20) — Sin implementación aún
@@ -1243,6 +1353,23 @@
         }
 
         // ==============================================================================
+        // TOAST NOTIFICATIONS
+        // ==============================================================================
+        const TOAST_TTL_MS = 4000;
+        function toast(msg, type = 'info', ttl = TOAST_TTL_MS) {
+            const stack = document.getElementById('toast-stack');
+            if (!stack) return;
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.textContent = msg;
+            stack.appendChild(el);
+            setTimeout(() => {
+                el.classList.add('fade-out');
+                setTimeout(() => el.remove(), 250);
+            }, ttl);
+        }
+
+        // ==============================================================================
         // OFFLINE DETECTION + DOCKER COMMAND MODAL (B+C)
         // ==============================================================================
         // Cada N segundos comprobamos si el receptor de cada caso responde.
@@ -1337,14 +1464,15 @@
                 await navigator.clipboard.writeText(text);
                 btn.textContent = '✅ Copiado';
                 btn.classList.add('copied');
+                toast('Comando copiado al portapapeles', 'success');
             } catch (e) {
-                // Fallback: select text so user can Ctrl+C manually
                 const range = document.createRange();
                 range.selectNodeContents(document.getElementById('cmd-modal-cmd'));
                 const sel = window.getSelection();
                 sel.removeAllRanges();
                 sel.addRange(range);
                 btn.textContent = '⚠️ Selecciona y copia (Ctrl+C)';
+                toast('No se pudo copiar automáticamente — selecciónalo a mano', 'warn');
             }
         }
 
@@ -1357,18 +1485,76 @@
             if (e.key === 'Escape') closeCmdModal();
         });
 
-        async function refreshHealthForAll() {
-            const checks = Object.keys(CASES).map(async (id) => {
-                const online = await pingCaseReceiver(id);
-                if (online) setReadyMode(id);
-                else setOfflineMode(id);
-            });
-            await Promise.all(checks);
+        // Track previous state per case so we can toast on transitions
+        const prevStatus = {}; // caseId -> 'ready' | 'offline'
+        let isChecking = false;
+
+        function setRecheckBusy(busy) {
+            const btn = document.getElementById('btn-recheck');
+            if (!btn) return;
+            btn.disabled = busy;
+            btn.textContent = busy ? '🔄 Comprobando…' : '🔄 Re-comprobar';
         }
 
-        // First check on load + periodic refresh
-        refreshHealthForAll();
-        setInterval(refreshHealthForAll, HEALTH_CHECK_INTERVAL_MS);
+        function updateCounters(readyCount, offlineCount) {
+            const total = Object.keys(CASES).length;
+            const pillReady   = document.getElementById('pill-ready');
+            const pillOffline = document.getElementById('pill-offline');
+            if (pillReady)   pillReady.textContent   = `🟢 ${readyCount}/${total} READY`;
+            if (pillOffline) pillOffline.textContent = `🔴 ${offlineCount}/${total} OFFLINE`;
+        }
+
+        function updateLastChecked() {
+            const el = document.getElementById('last-checked');
+            if (!el) return;
+            const now = new Date();
+            const t = now.toLocaleTimeString();
+            el.textContent = `Última comprobación: ${t}`;
+        }
+
+        async function refreshHealthForAll(opts = {}) {
+            if (isChecking) return;
+            isChecking = true;
+            setRecheckBusy(true);
+            const showToasts = !!opts.silent === false; // default true
+            let ready = 0, offline = 0;
+            const transitions = [];
+            const checks = Object.keys(CASES).map(async (id) => {
+                const online = await pingCaseReceiver(id);
+                const newSt = online ? 'ready' : 'offline';
+                if (online) { setReadyMode(id); ready++; }
+                else        { setOfflineMode(id); offline++; }
+                if (prevStatus[id] && prevStatus[id] !== newSt) {
+                    transitions.push({ id, from: prevStatus[id], to: newSt });
+                }
+                prevStatus[id] = newSt;
+            });
+            await Promise.all(checks);
+            updateCounters(ready, offline);
+            updateLastChecked();
+            if (showToasts) {
+                for (const t of transitions) {
+                    if (t.to === 'ready')   toast(`Caso ${t.id} ahora ONLINE 🟢`, 'success');
+                    if (t.to === 'offline') toast(`Caso ${t.id} cayó OFFLINE 🔴`, 'warn');
+                }
+            }
+            setRecheckBusy(false);
+            isChecking = false;
+        }
+
+        // Manual recheck button
+        const recheckBtn = document.getElementById('btn-recheck');
+        if (recheckBtn) {
+            recheckBtn.addEventListener('click', async () => {
+                toast('Comprobando estado de los receptores…', 'info', 2000);
+                await refreshHealthForAll();
+                toast('Comprobación completada', 'info', 1800);
+            });
+        }
+
+        // First check on load (silent — no toasts on initial load) + periodic refresh
+        refreshHealthForAll({ silent: true });
+        setInterval(() => refreshHealthForAll(), HEALTH_CHECK_INTERVAL_MS);
     </script>
 </body>
 

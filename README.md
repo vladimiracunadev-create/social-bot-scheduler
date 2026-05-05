@@ -3,7 +3,7 @@
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker Hub](https://img.shields.io/badge/Docker-Ready-blue.svg?logo=docker&logoColor=white)](https://hub.docker.com/)
-[![Version](https://img.shields.io/badge/version-4.2.0-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
+[![Version](https://img.shields.io/badge/version-4.3.0-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
 [![Security: Hardened](https://img.shields.io/badge/Security-Hardened-🛡️?color=red&labelColor=black)](SECURITY.md)
 
 Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. El **Social Bot Scheduler** actúa como una **Matriz Tecnológica** donde **n8n** orquesta la comunicación entre bots emisores y receptores políglotas.
@@ -40,7 +40,7 @@ docker-compose up -d
 
 Este comando levanta el núcleo del laboratorio:
 - 🌐 **n8n**: `http://localhost:5678`
-- 🖥️ **Master Dashboard**: `http://localhost:8080`
+- 🖥️ **Master Dashboard**: `http://localhost:8080` *(con detección automática de casos OFFLINE/READY, contadores en vivo, modal con `docker-compose --profile caseXX up -d` para levantar lo que falte y badges de RAM por caso — v4.3.0)*
 - 🔒 **Seguridad**: Puertos bindeados solo a `127.0.0.1`.
 
 ### 2. Demo Local Completa (Mode: Full)

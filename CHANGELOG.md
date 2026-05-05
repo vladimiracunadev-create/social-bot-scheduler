@@ -4,6 +4,35 @@ Todos los cambios notables en este proyecto se documentan sistemáticamente en e
 
 ---
 
+## 🎛️ [4.3.0] — 2026-05-05
+
+### ✨ Añadido — Master Dashboard interactivo
+
+- **Detección automática de estado por caso**: cada 20 s el dashboard hace ping (`fetch no-cors`) al puerto del receptor y marca cada tarjeta como 🟢 `READY` o 🔴 `OFFLINE`. Sin backend nuevo, sin agotar RAM al usuario.
+- **Modal "Mostrar comando para levantarlo"**: cuando un caso está OFFLINE, el botón se transforma y abre un modal con el comando `docker-compose --profile caseXX up -d`, la RAM estimada y un botón **📋 Copiar al portapapeles** (con fallback `execCommand`).
+- **Barra global Docker**: contadores live `🟢 N/9 READY · 🔴 N/9 OFFLINE · 🚧 11 PLANNED`, indicador `Última comprobación: HH:MM:SS` y botón **🔄 Re-comprobar** manual.
+- **Sistema de toasts**: notificaciones top-right cuando un caso transiciona ONLINE↔OFFLINE, al copiar comandos o al re-comprobar.
+- **Badges de RAM por tarjeta**: `💾 ~X.X GB` en cada uno de los 20 casos (verde para ligeros, rojo ⚠️ para los pesados 07/08/13/14).
+- **Separador visual** entre los 9 casos implementados y los 11 planificados, con enlace a `docs/PLANNED_CASES.md`.
+
+### 📚 Documentación de recursos
+
+- `docs/DOCKER_RESOURCES.md`: nueva sección "Consumo de RAM por Caso" con desglose receptor + DB + núcleo (1.13 GB), tabla de combinaciones recomendadas según RAM disponible (2/4/8/16 GB) y estimaciones para los 11 casos planificados.
+
+### 🔧 Fix — Dependabot puede escanear todo el repo
+
+Se añadieron los 4 manifiestos que faltaban desde v4.2.0 (rompían los runs scheduled de Dependabot):
+- `cases/02-python-to-go/dest/go.mod` (+ Dockerfile actualizado a `go mod tidy`)
+- `cases/03-go-to-node/origin/go.mod` (stdlib only)
+- `cases/04-node-to-fastapi/origin/package.json` (axios ^1.7.7)
+- `cases/06-go-to-symfony/origin/go.mod` (stdlib only)
+
+### 🔧 Fix — Validador tolera casos planificados
+
+`scripts/validate_case_matrix.py` ahora lee `status: planned` del manifest y excluye esos casos de la comparación estricta. Implementados (01–09) se siguen validando como antes; planificados se reportan como "skipped".
+
+---
+
 ## 🚧 [Unreleased] — Roadmap v5.0
 
 ### ✨ Añadido — Scaffolding de 11 casos planificados (cases 10–20)
