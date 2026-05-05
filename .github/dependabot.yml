@@ -1,4 +1,5 @@
 version: 2
+# Trigger re-evaluation: 2026-05-05 (diagnose persistent gomod/npm errors)
 updates:
   # GitHub Actions — detecta nuevas versiones de actions usadas en workflows
   - package-ecosystem: "github-actions"
