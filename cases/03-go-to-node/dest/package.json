@@ -12,5 +12,9 @@
     "start": "node server.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "packageManager": "pnpm@11.0.0",
+  "pnpm": {
+    "onlyBuiltDependencies": []
+  }
 }
