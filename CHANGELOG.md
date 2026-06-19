@@ -4,6 +4,30 @@ Todos los cambios notables en este proyecto se documentan sistemáticamente en e
 
 ---
 
+## 🔒 [4.3.1] — 2026-06-19
+
+### 🛡️ Seguridad — Supply chain (npm → pnpm v11)
+
+Mitigación de la campaña **Shai-Hulud** en npm. pnpm v11 trae `postinstall` scripts bloqueados por defecto y `minimumReleaseAge=24h`, lo que cierra la ventana de explotación típica de los paquetes maliciosos publicados con auto-install hooks.
+
+Casos migrados (todos con `onlyBuiltDependencies: []`):
+
+- `cases/03-go-to-node/dest` (`express`, `pg`, `axios`) — `pnpm-lock.yaml` nuevo
+- `cases/04-node-to-fastapi/origin` (`axios`) — `pnpm-lock.yaml` nuevo
+- `cases/05-laravel-to-react/dest` (`cors`, `express`, `mongodb`) — `pnpm import` desde `package-lock.json` existente
+
+**NO migrado** (intencional):
+
+- `n8n/data/nodes/package.json` — generado en runtime por el contenedor de n8n; tocarlo no aporta beneficio y puede causar conflictos al arrancar.
+
+### 🔧 Notas operativas
+
+- **CI**: sin cambios — el workflow `node-cases` solo hace `node --check` para syntax, no corre `npm install`.
+- **Dependabot**: `package-ecosystem: npm` se mantiene; GitHub Dependabot auto-detecta `pnpm-lock.yaml` en esa misma categoría.
+- **Sin impacto en producto**: ningún cambio funcional ni de API; solo manifest + lockfile.
+
+---
+
 ## 🎛️ [4.3.0] — 2026-05-05
 
 ### ✨ Añadido — Master Dashboard interactivo
