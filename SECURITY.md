@@ -44,7 +44,7 @@ Cada punto indica su estado: **OK**, **CORREGIDO** (en esta versión) o **RIESGO
 | :--- | :---: | :--- |
 | `.env` en `.gitignore` | **OK** | Línea `.env` y `.env.*` con excepciones explícitas para `!.env.example` y `!.env.demo.example`. |
 | `.env.example` commiteado | **OK** | Plantilla sin secretos reales. Nunca en `.gitignore`. |
-| Archivo de lock de dependencias | **CORREGIDO** | Los 5 `requirements.txt` se generan desde `requirements.in` con `pip-compile --generate-hashes`; cada dependencia directa y transitiva queda pinneada con hash SHA256, lo que fuerza el modo `pip --require-hashes` tanto en CI como en el build Docker (Python 3.11). (P-01, v4.4.0) |
+| Archivo de lock de dependencias | **CORREGIDO** | Los 5 `requirements.txt` se generan desde `requirements.in` con `uv pip compile --universal --generate-hashes --python-version 3.11`; cada dependencia directa y transitiva queda pinneada con hash SHA256 (la resolución universal incluye backports condicionales `python_version < "3.12"` con su marcador), lo que fuerza el modo `pip --require-hashes` en CI y en el build Docker (Python 3.11). (P-01, v4.4.0) |
 | Fallback hardcodeado en docker-compose | **RIESGO ACEPTADO** | Los valores `change-me-*` permiten arrancar el lab sin `.env`. El script `n8n_auto_setup.sh` emite warning si detecta placeholders. Riesgo local — nunca exponer sin edge proxy autenticado. |
 
 ---
@@ -150,7 +150,7 @@ docker compose --profile edge up -d
 
 | ID | Descripción | Prioridad | Estado | Implementación |
 | :--- | :--- | :---: | :---: | :--- |
-| P-01 | `requirements.txt` sin hashes SHA | Media | ✅ CORREGIDO | `requirements.in` → `pip-compile --generate-hashes` en los 5 archivos; `pip --require-hashes` en CI y Docker. |
+| P-01 | `requirements.txt` sin hashes SHA | Media | ✅ CORREGIDO | `requirements.in` → `uv pip compile --universal --generate-hashes --python-version 3.11` en los 5 archivos; `pip --require-hashes` en CI y Docker. |
 | P-02 | Rate limiting en Case 09 gateway | Baja | ✅ CORREGIDO | `slowapi` en `/webhook` (30/min) y `/errors` (60/min); env-configurable; excedente → 429. |
 | P-03 | Whitelist de owners en Case 09 | Baja | ✅ CORREGIDO | `owner` valida regex de GitHub en `RequestParamsDTO` (pydantic → 422), defensa en profundidad sobre el VO `Owner`. |
 | P-04 | Auditoría CVE Go/Node/Rust/Ruby/.NET en CI | Media | ✅ CORREGIDO | `govulncheck` + `pnpm audit` + `dotnet list package --vulnerable` bloqueantes; `cargo audit` en observación; `bundler-audit` condicional. |

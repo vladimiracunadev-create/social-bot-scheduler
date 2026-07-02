@@ -180,7 +180,9 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          # Node 22: corepack activates pnpm v11 (matches the committed
+          # pnpm-lock.yaml v9 format) which requires Node >= 22.13 (node:sqlite).
+          node-version: '22'
 
       - name: Syntax check Node cases
         run: |
@@ -243,7 +245,9 @@ jobs:
                      cases/03-go-to-node/origin \
                      cases/06-go-to-symfony/origin; do
             echo "== govulncheck $dir =="
-            ( cd "$dir" && go mod download && govulncheck ./... )
+            # `go mod tidy` (not `download`) writes the go.sum entries that
+            # govulncheck needs to load packages; go.sum is not committed.
+            ( cd "$dir" && go mod tidy && govulncheck ./... )
           done
         shell: bash
 

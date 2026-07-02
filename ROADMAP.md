@@ -8,7 +8,7 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 
 ### `v4.4.0` — "Cierre de Pendientes de Seguridad" 🔒 Ready
 
-- [x] **Hashes SHA en dependencias (P-01)**: `requirements.in` + `pip-compile --generate-hashes` en los 5 archivos Python; `pip --require-hashes` en CI y build Docker.
+- [x] **Hashes SHA en dependencias (P-01)**: `requirements.in` + `uv pip compile --universal --generate-hashes --python-version 3.11` en los 5 archivos Python; `pip --require-hashes` en CI y build Docker.
 - [x] **Rate limiting (P-02)**: `slowapi` en el gateway Case 09 (`/webhook` 30/min, `/errors` 60/min), configurable por env, excedente → HTTP 429.
 - [x] **Whitelist de owner (P-03)**: validación regex en el borde (`RequestParamsDTO` → 422) como defensa en profundidad sobre el value object `Owner`.
 - [x] **Auditoría CVE multi-lenguaje (P-04)**: `govulncheck`, `pnpm audit` y `dotnet list package --vulnerable` bloqueantes en CI; `cargo audit` en observación; `bundler-audit` condicional.
