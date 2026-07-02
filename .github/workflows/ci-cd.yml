@@ -188,6 +188,17 @@ jobs:
           node --check cases/04-node-to-fastapi/origin/index.js
           node --check cases/05-laravel-to-react/dest/server.js
 
+      - name: Node vulnerability audit (pnpm audit) [P-04]
+        run: |
+          corepack enable
+          for dir in cases/03-go-to-node/dest \
+                     cases/04-node-to-fastapi/origin \
+                     cases/05-laravel-to-react/dest; do
+            echo "== pnpm audit $dir =="
+            ( cd "$dir" && pnpm audit --prod --audit-level high )
+          done
+        shell: bash
+
   php-cases:
     name: PHP Cases (01,05,06)
     runs-on: ubuntu-latest
@@ -224,6 +235,18 @@ jobs:
           gofmt -e cases/06-go-to-symfony/origin/main.go > /dev/null
         shell: bash
 
+      - name: Go vulnerability audit (govulncheck) [P-04]
+        run: |
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          export PATH="$(go env GOPATH)/bin:$PATH"
+          for dir in cases/02-python-to-go/dest \
+                     cases/03-go-to-node/origin \
+                     cases/06-go-to-symfony/origin; do
+            echo "== govulncheck $dir =="
+            ( cd "$dir" && go mod download && govulncheck ./... )
+          done
+        shell: bash
+
   ruby-case:
     name: Ruby Destination (07)
     runs-on: ubuntu-latest
@@ -238,6 +261,20 @@ jobs:
       - name: Syntax check Ruby destination
         run: ruby -c cases/07-rust-to-ruby/dest/app.rb
 
+      - name: Ruby vulnerability audit (bundler-audit) [P-04]
+        run: |
+          if [ -f cases/07-rust-to-ruby/dest/Gemfile.lock ]; then
+            gem install bundler-audit
+            bundle-audit check --update \
+              --gemfile-lock cases/07-rust-to-ruby/dest/Gemfile.lock
+          else
+            echo "No Gemfile.lock present — Ruby gems (sinatra, cassandra-driver)"
+            echo "are provided by the runtime image, so there is no dependency"
+            echo "manifest to audit. bundler-audit skipped (documented gap in"
+            echo "SECURITY.md)."
+          fi
+        shell: bash
+
   rust-case:
     name: Rust Origin (07)
     runs-on: ubuntu-latest
@@ -249,6 +286,16 @@ jobs:
 
       - name: Check Rust origin
         run: cargo check --manifest-path cases/07-rust-to-ruby/origin/Cargo.toml
+
+      - name: Rust vulnerability audit (cargo-audit) [P-04]
+        # Observe mode: the origin teaching sample intentionally pins reqwest 0.11,
+        # which surfaces known RustSec advisories. Findings are reported in the CI
+        # log but do not block until the sample is modernized (tracked in ROADMAP).
+        continue-on-error: true
+        run: |
+          cargo install cargo-audit --locked
+          cargo generate-lockfile --manifest-path cases/07-rust-to-ruby/origin/Cargo.toml
+          cargo audit --file cases/07-rust-to-ruby/origin/Cargo.lock
 
   dotnet-case:
     name: Dotnet Origin (08)
@@ -263,6 +310,18 @@ jobs:
 
       - name: Build .NET origin
         run: dotnet build cases/08-csharp-to-flask/origin/SocialBot.csproj --configuration Release
+
+      - name: .NET vulnerability audit (dotnet list package --vulnerable) [P-04]
+        run: |
+          dotnet restore cases/08-csharp-to-flask/origin/SocialBot.csproj
+          output=$(dotnet list cases/08-csharp-to-flask/origin/SocialBot.csproj \
+            package --vulnerable --include-transitive 2>&1)
+          echo "$output"
+          if echo "$output" | grep -qi 'has the following vulnerable'; then
+            echo "::error::Vulnerable .NET packages detected"
+            exit 1
+          fi
+        shell: bash
 
   build-and-push:
     name: Build & Push to GHCR

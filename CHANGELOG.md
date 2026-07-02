@@ -4,6 +4,27 @@ Todos los cambios notables en este proyecto se documentan sistemáticamente en e
 
 ---
 
+## 🔒 [4.4.0] — 2026-07-02
+
+### 🛡️ Seguridad — Cierre de los 4 pendientes priorizados de la auditoría
+
+Los cuatro ítems que quedaban como **RIESGO ACEPTADO** en `SECURITY.md` pasan a **CORREGIDO**.
+
+#### Añadido
+
+- **P-01 · Hashes SHA en dependencias Python**: nuevos `requirements.in` como fuente y `requirements.txt` regenerados con `pip-compile --generate-hashes` en los 5 archivos (root, `01/origin`, `02/origin`, `08/dest`, `09/dest`). Cada dependencia directa y transitiva queda pinneada con hash SHA256, forzando el modo `pip --require-hashes` en CI y en el build Docker (Python 3.11).
+- **P-02 · Rate limiting en Case 09**: `slowapi` aplica throttling por IP en `POST /webhook` (30/min) y `POST /errors` (60/min). Límites configurables por `GATEWAY_WEBHOOK_RATE_LIMIT` / `GATEWAY_ERRORS_RATE_LIMIT`; el excedente devuelve **HTTP 429**. Protege la cuota de la GitHub API y contiene el abuso de una `X-API-Key` filtrada.
+- **P-03 · Whitelist de owner en Case 09**: el campo `owner` de `RequestParamsDTO` valida el patrón de usuario de GitHub (`^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$`) en el borde (pydantic → **422**), como defensa en profundidad sobre el value object `Owner` del dominio. Cierra la superficie tipo SSRF del parámetro que forma la URL saliente.
+- **P-04 · Auditoría CVE multi-lenguaje en CI**: `govulncheck` (Go), `pnpm audit --audit-level high` (Node) y `dotnet list package --vulnerable` (.NET) como pasos **bloqueantes**; `cargo audit` (Rust) en **modo observación** (el sample origin fija `reqwest 0.11` a propósito); `bundler-audit` (Ruby) condicionado a la existencia de `Gemfile.lock`.
+
+#### Notas
+
+- **slowapi** es dependencia nueva de Case 09 (añadida a `requirements.in` + lockfile con hashes).
+- **Follow-ups** registrados en `SECURITY.md`: **P-05** (`cargo audit` bloqueante), **P-06** (`Gemfile.lock` para Ruby), **P-07** (SHA-pinning de GitHub Actions).
+- Verificación local con `fastapi.testclient`: owner malformado → 422, 4ª petición sobre el límite → 429; los 5 lockfiles validan con `pip install --require-hashes`.
+
+---
+
 ## 🔒 [4.3.1] — 2026-06-19
 
 ### 🛡️ Seguridad — Supply chain (npm → pnpm v11)
@@ -46,6 +67,7 @@ Casos migrados (todos con `onlyBuiltDependencies: []`):
 ### 🔧 Fix — Dependabot puede escanear todo el repo
 
 Se añadieron los 4 manifiestos que faltaban desde v4.2.0 (rompían los runs scheduled de Dependabot):
+
 - `cases/02-python-to-go/dest/go.mod` (+ Dockerfile actualizado a `go mod tidy`)
 - `cases/03-go-to-node/origin/go.mod` (stdlib only)
 - `cases/04-node-to-fastapi/origin/package.json` (axios ^1.7.7)
@@ -99,11 +121,13 @@ Se incorpora la documentación de diseño y estructura de carpetas para 11 nuevo
 - **Detección de ofuscación base64+eval (Capa 8)**: El mismo job detecta patrones `eval(b64decode(...))` y equivalentes en Python, JS, Ruby, PHP y Shell.
 
 ### ✨ Añadido
+
 - `apache/security-headers.conf` — configuración Apache de hardening (headers + `-Indexes`).
 - `.gitattributes` — normalización de line endings por tipo de archivo.
 - `.github/dependabot.yml` — actualizaciones automáticas de dependencias para 11 ecosistemas.
 
 ### ⚙️ Cambiado
+
 - `docker-compose.yml` — `master-dashboard`, `dest-php` y `dest-symfony` montan `apache/security-headers.conf` y ejecutan `a2enmod headers` al arrancar.
 - `edge/start-caddy.sh` — añadidos `Content-Security-Policy` y `Permissions-Policy` al bloque de headers.
 - `.github/workflows/ci-cd.yml` — nuevo job `supply-chain-checks` (bidi + obfuscación), precede a `build-and-push`.
@@ -114,16 +138,19 @@ Se incorpora la documentación de diseño y estructura de carpetas para 11 nuevo
 ## 🚀 [4.1.0] — 2026-03-24
 
 ### 🛡️ Seguridad
+
 - **Fix Crítico**: Mitigación del ataque de cadena de suministro en `aquasecurity/trivy-action`. Upgrade a `v0.35.0`.
 - **Hardening CI/CD**: Refuerzo de permisos en los flujos de GitHub Actions.
 
 ### ✨ Añadido
+
 - **🔍 Verificación de Recursos**: Nuevo script `check_resources.py` para monitoreo en tiempo real (CPU, RAM, Disco).
 - **📊 Health Dashboard**: Interfaz visual de diagnóstico para verificar la preparación del entorno antes de la ejecución.
 - **🧹 Deep Clean**: Comandos `make clean` y `hub clean` para purga total de recursos Docker (volúmenes e imágenes).
 - **🧩 Docker Profiles**: Soporte para carga selectiva de servicios mediante perfiles (ej: `case01`, `full`).
 
 ### ⚙️ Cambiado
+
 - **🏎️ Optimización**: Límites granulares de CPU/RAM para los 20+ contenedores del ecosistema.
 - **📂 Alpine Migration**: Todos los servicios de destino ahora utilizan imágenes ligeras basadas en Alpine Linux para reducir la superficie de ataque.
 
@@ -132,10 +159,12 @@ Se incorpora la documentación de diseño y estructura de carpetas para 11 nuevo
 ## 🏗️ [4.0.0] — 2026-02-18
 
 ### 📂 Persistencia Políglota
+
 - **Integración Nativa**: Soporte para **8 motores de bases de datos** distintos: 🐬 MySQL, 🍃 MariaDB, 🐘 PostgreSQL, 📂 SQLite, 🍃 MongoDB, 🏎️ Redis, 👁️ Cassandra y 🏢 SQL Server.
 - **Auto-Provisionamiento**: Lógica inteligente de creación de esquemas y tablas en el primer arranque de cada receptor.
 
 ### ✨ Añadido
+
 - **🖥️ Master Dashboard v2**: Visualización unificada del estado de las bases de datos y previsualización de posts en tiempo real.
 - **🔗 Nuevos Drivers**: Soporte para `pyodbc`, `cassandra-driver`, `pg`, y extensiones de Redis para PHP.
 
@@ -144,6 +173,7 @@ Se incorpora la documentación de diseño y estructura de carpetas para 11 nuevo
 ## 🛡️ [3.0.0] — 2026-02-11
 
 ### 🏗️ Arquitectura de Resiliencia
+
 - **Guardrails Globales**: Implementación de **Idempotencia (SQLite)** y **Circuit Breaker** en todos los ejes tecnológicos.
 - **📥 Dead Letter Queue (DLQ)**: Sistema de captura de mensajes fallidos en todos los receptores.
 - **📚 Nueva Documentación**: Creación de `docs/GUARDRAILS.md` y guías técnicas de arquitectura profesional.
@@ -153,6 +183,7 @@ Se incorpora la documentación de diseño y estructura de carpetas para 11 nuevo
 ## 🛠️ [2.1.0] — 2026-01-25
 
 ### 🔧 Corregido
+
 - **Estandarización de Endpoints**: Todos los receptores ahora escuchan de forma uniforme en `/webhook`.
 - **Normalización de Payload**: Los campos de envío se han estandarizado a `id`, `text` y `channel`.
 - **CI Fixes**: Aplicación de `black` a todo el repositorio y corrección de dependencias de Ruby en Docker.
@@ -160,6 +191,7 @@ Se incorpora la documentación de diseño y estructura de carpetas para 11 nuevo
 ---
 
 ## 🏁 [1.0.0] — 2026-01-20
+
 - Lanzamiento inicial del laboratorio con 6 casos de integración base.
 - Soporte para orquestación multi-contenedor mediante Docker Compose.
 

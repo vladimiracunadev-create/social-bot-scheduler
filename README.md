@@ -3,7 +3,7 @@
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker Hub](https://img.shields.io/badge/Docker-Ready-blue.svg?logo=docker&logoColor=white)](https://hub.docker.com/)
-[![Version](https://img.shields.io/badge/version-4.3.1-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
+[![Version](https://img.shields.io/badge/version-4.4.0-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
 [![Security: Hardened](https://img.shields.io/badge/Security-Hardened-🛡️?color=red&labelColor=black)](SECURITY.md)
 
 Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. El **Social Bot Scheduler** actúa como una **Matriz Tecnológica** donde **n8n** orquesta la comunicación entre bots emisores y receptores políglotas.
@@ -39,6 +39,7 @@ docker-compose up -d
 ```
 
 Este comando levanta el núcleo del laboratorio:
+
 - 🌐 **n8n**: `http://localhost:5678`
 - 🖥️ **Master Dashboard**: `http://localhost:8080` *(con detección automática de casos OFFLINE/READY, contadores en vivo, modal con `docker-compose --profile caseXX up -d` para levantar lo que falte y badges de RAM por caso — v4.3.0)*
 - 🔒 **Seguridad**: Puertos bindeados solo a `127.0.0.1`.
@@ -96,7 +97,8 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 > [!IMPORTANT]
 > A partir de la v4.2.0, el laboratorio ha pasado por una auditoría completa de 8 capas (contenedor, red, credenciales, servidor web, herramientas, autenticación, CI/CD y cadena de suministro).
 
-### ✅ Qué está protegido:
+### ✅ Qué está protegido
+
 - **Binding de Red**: Todos los contenedores se publican únicamente en `127.0.0.1`.
 - **Secretos**: Contraseñas y API Keys gestionadas vía `.env`, nunca hardcodeadas. Gitleaks detecta fugas en el historial.
 - **Opt-in Observability**: Grafana y Prometheus solo se activan con `--profile observability`.
@@ -124,12 +126,12 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 
 El sistema no es solo una integración; es un catálogo vivo con **11 patrones arquitectónicos**:
 
-1.  **Microservicios**: 20+ contenedores independientes.
-2.  **Event-Driven**: Comunicación 100% vía Webhooks.
-3.  **Mediador**: n8n centraliza la lógica empresarial.
-4.  **Resiliencia**: Idempotencia, Circuit Breaker y DLQ.
-5.  **Persistencia Políglota**: 9 motores de bases de datos distintos.
-6.  *...y más!* Lee el detalle en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+1. **Microservicios**: 20+ contenedores independientes.
+2. **Event-Driven**: Comunicación 100% vía Webhooks.
+3. **Mediador**: n8n centraliza la lógica empresarial.
+4. **Resiliencia**: Idempotencia, Circuit Breaker y DLQ.
+5. **Persistencia Políglota**: 9 motores de bases de datos distintos.
+6. *...y más!* Lee el detalle en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ---
 
