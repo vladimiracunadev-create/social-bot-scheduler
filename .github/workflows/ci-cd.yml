@@ -228,7 +228,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           # 'stable' = latest patched toolchain; keeps govulncheck [P-04] green
           # against stdlib advisories (e.g. GO-2026-5037/5039) fixed upstream.
