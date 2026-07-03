@@ -27,7 +27,8 @@
 ## 🗺️ Diagrama de arquitectura
 
 ```mermaid
-flowchart LR
+%%{init: {'theme':'base','themeVariables':{'fontSize':'26px','fontFamily':'Segoe UI, Arial, sans-serif'},'flowchart':{'useMaxWidth':true,'htmlLabels':false,'nodeSpacing':55,'rankSpacing':70,'padding':16,'diagramPadding':16}}}%%
+flowchart TB
     subgraph ORIGIN["ORIGEN - Go"]
         B["main.go"]
     end
@@ -64,6 +65,7 @@ flowchart LR
 ## 🔁 Diagrama de secuencia (ciclo de una publicación)
 
 ```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontSize':'24px','fontFamily':'Segoe UI, Arial, sans-serif'},'sequence':{'useMaxWidth':true,'actorFontSize':22,'messageFontSize':20,'noteFontSize':18,'actorMargin':90,'boxMargin':16,'width':180}}}%%
 sequenceDiagram
     autonumber
     participant Bot as main.go (Go)
