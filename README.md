@@ -59,17 +59,17 @@ make up
 
 El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre cualquier tecnología.
 
-| ID | 📤 Origen (Emisor) | 🌉 Puente | 📥 Destino (Receptor) | 📁 Persistencia | 🏷️ Perfil |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **01** | `Python (Pydantic)` | **n8n** | `PHP Vanilla` | 🐬 **MySQL** | `case01` |
-| **02** | `Python` | **n8n** | `Go (Fiber/Gin)` | 🍃 **MariaDB** | `case02` |
-| **03** | `Go` | **n8n** | `Node / Express` | 🐘 **PostgreSQL** | `case03` |
-| **04** | `Node.js` | **n8n** | `FastAPI` | 📂 **SQLite** | `case04` |
-| **05** | `Laravel` | **n8n** | `React / Node` | 🍃 **MongoDB** | `case05` |
-| **06** | `Go` | **n8n** | `Symfony` | 🏎️ **Redis** | `case06` |
-| **07** | `Rust` | **n8n** | `Ruby (Sinatra)` | 👁️ **Cassandra** | `case07` |
-| **08** | `C# (.NET)` | **n8n** | `Flask` | 🏢 **SQL Server** | `case08` |
-| **09** | `Python` | **n8n** | `FastAPI Gateway` | 🦆 **DuckDB** | `case09` |
+| ID | 📤 Origen (Emisor) | 🌉 Puente | 📥 Destino (Receptor) | 📁 Persistencia | 🏷️ Perfil | 📐 Diagrama |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **01** | `Python (Pydantic)` | **n8n** | `PHP Vanilla` | 🐬 **MySQL** | `case01` | [📐 Ver](cases/01-python-to-php/ARCHITECTURE.md) |
+| **02** | `Python` | **n8n** | `Go (Fiber/Gin)` | 🍃 **MariaDB** | `case02` | [📐 Ver](cases/02-python-to-go/ARCHITECTURE.md) |
+| **03** | `Go` | **n8n** | `Node / Express` | 🐘 **PostgreSQL** | `case03` | [📐 Ver](cases/03-go-to-node/ARCHITECTURE.md) |
+| **04** | `Node.js` | **n8n** | `FastAPI` | 📂 **SQLite** | `case04` | [📐 Ver](cases/04-node-to-fastapi/ARCHITECTURE.md) |
+| **05** | `Laravel` | **n8n** | `React / Node` | 🍃 **MongoDB** | `case05` | [📐 Ver](cases/05-laravel-to-react/ARCHITECTURE.md) |
+| **06** | `Go` | **n8n** | `Symfony` | 🏎️ **Redis** | `case06` | [📐 Ver](cases/06-go-to-symfony/ARCHITECTURE.md) |
+| **07** | `Rust` | **n8n** | `Ruby (Sinatra)` | 👁️ **Cassandra** | `case07` | [📐 Ver](cases/07-rust-to-ruby/ARCHITECTURE.md) |
+| **08** | `C# (.NET)` | **n8n** | `Flask` | 🏢 **SQL Server** | `case08` | [📐 Ver](cases/08-csharp-to-flask/ARCHITECTURE.md) |
+| **09** | `Python` | **n8n** | `FastAPI Gateway` | 🦆 **DuckDB** | `case09` | [📐 Ver](cases/09-python-to-gateway/ARCHITECTURE.md) |
 
 ### 🚧 Casos planificados (v5.0 — pendientes de implementación)
 
