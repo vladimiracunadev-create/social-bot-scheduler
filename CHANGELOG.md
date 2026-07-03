@@ -4,6 +4,26 @@ Todos los cambios notables en este proyecto se documentan sistemáticamente en e
 
 ---
 
+## 🔒 [4.4.1] — 2026-07-02
+
+### 🛡️ Seguridad — Cierre de los follow-ups de v4.4.0 (P-05, P-06, P-07)
+
+Los tres follow-ups que quedaron abiertos tras v4.4.0 pasan a **CORREGIDO**.
+
+#### Añadido / Cambiado
+
+- **P-07 · SHA-pinning de GitHub Actions**: las **27** referencias `uses:` de `ci-cd.yml` y `wiki-sync.yml` se pinnean a SHA de 40 chars con comentario `# vX` (p.ej. `actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4`). Cierra la ventana de un tag reescrito maliciosamente; Dependabot sigue proponiendo bumps sobre el comentario de versión.
+- **P-05 · `cargo audit` bloqueante**: el sample `07-rust-to-ruby/origin` se moderniza — `dotenv` → `dotenvy` (cierra RUSTSEC-2021-0141, crate sin mantener) y `reqwest` 0.11 → 0.12 (elimina `rustls-pemfile`, cierra RUSTSEC-2025-0134). El paso `cargo audit` deja el modo observación y pasa a **bloqueante**.
+- **P-06 · `bundler-audit` con cobertura real**: se añaden `Gemfile` + `Gemfile.lock` al caso Ruby (`sinatra`, `cassandra-driver` + árbol transitivo). El paso deja de ser condicional y audita de verdad (verde contra la ruby-advisory-db).
+
+#### Notas
+
+- Con esto, **los 5 ecosistemas** (Python, Go, Node, .NET, Rust, Ruby) auditan CVEs de forma **bloqueante** en CI.
+- Verificado localmente en contenedores: `cargo generate-lockfile` deja `dotenvy 0.15.7` y `reqwest 0.12.28` sin `rustls-pemfile`; `bundle-audit check` → «No vulnerabilities found».
+- **Dependabot**: 23 PRs abiertos tras el release v4.4.0. Los de actions (`setup-node`, `setup-go`, etc.) quedan cubiertos por el SHA-pin; los majors (Express 5, Python 3.14, reqwest 0.13) se triarán manualmente por su riesgo de ruptura.
+
+---
+
 ## 🔒 [4.4.0] — 2026-07-02
 
 ### 🛡️ Seguridad — Cierre de los 4 pendientes priorizados de la auditoría

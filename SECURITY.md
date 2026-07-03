@@ -114,7 +114,8 @@ docker compose --profile edge up -d
 | :--- | :---: | :--- |
 | Escaneo de secretos en historial | **OK** | `gitleaks/gitleaks-action@v2` en job `build-and-push`. |
 | Auditoría de dependencias Python | **OK** | `pip-audit --ignore-vuln CVE-2026-1703` en job `python-cases`. |
-| Auditoría de otras dependencias (Go, Node, Rust, .NET, Ruby) | **CORREGIDO** | CI ejecuta `govulncheck` (Go), `pnpm audit --audit-level high` (Node) y `dotnet list package --vulnerable` (.NET) como pasos **bloqueantes**. `cargo audit` (Rust) corre en **modo observación** porque el sample origin fija `reqwest 0.11` a propósito. `bundler-audit` (Ruby) está cableado condicionado a la existencia de `Gemfile.lock`: hoy los gems (`sinatra`, `cassandra-driver`) los provee la imagen runtime, sin manifiesto que auditar — gap documentado. (P-04, v4.4.0) |
+| Auditoría de otras dependencias (Go, Node, Rust, .NET, Ruby) | **CORREGIDO** | CI ejecuta `govulncheck` (Go), `pnpm audit --audit-level high` (Node), `dotnet list package --vulnerable` (.NET), `cargo audit` (Rust) y `bundler-audit` (Ruby) — **todos bloqueantes** desde v4.4.1. (P-04 v4.4.0; P-05/P-06 v4.4.1) |
+| SHA-pinning de GitHub Actions | **CORREGIDO** | Las 27 referencias `uses:` de `ci-cd.yml` y `wiki-sync.yml` están pinneadas a SHA de 40 chars con comentario `# vX`. Cierra la ventana de un tag reescrito maliciosamente; Dependabot sigue proponiendo bumps. (P-07, v4.4.1) |
 | Escaneo de imagen Docker | **OK** | Trivy `v0.35.0` filtra `CRITICAL,HIGH` antes del push. |
 | Dependabot | **CORREGIDO** | Creado `.github/dependabot.yml` con ecosistemas: `github-actions`, `pip` (hub + 3 cases), `docker`, `gomod` (3 cases), `cargo`, `npm` (2 cases). |
 
@@ -163,13 +164,17 @@ docker compose --profile edge up -d
 > `govulncheck` forzó subir el toolchain Go de CI a `stable` (stdlib
 > GO-2026-5037/5039). Detalle completo en `CHANGELOG.md` (v4.4.0).
 
+### Resueltos en v4.4.1 (2026-07-02)
+
+| ID | Descripción | Prioridad | Estado | Implementación |
+| :--- | :--- | :---: | :---: | :--- |
+| P-05 | `cargo audit` en modo bloqueante | Baja | ✅ CORREGIDO | Sample `07-rust-to-ruby/origin` modernizado: `dotenv`→`dotenvy` (RUSTSEC-2021-0141) y `reqwest` 0.11→0.12 (elimina `rustls-pemfile`, RUSTSEC-2025-0134). `cargo audit` ahora **bloquea**. |
+| P-06 | `bundler-audit` sin cobertura real | Baja | ✅ CORREGIDO | `Gemfile` + `Gemfile.lock` añadidos al caso Ruby (`sinatra`, `cassandra-driver`); `bundler-audit` corre de verdad y en verde. |
+| P-07 | Actions de GitHub sin SHA-pinning | Media | ✅ CORREGIDO | Las 27 referencias `uses:` en `ci-cd.yml` y `wiki-sync.yml` pinneadas a SHA de 40 chars con comentario `# vX` (Dependabot las sigue actualizando). |
+
 ### Follow-ups abiertos
 
-| ID | Descripción | Prioridad | Nota |
-| :--- | :--- | :---: | :--- |
-| P-05 | `cargo audit` en modo bloqueante | Baja | Requiere modernizar el sample `07-rust-to-ruby/origin` (hoy `reqwest 0.11`) antes de exigir cero advisories. |
-| P-06 | `bundler-audit` sin cobertura real | Baja | El caso Ruby no declara `Gemfile.lock`; los gems los provee la imagen. Añadir manifiesto para auditar `sinatra`/`cassandra-driver`. |
-| P-07 | Actions de GitHub sin SHA-pinning | Media | `ci-cd.yml` referencia actions por tag (`@v4`) en vez de por SHA de 40 chars. Pinnear para cerrar la superficie supply-chain del pipeline. |
+_Ninguno de la auditoría original._ Gestión continua vía Dependabot (23 PRs abiertos tras el release v4.4.0: bumps de deps + majors como Express 5, Python 3.14, reqwest 0.13 — a triar manualmente por su riesgo de ruptura).
 
 ---
 
@@ -192,4 +197,4 @@ Si identificas un riesgo de seguridad:
 
 ---
 
-*Auditoría gestionada por Vladimir Acuña — Software & Security Engineering*
+_Auditoría gestionada por Vladimir Acuña — Software & Security Engineering_

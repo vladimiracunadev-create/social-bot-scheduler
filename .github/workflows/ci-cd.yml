@@ -10,12 +10,17 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
+# Least-privilege por defecto: el token solo lee. Los jobs que necesitan más
+# (build-and-push: packages:write) lo declaran explícitamente a nivel de job.
+permissions:
+  contents: read
+
 jobs:
   supply-chain-checks:
     name: Supply Chain — Bidi & Obfuscation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Detect Unicode bidirectional control characters (CVE-2021-42574)
         run: |
@@ -78,10 +83,10 @@ jobs:
     name: Matrix Integrity (01-08)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.11'
 
@@ -92,10 +97,10 @@ jobs:
     name: Runtime Security Guardrails
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.11'
           cache: 'pip'
@@ -128,10 +133,10 @@ jobs:
     name: Python Cases and Shared Scripts
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.11'
           cache: 'pip'
@@ -175,10 +180,10 @@ jobs:
     name: Node Cases (03-05)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           # Node 22: corepack activates pnpm v11 (matches the committed
           # pnpm-lock.yaml v9 format) which requires Node >= 22.13 (node:sqlite).
@@ -207,10 +212,10 @@ jobs:
     name: PHP Cases (01,05,06)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
         with:
           php-version: '8.2'
 
@@ -225,10 +230,10 @@ jobs:
     name: Go Cases (02,03,06)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
           # 'stable' = latest patched toolchain; keeps govulncheck [P-04] green
           # against stdlib advisories (e.g. GO-2026-5037/5039) fixed upstream.
@@ -259,47 +264,37 @@ jobs:
     name: Ruby Destination (07)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@d45b1a4e94b71acab930e56e79c6aa188764e7f9 # v1
         with:
           ruby-version: '3.3'
 
       - name: Syntax check Ruby destination
         run: ruby -c cases/07-rust-to-ruby/dest/app.rb
 
-      - name: Ruby vulnerability audit (bundler-audit) [P-04]
+      - name: Ruby vulnerability audit (bundler-audit) [P-04/P-06]
         run: |
-          if [ -f cases/07-rust-to-ruby/dest/Gemfile.lock ]; then
-            gem install bundler-audit
-            bundle-audit check --update \
-              --gemfile-lock cases/07-rust-to-ruby/dest/Gemfile.lock
-          else
-            echo "No Gemfile.lock present — Ruby gems (sinatra, cassandra-driver)"
-            echo "are provided by the runtime image, so there is no dependency"
-            echo "manifest to audit. bundler-audit skipped (documented gap in"
-            echo "SECURITY.md)."
-          fi
+          gem install bundler-audit
+          ( cd cases/07-rust-to-ruby/dest && bundle-audit check --update )
         shell: bash
 
   rust-case:
     name: Rust Origin (07)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@4be7066ada62dd38de10e7b70166bc74ed198c30 # stable
 
       - name: Check Rust origin
         run: cargo check --manifest-path cases/07-rust-to-ruby/origin/Cargo.toml
 
-      - name: Rust vulnerability audit (cargo-audit) [P-04]
-        # Observe mode: the origin teaching sample intentionally pins reqwest 0.11,
-        # which surfaces known RustSec advisories. Findings are reported in the CI
-        # log but do not block until the sample is modernized (tracked in ROADMAP).
-        continue-on-error: true
+      - name: Rust vulnerability audit (cargo-audit) [P-04/P-05]
+        # Blocking: the origin sample was modernized (dotenvy + reqwest 0.12),
+        # clearing RUSTSEC-2021-0141 and RUSTSEC-2025-0134.
         run: |
           cargo install cargo-audit --locked
           cargo generate-lockfile --manifest-path cases/07-rust-to-ruby/origin/Cargo.toml
@@ -309,10 +304,10 @@ jobs:
     name: Dotnet Origin (08)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Set up .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
         with:
           dotnet-version: '6.0.x'
 
@@ -352,24 +347,24 @@ jobs:
       security-events: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
 
       - name: Secret Scan (Gitleaks)
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Log in to the Container registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # v5
         with:
           context: .
           push: false
@@ -377,7 +372,7 @@ jobs:
           load: true
 
       - name: Container Scan (Trivy)
-        uses: aquasecurity/trivy-action@v0.35.0
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0
         with:
           image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest'
           format: 'table'
@@ -387,7 +382,7 @@ jobs:
           severity: 'CRITICAL,HIGH'
 
       - name: Push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # v5
         with:
           context: .
           push: true
