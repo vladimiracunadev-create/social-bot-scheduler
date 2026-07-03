@@ -28,37 +28,37 @@
 
 ```mermaid
 flowchart LR
-    subgraph ORIGIN["🐍 ORIGEN · Python"]
-        A[posts.json] --> B{bot.py<br/>emisor}
+    subgraph ORIGIN["ORIGEN - Python"]
+        B["bot.py"]
     end
 
-    subgraph BRIDGE["🌉 PUENTE · n8n + Guardrails"]
-        C((Webhook)) --> IDEM{Idempotencia<br/>fingerprint}
-        IDEM -- duplicado --> DISCARD[200 OK · descarta]
-        IDEM -- nuevo --> FWD[HTTP forward<br/>+ X-API-Key]
-        FWD -. error .-> DLQ[[Dead Letter Queue<br/>/errors]]
+    subgraph BRIDGE["PUENTE - n8n + Guardrails"]
+        C(["Webhook"]) --> IDEM{"Idempotencia (fingerprint)"}
+        IDEM -->|duplicado| DISCARD["200 OK - descarta"]
+        IDEM -->|nuevo| FWD["HTTP forward + X-API-Key"]
+        FWD -.->|error| DLQ["Dead Letter Queue (/errors)"]
     end
 
-    subgraph DEST["⚡ DESTINO · FastAPI Gateway"]
-        FWD --> AUTH{X-API-Key<br/>válida?}
-        AUTH -- no --> E401[401 Unauthorized]
-        AUTH -- sí --> RL{Rate limit<br/>30/min}
-        RL -- excede --> E429[429 Too Many Requests]
-        RL -- ok --> WL{Whitelist owner<br/>regex pydantic}
-        WL -- inválido --> E422[422 Unprocessable]
-        WL -- válido --> API[api.py]
-        API --> GH[[🐙 GitHub API]]
-        API --> DB[(DuckDB embebida)]
-        DB --> DASH[Dashboard :8090]
+    subgraph DEST["DESTINO - FastAPI Gateway"]
+        FWD --> AUTH{"X-API-Key valida?"}
+        AUTH -->|no| E401["401 Unauthorized"]
+        AUTH -->|si| RL{"Rate limit 30/min"}
+        RL -->|excede| E429["429 Too Many Requests"]
+        RL -->|ok| WL{"Whitelist owner (regex)"}
+        WL -->|invalido| E422["422 Unprocessable"]
+        WL -->|valido| API["api.py"]
+        API --> GH["GitHub API"]
+        API --> DB[("DuckDB")]
+        DB --> DASH["Dashboard :8090"]
     end
 
-    B -- POST JSON --> C
+    B -->|POST JSON| C
 
-    classDef origin fill:#3776AB,stroke:#1b3a5c,color:#fff
-    classDef bridge fill:#EA4B71,stroke:#8c1c38,color:#fff
-    classDef dest fill:#009688,stroke:#00544c,color:#fff
-    classDef db fill:#FFF000,stroke:#8c8400,color:#000
-    class A,B origin
+    classDef origin fill:#3776AB,stroke:#333,color:#fff
+    classDef bridge fill:#EA4B71,stroke:#333,color:#fff
+    classDef dest fill:#009688,stroke:#333,color:#fff
+    classDef db fill:#FFF000,stroke:#333,color:#000
+    class B origin
     class C,IDEM,FWD,DLQ,DISCARD bridge
     class AUTH,RL,WL,API,DASH,E401,E429,E422,GH dest
     class DB db
@@ -71,31 +71,30 @@ flowchart LR
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Bot as 🐍 bot.py
-    participant N8N as 🌉 n8n
-    participant GW as ⚡ FastAPI Gateway
-    participant GitHub as 🐙 GitHub API
-    participant DB as 🦆 DuckDB
+    participant Bot as bot.py (Python)
+    participant N8N as n8n
+    participant GW as FastAPI Gateway
+    participant GH as GitHub API
+    participant DB as DuckDB
 
-    Bot->>Bot: Lee posts.json + prepara payload
     Bot->>N8N: POST /webhook (JSON del post)
     N8N->>N8N: Idempotencia (fingerprint)
     alt Duplicado
         N8N-->>Bot: 200 OK (descartado)
     else Nuevo
         N8N->>GW: HTTP forward + header X-API-Key
-        alt X-API-Key ausente o inválida
+        alt X-API-Key ausente o invalida
             GW-->>N8N: 401 Unauthorized
         else Autenticado
             alt Rate limit excedido (30/min)
                 GW-->>N8N: 429 Too Many Requests
-            else Dentro del límite
-                GW->>GW: Valida owner (whitelist regex GitHub)
-                alt owner inválido
+            else Dentro del limite
+                GW->>GW: Valida owner (whitelist regex)
+                alt owner invalido
                     GW-->>N8N: 422 Unprocessable Entity
-                else owner válido
-                    GW->>GitHub: Llamada saliente (publicación real)
-                    GitHub-->>GW: Respuesta del proveedor
+                else owner valido
+                    GW->>GH: Llamada saliente (publicacion real)
+                    GH-->>GW: Respuesta del proveedor
                     GW->>DB: INSERT post (idempotente)
                     DB-->>GW: OK
                     GW-->>N8N: 200 + registro
@@ -103,7 +102,6 @@ sequenceDiagram
                 end
             end
         end
-        N8N-->>DLQ: Errores → POST /errors (60/min · DLQ)
     end
 ```
 

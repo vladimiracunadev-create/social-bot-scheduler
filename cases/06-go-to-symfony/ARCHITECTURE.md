@@ -28,33 +28,33 @@
 
 ```mermaid
 flowchart LR
-    subgraph ORIGIN["🐹 ORIGEN · Go"]
-        A[posts.json] --> B{main.go<br/>concurrente}
+    subgraph ORIGIN["ORIGEN - Go"]
+        B["main.go"]
     end
 
-    subgraph BRIDGE["🌉 PUENTE · n8n + Guardrails"]
-        C((Webhook)) --> IDEM{Idempotencia<br/>fingerprint}
-        IDEM -- duplicado --> DISCARD[200 OK · descarta]
-        IDEM -- nuevo --> CB{Circuit<br/>Breaker}
-        CB -- cerrado --> FWD[HTTP forward]
-        CB -- abierto --> DLQ[[Dead Letter Queue]]
+    subgraph BRIDGE["PUENTE - n8n + Guardrails"]
+        C(["Webhook"]) --> IDEM{"Idempotencia (fingerprint)"}
+        IDEM -->|duplicado| DISCARD["200 OK - descarta"]
+        IDEM -->|nuevo| CBK{"Circuit Breaker"}
+        CBK -->|cerrado| FWD["HTTP forward"]
+        CBK -->|abierto| DLQ["Dead Letter Queue"]
     end
 
-    subgraph DEST["🎵 DESTINO · Symfony / PHP"]
-        FWD --> H[index.php]
-        H --> DB[(Redis 7)]
-        DB --> DASH[Dashboard :8086]
+    subgraph DEST["DESTINO - Symfony"]
+        FWD --> H["index.php"]
+        H --> DB[("Redis 7")]
+        DB --> DASH["Dashboard :8086"]
     end
 
-    B -- POST JSON --> C
-    FWD -. error .-> DLQ
+    B -->|POST JSON| C
+    FWD -.->|error| DLQ
 
-    classDef origin fill:#00ADD8,stroke:#006680,color:#fff
-    classDef bridge fill:#EA4B71,stroke:#8c1c38,color:#fff
-    classDef dest fill:#000000,stroke:#000000,color:#fff
-    classDef db fill:#DC382D,stroke:#821f18,color:#fff
-    class A,B origin
-    class C,IDEM,CB,FWD,DLQ,DISCARD bridge
+    classDef origin fill:#00ADD8,stroke:#333,color:#fff
+    classDef bridge fill:#EA4B71,stroke:#333,color:#fff
+    classDef dest fill:#000000,stroke:#333,color:#fff
+    classDef db fill:#DC382D,stroke:#333,color:#fff
+    class B origin
+    class C,IDEM,CBK,FWD,DLQ,DISCARD bridge
     class H,DASH dest
     class DB db
 ```
@@ -66,12 +66,12 @@ flowchart LR
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Bot as 🐹 main.go
-    participant N8N as 🌉 n8n
-    participant SF as 🎵 index.php
-    participant DB as 🔴 Redis
+    participant Bot as main.go (Go)
+    participant N8N as n8n
+    participant Dest as index.php (Symfony)
+    participant DB as Redis 7
 
-    Bot->>Bot: Lee posts.json + dispara goroutines
+    Bot->>Bot: Prepara y valida el payload
     Bot->>N8N: POST /webhook (JSON del post)
     N8N->>N8N: Idempotencia (fingerprint)
     alt Duplicado
@@ -79,10 +79,10 @@ sequenceDiagram
     else Nuevo
         N8N->>N8N: Circuit Breaker (estado)
         alt Breaker cerrado
-            N8N->>SF: HTTP forward del payload
-            SF->>DB: SET post
-            DB-->>SF: OK
-            SF-->>N8N: 200 + registro
+            N8N->>Dest: HTTP forward del payload
+            Dest->>DB: INSERT post
+            DB-->>Dest: OK
+            Dest-->>N8N: 200 + registro
             N8N-->>Bot: 200 OK
         else Breaker abierto / error
             N8N->>N8N: Enruta a Dead Letter Queue

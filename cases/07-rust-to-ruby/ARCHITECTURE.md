@@ -28,33 +28,33 @@
 
 ```mermaid
 flowchart LR
-    subgraph ORIGIN["🦀 ORIGEN · Rust"]
-        A[posts.json] --> B{main.rs<br/>reqwest async}
+    subgraph ORIGIN["ORIGEN - Rust"]
+        B["main.rs"]
     end
 
-    subgraph BRIDGE["🌉 PUENTE · n8n + Guardrails"]
-        C((Webhook)) --> IDEM{Idempotencia<br/>fingerprint}
-        IDEM -- duplicado --> DISCARD[200 OK · descarta]
-        IDEM -- nuevo --> CB{Circuit<br/>Breaker}
-        CB -- cerrado --> FWD[HTTP forward]
-        CB -- abierto --> DLQ[[Dead Letter Queue]]
+    subgraph BRIDGE["PUENTE - n8n + Guardrails"]
+        C(["Webhook"]) --> IDEM{"Idempotencia (fingerprint)"}
+        IDEM -->|duplicado| DISCARD["200 OK - descarta"]
+        IDEM -->|nuevo| CBK{"Circuit Breaker"}
+        CBK -->|cerrado| FWD["HTTP forward"]
+        CBK -->|abierto| DLQ["Dead Letter Queue"]
     end
 
-    subgraph DEST["💎 DESTINO · Ruby / Sinatra"]
-        FWD --> H[app.rb]
-        H --> DB[(Cassandra 4.1)]
-        DB --> DASH[Dashboard :8087]
+    subgraph DEST["DESTINO - Ruby / Sinatra"]
+        FWD --> H["app.rb"]
+        H --> DB[("Cassandra 4.1")]
+        DB --> DASH["Dashboard :8087"]
     end
 
-    B -- POST JSON --> C
-    FWD -. error .-> DLQ
+    B -->|POST JSON| C
+    FWD -.->|error| DLQ
 
-    classDef origin fill:#DEA584,stroke:#8a6440,color:#000
-    classDef bridge fill:#EA4B71,stroke:#8c1c38,color:#fff
-    classDef dest fill:#CC342D,stroke:#7a1f1b,color:#fff
-    classDef db fill:#1287B1,stroke:#0a4f68,color:#fff
-    class A,B origin
-    class C,IDEM,CB,FWD,DLQ,DISCARD bridge
+    classDef origin fill:#DEA584,stroke:#333,color:#fff
+    classDef bridge fill:#EA4B71,stroke:#333,color:#fff
+    classDef dest fill:#CC342D,stroke:#333,color:#fff
+    classDef db fill:#1287B1,stroke:#333,color:#fff
+    class B origin
+    class C,IDEM,CBK,FWD,DLQ,DISCARD bridge
     class H,DASH dest
     class DB db
 ```
@@ -66,12 +66,12 @@ flowchart LR
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Bot as 🦀 main.rs
-    participant N8N as 🌉 n8n
-    participant RB as 💎 app.rb
-    participant DB as 🟦 Cassandra
+    participant Bot as main.rs (Rust)
+    participant N8N as n8n
+    participant Dest as app.rb (Ruby / Sinatra)
+    participant DB as Cassandra 4.1
 
-    Bot->>Bot: Lee posts.json + serializa (Serde)
+    Bot->>Bot: Prepara y valida el payload
     Bot->>N8N: POST /webhook (JSON del post)
     N8N->>N8N: Idempotencia (fingerprint)
     alt Duplicado
@@ -79,10 +79,10 @@ sequenceDiagram
     else Nuevo
         N8N->>N8N: Circuit Breaker (estado)
         alt Breaker cerrado
-            N8N->>RB: HTTP forward del payload
-            RB->>DB: INSERT post
-            DB-->>RB: OK
-            RB-->>N8N: 200 + registro
+            N8N->>Dest: HTTP forward del payload
+            Dest->>DB: INSERT post
+            DB-->>Dest: OK
+            Dest-->>N8N: 200 + registro
             N8N-->>Bot: 200 OK
         else Breaker abierto / error
             N8N->>N8N: Enruta a Dead Letter Queue

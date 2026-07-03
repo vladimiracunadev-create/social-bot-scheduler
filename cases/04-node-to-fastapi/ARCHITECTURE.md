@@ -28,33 +28,33 @@
 
 ```mermaid
 flowchart LR
-    subgraph ORIGIN["🟢 ORIGEN · Node.js"]
-        A[posts.json] --> B{index.js<br/>Axios}
+    subgraph ORIGIN["ORIGEN - Node.js"]
+        B["index.js"]
     end
 
-    subgraph BRIDGE["🌉 PUENTE · n8n + Guardrails"]
-        C((Webhook)) --> IDEM{Idempotencia<br/>fingerprint}
-        IDEM -- duplicado --> DISCARD[200 OK · descarta]
-        IDEM -- nuevo --> CB{Circuit<br/>Breaker}
-        CB -- cerrado --> FWD[HTTP forward]
-        CB -- abierto --> DLQ[[Dead Letter Queue]]
+    subgraph BRIDGE["PUENTE - n8n + Guardrails"]
+        C(["Webhook"]) --> IDEM{"Idempotencia (fingerprint)"}
+        IDEM -->|duplicado| DISCARD["200 OK - descarta"]
+        IDEM -->|nuevo| CBK{"Circuit Breaker"}
+        CBK -->|cerrado| FWD["HTTP forward"]
+        CBK -->|abierto| DLQ["Dead Letter Queue"]
     end
 
-    subgraph DEST["⚡ DESTINO · FastAPI / Uvicorn"]
-        FWD --> H[main.py]
-        H --> DB[(SQLite)]
-        DB --> DASH[Dashboard :8084]
+    subgraph DEST["DESTINO - FastAPI"]
+        FWD --> H["main.py"]
+        H --> DB[("SQLite")]
+        DB --> DASH["Dashboard :8084"]
     end
 
-    B -- POST JSON --> C
-    FWD -. error .-> DLQ
+    B -->|POST JSON| C
+    FWD -.->|error| DLQ
 
-    classDef origin fill:#339933,stroke:#1c521c,color:#fff
-    classDef bridge fill:#EA4B71,stroke:#8c1c38,color:#fff
-    classDef dest fill:#009688,stroke:#004d45,color:#fff
-    classDef db fill:#003B57,stroke:#001d2b,color:#fff
-    class A,B origin
-    class C,IDEM,CB,FWD,DLQ,DISCARD bridge
+    classDef origin fill:#339933,stroke:#333,color:#fff
+    classDef bridge fill:#EA4B71,stroke:#333,color:#fff
+    classDef dest fill:#009688,stroke:#333,color:#fff
+    classDef db fill:#003B57,stroke:#333,color:#fff
+    class B origin
+    class C,IDEM,CBK,FWD,DLQ,DISCARD bridge
     class H,DASH dest
     class DB db
 ```
@@ -66,28 +66,27 @@ flowchart LR
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Node as 🟢 index.js
-    participant N8N as 🌉 n8n
-    participant API as ⚡ main.py
-    participant DB as 🗄️ SQLite
+    participant Bot as index.js (Node.js)
+    participant N8N as n8n
+    participant Dest as main.py (FastAPI)
+    participant DB as SQLite
 
-    Node->>Node: Lee posts.json + envía async (Axios)
-    Node->>N8N: POST /webhook (JSON del post)
+    Bot->>Bot: Prepara y valida el payload
+    Bot->>N8N: POST /webhook (JSON del post)
     N8N->>N8N: Idempotencia (fingerprint)
     alt Duplicado
-        N8N-->>Node: 200 OK (descartado)
+        N8N-->>Bot: 200 OK (descartado)
     else Nuevo
         N8N->>N8N: Circuit Breaker (estado)
         alt Breaker cerrado
-            N8N->>API: HTTP forward del payload
-            API->>API: Validación Pydantic (tipado estricto)
-            API->>DB: INSERT post
-            DB-->>API: OK
-            API-->>N8N: 200 + registro
-            N8N-->>Node: 200 OK
+            N8N->>Dest: HTTP forward del payload
+            Dest->>DB: INSERT post
+            DB-->>Dest: OK
+            Dest-->>N8N: 200 + registro
+            N8N-->>Bot: 200 OK
         else Breaker abierto / error
             N8N->>N8N: Enruta a Dead Letter Queue
-            N8N-->>Node: 5xx (reintento posterior)
+            N8N-->>Bot: 5xx (reintento posterior)
         end
     end
 ```

@@ -28,33 +28,33 @@
 
 ```mermaid
 flowchart LR
-    subgraph ORIGIN["🐍 ORIGEN · Python"]
-        A[posts.json] --> B{bot.py<br/>Pydantic}
+    subgraph ORIGIN["ORIGEN - Python"]
+        B["bot.py"]
     end
 
-    subgraph BRIDGE["🌉 PUENTE · n8n + Guardrails"]
-        C((Webhook)) --> IDEM{Idempotencia<br/>fingerprint}
-        IDEM -- duplicado --> DISCARD[200 OK · descarta]
-        IDEM -- nuevo --> CB{Circuit<br/>Breaker}
-        CB -- cerrado --> FWD[HTTP forward]
-        CB -- abierto --> DLQ[[Dead Letter Queue]]
+    subgraph BRIDGE["PUENTE - n8n + Guardrails"]
+        C(["Webhook"]) --> IDEM{"Idempotencia (fingerprint)"}
+        IDEM -->|duplicado| DISCARD["200 OK - descarta"]
+        IDEM -->|nuevo| CBK{"Circuit Breaker"}
+        CBK -->|cerrado| FWD["HTTP forward"]
+        CBK -->|abierto| DLQ["Dead Letter Queue"]
     end
 
-    subgraph DEST["🐘 DESTINO · PHP / Apache"]
-        FWD --> H[index.php]
-        H --> DB[(MySQL 8.0)]
-        DB --> DASH[Dashboard :8081]
+    subgraph DEST["DESTINO - PHP / Apache"]
+        FWD --> H["index.php"]
+        H --> DB[("MySQL 8.0")]
+        DB --> DASH["Dashboard :8081"]
     end
 
-    B -- POST JSON --> C
-    FWD -. error .-> DLQ
+    B -->|POST JSON| C
+    FWD -.->|error| DLQ
 
-    classDef origin fill:#3776AB,stroke:#1b3a5c,color:#fff
-    classDef bridge fill:#EA4B71,stroke:#8c1c38,color:#fff
-    classDef dest fill:#777BB4,stroke:#3f4370,color:#fff
-    classDef db fill:#4479A1,stroke:#22405c,color:#fff
-    class A,B origin
-    class C,IDEM,CB,FWD,DLQ,DISCARD bridge
+    classDef origin fill:#3776AB,stroke:#333,color:#fff
+    classDef bridge fill:#EA4B71,stroke:#333,color:#fff
+    classDef dest fill:#777BB4,stroke:#333,color:#fff
+    classDef db fill:#4479A1,stroke:#333,color:#fff
+    class B origin
+    class C,IDEM,CBK,FWD,DLQ,DISCARD bridge
     class H,DASH dest
     class DB db
 ```
@@ -66,12 +66,12 @@ flowchart LR
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Bot as 🐍 bot.py
-    participant N8N as 🌉 n8n
-    participant PHP as 🐘 index.php
-    participant DB as 🐬 MySQL
+    participant Bot as bot.py (Python)
+    participant N8N as n8n
+    participant Dest as index.php (PHP / Apache)
+    participant DB as MySQL 8.0
 
-    Bot->>Bot: Lee posts.json + valida (Pydantic)
+    Bot->>Bot: Prepara y valida el payload
     Bot->>N8N: POST /webhook (JSON del post)
     N8N->>N8N: Idempotencia (fingerprint)
     alt Duplicado
@@ -79,10 +79,10 @@ sequenceDiagram
     else Nuevo
         N8N->>N8N: Circuit Breaker (estado)
         alt Breaker cerrado
-            N8N->>PHP: HTTP forward del payload
-            PHP->>DB: INSERT post
-            DB-->>PHP: OK
-            PHP-->>N8N: 200 + registro
+            N8N->>Dest: HTTP forward del payload
+            Dest->>DB: INSERT post
+            DB-->>Dest: OK
+            Dest-->>N8N: 200 + registro
             N8N-->>Bot: 200 OK
         else Breaker abierto / error
             N8N->>N8N: Enruta a Dead Letter Queue

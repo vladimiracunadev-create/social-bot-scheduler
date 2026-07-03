@@ -28,33 +28,33 @@
 
 ```mermaid
 flowchart LR
-    subgraph ORIGIN["🟣 ORIGEN · C# / .NET"]
-        A[posts / objetos tipados] --> B{Program.cs<br/>System.Text.Json}
+    subgraph ORIGIN["ORIGEN - C# / .NET"]
+        B["Program.cs"]
     end
 
-    subgraph BRIDGE["🌉 PUENTE · n8n + Guardrails"]
-        C((Webhook)) --> IDEM{Idempotencia<br/>fingerprint}
-        IDEM -- duplicado --> DISCARD[200 OK · descarta]
-        IDEM -- nuevo --> CB{Circuit<br/>Breaker}
-        CB -- cerrado --> FWD[HTTP forward]
-        CB -- abierto --> DLQ[[Dead Letter Queue]]
+    subgraph BRIDGE["PUENTE - n8n + Guardrails"]
+        C(["Webhook"]) --> IDEM{"Idempotencia (fingerprint)"}
+        IDEM -->|duplicado| DISCARD["200 OK - descarta"]
+        IDEM -->|nuevo| CBK{"Circuit Breaker"}
+        CBK -->|cerrado| FWD["HTTP forward"]
+        CBK -->|abierto| DLQ["Dead Letter Queue"]
     end
 
-    subgraph DEST["🌶️ DESTINO · Flask / Python"]
-        FWD --> H[app.py]
-        H --> DB[(SQL Server 2022)]
-        DB --> DASH[Dashboard :8088]
+    subgraph DEST["DESTINO - Flask"]
+        FWD --> H["app.py"]
+        H --> DB[("SQL Server 2022")]
+        DB --> DASH["Dashboard :8088"]
     end
 
-    B -- POST JSON --> C
-    FWD -. error .-> DLQ
+    B -->|POST JSON| C
+    FWD -.->|error| DLQ
 
-    classDef origin fill:#512BD4,stroke:#2c1873,color:#fff
-    classDef bridge fill:#EA4B71,stroke:#8c1c38,color:#fff
-    classDef dest fill:#000000,stroke:#000000,color:#fff
-    classDef db fill:#CC2927,stroke:#7a1817,color:#fff
-    class A,B origin
-    class C,IDEM,CB,FWD,DLQ,DISCARD bridge
+    classDef origin fill:#512BD4,stroke:#333,color:#fff
+    classDef bridge fill:#EA4B71,stroke:#333,color:#fff
+    classDef dest fill:#000000,stroke:#333,color:#fff
+    classDef db fill:#CC2927,stroke:#333,color:#fff
+    class B origin
+    class C,IDEM,CBK,FWD,DLQ,DISCARD bridge
     class H,DASH dest
     class DB db
 ```
@@ -66,12 +66,12 @@ flowchart LR
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Bot as 🟣 Program.cs
-    participant N8N as 🌉 n8n
-    participant Flask as 🌶️ app.py
-    participant DB as 🗄️ SQL Server
+    participant Bot as Program.cs (C# / .NET)
+    participant N8N as n8n
+    participant Dest as app.py (Flask)
+    participant DB as SQL Server 2022
 
-    Bot->>Bot: Serializa objetos tipados (System.Text.Json)
+    Bot->>Bot: Prepara y valida el payload
     Bot->>N8N: POST /webhook (JSON del post)
     N8N->>N8N: Idempotencia (fingerprint)
     alt Duplicado
@@ -79,10 +79,10 @@ sequenceDiagram
     else Nuevo
         N8N->>N8N: Circuit Breaker (estado)
         alt Breaker cerrado
-            N8N->>Flask: HTTP forward del payload
-            Flask->>DB: INSERT post (transaccional)
-            DB-->>Flask: OK
-            Flask-->>N8N: 200 + registro
+            N8N->>Dest: HTTP forward del payload
+            Dest->>DB: INSERT post
+            DB-->>Dest: OK
+            Dest-->>N8N: 200 + registro
             N8N-->>Bot: 200 OK
         else Breaker abierto / error
             N8N->>N8N: Enruta a Dead Letter Queue
