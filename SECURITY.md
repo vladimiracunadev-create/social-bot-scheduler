@@ -155,6 +155,14 @@ docker compose --profile edge up -d
 | P-03 | Whitelist de owners en Case 09 | Baja | ✅ CORREGIDO | `owner` valida regex de GitHub en `RequestParamsDTO` (pydantic → 422), defensa en profundidad sobre el VO `Owner`. |
 | P-04 | Auditoría CVE Go/Node/Rust/Ruby/.NET en CI | Media | ✅ CORREGIDO | `govulncheck` + `pnpm audit` + `dotnet list package --vulnerable` bloqueantes; `cargo audit` en observación; `bundler-audit` condicional. |
 
+> **Hallazgos reales cerrados por P-04**: al activarse, `pnpm audit` destapó
+> **3 HIGH + 1 moderate** en dependencias transitivas, corregidos vía
+> `pnpm.overrides` + regeneración de lockfile — `form-data` <4.0.6 (CRLF,
+> GHSA-hmw2-7cc7-3qxx, casos 03/04), `path-to-regexp` <0.1.13 (ReDoS,
+> GHSA-37ch-88jc-xwx2, caso 05) y `qs` (DoS, GHSA-q8mj-m7cp-5q26, caso 05).
+> `govulncheck` forzó subir el toolchain Go de CI a `stable` (stdlib
+> GO-2026-5037/5039). Detalle completo en `CHANGELOG.md` (v4.4.0).
+
 ### Follow-ups abiertos
 
 | ID | Descripción | Prioridad | Nota |
