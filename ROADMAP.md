@@ -6,6 +6,13 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 
 ## ✅ Hitos Completados
 
+### `v4.4.1` — "Follow-ups de Seguridad al Cierre" 🔒 Ready
+
+- [x] **SHA-pinning de Actions (P-07)**: 27 `uses:` pinneadas a SHA de 40 chars en `ci-cd.yml` y `wiki-sync.yml`.
+- [x] **`cargo audit` bloqueante (P-05)**: sample Rust modernizado (`dotenvy`, `reqwest` 0.12) — RUSTSEC-2021-0141 y 2025-0134 cerrados.
+- [x] **`bundler-audit` con cobertura (P-06)**: `Gemfile` + `Gemfile.lock` en el caso Ruby.
+- [x] **5 ecosistemas auditando CVEs de forma bloqueante** en CI (Python, Go, Node, .NET, Rust, Ruby).
+
 ### `v4.4.0` — "Cierre de Pendientes de Seguridad" 🔒 Ready
 
 - [x] **Hashes SHA en dependencias (P-01)**: `requirements.in` + `uv pip compile --universal --generate-hashes --python-version 3.11` en los 5 archivos Python; `pip --require-hashes` en CI y build Docker.
@@ -60,8 +67,8 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 - [x] **Rate limiting en Case 09** (P-02): `slowapi` con throttling por IP en el FastAPI gateway. ✅ v4.4.0
 - [x] **Whitelist de owners en Case 09** (P-03): `owner` validado con regex de GitHub en `RequestParamsDTO`. ✅ v4.4.0
 - [x] **Auditoría CVE multi-lenguaje** (P-04): `govulncheck`, `pnpm audit`, `cargo audit`, `bundler-audit`, `dotnet list package --vulnerable` en CI. ✅ v4.4.0
-- [ ] **`cargo audit` bloqueante** (P-05): modernizar el sample `07-rust-to-ruby/origin` (hoy `reqwest 0.11`) para exigir cero advisories.
-- [ ] **SHA-pinning de GitHub Actions** (P-07): pinnear las actions de `ci-cd.yml` por SHA de 40 chars.
+- [x] **`cargo audit` bloqueante** (P-05): sample `07-rust-to-ruby/origin` modernizado (`dotenvy`, `reqwest` 0.12). ✅ v4.4.1
+- [x] **SHA-pinning de GitHub Actions** (P-07): 27 actions pinneadas por SHA de 40 chars. ✅ v4.4.1
 
 ### 🌐 Conectividad Edge y Avanzada
 

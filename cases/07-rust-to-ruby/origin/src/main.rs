@@ -19,7 +19,7 @@ use std::thread;
 use std::time::Duration;
 use std::env;
 use serde::{Deserialize, Serialize};
-use dotenv::dotenv;
+use dotenvy::dotenv;
 
 // =================================================================================================
 // ESTRUCTURAS DE DATOS (Structs)

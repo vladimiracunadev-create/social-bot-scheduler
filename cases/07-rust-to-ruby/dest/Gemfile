@@ -1,0 +1,8 @@
+# Gemfile para el receptor Ruby/Sinatra del Caso 07.
+# Declara las gemas que `app.rb` requiere en runtime (además de `json`, que
+# es gema por defecto de Ruby). Su Gemfile.lock permite que `bundler-audit`
+# audite estas dependencias en CI (P-06).
+source 'https://rubygems.org'
+
+gem 'sinatra'
+gem 'cassandra-driver'
