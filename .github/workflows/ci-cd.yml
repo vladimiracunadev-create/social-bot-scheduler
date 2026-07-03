@@ -192,7 +192,9 @@ jobs:
 
       - name: Node vulnerability audit (pnpm audit) [P-04]
         run: |
-          corepack enable
+          # Install pnpm 10 directly (avoids corepack pulling pnpm 11, which
+          # needs Node >= 22.13); pnpm 10 reads the committed v9 lockfiles.
+          npm install -g pnpm@10
           for dir in cases/03-go-to-node/dest \
                      cases/04-node-to-fastapi/origin \
                      cases/05-laravel-to-react/dest; do
@@ -228,7 +230,9 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.22'
+          # 'stable' = latest patched toolchain; keeps govulncheck [P-04] green
+          # against stdlib advisories (e.g. GO-2026-5037/5039) fixed upstream.
+          go-version: 'stable'
 
       - name: Parse Go cases
         run: |
