@@ -17,6 +17,15 @@ Los cuatro ítems que quedaban como **RIESGO ACEPTADO** en `SECURITY.md` pasan a
 - **P-03 · Whitelist de owner en Case 09**: el campo `owner` de `RequestParamsDTO` valida el patrón de usuario de GitHub (`^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$`) en el borde (pydantic → **422**), como defensa en profundidad sobre el value object `Owner` del dominio. Cierra la superficie tipo SSRF del parámetro que forma la URL saliente.
 - **P-04 · Auditoría CVE multi-lenguaje en CI**: `govulncheck` (Go), `pnpm audit --audit-level high` (Node) y `dotnet list package --vulnerable` (.NET) como pasos **bloqueantes**; `cargo audit` (Rust) en **modo observación** (el sample origin fija `reqwest 0.11` a propósito); `bundler-audit` (Ruby) condicionado a la existencia de `Gemfile.lock`.
 
+#### Corregido — advisories transitivos detectados por el nuevo `pnpm audit` (P-04)
+
+El gate de Node destapó **3 HIGH + 1 moderate** en dependencias transitivas, resueltos vía `pnpm.overrides` + regeneración de lockfile:
+
+- `cases/03-go-to-node/dest` y `cases/04-node-to-fastapi/origin`: **`form-data`** `>=4.0.0 <4.0.6` (CRLF injection, GHSA-hmw2-7cc7-3qxx, vía `axios`) → `>=4.0.6`.
+- `cases/05-laravel-to-react/dest`: **`path-to-regexp`** `<0.1.13` (ReDoS, GHSA-37ch-88jc-xwx2, vía `express`) → `>=0.1.13 <0.2.0` (se mantiene la línea 0.1.x que espera Express 4); **`qs`** `>=6.11.1 <=6.15.1` (DoS, GHSA-q8mj-m7cp-5q26) → `>=6.15.2 <7.0.0`.
+
+Además, el gate de Go (`govulncheck`) forzó subir el toolchain de CI a `stable` (cerrando advisories de stdlib GO-2026-5037/5039 en `go1.22.12`).
+
 #### Notas
 
 - **slowapi** es dependencia nueva de Case 09 (añadida a `requirements.in` + lockfile con hashes).
