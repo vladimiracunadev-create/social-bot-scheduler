@@ -1,0 +1,10 @@
+# Case 01 (Python origin) dependencies.
+# Compile with:  pip-compile --generate-hashes requirements.in
+python-dotenv
+requests
+pydantic>=2.0
+pydantic-settings
+pytest
+pytest-cov
+mypy
+types-requests

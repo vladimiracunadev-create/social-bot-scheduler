@@ -1,0 +1,4 @@
+# Case 08 (Flask destination) dependencies.
+# Compile with:  pip-compile --generate-hashes requirements.in
+flask>=3.0.3
+pyodbc

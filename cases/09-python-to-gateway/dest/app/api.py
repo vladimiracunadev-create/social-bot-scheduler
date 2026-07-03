@@ -5,10 +5,14 @@ import os
 from pathlib import Path
 
 import requests
-from fastapi import FastAPI, Header, HTTPException
+from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 
+from app.domain import OWNER_PATTERN
 from app.infrastructure import (
     DuckDBDatabase,
     DuckDBIntegrationRequestRepository,
@@ -30,6 +34,14 @@ handle_request_use_case, handle_failure_use_case = create_use_cases(
     integration_repo, provider_repo
 )
 
+# P-02 — Rate limiting. Per-client (remote address) throttling protects the
+# upstream GitHub API quota and blunts abuse of a leaked X-API-Key. Limits are
+# env-configurable so operators can tune them per deployment.
+WEBHOOK_RATE_LIMIT = os.getenv("GATEWAY_WEBHOOK_RATE_LIMIT", "30/minute")
+ERRORS_RATE_LIMIT = os.getenv("GATEWAY_ERRORS_RATE_LIMIT", "60/minute")
+
+limiter = Limiter(key_func=get_remote_address)
+
 app = FastAPI(
     title="Case 09 Integration Gateway",
     version="1.0.0",
@@ -37,10 +49,16 @@ app = FastAPI(
         "FastAPI gateway with DuckDB persistence " "and a server-rendered dashboard."
     ),
 )
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
 class RequestParamsDTO(BaseModel):
-    owner: str
+    # P-03 — Whitelist the owner at the edge (defence in depth). The domain
+    # Owner value object enforces the same rule, but validating here rejects
+    # malformed input with a clean 422 before it can shape an outbound request
+    # to the GitHub API (SSRF-shaped surface).
+    owner: str = Field(pattern=OWNER_PATTERN.pattern)
     limit: int = Field(ge=1, le=50)
 
 
@@ -78,8 +96,11 @@ def render_table_rows(rows: list[dict], columns: list[str]) -> str:
 
 
 @app.post("/webhook")
+@limiter.limit(WEBHOOK_RATE_LIMIT)
 def webhook(
-    payload: IntegrationRequestDTO, x_api_key: str | None = Header(default=None)
+    request: Request,
+    payload: IntegrationRequestDTO,
+    x_api_key: str | None = Header(default=None),
 ):
     api_key = validate_api_key(x_api_key)
     try:
@@ -94,7 +115,8 @@ def webhook(
 
 
 @app.post("/errors")
-def errors(payload: dict):
+@limiter.limit(ERRORS_RATE_LIMIT)
+def errors(request: Request, payload: dict):
     return handle_failure_use_case.execute(payload)
 
 

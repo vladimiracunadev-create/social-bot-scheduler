@@ -4,10 +4,15 @@ Este repositorio es un **laboratorio de ingeniería políglota**. La postura de 
 
 ---
 
-## Auditoría de Seguridad — Resultados (v4.2.0)
+## Auditoría de Seguridad — Resultados (v4.2.0 · addendum v4.4.0)
 
 Auditoría completa ejecutada el 2026-04-06 siguiendo el framework de 8 capas.
 Cada punto indica su estado: **OK**, **CORREGIDO** (en esta versión) o **RIESGO ACEPTADO**.
+
+> **Addendum v4.4.0 (2026-07-02)** — Los cuatro pendientes priorizados de la
+> auditoría (**P-01** hashes SHA, **P-02** rate limiting, **P-03** whitelist de
+> owner, **P-04** auditoría CVE multi-lenguaje) pasan de **RIESGO ACEPTADO** a
+> **CORREGIDO**. Ver detalle en cada capa y en «Pendientes Priorizados».
 
 ---
 
@@ -39,7 +44,7 @@ Cada punto indica su estado: **OK**, **CORREGIDO** (en esta versión) o **RIESGO
 | :--- | :---: | :--- |
 | `.env` en `.gitignore` | **OK** | Línea `.env` y `.env.*` con excepciones explícitas para `!.env.example` y `!.env.demo.example`. |
 | `.env.example` commiteado | **OK** | Plantilla sin secretos reales. Nunca en `.gitignore`. |
-| Archivo de lock de dependencias | **RIESGO ACEPTADO** | `requirements.txt` usa versiones `>=` sin hashes SHA. `pip-audit` en CI detecta CVEs conocidos. Mitigación completa requeriría `pip-compile --generate-hashes`. |
+| Archivo de lock de dependencias | **CORREGIDO** | Los 5 `requirements.txt` se generan desde `requirements.in` con `uv pip compile --universal --generate-hashes --python-version 3.11`; cada dependencia directa y transitiva queda pinneada con hash SHA256 (la resolución universal incluye backports condicionales `python_version < "3.12"` con su marcador), lo que fuerza el modo `pip --require-hashes` en CI y en el build Docker (Python 3.11). (P-01, v4.4.0) |
 | Fallback hardcodeado en docker-compose | **RIESGO ACEPTADO** | Los valores `change-me-*` permiten arrancar el lab sin `.env`. El script `n8n_auto_setup.sh` emite warning si detecta placeholders. Riesgo local — nunca exponer sin edge proxy autenticado. |
 
 ---
@@ -58,10 +63,13 @@ Cada punto indica su estado: **OK**, **CORREGIDO** (en esta versión) o **RIESGO
 | `AllowOverride` para `.htaccess` | **N/A** | No se usa `.htaccess`; la config se monta directamente en `conf-enabled/`. |
 
 Los tres servicios Apache reciben la misma config montada en `:ro`:
-```
+
+```text
 ./apache/security-headers.conf:/etc/apache2/conf-enabled/security-headers.conf:ro
 ```
+
 Y habilitan `mod_headers` vía:
+
 ```yaml
 command: sh -c "a2enmod headers && apache2-foreground"
 ```
@@ -74,8 +82,8 @@ command: sh -c "a2enmod headers && apache2-foreground"
 | :--- | :---: | :--- |
 | Modo solo lectura por defecto | **OK** | `DRY_RUN=true` y `NO_PUBLIC_POSTING=true` en `.env.example`. |
 | CSRF en Case 09 (FastAPI) | **OK** | El endpoint `/webhook` requiere `X-API-Key` válido por header — no es un formulario HTML con POST de navegador. |
-| Rate limiting | **RIESGO ACEPTADO** | No existe rate limiting explícito en el gateway Case 09. Aceptable para laboratorio local. En producción: añadir SlowAPI o un middleware de throttling. |
-| Whitelist de destinos | **RIESGO ACEPTADO** | El parámetro `owner` del gateway se pasa a GitHub API; no está en whitelist. Se valida via `pydantic` (tipo str) y el límite es numérico (`le=50`). En producción: añadir regex whitelist de owners permitidos. |
+| Rate limiting | **CORREGIDO** | `slowapi` aplica throttling por IP de cliente en `/webhook` (30/min) y `/errors` (60/min) del gateway Case 09; ambos límites son configurables por `GATEWAY_WEBHOOK_RATE_LIMIT` / `GATEWAY_ERRORS_RATE_LIMIT`. El excedente devuelve HTTP 429, protegiendo la cuota de la GitHub API y limitando el abuso de una `X-API-Key` filtrada. (P-02, v4.4.0) |
+| Whitelist de destinos | **CORREGIDO** | El campo `owner` de `RequestParamsDTO` valida el patrón `^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$` en el borde (pydantic → 422), replicando el value object `Owner` del dominio. Rechaza barras, `@` y encodings que pudieran redirigir la llamada saliente a GitHub (superficie tipo SSRF). (P-03, v4.4.0) |
 
 ---
 
@@ -89,6 +97,7 @@ command: sh -c "a2enmod headers && apache2-foreground"
 | Grafana (`:3000`) | **OK** | `GF_AUTH_ANONYMOUS_ENABLED=false`, `GF_USERS_ALLOW_SIGN_UP=false`. Cambiar credenciales en `.env`. |
 
 **Para exponer el dashboard en una red compartida** sin edge proxy completo:
+
 ```bash
 # Generar hash de contraseña
 docker run --rm caddy:2.10.2-alpine caddy hash-password --plaintext 'TuPassword'
@@ -105,7 +114,7 @@ docker compose --profile edge up -d
 | :--- | :---: | :--- |
 | Escaneo de secretos en historial | **OK** | `gitleaks/gitleaks-action@v2` en job `build-and-push`. |
 | Auditoría de dependencias Python | **OK** | `pip-audit --ignore-vuln CVE-2026-1703` en job `python-cases`. |
-| Auditoría de otras dependencias (Go, Node, Rust, .NET, Ruby) | **RIESGO ACEPTADO** | Solo Python tiene auditoría automática. Go, Node, Rust, .NET y Ruby se validan en sintaxis/build pero no contra CVE DB. Dependabot abre PRs cuando hay versiones vulnerables. |
+| Auditoría de otras dependencias (Go, Node, Rust, .NET, Ruby) | **CORREGIDO** | CI ejecuta `govulncheck` (Go), `pnpm audit --audit-level high` (Node) y `dotnet list package --vulnerable` (.NET) como pasos **bloqueantes**. `cargo audit` (Rust) corre en **modo observación** porque el sample origin fija `reqwest 0.11` a propósito. `bundler-audit` (Ruby) está cableado condicionado a la existencia de `Gemfile.lock`: hoy los gems (`sinatra`, `cassandra-driver`) los provee la imagen runtime, sin manifiesto que auditar — gap documentado. (P-04, v4.4.0) |
 | Escaneo de imagen Docker | **OK** | Trivy `v0.35.0` filtra `CRITICAL,HIGH` antes del push. |
 | Dependabot | **CORREGIDO** | Creado `.github/dependabot.yml` con ecosistemas: `github-actions`, `pip` (hub + 3 cases), `docker`, `gomod` (3 cases), `cargo`, `npm` (2 cases). |
 
@@ -137,12 +146,22 @@ docker compose --profile edge up -d
 
 ## Pendientes Priorizados
 
-| ID | Descripción | Prioridad | Solución Propuesta |
+### Resueltos en v4.4.0 (2026-07-02)
+
+| ID | Descripción | Prioridad | Estado | Implementación |
+| :--- | :--- | :---: | :---: | :--- |
+| P-01 | `requirements.txt` sin hashes SHA | Media | ✅ CORREGIDO | `requirements.in` → `uv pip compile --universal --generate-hashes --python-version 3.11` en los 5 archivos; `pip --require-hashes` en CI y Docker. |
+| P-02 | Rate limiting en Case 09 gateway | Baja | ✅ CORREGIDO | `slowapi` en `/webhook` (30/min) y `/errors` (60/min); env-configurable; excedente → 429. |
+| P-03 | Whitelist de owners en Case 09 | Baja | ✅ CORREGIDO | `owner` valida regex de GitHub en `RequestParamsDTO` (pydantic → 422), defensa en profundidad sobre el VO `Owner`. |
+| P-04 | Auditoría CVE Go/Node/Rust/Ruby/.NET en CI | Media | ✅ CORREGIDO | `govulncheck` + `pnpm audit` + `dotnet list package --vulnerable` bloqueantes; `cargo audit` en observación; `bundler-audit` condicional. |
+
+### Follow-ups abiertos
+
+| ID | Descripción | Prioridad | Nota |
 | :--- | :--- | :---: | :--- |
-| P-01 | `requirements.txt` sin hashes SHA | Media | `pip-compile --generate-hashes` → `requirements.txt` con hashes verificables. |
-| P-02 | Rate limiting en Case 09 gateway | Baja | Añadir `slowapi` o middleware de throttling en `main.py`. |
-| P-03 | Whitelist de owners en Case 09 | Baja | Validar `owner` contra regex `^[a-zA-Z0-9-]{1,39}$` en `RequestParamsDTO`. |
-| P-04 | Auditoría CVE para Go/Node/Rust/Ruby/.NET en CI | Media | `govulncheck`, `npm audit`, `cargo audit`, `bundler-audit`, `dotnet list package --vulnerable`. |
+| P-05 | `cargo audit` en modo bloqueante | Baja | Requiere modernizar el sample `07-rust-to-ruby/origin` (hoy `reqwest 0.11`) antes de exigir cero advisories. |
+| P-06 | `bundler-audit` sin cobertura real | Baja | El caso Ruby no declara `Gemfile.lock`; los gems los provee la imagen. Añadir manifiesto para auditar `sinatra`/`cassandra-driver`. |
+| P-07 | Actions de GitHub sin SHA-pinning | Media | `ci-cd.yml` referencia actions por tag (`@v4`) en vez de por SHA de 40 chars. Pinnear para cerrar la superficie supply-chain del pipeline. |
 
 ---
 
@@ -159,6 +178,7 @@ docker compose --profile edge up -d
 ## Reporte de Vulnerabilidades
 
 Si identificas un riesgo de seguridad:
+
 1. **No abras un Issue público** — usa el sistema de **Security Advisories** de GitHub.
 2. Incluye pasos para reproducir y el impacto técnico estimado.
 
