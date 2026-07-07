@@ -56,6 +56,24 @@ CASES = {
         "dest_url": "http://dest-flask:5000/webhook",
         "error_url": "http://dest-flask:5000/errors",
     },
+    "16": {
+        "name": "GraphQL to Hasura",
+        "webhook_path": "social-bot-scheduler-graphql",
+        "dest_url": "http://dest-graphql-16:3000/webhook",
+        "error_url": "http://dest-graphql-16:3000/errors",
+    },
+    "11": {
+        "name": "Elixir to Erlang",
+        "webhook_path": "social-bot-scheduler-beam",
+        "dest_url": "http://dest-erlang-11:8080/webhook",
+        "error_url": "http://dest-erlang-11:8080/errors",
+    },
+    "17": {
+        "name": "Rust MQTT to Node",
+        "webhook_path": "social-bot-scheduler-mqtt",
+        "dest_url": "http://dest-mqtt-17:3000/webhook",
+        "error_url": "http://dest-mqtt-17:3000/errors",
+    },
 }
 
 
@@ -259,6 +277,9 @@ def main():
         "06": "case-06-go-to-symfony.json",
         "07": "case-07-rust-to-ruby.json",
         "08": "case-08-csharp-to-flask.json",
+        "16": "case-16-graphql-to-hasura.json",
+        "11": "case-11-elixir-to-erlang.json",
+        "17": "case-17-mqtt-rust-to-node.json",
     }
 
     for case_id, config in CASES.items():

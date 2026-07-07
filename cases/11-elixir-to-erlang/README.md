@@ -1,44 +1,64 @@
-# 🧩 Caso 11: 💧 Elixir (Phoenix) -> 🌉 n8n -> 🔴 Erlang (Cowboy)
+# 🧩 Caso 11: 💧 Elixir → 🌉 n8n → 🔴 Erlang (Cowboy) + Mnesia
 
-[![Status: Planned](https://img.shields.io/badge/Status-Planned-orange.svg)]()
+[![Status: Ready](https://img.shields.io/badge/Status-Ready-brightgreen.svg)]()
 [![Language: Elixir](https://img.shields.io/badge/Language-Elixir-4B275F?logo=elixir&logoColor=white)](https://elixir-lang.org/)
 [![Language: Erlang](https://img.shields.io/badge/Language-Erlang-A90533?logo=erlang&logoColor=white)](https://www.erlang.org/)
 [![Runtime: BEAM](https://img.shields.io/badge/Runtime-BEAM-purple.svg)]()
 
-> [!WARNING]
-> **🚧 Caso pendiente de implementación.** Solo scaffolding y diseño. Aún sin código funcional.
-
-Demuestra el modelo de **concurrencia por actores** sobre la **BEAM VM** — un paradigma que ningún caso actual cubre. Phoenix LiveView para emisión, Cowboy puro para recepción.
+Demuestra el modelo de **concurrencia por actores** sobre la **BEAM VM** — un paradigma que ningún caso 01–09 cubre. Emisor **Elixir** y receptor **Erlang/Cowboy** con persistencia en **Mnesia**, la única BD de la matriz que vive *dentro* del runtime de la aplicación (sin contenedor de base de datos separado).
 
 ---
 
-## 🏗️ Arquitectura del Flujo (Propuesta)
+## 🏗️ Arquitectura del Flujo
 
-1. **📤 Origen**: `lib/publisher.ex` (Elixir + Phoenix Channel) — emite eventos vía `HTTPoison`.
-2. **🌉 Puente**: **n8n** (Webhook).
-3. **📥 Destino**: `cowboy_handler.erl` (Erlang puro con Cowboy 2.x).
-4. **📁 Persistencia**: **Mnesia** (DB nativa BEAM, distribuida) o ETS para hot-storage.
+1. **📤 Origen** — `origin/lib/publisher.ex`: emisor Elixir que lee `posts.json` y reenvía los posts vencidos al webhook de n8n (HTTP vía `:httpc`, JSON vía el módulo `:json` de OTP 27, sin dependencias externas).
+2. **🌉 Puente** — **n8n**: guardrails canónicos (fingerprint → circuit breaker → idempotencia → HTTP con reintentos → DLQ).
+3. **📥 Destino** — `dest/src/*.erl`: aplicación **Erlang/Cowboy 2.12** con árbol de supervisión OTP. Expone el contrato REST (`/webhook`, `/errors`, `/logs`, `/health`, `/`).
+4. **📁 Persistencia** — **Mnesia** (`ram_copies`): tabla `social_post` como `ordered_set`, embebida en el nodo BEAM.
+
+> [!NOTE]
+> El destino se empaqueta como un **release OTP** con ERTS embebido (`rebar3 as prod release`), el formato de despliegue idiomático de Erlang.
+
+---
+
+## 🚀 Cómo levantarlo
+
+```bash
+docker-compose --profile case11 up -d      # sólo el receptor BEAM; no hay contenedor de BD
+```
+
+| Servicio | Rol | Puerto host |
+| :--- | :--- | :---: |
+| `dest-erlang-11` | Erlang/Cowboy + Mnesia + dashboard | **8092** |
+
+- **Dashboard del caso**: <http://localhost:8092>
+- **Probar desde el dashboard maestro**: <http://localhost:8080> → tarjeta **CASE-11**.
+
+### Probar el emisor Elixir (opcional)
+
+```bash
+cd cases/11-elixir-to-erlang/origin
+WEBHOOK_URL=http://localhost:5678/webhook/social-bot-scheduler-beam mix run -e "Case11.Publisher.main()"
+```
 
 ---
 
 ## 🎯 Objetivos didácticos
 
-- Modelo de actores: cada request = un proceso BEAM ligero (~2 KB).
-- "Let it crash": demostrar supervisión OTP frente a fallos.
-- Hot code reloading sin downtime.
-- Mnesia: la única DB de la matriz que vive *dentro* del runtime de la app.
+- **Modelo de actores**: cada request = un proceso BEAM ligero (~2 KB), aislado.
+- **"Let it crash" + supervisión OTP**: el árbol de supervisión mantiene la app viva.
+- **Mnesia**: la única BD de la matriz embebida en el runtime; transacciones ACID sin servidor externo.
 
 ---
 
-## 📋 TODO de implementación
+## ⚠️ Consideraciones (modelo del laboratorio)
 
-- [ ] `mix.exs` con dependencias Phoenix + HTTPoison.
-- [ ] Supervisor tree con `OneForOne` strategy.
-- [ ] `rebar3` para el módulo Erlang.
-- [ ] Workflow n8n `case11-beam.json`.
-- [ ] Tests con ExUnit y Common Test.
-- [ ] Perfil `case11` en `docker-compose.yml`.
+- Puerto bindeado a `127.0.0.1` (aislamiento runtime).
+- El receptor valida el payload (`id` y `text` → HTTP 422) como defensa en profundidad.
+- `ram_copies` mantiene los datos en memoria del nodo; en un clúster real se usaría `disc_copies` con replicación entre nodos.
 
 ---
 
-*Pendiente — parte del roadmap v5.0.*
+## ✅ Estado
+
+Implementado y verificado (build + boot + health). Parte del **Lote 1** del roadmap v5.0 → v4.5.

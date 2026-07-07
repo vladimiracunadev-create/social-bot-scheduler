@@ -1,0 +1,10 @@
+{application, social_bot_dest,
+ [{description, "Case 11: receptor Erlang/Cowboy con Mnesia embebida (BEAM)."},
+  {vsn, "1.0.0"},
+  {registered, []},
+  {mod, {social_bot_dest_app, []}},
+  {applications, [kernel, stdlib, mnesia, cowboy]},
+  {env, []},
+  {modules, []},
+  {licenses, ["MIT"]}
+ ]}.

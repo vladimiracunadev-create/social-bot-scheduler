@@ -4,6 +4,31 @@ Todos los cambios notables en este proyecto se documentan sistemáticamente en e
 
 ---
 
+## 🚀 [4.5.0] — 2026-07-07
+
+### ✨ Matriz Tecnológica — Lote 1 de casos planificados implementados (16, 11, 17)
+
+Tres casos del roadmap v5.0 pasan de **scaffolding** a **implementados y verificados** (build + boot + health con Docker). La matriz operativa crece de **9 → 12 casos**.
+
+#### Añadido
+
+- **Caso 16 · Apollo GraphQL → n8n → Hasura + TimescaleDB** (puerto `8091`): emisor Apollo Server (schema-first) y micro-receiver que traduce el contrato REST a mutaciones/queries GraphQL contra Hasura (DB-first) sobre una **hypertable** de TimescaleDB. Trackeo de tabla vía Metadata API en el arranque.
+- **Caso 11 · Elixir → n8n → Erlang (Cowboy) + Mnesia** (puerto `8092`): emisor Elixir y receptor Erlang/Cowboy empaquetado como **release OTP** con persistencia en **Mnesia embebida** (`ram_copies`) — la única BD de la matriz sin contenedor separado.
+- **Caso 17 · Rust (MQTT) → n8n → Node → InfluxDB** (puerto `8093`): emisor Rust (`rumqttc`) que publica en **Mosquitto**; un subscriber Node persiste en **InfluxDB** (series temporales). El receiver REST reinyecta la entrega de n8n en el mismo bus MQTT (un sink, dos entradas).
+
+#### Cambiado
+
+- **Resiliencia de arranque**: los nuevos servicios con motor turnkey usan `healthcheck` + `depends_on: condition: service_healthy` (Hasura no arranca hasta que TimescaleDB está `healthy`, etc.), eliminando los crashes por orden de arranque.
+- **Dashboard maestro** (`index.html`): tarjetas `CASE-11/16/17` en estado `READY` con test de integración; el objeto `CASES` y los contadores (`Total`, pills READY/OFFLINE) son ahora dinámicos sobre `Object.keys(CASES)`.
+- **Contrato de CI**: `scripts/validate_case_matrix.py` incorpora los tres casos; `scripts/generate_workflows.py` genera sus workflows n8n con los guardrails canónicos (fingerprint · circuit breaker · idempotencia · reintentos · DLQ).
+
+#### Notas
+
+- Cada caso es **independiente** (perfil `caseNN`) y **aditivo**: ningún servicio 01–09 fue modificado. Puertos reasignados a `8091–8093` (se corrige el solape con el Gateway `8090` y cAdvisor `8089` del plan original).
+- Verificación por caso: `POST /webhook` persiste en el motor real, `GET /logs` lo recupera, validación `422` en payload inválido, confirmación directa en la BD.
+
+---
+
 ## 🔒 [4.4.1] — 2026-07-02
 
 ### 🛡️ Seguridad — Cierre de los follow-ups de v4.4.0 (P-05, P-06, P-07)

@@ -811,7 +811,7 @@
             <div class="case-result" id="result-09"></div>
         </div>
 
-        <div class="section-divider">🚧 CASOS PLANIFICADOS (10–20) — solo scaffolding y documentación de diseño · ver <a href="docs/PLANNED_CASES.md" style="color:#fb923c;">PLANNED_CASES.md</a></div>
+        <div class="section-divider">🧩 CASOS 10–20 — <span style="color:#22c55e;">11 · 16 · 17 implementados (v4.5.0)</span> · el resto en scaffolding · ver <a href="docs/PLANNED_CASES.md" style="color:#fb923c;">PLANNED_CASES.md</a></div>
 
         <!-- =====================================================
              CASOS PLANIFICADOS (10-20) — Sin implementación aún
@@ -836,20 +836,21 @@
         </div>
 
         <!-- Case 11: Elixir -> Erlang -->
-        <div class="case-card" data-case="11" data-planned="true">
+        <div class="case-card" data-case="11">
             <div class="case-header">
                 <span class="case-id">CASE-11</span>
-                <span class="case-status status-planned">PLANNED</span>
+                <span class="case-status" id="status-11">READY</span>
             </div>
-            <h3 class="case-title">Elixir (Phoenix) ➔ n8n ➔ Erlang (Cowboy) <span class="ram-tag" title="Estimado, sin medir">💾 ~1.5 GB</span></h3>
-            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
-            <div class="db-tag">Database: Mnesia</div>
+            <h3 class="case-title">Elixir ➔ n8n ➔ Erlang (Cowboy) <span class="ram-tag" title="Núcleo (1.13 GB) + receptor BEAM; Mnesia embebida (sin contenedor de BD)">💾 ~1.4 GB</span></h3>
+            <div class="db-tag">Database: Mnesia (embebida)</div>
             <div class="tech-stack">
                 <span class="tech-tag">BEAM VM</span>
                 <span class="tech-tag">OTP</span>
                 <span class="tech-tag">Actor Model</span>
             </div>
-            <button class="btn-test" disabled>No disponible</button>
+            <button class="btn-test" id="btn-11">🔗 Probar Integración</button>
+            <div class="db-records" id="db-records-11" style="display:none"></div>
+            <div class="case-result" id="result-11"></div>
         </div>
 
         <!-- Case 12: Python -> RAG -->
@@ -921,37 +922,39 @@
         </div>
 
         <!-- Case 16: GraphQL -> Hasura -->
-        <div class="case-card" data-case="16" data-planned="true">
+        <div class="case-card" data-case="16">
             <div class="case-header">
                 <span class="case-id">CASE-16</span>
-                <span class="case-status status-planned">PLANNED</span>
+                <span class="case-status" id="status-16">READY</span>
             </div>
-            <h3 class="case-title">Apollo (GraphQL) ➔ n8n ➔ Hasura <span class="ram-tag" title="Estimado, sin medir">💾 ~1.9 GB</span></h3>
-            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <h3 class="case-title">Apollo (GraphQL) ➔ n8n ➔ Hasura <span class="ram-tag" title="Núcleo (1.13 GB) + TimescaleDB + Hasura + receiver">💾 ~1.9 GB</span></h3>
             <div class="db-tag">Database: TimescaleDB</div>
             <div class="tech-stack">
                 <span class="tech-tag">GraphQL</span>
                 <span class="tech-tag">Hasura</span>
                 <span class="tech-tag">Time-series</span>
             </div>
-            <button class="btn-test" disabled>No disponible</button>
+            <button class="btn-test" id="btn-16">🔗 Probar Integración</button>
+            <div class="db-records" id="db-records-16" style="display:none"></div>
+            <div class="case-result" id="result-16"></div>
         </div>
 
         <!-- Case 17: Rust MQTT -> Node -->
-        <div class="case-card" data-case="17" data-planned="true">
+        <div class="case-card" data-case="17">
             <div class="case-header">
                 <span class="case-id">CASE-17</span>
-                <span class="case-status status-planned">PLANNED</span>
+                <span class="case-status" id="status-17">READY</span>
             </div>
-            <h3 class="case-title">Rust (MQTT) ➔ n8n ➔ Node (MQTT) <span class="ram-tag" title="Estimado, sin medir">💾 ~1.85 GB</span></h3>
-            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <h3 class="case-title">Rust (MQTT) ➔ n8n ➔ Node (MQTT) <span class="ram-tag" title="Núcleo (1.13 GB) + Mosquitto + InfluxDB + receiver">💾 ~1.85 GB</span></h3>
             <div class="db-tag">Database: InfluxDB</div>
             <div class="tech-stack">
-                <span class="tech-tag">MQTT 5.0</span>
+                <span class="tech-tag">MQTT</span>
                 <span class="tech-tag">IoT</span>
                 <span class="tech-tag">Pub-Sub</span>
             </div>
-            <button class="btn-test" disabled>No disponible</button>
+            <button class="btn-test" id="btn-17">🔗 Probar Integración</button>
+            <div class="db-records" id="db-records-17" style="display:none"></div>
+            <div class="case-result" id="result-17"></div>
         </div>
 
         <!-- Case 18: Zig -> Crystal -->
@@ -1051,7 +1054,10 @@
             '06': { webhook: 'social-bot-scheduler-symfony', port: 8086, origin: 'Go',     dest: 'Symfony',         ram: '~1.3 GB'  },
             '07': { webhook: 'social-bot-scheduler-ruby',    port: 8087, origin: 'Rust',   dest: 'Ruby',            ram: '~3.25 GB ⚠️ pesado (Cassandra)' },
             '08': { webhook: 'social-bot-scheduler-flask',   port: 8088, origin: 'C#',     dest: 'Flask',           ram: '~3.25 GB ⚠️ pesado (SQL Server)' },
-            '09': { webhook: 'social-bot-scheduler-gateway', port: 8090, origin: 'Python', dest: 'FastAPI Gateway', ram: '~1.4 GB'  }
+            '09': { webhook: 'social-bot-scheduler-gateway', port: 8090, origin: 'Python', dest: 'FastAPI Gateway', ram: '~1.4 GB'  },
+            '16': { webhook: 'social-bot-scheduler-graphql', port: 8091, origin: 'Apollo GraphQL', dest: 'Hasura + TimescaleDB', ram: '~1.9 GB' },
+            '11': { webhook: 'social-bot-scheduler-beam',    port: 8092, origin: 'Elixir',        dest: 'Erlang/Cowboy + Mnesia', ram: '~1.4 GB' },
+            '17': { webhook: 'social-bot-scheduler-mqtt',    port: 8093, origin: 'Rust (MQTT)',   dest: 'Node + InfluxDB',        ram: '~1.85 GB' }
         };
 
         const N8N_BASE = 'http://localhost:5678';
@@ -1098,7 +1104,7 @@
 
         function updateSummary() {
             document.getElementById('summary-bar').style.display = 'flex';
-            document.getElementById('stat-total').textContent = `Total: ${testResults.pass + testResults.fail}/9`;
+            document.getElementById('stat-total').textContent = `Total: ${testResults.pass + testResults.fail}/${Object.keys(CASES).length}`;
             document.getElementById('stat-pass').textContent = `✅ Pass: ${testResults.pass}`;
             document.getElementById('stat-fail').textContent = `❌ Fail: ${testResults.fail}`;
         }

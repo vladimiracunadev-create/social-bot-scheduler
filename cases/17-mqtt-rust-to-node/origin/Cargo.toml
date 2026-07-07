@@ -1,0 +1,19 @@
+[package]
+name = "case17-rust-publisher"
+version = "1.0.0"
+edition = "2021"
+description = "Emisor MQTT en Rust (Case 17): publica posts en Mosquitto."
+
+[[bin]]
+name = "publisher"
+path = "src/main.rs"
+
+[dependencies]
+# default-features=false evita TLS (rustls/ring): en el laboratorio el broker es local y sin cifrado.
+rumqttc = { version = "0.24", default-features = false }
+serde_json = "1"
+
+[profile.release]
+opt-level = "z"
+lto = true
+strip = true

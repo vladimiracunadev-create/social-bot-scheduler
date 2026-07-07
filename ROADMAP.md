@@ -6,6 +6,14 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 
 ## ✅ Hitos Completados
 
+### `v4.5.0` — "Matriz +3: GraphQL/Hasura, BEAM, MQTT/IoT" 🚀 Ready
+
+- [x] **Caso 16 — Apollo GraphQL → Hasura + TimescaleDB** (`8091`): schema-first vs DB-first sobre hypertables.
+- [x] **Caso 11 — Elixir → Erlang/Cowboy + Mnesia** (`8092`): release OTP con BD embebida (sin contenedor).
+- [x] **Caso 17 — Rust (MQTT) → Node + InfluxDB** (`8093`): pub/sub IoT con Mosquitto y series temporales.
+- [x] **Matriz operativa 9 → 12 casos**; puertos reasignados a `8091–8093` (resuelto el solape con `8090`/`8089`).
+- [x] **Arranque resiliente**: `healthcheck` + `depends_on: service_healthy` en los motores turnkey.
+
 ### `v4.4.1` — "Follow-ups de Seguridad al Cierre" 🔒 Ready
 
 - [x] **SHA-pinning de Actions (P-07)**: 27 `uses:` pinneadas a SHA de 40 chars en `ci-cd.yml` y `wiki-sync.yml`.
@@ -82,7 +90,7 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 ### 🧩 Expansión de la Matriz Tecnológica (casos 10-14 — scaffolding ya creado)
 
 - [ ] **Caso 10 — JVM**: Java (Spring Boot) → Kotlin (Ktor) + PostgreSQL. Cubre el hueco enterprise JVM.
-- [ ] **Caso 11 — BEAM**: Elixir (Phoenix) → Erlang (Cowboy) + Mnesia. Modelo de actores y supervisión OTP.
+- [x] **Caso 11 — BEAM**: Elixir → Erlang (Cowboy) + Mnesia. Modelo de actores y supervisión OTP. ✅ v4.5.0
 - [ ] **Caso 12 — RAG/IA**: Python LLM → FastAPI + pgvector. Pipeline embeddings + retrieval semántico.
 - [ ] **Caso 13 — Streaming**: Node + Kafka → Go consumer + ClickHouse. Event streaming real + OLAP columnar.
 - [ ] **Caso 14 — BaaS**: Next.js 15 → Supabase (Edge Functions + RLS + Realtime). Primer caso BaaS de la matriz.
@@ -90,8 +98,8 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 ### 🧩 Tier 2/3 — Scaffolding también creado (cases 15-20)
 
 - [ ] **Caso 15 — gRPC**: Go server ↔ Python client + CockroachDB (protocolo binario + SQL distribuido).
-- [ ] **Caso 16 — GraphQL**: Apollo Server ↔ Hasura + TimescaleDB (schema-first vs DB-first + series temporales).
-- [ ] **Caso 17 — IoT**: Rust MQTT publisher ↔ Node subscriber + InfluxDB (pub/sub + telemetría).
+- [x] **Caso 16 — GraphQL**: Apollo Server ↔ Hasura + TimescaleDB (schema-first vs DB-first + series temporales). ✅ v4.5.0
+- [x] **Caso 17 — IoT**: Rust MQTT publisher ↔ Node subscriber + InfluxDB (pub/sub + telemetría). ✅ v4.5.0
 - [ ] **Caso 18 — Grafos**: Zig ↔ Crystal (Kemal) + Neo4j (lenguajes emergentes sin GC + Cypher).
 - [ ] **Caso 19 — Funcional**: F# (.NET) ↔ Clojure (Ring/Reitit) + XTDB (paradigma puro + DB bitemporal).
 - [ ] **Caso 20 — Mobile-backend**: Swift Vapor ↔ Dart Shelf + Firebase emulator local.

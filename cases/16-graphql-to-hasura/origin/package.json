@@ -1,0 +1,18 @@
+{
+  "name": "case16-graphql-origin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Emisor Apollo GraphQL (Case 16): expone los posts programados vía GraphQL y reenvía los vencidos a n8n.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@apollo/server": "4.11.3",
+    "graphql": "16.10.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

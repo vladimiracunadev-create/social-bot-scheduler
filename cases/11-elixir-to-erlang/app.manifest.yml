@@ -1,18 +1,18 @@
 id: "11"
-name: "Elixir (Phoenix) -> n8n -> Erlang (Cowboy)"
+name: "Elixir -> n8n -> Erlang (Cowboy) + Mnesia"
 path: "cases/11-elixir-to-erlang"
-status: "planned"
+status: "ready"
 origin:
   language: "elixir"
-  framework: "phoenix"
+  framework: "mix"
   entrypoint: "origin/lib/publisher.ex"
 destination:
   language: "erlang"
   framework: "cowboy"
-  port: 8091
-  url: "http://localhost:8091"
+  port: 8092
+  url: "http://localhost:8092"
 database:
   engine: "mnesia"
-  notes: "DB nativa BEAM; alternativa ETS para hot storage"
-stack: ["elixir", "phoenix", "n8n", "erlang", "cowboy", "mnesia", "otp"]
-description: "Modelo de actores BEAM: concurrencia masiva, supervision OTP, let-it-crash."
+  notes: "DB nativa BEAM embebida (ram_copies); sin contenedor de base de datos separado."
+stack: ["elixir", "n8n", "erlang", "cowboy", "mnesia", "otp", "beam"]
+description: "Modelo de actores BEAM: emisor Elixir y receptor Erlang/Cowboy con persistencia Mnesia embebida en el runtime."

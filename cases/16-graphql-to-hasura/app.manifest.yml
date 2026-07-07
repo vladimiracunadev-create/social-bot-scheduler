@@ -1,18 +1,19 @@
 id: "16"
-name: "Apollo Server (GraphQL) -> n8n -> Hasura -> TimescaleDB"
+name: "Apollo GraphQL -> n8n -> Hasura (TimescaleDB)"
 path: "cases/16-graphql-to-hasura"
-status: "planned"
+status: "ready"
 origin:
-  language: "typescript"
-  framework: "apollo-server-v4"
-  entrypoint: "origin/server.ts"
+  language: "nodejs"
+  framework: "apollo-server"
+  entrypoint: "origin/index.js"
 destination:
-  language: "n/a"
+  language: "nodejs"
   framework: "hasura"
-  port: 8096
-  url: "http://localhost:8096"
+  engine: "hasura-graphql-engine"
+  port: 8091
+  url: "http://localhost:8091"
 database:
   engine: "timescaledb"
-  notes: "Extension Postgres para series temporales"
-stack: ["typescript", "graphql", "apollo", "n8n", "hasura", "timescaledb", "postgresql"]
-description: "GraphQL schema-first (Apollo) vs DB-first (Hasura) con persistencia time-series."
+  version: "16"
+stack: ["nodejs", "apollo-server", "graphql", "n8n", "hasura", "timescaledb", "postgresql"]
+description: "Emisor Apollo GraphQL (schema-first) que reenvia posts vencidos a n8n; un micro-receiver traduce REST a mutaciones/queries GraphQL sobre Hasura + TimescaleDB (database-first)."

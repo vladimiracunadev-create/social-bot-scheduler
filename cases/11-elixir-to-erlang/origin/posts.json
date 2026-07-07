@@ -1,0 +1,16 @@
+[
+  {
+    "id": "post-11-001",
+    "text": "Modelo de actores BEAM: cada request es un proceso ligero (~2 KB).",
+    "channel": "beam",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  },
+  {
+    "id": "post-11-002",
+    "text": "Mnesia vive dentro del runtime: la unica BD de la matriz sin contenedor.",
+    "channel": "mnesia",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  }
+]

@@ -282,6 +282,185 @@ services:
     networks:
       - bot-network
 
+  # ---------------------------------------------------------------------------
+  # Case 16: Apollo GraphQL -> n8n -> Hasura (GraphQL Engine) + TimescaleDB
+  # Destino "motor real": el receiver traduce REST a GraphQL contra Hasura.
+  # ---------------------------------------------------------------------------
+
+  # TimescaleDB (Case 16): hypertable social_posts
+  db-timescaledb-16:
+    image: timescale/timescaledb:2.17.2-pg16
+    container_name: social-bot-db-timescaledb-16
+    profiles: ["case16", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.25"
+    environment:
+      - POSTGRES_DB=social_bot
+      - POSTGRES_PASSWORD=${CASE16_DB_PASSWORD:-change-me-case16-local}
+    volumes:
+      - ./cases/16-graphql-to-hasura/dest/timescale/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - bot-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d social_bot"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 20s
+
+  # Hasura GraphQL Engine (Case 16): API GraphQL auto-derivada sobre TimescaleDB
+  hasura-16:
+    image: hasura/graphql-engine:v2.44.0
+    container_name: social-bot-hasura-16
+    profiles: ["case16", "full"]
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+          cpus: "0.25"
+    environment:
+      - HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:${CASE16_DB_PASSWORD:-change-me-case16-local}@db-timescaledb-16:5432/social_bot
+      - HASURA_GRAPHQL_ADMIN_SECRET=${CASE16_HASURA_SECRET:-change-me-case16-hasura}
+      - HASURA_GRAPHQL_ENABLE_CONSOLE=false
+      - HASURA_GRAPHQL_DEV_MODE=false
+    networks:
+      - bot-network
+    depends_on:
+      db-timescaledb-16:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/healthz || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+
+  # Micro-receiver Case 16 (REST <-> GraphQL): superficie visible en :8091
+  dest-graphql-16:
+    build: ./cases/16-graphql-to-hasura/dest/receiver
+    container_name: social-bot-dest-graphql-16
+    profiles: ["case16", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+          cpus: "0.10"
+    ports:
+      - "${HOST_BIND_IP:-127.0.0.1}:8091:3000"
+    environment:
+      - PORT=3000
+      - HASURA_URL=http://hasura-16:8080
+      - HASURA_ADMIN_SECRET=${CASE16_HASURA_SECRET:-change-me-case16-hasura}
+    networks:
+      - bot-network
+    depends_on:
+      hasura-16:
+        condition: service_healthy
+
+  # ---------------------------------------------------------------------------
+  # Case 11: Elixir -> n8n -> Erlang (Cowboy) + Mnesia
+  # Sin contenedor de BD: Mnesia vive dentro del runtime BEAM del receptor.
+  # ---------------------------------------------------------------------------
+  dest-erlang-11:
+    build: ./cases/11-elixir-to-erlang/dest
+    container_name: social-bot-dest-erlang-11
+    profiles: ["case11", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.20"
+    ports:
+      - "${HOST_BIND_IP:-127.0.0.1}:8092:8080"
+    environment:
+      - PORT=8080
+    networks:
+      - bot-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://localhost:8080/health || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  # ---------------------------------------------------------------------------
+  # Case 17: Rust (MQTT) -> n8n -> Node (subscriber) -> InfluxDB
+  # Mosquitto es el bus interno; InfluxDB el sink de series temporales.
+  # ---------------------------------------------------------------------------
+
+  # Broker MQTT (Case 17)
+  mosquitto-17:
+    image: eclipse-mosquitto:2.0
+    container_name: social-bot-mosquitto-17
+    profiles: ["case17", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+          cpus: "0.10"
+    volumes:
+      - ./cases/17-mqtt-rust-to-node/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+    networks:
+      - bot-network
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_pub -h localhost -t health -m ok || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+  # InfluxDB 1.8 (Case 17): persistencia de series temporales
+  influxdb-17:
+    image: influxdb:1.8
+    container_name: social-bot-influxdb-17
+    profiles: ["case17", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.25"
+    environment:
+      - INFLUXDB_DB=social
+      - INFLUXDB_HTTP_AUTH_ENABLED=false
+    networks:
+      - bot-network
+    healthcheck:
+      test: ["CMD-SHELL", "influx -execute 'SHOW DATABASES' || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 10s
+
+  # Subscriber MQTT + receiver REST (Case 17): superficie visible en :8093
+  dest-mqtt-17:
+    build: ./cases/17-mqtt-rust-to-node/dest
+    container_name: social-bot-dest-mqtt-17
+    profiles: ["case17", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 96M
+          cpus: "0.10"
+    ports:
+      - "${HOST_BIND_IP:-127.0.0.1}:8093:3000"
+    environment:
+      - PORT=3000
+      - MQTT_URL=mqtt://mosquitto-17:1883
+      - MQTT_TOPIC=social/posts
+      - INFLUX_URL=http://influxdb-17:8086
+      - INFLUX_DB=social
+    networks:
+      - bot-network
+    depends_on:
+      mosquitto-17:
+        condition: service_healthy
+      influxdb-17:
+        condition: service_healthy
+
   # Observability: optional profile, local-only by default
   prometheus:
     image: ${PROMETHEUS_IMAGE:-prom/prometheus:v2.54.1}

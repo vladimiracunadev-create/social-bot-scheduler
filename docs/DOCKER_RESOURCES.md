@@ -71,6 +71,12 @@ Si decides hacer un `docker-compose --profile full pull`, este es el impacto en 
 | **07** | Ruby | 128 MB | Cassandra | **2 GB** | **2.13 GB** | ~3.25 GB | 🔴 Pesado |
 | **08** | Flask | 128 MB | SQL Server | **2 GB** | **2.13 GB** | ~3.25 GB | 🔴 Pesado |
 | **09** | FastAPI Gateway | 256 MB | DuckDB (embebida) | 0 MB | **256 MB** | ~1.4 GB | 🟢 Ligero |
+| **11** | Erlang/Cowboy | 256 MB | Mnesia (embebida) | 0 MB | **256 MB** | ~1.4 GB | 🟢 Ligero |
+| **16** | Hasura + receiver | 448 MB | TimescaleDB | 512 MB | **960 MB** | ~1.9 GB | 🟡 Medio |
+| **17** | Node + Mosquitto | 160 MB | InfluxDB 1.8 | 512 MB | **672 MB** | ~1.85 GB | 🟡 Medio |
+
+> [!NOTE]
+> **Casos 11, 16 y 17** (implementados en `v4.5.0`) son los primeros del roadmap v5.0. El **11** no añade contenedor de BD (Mnesia vive en el runtime BEAM). Los límites `deploy.resources` son valores medidos por `docker-compose.yml`, no estimaciones.
 
 > [!IMPORTANT]
 > **Casos 07 y 08** son los únicos "pesados" del laboratorio: cada uno consume **~3.25 GB** por culpa de Cassandra/SQL Server. Si tu máquina tiene <8 GB de RAM disponibles, evita ejecutarlos en paralelo con otros casos.

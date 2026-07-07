@@ -1,0 +1,16 @@
+[
+  {
+    "id": "post-17-001",
+    "text": "Rust publica telemetria via MQTT con un binario minimo y seguro.",
+    "channel": "mqtt",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  },
+  {
+    "id": "post-17-002",
+    "text": "InfluxDB almacena las series temporales del pipeline IoT.",
+    "channel": "influx",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  }
+]

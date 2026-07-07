@@ -43,26 +43,31 @@ Descubre por que hemos elegido estas combinaciones y que beneficios aporta cada 
 | 07 | Rust -> n8n -> Ruby | Cassandra | No | No |
 | 08 | C# -> n8n -> Flask | SQL Server | No | No |
 | 09 | Python -> n8n -> FastAPI Gateway | DuckDB | X-API-Key | GitHub API |
+| 11 | Elixir -> n8n -> Erlang (Cowboy) | Mnesia (embebida) | No | Bus BEAM |
+| 16 | Apollo GraphQL -> n8n -> Hasura | TimescaleDB | Admin secret | GraphQL |
+| 17 | Rust (MQTT) -> n8n -> Node | InfluxDB | No | Mosquitto |
+
+> Casos **11, 16 y 17** implementados en `v4.5.0` (puertos `8092`, `8091`, `8093`).
 
 ---
 
-## Casos Planificados (10-20)
+## Casos Planificados (10, 12-15, 18-20)
 
-Existen **11 casos adicionales** con scaffolding y documentación de diseño, pero **sin implementacion funcional** todavia. Ver el documento dedicado: [PLANNED_CASES.md](PLANNED_CASES.md).
+Quedan **8 casos** con scaffolding y documentación de diseño, pero **sin implementacion funcional** todavia. Ver el documento dedicado: [PLANNED_CASES.md](PLANNED_CASES.md).
 
-| ID | Flujo (resumen) | DB | Categoria |
-| :--- | :--- | :--- | :--- |
-| 10 | Java (Spring) -> Kotlin (Ktor) | PostgreSQL | JVM |
-| 11 | Elixir -> Erlang | Mnesia | BEAM / Actores |
-| 12 | Python LLM -> FastAPI RAG | pgvector | IA / RAG |
-| 13 | Node + Kafka -> Go | ClickHouse | Streaming |
-| 14 | Next.js -> Supabase | Postgres + RLS | BaaS |
-| 15 | Go gRPC -> Python gRPC | CockroachDB | Protobuf |
-| 16 | Apollo GraphQL -> Hasura | TimescaleDB | GraphQL |
-| 17 | Rust MQTT -> Node | InfluxDB | IoT |
-| 18 | Zig -> Crystal | Neo4j | Grafos |
-| 19 | F# -> Clojure | XTDB | Bitemporal |
-| 20 | Swift Vapor -> Dart Shelf | Firebase emulator | Mobile-backend |
+| ID | Flujo (resumen) | DB | Categoria | Estado |
+| :--- | :--- | :--- | :--- | :--- |
+| 10 | Java (Spring) -> Kotlin (Ktor) | PostgreSQL | JVM | 🚧 Planificado |
+| 11 | Elixir -> Erlang | Mnesia | BEAM / Actores | ✅ v4.5.0 |
+| 12 | Python LLM -> FastAPI RAG | pgvector | IA / RAG | 🚧 Planificado |
+| 13 | Node + Kafka -> Go | ClickHouse | Streaming | 🚧 Planificado |
+| 14 | Next.js -> Supabase | Postgres + RLS | BaaS | 🚧 Planificado |
+| 15 | Go gRPC -> Python gRPC | CockroachDB | Protobuf | 🚧 Planificado |
+| 16 | Apollo GraphQL -> Hasura | TimescaleDB | GraphQL | ✅ v4.5.0 |
+| 17 | Rust MQTT -> Node | InfluxDB | IoT | ✅ v4.5.0 |
+| 18 | Zig -> Crystal | Neo4j | Grafos | 🚧 Planificado |
+| 19 | F# -> Clojure | XTDB | Bitemporal | 🚧 Planificado |
+| 20 | Swift Vapor -> Dart Shelf | Firebase emulator | Mobile-backend | 🚧 Planificado |
 
 ---
 

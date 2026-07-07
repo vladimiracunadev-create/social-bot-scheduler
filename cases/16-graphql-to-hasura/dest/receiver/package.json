@@ -1,0 +1,17 @@
+{
+  "name": "case16-hasura-receiver",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Micro-receiver REST (Case 16) que persiste y consulta vía Hasura GraphQL sobre TimescaleDB.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "4.21.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

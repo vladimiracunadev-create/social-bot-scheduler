@@ -1,0 +1,16 @@
+[
+  {
+    "id": "post-16-001",
+    "text": "GraphQL schema-first: el emisor Apollo expone la cola de posts tipada.",
+    "channel": "graphql",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  },
+  {
+    "id": "post-16-002",
+    "text": "Hasura genera GraphQL sobre TimescaleDB sin escribir resolvers.",
+    "channel": "hasura",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  }
+]

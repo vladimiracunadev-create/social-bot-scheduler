@@ -41,4 +41,12 @@ test_node_type.json
 # Node dependencies
 node_modules/
 
+# Rust build artifacts (case 17 origin)
+target/
+
+# Erlang/Elixir build artifacts (case 11)
+_build/
+*.beam
+erl_crash.dump
+
 .claude/

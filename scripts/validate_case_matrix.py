@@ -139,6 +139,48 @@ EXPECTED_CASES = (
         ),
         workflow_file="case-09-python-to-gateway.json",
     ),
+    CaseExpectation(
+        slug="16-graphql-to-hasura",
+        case_id="16",
+        origin_language="nodejs",
+        origin_entrypoint="origin/index.js",
+        destination_language="nodejs",
+        destination_files=(
+            "dest/receiver/index.js",
+            "dest/receiver/index.html",
+            "dest/receiver/Dockerfile",
+            "dest/receiver/package.json",
+        ),
+        workflow_file="case-16-graphql-to-hasura.json",
+    ),
+    CaseExpectation(
+        slug="11-elixir-to-erlang",
+        case_id="11",
+        origin_language="elixir",
+        origin_entrypoint="origin/lib/publisher.ex",
+        destination_language="erlang",
+        destination_files=(
+            "dest/src/social_bot_dest_app.erl",
+            "dest/rebar.config",
+            "dest/priv/index.html",
+            "dest/Dockerfile",
+        ),
+        workflow_file="case-11-elixir-to-erlang.json",
+    ),
+    CaseExpectation(
+        slug="17-mqtt-rust-to-node",
+        case_id="17",
+        origin_language="rust",
+        origin_entrypoint="origin/src/main.rs",
+        destination_language="nodejs",
+        destination_files=(
+            "dest/index.js",
+            "dest/index.html",
+            "dest/Dockerfile",
+            "dest/package.json",
+        ),
+        workflow_file="case-17-mqtt-rust-to-node.json",
+    ),
 )
 
 
