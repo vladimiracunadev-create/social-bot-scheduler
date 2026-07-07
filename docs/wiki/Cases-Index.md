@@ -1,6 +1,6 @@
 # 🧩 Índice de la Matriz Tecnológica
 
-Bienvenidos a la cartografía del **Social Bot Scheduler**. Este laboratorio se compone de **9 ejes de integración implementados** y **11 casos planificados adicionales** (ver [PLANNED_CASES](../PLANNED_CASES.md)) que demuestran la ductilidad de la orquestación moderna.
+Bienvenidos a la cartografía del **Social Bot Scheduler**. Este laboratorio se compone de **12 ejes de integración implementados** y **8 casos planificados adicionales** (ver [PLANNED_CASES](../PLANNED_CASES.md)) que demuestran la ductilidad de la orquestación moderna.
 
 ---
 
@@ -35,7 +35,7 @@ El **Caso 09** es el pináculo arquitectónico del laboratorio, demostrando:
 
 1.  **Añade flujos**: Sigue el [Manual de Activación](../../COMO_ACTIVAR_WORKFLOWS.md).
 2.  **Lanza bots**: Utiliza el comando `python hub.py ejecutar <id>`.
-3.  **Audita estados**: Verifica la persistencia en los dashboards correspondientes (`:8081-8090`).
+3.  **Audita estados**: Verifica la persistencia en los dashboards correspondientes (`:8081-8093`).
 
 ---
 *Catálogo técnico v4.1 — Social Bot Scheduler*

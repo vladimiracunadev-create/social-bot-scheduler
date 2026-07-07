@@ -51,7 +51,7 @@
 graph TB
     subgraph "🖥️ Host Único (Docker Compose)"
         N[n8n :5678]
-        D[Dashboards :8080-8090]
+        D[Dashboards :8080-8093]
         DB1[(MySQL/MariaDB/PG/...)]
         OBS[Prometheus + Grafana]
         N --> DB1
@@ -456,7 +456,7 @@ aws secretsmanager create-secret \
 
 1. Crear **ACM cert** en `us-east-1` para `*.sbs.example.com`.
 2. Aprovisionar **ALB** con listeners 80→443 redirect y 443 con cert.
-3. Configurar **Target Groups** por servicio (n8n/5678, dashboards/8080-8090).
+3. Configurar **Target Groups** por servicio (n8n/5678, dashboards/8080-8093).
 4. Crear **Route 53 A-Alias** apuntando al ALB.
 5. (Opcional) **CloudFront** + **WAF** delante del ALB para los dashboards estáticos.
 

@@ -10,7 +10,7 @@
 social-bot-scheduler/
 ├── 🏠 Raíz ................... Configuración, orquestación y entrada principal
 ├── 🛡️ apache/ ................ Config Apache de hardening (security headers)
-├── 📦 cases/ ................. 9 Casos implementados + 11 planificados (ver docs/PLANNED_CASES.md)
+├── 📦 cases/ ................. 12 Casos implementados + 8 planificados (ver docs/PLANNED_CASES.md)
 ├── 📚 docs/ .................. Documentación técnica y guías
 ├── 🌐 edge/ .................. Caddy reverse proxy (perfil edge)
 ├── 🔄 n8n/ ................... Workflows de orquestación (JSON exportados)
@@ -49,7 +49,7 @@ social-bot-scheduler/
 
 | Archivo | Importancia | Descripción |
 |---------|:-----------:|-------------|
-| `import_workflows.py` | ?? Alta | Importa autom?ticamente los 9 workflows JSON al motor n8n v?a API REST. Esencial para el primer despliegue. |
+| `import_workflows.py` | ?? Alta | Importa autom?ticamente los 12 workflows JSON al motor n8n v?a API REST. Esencial para el primer despliegue. |
 | `generate_workflows.py` | 🟡 Media | Genera plantillas base de workflows n8n para nuevos casos de integración. |
 | `check_workflows.py` | 🟡 Media | Verifica que los workflows importados estén activos y sus webhooks registrados. |
 | `diagnose_n8n.py` | 🟡 Media | Diagnóstico profundo del estado de n8n: nodos registrados, credenciales, errores de arranque. |
@@ -83,7 +83,7 @@ social-bot-scheduler/
 | `SECURITY.md` | 🟢 Alta | Política de seguridad: cómo reportar vulnerabilidades de forma responsable. |
 | `LICENSE` | 🟡 Media | Licencia del proyecto (MIT/Apache). |
 | `NOTICE` | 🟢 Baja | Atribuciones legales de dependencias de terceros. |
-| `index.html` | 🟢 Alta | **Dashboard Maestro (v4.3.0+)** — Interfaz web unificada con: (a) detección automática client-side cada 20 s del estado `READY/OFFLINE` de cada caso vía ping al receptor; (b) modal con `docker-compose --profile caseXX up -d` y copy-to-clipboard para casos OFFLINE; (c) barra Docker con contadores live + última comprobación + botón Re-comprobar; (d) sistema de toasts para transiciones; (e) badges de RAM en las 20 tarjetas (9 implementadas + 11 planificadas marcadas con scaffolding). Sin backend nuevo: el navegador nunca ejecuta `docker`, solo muestra el comando exacto. |
+| `index.html` | 🟢 Alta | **Dashboard Maestro (v4.3.0+)** — Interfaz web unificada con: (a) detección automática client-side cada 20 s del estado `READY/OFFLINE` de cada caso vía ping al receptor; (b) modal con `docker-compose --profile caseXX up -d` y copy-to-clipboard para casos OFFLINE; (c) barra Docker con contadores live + última comprobación + botón Re-comprobar; (d) sistema de toasts para transiciones; (e) badges de RAM en las 20 tarjetas (12 implementadas + 8 planificadas marcadas con scaffolding). Sin backend nuevo: el navegador nunca ejecuta `docker`, solo muestra el comando exacto. |
 | `llms.txt` | 🟢 Baja | Metadatos del proyecto optimizados para consumo por modelos de lenguaje (LLMs). |
 | `COMO_ACTIVAR_WORKFLOWS.md` | 🟢 Alta | Guía paso a paso para importar y activar los workflows de n8n. |
 | `IMPORT_WORKFLOWS.md` | 🟡 Media | Documentación técnica del proceso de importación de workflows. |

@@ -28,7 +28,7 @@ Cada fila es un sistema completo e independiente: un emisor, un puente de orques
 | **08** | C# (.NET) | Flask | 🏢 **SQL Server** |
 | **09** | Python | FastAPI Gateway | 🦆 **DuckDB** |
 
-**9 flujos. 20+ contenedores Docker. Todo orquestado.** 🛡️
+**12 flujos. 20+ contenedores Docker. Todo orquestado.** 🛡️
 
 ---
 

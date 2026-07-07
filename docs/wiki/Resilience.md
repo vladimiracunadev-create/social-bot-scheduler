@@ -6,14 +6,14 @@ Esta guía detalla la implementación de los mecanismos de defensa y recuperaci�
 
 ## 📊 Cobertura de Resiliencia
 
-El 100% de los **9 casos de integración implementados** cuentan con el siguiente stack de resiliencia (los [casos planificados 10–20](../PLANNED_CASES.md) deberán incorporarlo en su implementación futura):
+El 100% de los **12 casos de integración implementados** cuentan con el siguiente stack de resiliencia (los [casos planificados 10–20](../PLANNED_CASES.md) deberán incorporarlo en su implementación futura):
 
 | Mecanismo | Propósito Técnico | Estado |
 | :--- | :--- | :---: |
-| **Circuit Breaker** | Evita saturación de servicios caídos o degradados. | 🟢 9/9 |
-| **Idempotencia** | Previene el procesamiento de eventos duplicados. | 🟢 9/9 |
-| **Dead Letter Queue**| Captura mensajes que fallan tras múltiples reintentos. | 🟢 9/9 |
-| **Backoff Exponencial**| Estrategia inteligente de reintentos en n8n. | 🟢 9/9 |
+| **Circuit Breaker** | Evita saturación de servicios caídos o degradados. | 🟢 12/12 |
+| **Idempotencia** | Previene el procesamiento de eventos duplicados. | 🟢 12/12 |
+| **Dead Letter Queue**| Captura mensajes que fallan tras múltiples reintentos. | 🟢 12/12 |
+| **Backoff Exponencial**| Estrategia inteligente de reintentos en n8n. | 🟢 12/12 |
 
 ---
 

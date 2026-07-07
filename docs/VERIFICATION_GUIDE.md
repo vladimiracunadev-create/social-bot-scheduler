@@ -62,7 +62,7 @@ python verify_n8n.py
 ```
 **Puntos de control**:
 - [ ] Salud del endpoint `/healthz`.
-- [ ] Estado de los 9 flujos de la matriz (Active/Inactive).
+- [ ] Estado de los 12 flujos de la matriz (Active/Inactive).
 - [ ] Conectividad con la base de datos interna.
 
 ---

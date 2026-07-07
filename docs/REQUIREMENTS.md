@@ -8,7 +8,7 @@ Este documento detalla las especificaciones mínimas y recomendadas de hardware 
 
 Ejecutar más de 20 contenedores simultáneamente (incluyendo 8 motores de bases de datos heterogéneos) es una tarea intensiva en recursos. El sistema permite **Carga Selectiva** mediante perfiles para ajustarse a máquinas con menos recursos.
 
-| Componente | Perfil Mínimo (1 Caso) | Perfil Estándar (Demo) | Perfil Total (9 Casos + Obs) |
+| Componente | Perfil Mínimo (1 Caso) | Perfil Estándar (Demo) | Perfil Total (12 Casos + Obs) |
 | :--- | :--- | :--- | :--- |
 | **CPU** | 2 Cores | 4 Cores | 4-8 Cores |
 | **RAM** | 4 GB | 8 GB | **16 GB** |

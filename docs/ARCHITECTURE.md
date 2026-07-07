@@ -127,7 +127,7 @@ El despliegue soporta múltiples entornos:
 | :--- | :--- | :--- | :--- |
 | 1 | Estructura | **Microservices** | 20+ Contenedores Docker |
 | 2 | Comunicación | **Webhooks** | n8n HTTP Broker |
-| 3 | Datos | **Polyglot Persistence** | 9 Motores de BD distintos |
+| 3 | Datos | **Polyglot Persistence** | 12 Motores de BD distintos |
 | 4 | Resiliencia | **Guardrails** | Circuit Breaker & Idempotency |
 | 5 | Operación | **CLI Facade** | `hub.py` Management Hub |
 

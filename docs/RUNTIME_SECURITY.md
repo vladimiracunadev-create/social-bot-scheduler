@@ -53,7 +53,7 @@ Por defecto, todos los servicios publican sus puertos exclusivamente en el inter
 | **n8n** | `5678` | Loopback / Proxy Autenticado |
 | **Grafana** | `3000` | Loopback |
 | **cAdvisor** | `8089` | **NUNCA EXPONER**. Acceso al Socket Docker. |
-| **Gateways** | `8080-8090`| Loopback |
+| **Gateways** | `8080-8093`| Loopback |
 
 ---
 

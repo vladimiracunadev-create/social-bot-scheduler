@@ -10,10 +10,10 @@ Esta guía detalla la implementación completa de resiliencia en el Social Bot S
 
 | Mecanismo | Descripción | Estado |
 |-----------|-------------|--------|
-| **Reintentos Autom?ticos** | 3 intentos con 1s de espera | ? 9/9 casos |
-| **Dead Letter Queue** | Registro de errores irrecuperables | ? 9/9 casos |
-| **Idempotencia** | Prevenci?n de duplicados | ? 9/9 casos |
-| **Circuit Breaker** | Protecci?n contra servicios ca?dos | ? 9/9 casos |
+| **Reintentos Autom?ticos** | 3 intentos con 1s de espera | ? 12/12 casos |
+| **Dead Letter Queue** | Registro de errores irrecuperables | ? 12/12 casos |
+| **Idempotencia** | Prevenci?n de duplicados | ? 12/12 casos |
+| **Circuit Breaker** | Protecci?n contra servicios ca?dos | ? 12/12 casos |
 
 ---
 

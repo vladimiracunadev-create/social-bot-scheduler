@@ -15,10 +15,10 @@ El objetivo fundamental no es crear un producto comercial, sino un **entorno de 
 
 ## ⛰️ Desafíos de Ingeniería (Challenges)
 
-Durante el desarrollo de la matriz de 9 casos implementados (con [11 más planificados](PLANNED_CASES.md)), enfrentamos retos técnicos significativos:
+Durante el desarrollo de la matriz de 12 casos implementados (con [8 más planificados](PLANNED_CASES.md)), enfrentamos retos técnicos significativos:
 
 1.  **Estandarización de Payloads**: Lograr que un `struct` de Rust, un `record` de C# y un `array` de PHP emitan exactamente el mismo esquema JSON.
-2.  **Orquestación de Puertos**: Gestión de 20+ servicios web simultáneos sin colisiones de red (puertos `8080-8090`).
+2.  **Orquestación de Puertos**: Gestión de 20+ servicios web simultáneos sin colisiones de red (puertos `8080-8093`).
 3.  **Contenerización Heterogénea**: Optimización de Dockerfiles para ecosistemas diversos (Alpine para Go/Rust vs. imágenes de Windows para SQL Server).
 4.  **Multi-Persistencia Políglota**: Sincronizar 8 motores de bases de datos (SQL, NoSQL, Key-Value) en un único entorno Docker con auto-migración de esquemas.
 
