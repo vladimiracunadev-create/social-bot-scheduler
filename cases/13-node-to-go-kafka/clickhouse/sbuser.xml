@@ -1,0 +1,13 @@
+<clickhouse>
+  <!-- Usuario accesible desde la red del laboratorio (el 'default' solo permite localhost). -->
+  <users>
+    <sbuser>
+      <password>change-me-case13-local</password>
+      <networks>
+        <ip>::/0</ip>
+      </networks>
+      <profile>default</profile>
+      <quota>default</quota>
+    </sbuser>
+  </users>
+</clickhouse>

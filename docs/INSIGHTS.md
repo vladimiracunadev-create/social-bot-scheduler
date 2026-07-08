@@ -15,7 +15,7 @@ El objetivo fundamental no es crear un producto comercial, sino un **entorno de 
 
 ## ⛰️ Desafíos de Ingeniería (Challenges)
 
-Durante el desarrollo de la matriz de 17 casos implementados (con [3 más planificados](PLANNED_CASES.md)), enfrentamos retos técnicos significativos:
+Durante el desarrollo de la matriz de 19 casos implementados (con [1 más planificado](PLANNED_CASES.md)), enfrentamos retos técnicos significativos:
 
 1.  **Estandarización de Payloads**: Lograr que un `struct` de Rust, un `record` de C# y un `array` de PHP emitan exactamente el mismo esquema JSON.
 2.  **Orquestación de Puertos**: Gestión de 20+ servicios web simultáneos sin colisiones de red (puertos `8080-8093`).

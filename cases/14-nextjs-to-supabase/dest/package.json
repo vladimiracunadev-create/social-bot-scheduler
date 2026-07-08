@@ -1,0 +1,13 @@
+{
+  "name": "case14-supabase-receiver",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Receiver (Case 14) que persiste en Supabase (Postgres + RLS) via PostgREST.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": { "start": "node index.js" },
+  "dependencies": {
+    "express": "4.21.2"
+  },
+  "engines": { "node": ">=20" }
+}

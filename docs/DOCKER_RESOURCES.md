@@ -74,6 +74,8 @@ Si decides hacer un `docker-compose --profile full pull`, este es el impacto en 
 | **10** | Kotlin/Ktor (JVM) | 512 MB | PostgreSQL 16 | 256 MB | **768 MB** | ~2.15 GB | 🟡 Medio |
 | **11** | Erlang/Cowboy | 256 MB | Mnesia (embebida) | 0 MB | **256 MB** | ~1.4 GB | 🟢 Ligero |
 | **12** | FastAPI RAG | 256 MB | pgvector | 256 MB | **512 MB** | ~1.65 GB | 🟢 Ligero |
+| **13** | Go consumer | 128 MB | Kafka + ClickHouse | ~2 GB | **~1.6 GB** | ~2.75 GB | 🟡 Medio |
+| **14** | Node receiver + PostgREST | 192 MB | Postgres | 256 MB | **448 MB** | ~1.6 GB | 🟢 Ligero |
 | **15** | Go gRPC + Python | 256 MB | CockroachDB | 512 MB | **768 MB** | ~2.0 GB | 🟡 Medio |
 | **16** | Hasura + receiver | 448 MB | TimescaleDB | 512 MB | **960 MB** | ~1.9 GB | 🟡 Medio |
 | **17** | Node + Mosquitto | 160 MB | InfluxDB 1.8 | 512 MB | **672 MB** | ~1.85 GB | 🟡 Medio |
@@ -81,7 +83,7 @@ Si decides hacer un `docker-compose --profile full pull`, este es el impacto en 
 | **20** | Dart/Shelf | 128 MB | Firestore emulator | 1 GB | **1.13 GB** | ~2.3 GB | 🟡 Medio |
 
 > [!NOTE]
-> **Casos 11, 16, 17** (`v4.5.0`), **10, 12, 18** (`v4.6.0`) y **15, 20** (`v4.7.0`) son los del roadmap v5.0 ya implementados. El **11** no añade contenedor de BD (Mnesia vive en el runtime BEAM); **18** (Neo4j) y **20** (emulador Firestore) son los más pesados. Los límites `deploy.resources` son valores del `docker-compose.yml`.
+> **19 de 20 casos** implementados (Lotes 1–4, `v4.5.0`–`v4.8.0`); sólo resta el **19**. El **11** no añade contenedor de BD (Mnesia vive en el runtime BEAM); **13** (Kafka), **18** (Neo4j) y **20** (emulador Firestore) son los más pesados. Los límites `deploy.resources` son valores del `docker-compose.yml`.
 
 > [!IMPORTANT]
 > **Casos 07 y 08** son los únicos "pesados" del laboratorio: cada uno consume **~3.25 GB** por culpa de Cassandra/SQL Server. Si tu máquina tiene <8 GB de RAM disponibles, evita ejecutarlos en paralelo con otros casos.

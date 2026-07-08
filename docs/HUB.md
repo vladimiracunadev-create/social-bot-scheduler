@@ -2,7 +2,7 @@
 
 El **Social Bot Scheduler** incluye dos capas de control complementarias:
 
-1. **HUB CLI** (`hub.py` / `hub.sh` / `hub.ps1`) — la herramienta para gestionar la matriz de **17 casos implementados** (+ [3 planificados](PLANNED_CASES.md)) desde terminal de forma centralizada, segura y estandarizada.
+1. **HUB CLI** (`hub.py` / `hub.sh` / `hub.ps1`) — la herramienta para gestionar la matriz de **19 casos implementados** (+ [1 planificado](PLANNED_CASES.md)) desde terminal de forma centralizada, segura y estandarizada.
 2. **Master Dashboard** (`http://localhost:8080`, v4.3.0+) — interfaz web read-only con **detección automática del estado de Docker por caso**, contadores live, indicador de última comprobación y modal con el comando `docker-compose --profile caseXX up -d` listo para copiar cuando un caso está caído. Ver [HEALTH_CHECK.md](HEALTH_CHECK.md#diagnóstico-desde-el-master-dashboard-v430).
 
 ---

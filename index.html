@@ -873,37 +873,39 @@
         </div>
 
         <!-- Case 13: Node + Kafka -> Go -->
-        <div class="case-card" data-case="13" data-planned="true">
+        <div class="case-card" data-case="13">
             <div class="case-header">
                 <span class="case-id">CASE-13</span>
-                <span class="case-status status-planned">PLANNED</span>
+                <span class="case-status" id="status-13">READY</span>
             </div>
-            <h3 class="case-title">Node + Kafka ➔ n8n ➔ Go consumer <span class="ram-tag heavy" title="Estimado, Kafka es pesado">💾 ~3.35 GB ⚠️</span></h3>
-            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <h3 class="case-title">Node + Kafka ➔ n8n ➔ Go consumer <span class="ram-tag heavy" title="Núcleo (1.13 GB) + Kafka (1 GB) + ClickHouse + Go">💾 ~2.75 GB ⚠️</span></h3>
             <div class="db-tag">Database: ClickHouse</div>
             <div class="tech-stack">
                 <span class="tech-tag">Kafka</span>
                 <span class="tech-tag">Streaming</span>
                 <span class="tech-tag">OLAP</span>
             </div>
-            <button class="btn-test" disabled>No disponible</button>
+            <button class="btn-test" id="btn-13">🔗 Probar Integración</button>
+            <div class="db-records" id="db-records-13" style="display:none"></div>
+            <div class="case-result" id="result-13"></div>
         </div>
 
         <!-- Case 14: Next.js -> Supabase -->
-        <div class="case-card" data-case="14" data-planned="true">
+        <div class="case-card" data-case="14">
             <div class="case-header">
                 <span class="case-id">CASE-14</span>
-                <span class="case-status status-planned">PLANNED</span>
+                <span class="case-status" id="status-14">READY</span>
             </div>
-            <h3 class="case-title">Next.js 15 ➔ n8n ➔ Supabase Edge Fn <span class="ram-tag heavy" title="Estimado, Supabase local stack es pesado">💾 ~3.4 GB ⚠️</span></h3>
-            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <h3 class="case-title">Next.js 15 ➔ n8n ➔ Supabase <span class="ram-tag" title="Núcleo (1.13 GB) + Postgres + PostgREST + receiver">💾 ~1.6 GB</span></h3>
             <div class="db-tag">Database: Supabase (Postgres + RLS)</div>
             <div class="tech-stack">
                 <span class="tech-tag">BaaS</span>
                 <span class="tech-tag">RLS</span>
-                <span class="tech-tag">Realtime</span>
+                <span class="tech-tag">PostgREST</span>
             </div>
-            <button class="btn-test" disabled>No disponible</button>
+            <button class="btn-test" id="btn-14">🔗 Probar Integración</button>
+            <div class="db-records" id="db-records-14" style="display:none"></div>
+            <div class="case-result" id="result-14"></div>
         </div>
 
         <!-- Case 15: Go gRPC -> Python gRPC -->
@@ -1063,6 +1065,8 @@
             '10': { webhook: 'social-bot-scheduler-ktor',    port: 8090, origin: 'Java (Spring)', dest: 'Kotlin/Ktor + Postgres', ram: '~2.15 GB' },
             '11': { webhook: 'social-bot-scheduler-beam',    port: 8091, origin: 'Elixir',        dest: 'Erlang/Cowboy + Mnesia', ram: '~1.4 GB' },
             '12': { webhook: 'social-bot-scheduler-rag',     port: 8092, origin: 'Python (LLM)',  dest: 'FastAPI RAG + pgvector', ram: '~1.65 GB' },
+            '13': { webhook: 'social-bot-scheduler-kafka',   port: 8093, origin: 'Node + Kafka',  dest: 'Go + ClickHouse',        ram: '~2.75 GB' },
+            '14': { webhook: 'social-bot-scheduler-supabase', port: 8094, origin: 'Next.js 15',  dest: 'Supabase (Postgres+RLS)', ram: '~1.6 GB' },
             '15': { webhook: 'social-bot-scheduler-grpc',    port: 8095, origin: 'Go (gRPC)',     dest: 'Python gRPC + CockroachDB', ram: '~2.0 GB' },
             '16': { webhook: 'social-bot-scheduler-graphql', port: 8096, origin: 'Apollo GraphQL', dest: 'Hasura + TimescaleDB', ram: '~1.9 GB' },
             '17': { webhook: 'social-bot-scheduler-mqtt',    port: 8097, origin: 'Rust (MQTT)',   dest: 'Node + InfluxDB',        ram: '~1.85 GB' },

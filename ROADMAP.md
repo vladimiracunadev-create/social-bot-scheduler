@@ -6,6 +6,13 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 
 ## ✅ Hitos Completados
 
+### `v4.8.0` — "Matriz +2: Streaming Kafka/ClickHouse, BaaS Supabase" 🚀 Ready
+
+- [x] **Caso 13 — Node+Kafka → Go + ClickHouse** (`8093`): event streaming (KRaft) + sink columnar (CQRS).
+- [x] **Caso 14 — Next.js → Supabase (Postgres + RLS)** (`8094`): primer caso BaaS con PostgREST + RLS.
+- [x] **Matriz operativa 17 → 19 casos** (19 de 20); todos bajo la regla `8080 + id`.
+- [ ] **Caso 19 — F# → Clojure/XTDB** (`8099`): código completo; verificación end-to-end pendiente.
+
 ### `v4.7.0` — "Matriz +2: gRPC/CockroachDB, Mobile-backend" 🚀 Ready
 
 - [x] **Caso 15 — Go gRPC → Python gRPC + CockroachDB** (`8095`): protocolo binario + SQL distribuido.
@@ -111,8 +118,8 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 - [x] **Caso 10 — JVM**: Java (Spring Boot) → Kotlin (Ktor) + PostgreSQL. Cubre el hueco enterprise JVM. ✅ v4.6.0
 - [x] **Caso 11 — BEAM**: Elixir → Erlang (Cowboy) + Mnesia. Modelo de actores y supervisión OTP. ✅ v4.5.0
 - [x] **Caso 12 — RAG/IA**: Python LLM → FastAPI + pgvector. Pipeline embeddings + retrieval semántico. ✅ v4.6.0
-- [ ] **Caso 13 — Streaming**: Node + Kafka → Go consumer + ClickHouse. Event streaming real + OLAP columnar.
-- [ ] **Caso 14 — BaaS**: Next.js 15 → Supabase (Edge Functions + RLS + Realtime). Primer caso BaaS de la matriz.
+- [x] **Caso 13 — Streaming**: Node + Kafka → Go consumer + ClickHouse. Event streaming real + OLAP columnar. ✅ v4.8.0
+- [x] **Caso 14 — BaaS**: Next.js 15 → Supabase (Postgres + PostgREST + RLS). Primer caso BaaS de la matriz. ✅ v4.8.0
 
 ### 🧩 Tier 2/3 — Scaffolding también creado (cases 15-20)
 

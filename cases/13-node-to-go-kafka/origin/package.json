@@ -1,0 +1,13 @@
+{
+  "name": "case13-kafka-producer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Productor Node/kafkajs (Case 13): publica posts en Kafka y los reenvía a n8n.",
+  "type": "module",
+  "main": "producer.js",
+  "scripts": { "start": "node producer.js" },
+  "dependencies": {
+    "kafkajs": "2.2.4"
+  },
+  "engines": { "node": ">=20" }
+}

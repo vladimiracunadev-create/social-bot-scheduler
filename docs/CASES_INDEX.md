@@ -46,24 +46,24 @@ Descubre por que hemos elegido estas combinaciones y que beneficios aporta cada 
 | 10 | Java (Spring) -> n8n -> Kotlin (Ktor) | PostgreSQL | No | JVM |
 | 11 | Elixir -> n8n -> Erlang (Cowboy) | Mnesia (embebida) | No | Bus BEAM |
 | 12 | Python (LLM) -> n8n -> FastAPI RAG | pgvector | No | Retrieval |
+| 13 | Node + Kafka -> n8n -> Go consumer | ClickHouse | No | Streaming / CQRS |
+| 14 | Next.js -> n8n -> Supabase (PostgREST) | Postgres + RLS | RLS | BaaS |
 | 15 | Go (gRPC) -> n8n -> Python (gRPC) | CockroachDB | No | Protobuf |
 | 16 | Apollo GraphQL -> n8n -> Hasura | TimescaleDB | Admin secret | GraphQL |
 | 17 | Rust (MQTT) -> n8n -> Node | InfluxDB | No | Mosquitto |
 | 18 | Zig -> n8n -> Crystal (Kemal) | Neo4j | No | Cypher / grafo |
 | 20 | Swift -> n8n -> Dart (Shelf) | Firestore (emulador) | No | Mobile-backend |
 
-> Casos **11, 16, 17** (`v4.5.0`), **10, 12, 18** (`v4.6.0`) y **15, 20** (`v4.7.0`) implementados. Puertos por fórmula `8080 + id` (ver [PORTS.md](PORTS.md)).
+> **19 de 20 casos** implementados (todos menos el 19). Puertos por fórmula `8080 + id` (ver [PORTS.md](PORTS.md)).
 
 ---
 
-## Casos Planificados (13, 14, 19)
+## Único caso pendiente (19)
 
-Quedan **3 casos**: **13 y 14** en scaffolding; el **19** con código completo pero pendiente de verificación end-to-end. Ver el documento dedicado: [PLANNED_CASES.md](PLANNED_CASES.md).
+Queda **sólo el caso 19** (F# → Clojure/XTDB): código completo pero pendiente de verificación end-to-end. Ver el documento dedicado: [PLANNED_CASES.md](PLANNED_CASES.md).
 
 | ID | Flujo (resumen) | DB | Categoria | Estado |
 | :--- | :--- | :--- | :--- | :--- |
-| 13 | Node + Kafka -> Go | ClickHouse | Streaming | 🚧 Planificado |
-| 14 | Next.js -> Supabase | Postgres + RLS | BaaS | 🚧 Planificado |
 | 19 | F# -> Clojure | XTDB | Bitemporal | 🧪 Código listo, verificación pendiente |
 
 ---

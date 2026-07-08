@@ -1,7 +1,7 @@
 id: "13"
-name: "Node.js -> n8n + Kafka -> Go consumer -> ClickHouse"
+name: "Node.js + Kafka -> n8n -> Go consumer -> ClickHouse"
 path: "cases/13-node-to-go-kafka"
-status: "planned"
+status: "ready"
 origin:
   language: "node"
   framework: "kafkajs"
@@ -18,4 +18,4 @@ database:
   engine: "clickhouse"
   version: "24"
 stack: ["node", "kafkajs", "n8n", "kafka", "go", "clickhouse", "streaming", "cqrs"]
-description: "Event streaming real con Kafka + sink columnar ClickHouse. Patron CQRS."
+description: "Event streaming con Kafka (KRaft) + sink columnar ClickHouse. El receiver Go produce en /webhook y una goroutine consumer proyecta los eventos en ClickHouse (CQRS)."

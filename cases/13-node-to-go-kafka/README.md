@@ -1,54 +1,61 @@
-# 🧩 Caso 13: 🟢 Node.js -> 🌉 n8n + 📨 Kafka -> 🐹 Go Consumer -> 🟡 ClickHouse
+# 🧩 Caso 13: 🟢 Node.js + Kafka → 🌉 n8n → 🐹 Go consumer → 📊 ClickHouse
 
-[![Status: Planned](https://img.shields.io/badge/Status-Planned-orange.svg)]()
-[![Language: Node.js](https://img.shields.io/badge/Language-Node.js-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Language: Go](https://img.shields.io/badge/Language-Go-00ADD8?logo=go&logoColor=white)](https://go.dev/)
-[![Broker: Kafka](https://img.shields.io/badge/Broker-Kafka-231F20?logo=apachekafka&logoColor=white)](https://kafka.apache.org/)
-[![Database: ClickHouse](https://img.shields.io/badge/Database-ClickHouse-FFCC01?logo=clickhouse&logoColor=black)](https://clickhouse.com/)
+[![Status: Ready](https://img.shields.io/badge/Status-Ready-brightgreen.svg)]()
+[![Language: Node](https://img.shields.io/badge/Origen-Node%2FKafka-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Broker: Kafka](https://img.shields.io/badge/Broker-Kafka%20(KRaft)-231F20?logo=apachekafka&logoColor=white)](https://kafka.apache.org/)
+[![Database: ClickHouse](https://img.shields.io/badge/Database-ClickHouse-FAFF69?logo=clickhouse&logoColor=black)](https://clickhouse.com/)
 
-> [!WARNING]
-> **🚧 Caso pendiente de implementación.** Solo scaffolding y diseño.
-
-Primer caso de la matriz que introduce **event streaming real** (no solo webhooks puntuales). Demuestra el patrón **CQRS + analytical store** con ClickHouse como sink columnar.
+**Event streaming** real con **Kafka** (modo KRaft, sin Zookeeper) y sink columnar **ClickHouse**. Patrón **CQRS**: los posts entran como eventos a un topic y un consumer Go los proyecta en ClickHouse para consultas analíticas.
 
 ---
 
-## 🏗️ Arquitectura del Flujo (Propuesta)
+## 🏗️ Arquitectura del Flujo
 
-1. **📤 Origen**: `producer.js` (Node + `kafkajs`) — emite eventos a topic `events.raw`.
-2. **🌉 Puente**: **n8n** — consume `events.raw`, enriquece, republica a `events.enriched`.
-3. **📥 Destino**: `consumer.go` — consume `events.enriched`, batch-inserta en ClickHouse.
-4. **📁 Persistencia**: **ClickHouse** (tablas con engine `MergeTree`, partitioning por día).
+1. **📤 Origen** — `origin/producer.js`: productor **Node/kafkajs** que publica los posts en el topic `social-posts` y los reenvía a n8n.
+2. **🌉 Puente** — **n8n**: guardrails canónicos (fingerprint → circuit breaker → idempotencia → HTTP con reintentos → DLQ).
+3. **📥 Destino** — `dest/main.go`: servicio **Go** con doble rol sobre el mismo topic:
+   - **Producer**: en `/webhook` publica el post en Kafka.
+   - **Consumer**: una goroutine lee del topic y hace INSERT en ClickHouse (interfaz HTTP).
+4. **📁 Persistencia** — **ClickHouse 24**: tabla `social_posts` (`ReplacingMergeTree ORDER BY id`, idempotente).
+
+> [!NOTE]
+> Kafka (KRaft) y el emisor Node producen al mismo topic; el consumer Go es el único **sink** hacia ClickHouse. Dos entradas, un pipeline (CQRS).
+
+---
+
+## 🚀 Cómo levantarlo
+
+```bash
+docker-compose --profile case13 up -d      # Kafka + ClickHouse + consumer Go
+```
+
+| Servicio | Rol | Puerto host |
+| :--- | :--- | :---: |
+| `kafka-13` | Broker Kafka (KRaft) | interno |
+| `clickhouse-13` | ClickHouse (OLAP columnar) | interno |
+| `dest-go-13` | Producer + consumer + dashboard | **8093** |
+
+- **Dashboard del caso**: <http://localhost:8093>
+- **Probar desde el dashboard maestro**: <http://localhost:8080> → tarjeta **CASE-13**.
 
 ---
 
 ## 🎯 Objetivos didácticos
 
-- Diferencia entre **mensajería transaccional** (RabbitMQ) y **streaming** (Kafka).
-- **Consumer groups**, offsets, replay y at-least-once delivery.
-- Por qué ClickHouse no es Postgres: storage columnar, compresión, queries OLAP a billones de filas.
-- n8n como **stream processor** ligero (no como reemplazo de Flink/Spark).
+- **Event streaming**: Kafka como log distribuido; producer/consumer desacoplados.
+- **CQRS**: escritura como evento, lectura proyectada en un store analítico.
+- **ClickHouse**: OLAP columnar para agregaciones a gran escala.
 
 ---
 
-## ⚠️ Consideraciones operacionales
+## ⚠️ Consideraciones (modelo del laboratorio)
 
-- Kafka exige Zookeeper o KRaft → +2-3 contenedores. Documentar el coste de RAM.
-- Topics deben tener `replication.factor` apropiado incluso en single-broker dev.
-- ClickHouse insert batching crítico: insertar fila-a-fila destruye el rendimiento.
-
----
-
-## 📋 TODO de implementación
-
-- [ ] Bitnami Kafka (KRaft mode) en `docker-compose.yml`.
-- [ ] Productor Node con `kafkajs` y schema validation (Zod).
-- [ ] Consumer Go con `confluent-kafka-go` o `segmentio/kafka-go`.
-- [ ] Schema ClickHouse con `MergeTree` particionado.
-- [ ] Workflow n8n `case13-stream.json`.
-- [ ] Dashboard Grafana con métricas de lag.
-- [ ] Perfil `case13` en `docker-compose.yml`.
+- Puerto `8093` = `8080 + 13` (regla canónica, ver [docs/PORTS.md](../../docs/PORTS.md)).
+- ClickHouse expone un usuario `sbuser` accesible desde la red del lab (el `default` solo permite localhost).
+- El receiver valida `id`/`text` (→ HTTP 422). Kafka es el servicio pesado (~1 GB).
 
 ---
 
-*Pendiente — parte del roadmap v5.0. Caso de mayor coste operacional (~5 contenedores extra).*
+## ✅ Estado
+
+Implementado y verificado (build + boot + health). Parte del **Lote 4** del roadmap v5.0 → v4.8.

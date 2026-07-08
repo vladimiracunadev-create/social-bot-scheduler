@@ -250,6 +250,34 @@ EXPECTED_CASES = (
         ),
         workflow_file="case-20-swift-to-dart.json",
     ),
+    CaseExpectation(
+        slug="13-node-to-go-kafka",
+        case_id="13",
+        origin_language="node",
+        origin_entrypoint="origin/producer.js",
+        destination_language="go",
+        destination_files=(
+            "dest/main.go",
+            "dest/go.mod",
+            "dest/index.html",
+            "dest/Dockerfile",
+        ),
+        workflow_file="case-13-node-to-go-kafka.json",
+    ),
+    CaseExpectation(
+        slug="14-nextjs-to-supabase",
+        case_id="14",
+        origin_language="node",
+        origin_entrypoint="origin/app/api/emit/route.js",
+        destination_language="node",
+        destination_files=(
+            "dest/index.js",
+            "dest/package.json",
+            "dest/index.html",
+            "dest/Dockerfile",
+        ),
+        workflow_file="case-14-nextjs-to-supabase.json",
+    ),
 )
 
 

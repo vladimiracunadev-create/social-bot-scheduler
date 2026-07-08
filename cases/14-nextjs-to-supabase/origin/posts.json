@@ -1,0 +1,16 @@
+[
+  {
+    "id": "post-14-001",
+    "text": "Next.js emite hacia n8n; el dato aterriza en Supabase (Postgres + RLS).",
+    "channel": "nextjs",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  },
+  {
+    "id": "post-14-002",
+    "text": "PostgREST expone la tabla como API REST; RLS gobierna el acceso.",
+    "channel": "supabase",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  }
+]

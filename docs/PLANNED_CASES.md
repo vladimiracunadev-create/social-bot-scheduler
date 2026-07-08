@@ -1,9 +1,9 @@
 # 🚧 Casos Planificados (v5.0+)
 
 > [!IMPORTANT]
-> Este documento es el **single source of truth** para los casos del roadmap (IDs 10–20). Implementados: **11, 16, 17** (`v4.5.0`), **10, 12, 18** (`v4.6.0`) y **15, 20** (`v4.7.0`). Quedan **3**: los casos **13 y 14** en scaffolding, y el **19** con el código completo pero **pendiente de verificación end-to-end** (se cierra al final). Cualquier referencia en otros documentos debe enlazar aquí.
+> Este documento es el **single source of truth** para los casos del roadmap (IDs 10–20). Implementados: **11, 16, 17** (`v4.5.0`), **10, 12, 18** (`v4.6.0`), **15, 20** (`v4.7.0`) y **13, 14** (`v4.8.0`). Queda **sólo 1**: el caso **19**, con el código completo (bug de arranque AOT corregido) pero **pendiente de verificación end-to-end**. Cualquier referencia en otros documentos debe enlazar aquí.
 
-Los casos 01–12, 15, 16, 17, 18 y 20 están plenamente operativos — ver [CASES_INDEX.md](CASES_INDEX.md). Los casos descritos abajo están reservados como **roadmap arquitectónico** y **no se levantan** desde `docker-compose.yml` (no hay perfiles `case10`–`case20` aún).
+Los casos 01–18 y 20 están plenamente operativos (todos menos el 19) — ver [CASES_INDEX.md](CASES_INDEX.md). Los casos descritos abajo están reservados como **roadmap arquitectónico** y **no se levantan** desde `docker-compose.yml` (no hay perfiles `case10`–`case20` aún).
 
 ---
 
@@ -14,8 +14,8 @@ Los casos 01–12, 15, 16, 17, 18 y 20 están plenamente operativos — ver [CAS
 | **10** ✅ | Java (Spring Boot) | n8n | Kotlin (Ktor) | 🐘 PostgreSQL | `8090` | ~1.0 GB | ~2.15 GB 🟡 | JVM |
 | **11** ✅ | Elixir | n8n | Erlang (Cowboy) | 🟣 Mnesia (embebida) | `8091` | ~384 MB | ~1.4 GB 🟢 | BEAM |
 | **12** ✅ | Python (LLM) | n8n | FastAPI + RAG | 🧠 pgvector | `8092` | ~0.5 GB | ~1.65 GB 🟢 | IA / RAG |
-| **13** | Node + Kafka | n8n | Go consumer | 🟡 ClickHouse | `8093` | ~2.2 GB | ~3.35 GB 🔴 | Streaming |
-| **14** | Next.js 15 | n8n | Supabase Edge Fn | 🟢 Supabase (Postgres + RLS) | `8094` | ~2.25 GB | ~3.4 GB 🔴 | BaaS |
+| **13** ✅ | Node + Kafka | n8n | Go consumer | 🟡 ClickHouse | `8093` | ~1.6 GB | ~2.75 GB 🟡 | Streaming |
+| **14** ✅ | Next.js 15 | n8n | Supabase (PostgREST) | 🟢 Postgres + RLS | `8094` | ~0.5 GB | ~1.6 GB 🟢 | BaaS |
 | **15** ✅ | Go (gRPC) | n8n | Python (gRPC) | 🪳 CockroachDB | `8095` | ~832 MB | ~2.0 GB 🟡 | Protobuf |
 | **16** ✅ | Apollo (GraphQL) | n8n | Hasura | 📈 TimescaleDB | `8096` | ~768 MB | ~1.9 GB 🟢 | GraphQL |
 | **17** ✅ | Rust (MQTT) | n8n | Node (MQTT) | 📊 InfluxDB | `8097` | ~736 MB | ~1.85 GB 🟢 | IoT |

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "post-13-001",
+    "text": "Node produce eventos a Kafka; un consumer Go los proyecta en ClickHouse.",
+    "channel": "kafka",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  },
+  {
+    "id": "post-13-002",
+    "text": "ClickHouse es OLAP columnar: agregaciones analiticas a gran escala.",
+    "channel": "clickhouse",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  }
+]

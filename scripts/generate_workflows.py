@@ -110,6 +110,18 @@ CASES = {
         "dest_url": "http://dest-dart-20:8080/webhook",
         "error_url": "http://dest-dart-20:8080/errors",
     },
+    "13": {
+        "name": "Kafka to ClickHouse",
+        "webhook_path": "social-bot-scheduler-kafka",
+        "dest_url": "http://dest-go-13:8080/webhook",
+        "error_url": "http://dest-go-13:8080/errors",
+    },
+    "14": {
+        "name": "Next to Supabase",
+        "webhook_path": "social-bot-scheduler-supabase",
+        "dest_url": "http://dest-supabase-14:3000/webhook",
+        "error_url": "http://dest-supabase-14:3000/errors",
+    },
 }
 
 
@@ -322,6 +334,8 @@ def main():
         "15": "case-15-grpc-go-to-python.json",
         "19": "case-19-fsharp-to-clojure.json",
         "20": "case-20-swift-to-dart.json",
+        "13": "case-13-node-to-go-kafka.json",
+        "14": "case-14-nextjs-to-supabase.json",
     }
 
     for case_id, config in CASES.items():

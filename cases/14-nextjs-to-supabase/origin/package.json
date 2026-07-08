@@ -1,0 +1,19 @@
+{
+  "name": "case14-nextjs-origin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Emisor Next.js (Case 14): route handler + CLI que reenvía posts a n8n.",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "emit": "node emit.mjs"
+  },
+  "dependencies": {
+    "next": "15.1.3",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "engines": { "node": ">=20" }
+}

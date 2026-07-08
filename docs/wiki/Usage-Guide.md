@@ -9,7 +9,7 @@ Esta guía proporciona las instrucciones operativas para interactuar con el labo
 Asegúrate de haber configurado tu entorno siguiendo la [Guía de Instalación](../../docs/INSTALL.md).
 
 ### 🖥️ Interacción con el HUB (CLI)
-El **HUB** es la herramienta maestra para gestionar la matriz de 17 casos implementados (los [3 casos planificados](../PLANNED_CASES.md) aún no son operables desde el HUB):
+El **HUB** es la herramienta maestra para gestionar la matriz de 19 casos implementados (el [1 caso planificado](../PLANNED_CASES.md) aún no son operables desde el HUB):
 - **Windows**: `.\hub.ps1 doctor`
 - **Linux / macOS**: `./hub.sh doctor`
 

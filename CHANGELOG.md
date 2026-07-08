@@ -4,6 +4,25 @@ Todos los cambios notables en este proyecto se documentan sistemáticamente en e
 
 ---
 
+## 🚀 [4.8.0] — 2026-07-08
+
+### ✨ Matriz Tecnológica — Lote 4: Kafka/ClickHouse (13) y Next.js/Supabase (14)
+
+Los dos casos más pesados del roadmap pasan a **implementados y verificados** (build + boot + health con Docker). La matriz operativa llega a **19 de 20 casos**; sólo resta el **19** (código completo, verificación pendiente).
+
+#### Añadido
+
+- **Caso 13 · Node+Kafka → n8n → Go consumer → ClickHouse** (puerto `8093`): event streaming con **Kafka (KRaft)** y sink columnar **ClickHouse**. Patrón CQRS — el receiver Go produce en `/webhook` y una goroutine consumer proyecta los eventos en ClickHouse (`ReplacingMergeTree`, idempotente).
+- **Caso 14 · Next.js → n8n → Supabase (Postgres + RLS)** (puerto `8094`): primer caso BaaS. Núcleo de Supabase — **Postgres + PostgREST + Row Level Security**. Next.js emite; el receiver persiste vía PostgREST gobernado por la política RLS del rol `web_anon`.
+
+#### Notas
+
+- Ambos respetan la regla de puertos `8080 + id` y pasan `scripts/validate_ports.py`.
+- **ClickHouse**: se añade un rol `sbuser` accesible desde la red del lab (el `default` sólo permite localhost).
+- **Caso 19** (F#/Clojure/XTDB): sigue con el código completo y el bug de arranque AOT corregido; pendiente sólo de la verificación end-to-end.
+
+---
+
 ## 🚀 [4.7.0] — 2026-07-08
 
 ### ✨ Matriz Tecnológica — Lote 3: gRPC/CockroachDB (15) y Swift/Dart/Firestore (20)
