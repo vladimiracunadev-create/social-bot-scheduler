@@ -33,9 +33,9 @@ docker-compose --profile case17 up -d      # Mosquitto + InfluxDB + receiver Nod
 | :--- | :--- | :---: |
 | `mosquitto-17` | Broker MQTT | interno |
 | `influxdb-17` | InfluxDB 1.8 (series temporales) | interno |
-| `dest-mqtt-17` | Subscriber + receiver REST + dashboard | **8093** |
+| `dest-mqtt-17` | Subscriber + receiver REST + dashboard | **8097** |
 
-- **Dashboard del caso**: <http://localhost:8093>
+- **Dashboard del caso**: <http://localhost:8097>
 - **Probar desde el dashboard maestro**: <http://localhost:8080> → tarjeta **CASE-17**.
 
 ### Probar el emisor Rust (opcional)

@@ -94,7 +94,7 @@ Si el stack de monitoreo está activo (`make up-observability`):
 
 - **Prometheus**: `http://localhost:9090` (Check targets: `UP`).
 - **Grafana**: `http://localhost:3000` (Verificar dashboards de contenedores).
-- **cAdvisor**: `http://localhost:8089` (Métricas de runtime Docker).
+- **cAdvisor**: `http://localhost:9091` (Métricas de runtime Docker).
 
 ---
 

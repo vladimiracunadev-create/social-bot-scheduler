@@ -8,10 +8,10 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 
 ### `v4.5.0` — "Matriz +3: GraphQL/Hasura, BEAM, MQTT/IoT" 🚀 Ready
 
-- [x] **Caso 16 — Apollo GraphQL → Hasura + TimescaleDB** (`8091`): schema-first vs DB-first sobre hypertables.
-- [x] **Caso 11 — Elixir → Erlang/Cowboy + Mnesia** (`8092`): release OTP con BD embebida (sin contenedor).
-- [x] **Caso 17 — Rust (MQTT) → Node + InfluxDB** (`8093`): pub/sub IoT con Mosquitto y series temporales.
-- [x] **Matriz operativa 9 → 12 casos**; puertos reasignados a `8091–8093` (resuelto el solape con `8090`/`8089`).
+- [x] **Caso 16 — Apollo GraphQL → Hasura + TimescaleDB** (`8096`): schema-first vs DB-first sobre hypertables.
+- [x] **Caso 11 — Elixir → Erlang/Cowboy + Mnesia** (`8091`): release OTP con BD embebida (sin contenedor).
+- [x] **Caso 17 — Rust (MQTT) → Node + InfluxDB** (`8097`): pub/sub IoT con Mosquitto y series temporales.
+- [x] **Matriz operativa 9 → 12 casos**; puertos por fórmula canónica `8080 + id` (09→8089, 11→8091, 16→8096, 17→8097; cAdvisor→9091).
 - [x] **Arranque resiliente**: `healthcheck` + `depends_on: service_healthy` en los motores turnkey.
 
 ### `v4.4.1` — "Follow-ups de Seguridad al Cierre" 🔒 Ready

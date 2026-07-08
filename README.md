@@ -3,7 +3,7 @@
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker Hub](https://img.shields.io/badge/Docker-Ready-blue.svg?logo=docker&logoColor=white)](https://hub.docker.com/)
-[![Version](https://img.shields.io/badge/version-4.5.0-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
+[![Version](https://img.shields.io/badge/version-4.5.1-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
 [![Security: Hardened](https://img.shields.io/badge/Security-Hardened-🛡️?color=red&labelColor=black)](SECURITY.md)
 
 Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. El **Social Bot Scheduler** actúa como una **Matriz Tecnológica** donde **n8n** orquesta la comunicación entre bots emisores y receptores políglotas.
@@ -75,7 +75,7 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 | **17** | `Rust (MQTT)` | **n8n** | `Node + InfluxDB` | 📊 **InfluxDB** | `case17` | [📐 Ver](cases/17-mqtt-rust-to-node/ARCHITECTURE.md) |
 
 > [!TIP]
-> **Casos 11, 16 y 17** (`v4.5.0`) son el **Lote 1** del roadmap v5.0, ya operativos: `docker-compose --profile case11|case16|case17 up -d` (puertos `8092`, `8091`, `8093`).
+> **Casos 11, 16 y 17** (`v4.5.0`) son el **Lote 1** del roadmap v5.0, ya operativos: `docker-compose --profile case11|case16|case17 up -d` (puertos `8091`, `8096`, `8097`).
 
 ### 🚧 Casos planificados (v5.0 — pendientes de implementación)
 
@@ -121,7 +121,7 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 | **n8n** | `5678` | Alto (Orquestación maestra) |
 | **Grafana** | `3000` | Medio (Métricas y visualización) |
 | **Dashboards** | `8080-8093` | Bajo (Visualización de casos) |
-| **cAdvisor** | `8089` | **Muy Alto** (Monta `/var/run/docker.sock`) |
+| **cAdvisor** | `9091` | **Muy Alto** (Monta `/var/run/docker.sock`) |
 
 ---
 

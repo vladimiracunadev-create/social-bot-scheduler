@@ -19,7 +19,7 @@
 | **Destino** | Micro-receiver REST↔GraphQL — [`dest/receiver/index.js`](dest/receiver/index.js) |
 | **Motor destino** | Hasura GraphQL Engine |
 | **Persistencia** | TimescaleDB (hypertable `social_posts`) |
-| **Puerto (dashboard)** | [`http://localhost:8091`](http://localhost:8091) |
+| **Puerto (dashboard)** | [`http://localhost:8096`](http://localhost:8096) |
 | **Perfil Docker** | `case16` |
 | **Guardrails** | Fingerprint · Circuit breaker · Idempotencia · HTTP con reintentos · DLQ |
 
@@ -47,7 +47,7 @@ flowchart TB
         FWD --> R["receiver /webhook"]
         R -->|mutation GraphQL| H["Hasura Engine"]
         H --> DB[("TimescaleDB hypertable")]
-        DASH["Dashboard :8091"] -->|query GraphQL /logs| R
+        DASH["Dashboard :8096"] -->|query GraphQL /logs| R
         R -->|query GraphQL| H
     end
 
@@ -90,7 +90,7 @@ sequenceDiagram
         Rec-->>N8N: 200 OK
         N8N-->>Apollo: 200 OK
     end
-    Note over Rec,Has: El dashboard :8091 lee vía query GraphQL (/logs)
+    Note over Rec,Has: El dashboard :8096 lee vía query GraphQL (/logs)
 ```
 
 ---
@@ -119,7 +119,7 @@ sequenceDiagram
 docker-compose --profile case16 up -d          # TimescaleDB + Hasura + receiver
 ```
 
-Dashboard: [`http://localhost:8091`](http://localhost:8091)
+Dashboard: [`http://localhost:8096`](http://localhost:8096)
 
 ---
 

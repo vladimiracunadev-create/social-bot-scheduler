@@ -138,10 +138,10 @@ docker compose --profile edge up -d
 | Componente | Riesgo | Puerto Local | Acción Recomendada |
 | :--- | :---: | :--- | :--- |
 | **n8n Orchestrator** | ALTO | `5678` | Cambiar credenciales en `.env`. Usar perfil `edge` para acceso remoto. |
-| **cAdvisor (Docker socket)** | CRITICO | `8089` | Solo en perfil `observability`. **NUNCA exponer** — acceso root al daemon Docker. |
+| **cAdvisor (Docker socket)** | CRITICO | `9091` | Solo en perfil `observability`. **NUNCA exponer** — acceso root al daemon Docker. |
 | **Prometheus / Grafana** | MEDIO | `9090` / `3000` | Solo en perfil `observability`. Cambiar `GRAFANA_ADMIN_PASSWORD` en `.env`. |
 | **master-dashboard** | BAJO | `8080` | Sin auth, solo loopback. Activar `edge` para redes compartidas. |
-| **Integration Hubs (casos)** | BAJO | `8081–8090` | Endpoints de prueba, loopback únicamente. |
+| **Integration Hubs (casos)** | BAJO | `8081–8100` | Endpoints de prueba, loopback únicamente. |
 
 ---
 

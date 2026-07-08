@@ -6,7 +6,7 @@ origin:
   entrypoint: "origin/bot.py"
 destination:
   language: "python"
-  port: 8090
-  url: "http://localhost:8090"
+  port: 8089
+  url: "http://localhost:8089"
 stack: ["python", "n8n", "fastapi", "duckdb", "github-api"]
 description: "Integracion de bot Python con Integration Gateway en FastAPI, autenticacion por X-API-Key y persistencia DuckDB"

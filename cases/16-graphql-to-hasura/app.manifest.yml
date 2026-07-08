@@ -10,8 +10,8 @@ destination:
   language: "nodejs"
   framework: "hasura"
   engine: "hasura-graphql-engine"
-  port: 8091
-  url: "http://localhost:8091"
+  port: 8096
+  url: "http://localhost:8096"
 database:
   engine: "timescaledb"
   version: "16"

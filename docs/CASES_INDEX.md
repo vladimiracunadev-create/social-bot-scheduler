@@ -27,7 +27,7 @@ Descubre por que hemos elegido estas combinaciones y que beneficios aporta cada 
 | **Symfony** | 8086 | Redis | Alto rendimiento y estados en memoria. |
 | **Ruby (Sinatra)** | 8087 | Cassandra | Escalabilidad lineal y alta disponibilidad. |
 | **Flask** | 8088 | SQL Server | Integracion Enterprise robusta. |
-| **FastAPI Gateway** | 8090 | DuckDB | Gateway autenticado con X-API-Key, DDD y dashboard operativo. |
+| **FastAPI Gateway** | 8089 | DuckDB | Gateway autenticado con X-API-Key, DDD y dashboard operativo. |
 
 ---
 
@@ -47,7 +47,7 @@ Descubre por que hemos elegido estas combinaciones y que beneficios aporta cada 
 | 16 | Apollo GraphQL -> n8n -> Hasura | TimescaleDB | Admin secret | GraphQL |
 | 17 | Rust (MQTT) -> n8n -> Node | InfluxDB | No | Mosquitto |
 
-> Casos **11, 16 y 17** implementados en `v4.5.0` (puertos `8092`, `8091`, `8093`).
+> Casos **11, 16 y 17** implementados en `v4.5.0` (puertos `8091`, `8096`, `8097`).
 
 ---
 

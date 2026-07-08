@@ -10,8 +10,8 @@ origin:
 destination:
   language: "nodejs"
   protocol: "mqtt"
-  port: 8093
-  url: "http://localhost:8093"
+  port: 8097
+  url: "http://localhost:8097"
 broker:
   engine: "mosquitto"
   version: "2.x"

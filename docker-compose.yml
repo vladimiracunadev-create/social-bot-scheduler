@@ -272,7 +272,7 @@ services:
           memory: 256M
           cpus: "0.20"
     ports:
-      - "${HOST_BIND_IP:-127.0.0.1}:8090:8000"
+      - "${HOST_BIND_IP:-127.0.0.1}:8089:8000"
     volumes:
       - ./cases/09-python-to-gateway/dest/data:/app/data
       - ./cases/09-python-to-gateway/dest/logs:/app/logs
@@ -350,7 +350,7 @@ services:
           memory: 64M
           cpus: "0.10"
     ports:
-      - "${HOST_BIND_IP:-127.0.0.1}:8091:3000"
+      - "${HOST_BIND_IP:-127.0.0.1}:8096:3000"
     environment:
       - PORT=3000
       - HASURA_URL=http://hasura-16:8080
@@ -375,7 +375,7 @@ services:
           memory: 256M
           cpus: "0.20"
     ports:
-      - "${HOST_BIND_IP:-127.0.0.1}:8092:8080"
+      - "${HOST_BIND_IP:-127.0.0.1}:8091:8080"
     environment:
       - PORT=8080
     networks:
@@ -446,7 +446,7 @@ services:
           memory: 96M
           cpus: "0.10"
     ports:
-      - "${HOST_BIND_IP:-127.0.0.1}:8093:3000"
+      - "${HOST_BIND_IP:-127.0.0.1}:8097:3000"
     environment:
       - PORT=3000
       - MQTT_URL=mqtt://mosquitto-17:1883
@@ -514,7 +514,7 @@ services:
           memory: 128M
           cpus: "0.10"
     ports:
-      - "${HOST_BIND_IP:-127.0.0.1}:8089:8080"
+      - "${HOST_BIND_IP:-127.0.0.1}:9091:8080"
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro

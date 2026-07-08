@@ -4,6 +4,25 @@ Todos los cambios notables en este proyecto se documentan sistemáticamente en e
 
 ---
 
+## 🔌 [4.5.1] — 2026-07-08
+
+### 🧭 Esquema de puertos canónico + validador anti-colisión
+
+Los puertos se asignaban por orden de implementación (11→8092, 16→8091, 17→8093), lo que escalaba mal. Se establece una **regla determinista** y su garantía en CI.
+
+#### Añadido
+
+- **Regla canónica `puerto = 8080 + id`** documentada en [docs/PORTS.md](docs/PORTS.md): el número de caso se lee en el puerto; escala sin límite práctico (caso 30→8110, 99→8179).
+- **`scripts/validate_ports.py`** (sin dependencias) cableado en CI (`matrix-integrity`): falla el build si algún puerto se desvía de la fórmula, si hay dos puertos host duplicados, si un caso implementado no publica su puerto, o si la infra colisiona con la banda de casos. **Ningún caso puede romper a otro.**
+
+#### Cambiado
+
+- **Renumeración a la fórmula**: `09` 8090→**8089**, `11` 8092→**8091**, `16` 8091→**8096**, `17` 8093→**8097**.
+- **cAdvisor** 8089→**9091** (fuera de la banda de casos, junto a Prometheus).
+- Sincronizadas todas las referencias (compose, `index.html`, manifests, README, SECURITY, docs) al nuevo mapa. El edge/Caddy no se ve afectado (referencia al caso 09 por nombre de servicio, no por puerto).
+
+---
+
 ## 🚀 [4.5.0] — 2026-07-07
 
 ### ✨ Matriz Tecnológica — Lote 1 de casos planificados implementados (16, 11, 17)

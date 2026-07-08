@@ -9,8 +9,8 @@ origin:
 destination:
   language: "erlang"
   framework: "cowboy"
-  port: 8092
-  url: "http://localhost:8092"
+  port: 8091
+  url: "http://localhost:8091"
 database:
   engine: "mnesia"
   notes: "DB nativa BEAM embebida (ram_copies); sin contenedor de base de datos separado."

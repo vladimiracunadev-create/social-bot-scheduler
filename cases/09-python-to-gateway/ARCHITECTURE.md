@@ -18,7 +18,7 @@
 | **Puente** | n8n — [`case-09-python-to-gateway.json`](../../n8n/workflows/case-09-python-to-gateway.json) |
 | **Destino** | Integration Gateway en FastAPI — [`dest/app/api.py`](dest/app/api.py) |
 | **Persistencia** | DuckDB (embebida) + GitHub API (proveedor externo) |
-| **Puerto (dashboard)** | [`http://localhost:8090`](http://localhost:8090) |
+| **Puerto (dashboard)** | [`http://localhost:8089`](http://localhost:8089) |
 | **Perfil Docker** | `case09` |
 | **Guardrails** | Autenticación `X-API-Key` · Rate limiting (429) · Whitelist `owner` (422) · Idempotencia · Dead Letter Queue |
 
@@ -50,7 +50,7 @@ flowchart TB
         WL -->|valido| API["api.py"]
         API --> GH["GitHub API"]
         API --> DB[("DuckDB")]
-        DB --> DASH["Dashboard :8090"]
+        DB --> DASH["Dashboard :8089"]
     end
 
     B -->|POST JSON| C
@@ -129,7 +129,7 @@ Este es el caso **más endurecido** del laboratorio; su borde concentra las defe
 - **♻️ Idempotencia por fingerprint**: evita el reprocesamiento de eventos duplicados.
 - **📥 DLQ vía `/errors`**: los mensajes fallidos se derivan a la cola de auditoría para su recuperación.
 - **🐙 Proveedor externo GitHub API**: realiza la publicación real saliente cuando `GITHUB_TOKEN` está configurado.
-- **🦆 Persistencia DuckDB**: base OLAP in-process que permite consultas analíticas sobre el histórico de posts con latencia casi nula, servidas en el dashboard (`:8090`).
+- **🦆 Persistencia DuckDB**: base OLAP in-process que permite consultas analíticas sobre el histórico de posts con latencia casi nula, servidas en el dashboard (`:8089`).
 
 ---
 
@@ -140,7 +140,7 @@ docker-compose --profile case09 up -d          # levanta Gateway FastAPI + DuckD
 python hub.py ejecutar 09-python-to-gateway     # dispara el emisor Python
 ```
 
-Dashboard: [`http://localhost:8090`](http://localhost:8090)
+Dashboard: [`http://localhost:8089`](http://localhost:8089)
 
 ---
 

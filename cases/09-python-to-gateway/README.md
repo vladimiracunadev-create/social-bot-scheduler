@@ -54,8 +54,8 @@ make demo09
 
 ## 🚦 Verificación y Dashboards
 
-- **🌐 Gateway Dashboard**: [http://localhost:8090](http://localhost:8090)
-- **⚙️ API Docs (Swagger)**: `http://localhost:8090/docs`
+- **🌐 Gateway Dashboard**: [http://localhost:8089](http://localhost:8089)
+- **⚙️ API Docs (Swagger)**: `http://localhost:8089/docs`
 - **🦆 Data Analysis**: DuckDB permite realizar consultas analíticas sobre el histórico de posts con latencia casi nula.
 
 ---

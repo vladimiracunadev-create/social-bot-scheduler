@@ -18,7 +18,7 @@
 | **Puente** | n8n — [`case-11-elixir-to-erlang.json`](../../n8n/workflows/case-11-elixir-to-erlang.json) |
 | **Destino** | Erlang/Cowboy 2.12 (release OTP) — [`dest/src/social_bot_dest_app.erl`](dest/src/social_bot_dest_app.erl) |
 | **Persistencia** | Mnesia (`ram_copies`, embebida) |
-| **Puerto (dashboard)** | [`http://localhost:8092`](http://localhost:8092) |
+| **Puerto (dashboard)** | [`http://localhost:8091`](http://localhost:8091) |
 | **Perfil Docker** | `case11` |
 | **Guardrails** | Fingerprint · Circuit breaker · Idempotencia · HTTP con reintentos · DLQ |
 
@@ -47,7 +47,7 @@ flowchart TB
         SUP --> WH["webhook_handler"]
         WH --> ST["store (transaccion)"]
         ST --> DB[("Mnesia ram_copies")]
-        DB --> DASH["Dashboard :8092"]
+        DB --> DASH["Dashboard :8091"]
     end
 
     P -->|POST JSON| C
@@ -87,7 +87,7 @@ sequenceDiagram
         Cow-->>N8N: 200 OK
         N8N-->>Ex: 200 OK
     end
-    Note over Cow,Mn: El dashboard :8092 lee via /logs (mnesia:transaction/read)
+    Note over Cow,Mn: El dashboard :8091 lee via /logs (mnesia:transaction/read)
 ```
 
 ---
@@ -116,7 +116,7 @@ sequenceDiagram
 docker-compose --profile case11 up -d          # receptor Erlang/Cowboy + Mnesia (sin BD externa)
 ```
 
-Dashboard: [`http://localhost:8092`](http://localhost:8092)
+Dashboard: [`http://localhost:8091`](http://localhost:8091)
 
 ---
 

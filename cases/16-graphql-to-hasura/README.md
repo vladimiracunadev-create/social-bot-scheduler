@@ -34,9 +34,9 @@ Servicios que arranca el perfil `case16`:
 | :--- | :--- | :---: |
 | `db-timescaledb-16` | TimescaleDB (hypertable) | interno |
 | `hasura-16` | Hasura GraphQL Engine | interno |
-| `dest-graphql-16` | Micro-receiver REST↔GraphQL + dashboard | **8091** |
+| `dest-graphql-16` | Micro-receiver REST↔GraphQL + dashboard | **8096** |
 
-- **Dashboard del caso**: <http://localhost:8091>
+- **Dashboard del caso**: <http://localhost:8096>
 - **Probar desde el dashboard maestro**: <http://localhost:8080> → tarjeta **CASE-16** → *Probar Integración*.
 
 ### Probar el emisor Apollo (opcional)

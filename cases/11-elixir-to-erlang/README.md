@@ -29,9 +29,9 @@ docker-compose --profile case11 up -d      # sólo el receptor BEAM; no hay cont
 
 | Servicio | Rol | Puerto host |
 | :--- | :--- | :---: |
-| `dest-erlang-11` | Erlang/Cowboy + Mnesia + dashboard | **8092** |
+| `dest-erlang-11` | Erlang/Cowboy + Mnesia + dashboard | **8091** |
 
-- **Dashboard del caso**: <http://localhost:8092>
+- **Dashboard del caso**: <http://localhost:8091>
 - **Probar desde el dashboard maestro**: <http://localhost:8080> → tarjeta **CASE-11**.
 
 ### Probar el emisor Elixir (opcional)

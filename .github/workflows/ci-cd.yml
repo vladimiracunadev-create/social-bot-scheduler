@@ -93,6 +93,9 @@ jobs:
       - name: Validate 8-case matrix
         run: python scripts/validate_case_matrix.py
 
+      - name: Validate port allocation (formula 8080+id, no collisions)
+        run: python scripts/validate_ports.py
+
   runtime-security:
     name: Runtime Security Guardrails
     runs-on: ubuntu-latest

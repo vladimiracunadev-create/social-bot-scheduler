@@ -19,7 +19,7 @@
 | **Broker** | Mosquitto 2.x (topic `social/posts`, QoS 1) |
 | **Destino** | Node subscriber + receiver REST — [`dest/index.js`](dest/index.js) |
 | **Persistencia** | InfluxDB 1.8 (measurement `social_posts`) |
-| **Puerto (dashboard)** | [`http://localhost:8093`](http://localhost:8093) |
+| **Puerto (dashboard)** | [`http://localhost:8097`](http://localhost:8097) |
 | **Perfil Docker** | `case17` |
 
 ---
@@ -45,7 +45,7 @@ flowchart TB
         REC -->|publish| MQ
         MQ -->|subscribe| SINK["subscriber"]
         SINK --> DB[("InfluxDB")]
-        DB --> DASH["Dashboard :8093"]
+        DB --> DASH["Dashboard :8097"]
     end
 
     R -->|MQTT publish| MQ
@@ -112,7 +112,7 @@ sequenceDiagram
 docker-compose --profile case17 up -d          # Mosquitto + InfluxDB + receiver Node
 ```
 
-Dashboard: [`http://localhost:8093`](http://localhost:8093)
+Dashboard: [`http://localhost:8097`](http://localhost:8097)
 
 ---
 

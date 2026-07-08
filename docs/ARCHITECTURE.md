@@ -34,7 +34,7 @@ Es la **capa de auditoría y visualización**. n8n envía una copia del post fin
 | **06** | Go | n8n | Symfony | 🏎️ **Redis** | 8086 |
 | **07** | Rust | n8n | Ruby (Sinatra) | 👁️ **Cassandra** | 8087 |
 | **08** | C# (.NET) | n8n | Flask | 🏢 **SQL Server** | 8088 |
-| **09** | Python | n8n | FastAPI Gateway | 🦆 **DuckDB** | 8090 |
+| **09** | Python | n8n | FastAPI Gateway | 🦆 **DuckDB** | 8089 |
 
 ---
 
