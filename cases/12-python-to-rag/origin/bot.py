@@ -31,7 +31,9 @@ def send(post: dict) -> bool:
             "scheduled_at": post.get("scheduled_at", ""),
         }
     ).encode("utf-8")
-    req = urllib.request.Request(WEBHOOK_URL, data=payload, headers={"Content-Type": "application/json"})
+    req = urllib.request.Request(
+        WEBHOOK_URL, data=payload, headers={"Content-Type": "application/json"}
+    )
     try:
         with urllib.request.urlopen(req, timeout=15) as resp:
             if 200 <= resp.status < 300:
@@ -60,7 +62,9 @@ def main():
             post["published"] = True
             changed = True
     if changed:
-        POSTS_FILE.write_text(json.dumps(posts, indent=2, ensure_ascii=False), encoding="utf-8")
+        POSTS_FILE.write_text(
+            json.dumps(posts, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
 
 
 if __name__ == "__main__":

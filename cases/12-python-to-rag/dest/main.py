@@ -52,7 +52,9 @@ def to_pgvector(vec: list[float]) -> str:
 # BASE DE DATOS (pgvector)
 # ==================================================================================================
 def connect():
-    return psycopg2.connect(host=DB_HOST, dbname=DB_NAME, user=DB_USER, password=DB_PASS)
+    return psycopg2.connect(
+        host=DB_HOST, dbname=DB_NAME, user=DB_USER, password=DB_PASS
+    )
 
 
 def init_db():
@@ -61,16 +63,14 @@ def init_db():
             conn = connect()
             with conn, conn.cursor() as cur:
                 cur.execute("CREATE EXTENSION IF NOT EXISTS vector")
-                cur.execute(
-                    f"""CREATE TABLE IF NOT EXISTS social_posts (
+                cur.execute(f"""CREATE TABLE IF NOT EXISTS social_posts (
                             id TEXT PRIMARY KEY,
                             text TEXT NOT NULL,
                             channel TEXT NOT NULL DEFAULT 'default',
                             scheduled_at TEXT,
                             created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
                             embedding vector({DIM})
-                        )"""
-                )
+                        )""")
             conn.close()
             print("[bootstrap] pgvector listo (extension + tabla social_posts).")
             return
@@ -103,7 +103,10 @@ def health():
 @app.post("/webhook")
 def webhook(post: Post):
     if not post.id or not post.text:
-        return JSONResponse(status_code=422, content={"ok": False, "error": "id y text son obligatorios"})
+        return JSONResponse(
+            status_code=422,
+            content={"ok": False, "error": "id y text son obligatorios"},
+        )
     vec = to_pgvector(embed(post.text))
     conn = connect()
     with conn, conn.cursor() as cur:
@@ -115,7 +118,11 @@ def webhook(post: Post):
         )
     conn.close()
     print(f"Post embebido y persistido en pgvector: {post.id}")
-    return {"ok": True, "message": "Post embebido en pgvector", "case": "12-python-to-rag"}
+    return {
+        "ok": True,
+        "message": "Post embebido en pgvector",
+        "case": "12-python-to-rag",
+    }
 
 
 @app.post("/errors")
@@ -129,10 +136,14 @@ async def errors(request: Request):
 def logs():
     conn = connect()
     with conn, conn.cursor() as cur:
-        cur.execute("SELECT id, channel, text, created_at FROM social_posts ORDER BY created_at DESC LIMIT 20")
+        cur.execute(
+            "SELECT id, channel, text, created_at FROM social_posts ORDER BY created_at DESC LIMIT 20"
+        )
         rows = cur.fetchall()
     conn.close()
-    out = [f"[{r[3]}] PGVECTOR | id={r[0]} | channel={r[1]} | text={r[2]}" for r in rows]
+    out = [
+        f"[{r[3]}] PGVECTOR | id={r[0]} | channel={r[1]} | text={r[2]}" for r in rows
+    ]
     return {"ok": True, "logs": out}
 
 
@@ -149,7 +160,13 @@ def search(q: str, k: int = 5):
         )
         rows = cur.fetchall()
     conn.close()
-    return {"ok": True, "query": q, "matches": [{"id": r[0], "text": r[1], "score": round(float(r[2]), 4)} for r in rows]}
+    return {
+        "ok": True,
+        "query": q,
+        "matches": [
+            {"id": r[0], "text": r[1], "score": round(float(r[2]), 4)} for r in rows
+        ],
+    }
 
 
 @app.get("/", response_class=HTMLResponse)

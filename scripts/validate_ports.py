@@ -18,6 +18,7 @@ Se ejecuta en CI (y localmente) y FALLA si:
 
 Así, cualquier colisión o desvío se detecta ANTES de levantar nada.
 """
+
 from __future__ import annotations
 
 import re
@@ -95,7 +96,9 @@ def main() -> int:
     for host_port, proto in collect_compose_ports():
         key = (host_port, proto)
         if key in seen:
-            errors.append(f"[colision] puerto {host_port}/{proto} publicado por 2+ servicios")
+            errors.append(
+                f"[colision] puerto {host_port}/{proto} publicado por 2+ servicios"
+            )
         seen[key] = True
 
     published = {p for p, _ in seen}
@@ -112,7 +115,9 @@ def main() -> int:
             )
 
     # (4) Infra reservada no colisiona con la banda de casos implementados.
-    case_ports = {expected_port(c["id"]) for c in cases if c["status"] != "planned" and c["id"]}
+    case_ports = {
+        expected_port(c["id"]) for c in cases if c["status"] != "planned" and c["id"]
+    }
     for port, name in RESERVED_INFRA.items():
         if port in case_ports:
             errors.append(f"[infra] '{name}' usa {port}, puerto de fórmula de un caso")
@@ -123,8 +128,13 @@ def main() -> int:
             print(f" - {e}")
         return 1
 
-    ready = sorted((c for c in cases if c["status"] != "planned" and c["id"]), key=lambda x: x["id"])
-    print(f"Validacion de puertos OK - {len(ready)} casos implementados, formula 8080+id.")
+    ready = sorted(
+        (c for c in cases if c["status"] != "planned" and c["id"]),
+        key=lambda x: x["id"],
+    )
+    print(
+        f"Validacion de puertos OK - {len(ready)} casos implementados, formula 8080+id."
+    )
     print("  " + ", ".join(f"{c['id']}:{expected_port(c['id'])}" for c in ready))
     return 0
 
