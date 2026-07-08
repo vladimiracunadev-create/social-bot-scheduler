@@ -1,6 +1,6 @@
 # 🛡️ n8n Guardrails: Resiliencia y Seguridad
 
-Esta guía detalla los **Guardrails** (mecanismos de protección) implementados en la capa del **Bridge (n8n)**. Estos patrones aseguran que el ecosistema sea resistente a fallos, evite duplicados y maneje errores de forma robusta en **TODOS los 15 casos de integración implementados**. (Los [5 casos planificados](PLANNED_CASES.md) deberán adoptar estos guardrails al implementarse.)
+Esta guía detalla los **Guardrails** (mecanismos de protección) implementados en la capa del **Bridge (n8n)**. Estos patrones aseguran que el ecosistema sea resistente a fallos, evite duplicados y maneje errores de forma robusta en **TODOS los 17 casos de integración implementados**. (Los [3 casos planificados](PLANNED_CASES.md) deberán adoptar estos guardrails al implementarse.)
 
 ---
 

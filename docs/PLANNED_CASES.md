@@ -1,9 +1,9 @@
 # 🚧 Casos Planificados (v5.0+)
 
 > [!IMPORTANT]
-> Este documento es el **single source of truth** para los casos del roadmap (IDs 10–20). Los casos **11, 16, 17** (`v4.5.0`) y **10, 12, 18** (`v4.6.0`) ya están implementados; los **5 restantes** (13, 14, 15, 19, 20) contienen sólo scaffolding (carpeta + README + manifest) y **no tienen implementación funcional todavía**. Cualquier referencia en otros documentos debe enlazar aquí.
+> Este documento es el **single source of truth** para los casos del roadmap (IDs 10–20). Implementados: **11, 16, 17** (`v4.5.0`), **10, 12, 18** (`v4.6.0`) y **15, 20** (`v4.7.0`). Quedan **3**: los casos **13 y 14** en scaffolding, y el **19** con el código completo pero **pendiente de verificación end-to-end** (se cierra al final). Cualquier referencia en otros documentos debe enlazar aquí.
 
-Los casos 01–12, 16, 17 y 18 están plenamente operativos — ver [CASES_INDEX.md](CASES_INDEX.md). Los casos descritos abajo están reservados como **roadmap arquitectónico** y **no se levantan** desde `docker-compose.yml` (no hay perfiles `case10`–`case20` aún).
+Los casos 01–12, 15, 16, 17, 18 y 20 están plenamente operativos — ver [CASES_INDEX.md](CASES_INDEX.md). Los casos descritos abajo están reservados como **roadmap arquitectónico** y **no se levantan** desde `docker-compose.yml` (no hay perfiles `case10`–`case20` aún).
 
 ---
 
@@ -16,12 +16,12 @@ Los casos 01–12, 16, 17 y 18 están plenamente operativos — ver [CASES_INDEX
 | **12** ✅ | Python (LLM) | n8n | FastAPI + RAG | 🧠 pgvector | `8092` | ~0.5 GB | ~1.65 GB 🟢 | IA / RAG |
 | **13** | Node + Kafka | n8n | Go consumer | 🟡 ClickHouse | `8093` | ~2.2 GB | ~3.35 GB 🔴 | Streaming |
 | **14** | Next.js 15 | n8n | Supabase Edge Fn | 🟢 Supabase (Postgres + RLS) | `8094` | ~2.25 GB | ~3.4 GB 🔴 | BaaS |
-| **15** | Go (gRPC) | n8n | Python (gRPC) | 🪳 CockroachDB | `8095` | ~832 MB | ~2.0 GB 🟡 | Protobuf |
+| **15** ✅ | Go (gRPC) | n8n | Python (gRPC) | 🪳 CockroachDB | `8095` | ~832 MB | ~2.0 GB 🟡 | Protobuf |
 | **16** ✅ | Apollo (GraphQL) | n8n | Hasura | 📈 TimescaleDB | `8096` | ~768 MB | ~1.9 GB 🟢 | GraphQL |
 | **17** ✅ | Rust (MQTT) | n8n | Node (MQTT) | 📊 InfluxDB | `8097` | ~736 MB | ~1.85 GB 🟢 | IoT |
 | **18** ✅ | Zig | n8n | Crystal (Kemal) | 🕸️ Neo4j | `8098` | ~1.15 GB | ~2.3 GB 🟡 | Grafos |
 | **19** | F# (.NET) | n8n | Clojure (Ring) | ⏳ XTDB | `8099` | ~1.5 GB | ~2.65 GB 🟡 | Funcional |
-| **20** | Swift (Vapor) | n8n | Dart (Shelf) | 🔥 Firebase Emulator | `8100` | ~1.4 GB | ~2.55 GB 🟡 | Mobile-backend |
+| **20** ✅ | Swift | n8n | Dart (Shelf) | 🔥 Firestore emulator | `8100` | ~1.4 GB | ~2.3 GB 🟡 | Mobile-backend |
 
 > [!IMPORTANT]
 > Las cifras son **estimaciones** previas a la implementación, basadas en los límites típicos de las imágenes oficiales de cada stack. Los valores reales se medirán al implementarse y se moverán a [DOCKER_RESOURCES.md](DOCKER_RESOURCES.md).

@@ -10,10 +10,10 @@ El 100% de los **15 casos de integración implementados** cuentan con el siguien
 
 | Mecanismo | Propósito Técnico | Estado |
 | :--- | :--- | :---: |
-| **Circuit Breaker** | Evita saturación de servicios caídos o degradados. | 🟢 15/15 |
-| **Idempotencia** | Previene el procesamiento de eventos duplicados. | 🟢 15/15 |
-| **Dead Letter Queue**| Captura mensajes que fallan tras múltiples reintentos. | 🟢 15/15 |
-| **Backoff Exponencial**| Estrategia inteligente de reintentos en n8n. | 🟢 15/15 |
+| **Circuit Breaker** | Evita saturación de servicios caídos o degradados. | 🟢 17/17 |
+| **Idempotencia** | Previene el procesamiento de eventos duplicados. | 🟢 17/17 |
+| **Dead Letter Queue**| Captura mensajes que fallan tras múltiples reintentos. | 🟢 17/17 |
+| **Backoff Exponencial**| Estrategia inteligente de reintentos en n8n. | 🟢 17/17 |
 
 ---
 

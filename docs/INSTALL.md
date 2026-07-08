@@ -15,7 +15,7 @@ docker-compose up -d
 **Servicios activos**: `n8n` y el `Master Dashboard`.
 
 ### 🚀 Opción B: Laboratorio Completo (Demo)
-Activa la matriz completa de 15 casos implementados y el stack de observabilidad. (Los [5 casos planificados](PLANNED_CASES.md) no se levantan: solo existen como scaffolding documental.)
+Activa la matriz completa de 17 casos implementados y el stack de observabilidad. (Los [3 casos planificados](PLANNED_CASES.md) no se levantan: solo existen como scaffolding documental.)
 ```bash
 cp .env.demo.example .env
 make up

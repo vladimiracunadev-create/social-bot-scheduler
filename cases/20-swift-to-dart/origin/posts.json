@@ -1,0 +1,16 @@
+[
+  {
+    "id": "post-20-001",
+    "text": "Swift en Linux como lenguaje de sistemas server-side, no solo iOS.",
+    "channel": "swift",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  },
+  {
+    "id": "post-20-002",
+    "text": "Dart/Shelf persiste documentos en el emulador de Firestore via REST.",
+    "channel": "firestore",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  }
+]

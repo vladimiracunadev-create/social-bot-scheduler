@@ -1,55 +1,58 @@
-# 🧩 Caso 20: 🍎 Swift (Vapor) -> 🌉 n8n -> 🎯 Dart (Shelf) -> 🔥 Firebase Emulator
+# 🧩 Caso 20: 🍎 Swift → 🌉 n8n → 🎯 Dart (Shelf) + 🔥 Firestore emulator
 
-[![Status: Planned](https://img.shields.io/badge/Status-Planned-orange.svg)]()
-[![Language: Swift](https://img.shields.io/badge/Language-Swift-F05138?logo=swift&logoColor=white)](https://swift.org/)
+[![Status: Ready](https://img.shields.io/badge/Status-Ready-brightgreen.svg)]()
+[![Language: Swift](https://img.shields.io/badge/Language-Swift-FA7343?logo=swift&logoColor=white)](https://www.swift.org/)
 [![Language: Dart](https://img.shields.io/badge/Language-Dart-0175C2?logo=dart&logoColor=white)](https://dart.dev/)
-[![Backend: Firebase](https://img.shields.io/badge/Backend-Firebase%20Emulator-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com/docs/emulator-suite)
+[![Database: Firestore](https://img.shields.io/badge/Database-Firestore%20(emulator)-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com/docs/emulator-suite)
 
-> [!WARNING]
-> **🚧 Caso pendiente de implementación.** Solo scaffolding y diseño.
-
-Cubre el ecosistema **mobile-backend**: dos lenguajes asociados a apps móviles (Swift = iOS, Dart = Flutter) ejecutándose **server-side**, con Firebase Emulator Suite local para evitar dependencia de la nube de Google.
+Stack **mobile-backend** con lenguajes server-side: emisor **Swift** (en Linux) y receptor **Dart** con **Shelf**, persistiendo en el **emulador de Firestore** de la Firebase Emulator Suite (local, sin cloud).
 
 ---
 
-## 🏗️ Arquitectura del Flujo (Propuesta)
+## 🏗️ Arquitectura del Flujo
 
-1. **📤 Origen**: `Publisher.swift` (Vapor 4 sobre Swift on Linux) — async/await nativo.
-2. **🌉 Puente**: **n8n** — webhook estándar.
-3. **📥 Destino**: `server.dart` (Shelf + `shelf_router`) — handler async con isolates.
-4. **📁 Persistencia**: **Firebase Emulator Suite local** — Firestore + Auth + Cloud Functions emulados.
+1. **📤 Origen** — `origin/Sources/Publisher/main.swift`: emisor Swift que reenvía los posts vencidos al webhook de n8n con `URLSession`.
+2. **🌉 Puente** — **n8n**: guardrails canónicos (fingerprint → circuit breaker → idempotencia → HTTP con reintentos → DLQ).
+3. **📥 Destino** — `dest/bin/server.dart`: receptor **Dart/Shelf** (compilado AOT a binario nativo) que cumple el contrato REST.
+4. **📁 Persistencia** — **Firestore emulator**: el receptor hace `PATCH`/`GET` a la API REST v1 del emulador (colección `social_posts`, documentos con `fields` tipados).
 
 > [!NOTE]
-> Se usa la **CLI `firebase emulators:start`** para mantener el laboratorio 100% offline. Sin claves de proyecto reales.
+> El emulador de Firestore (Firebase Emulator Suite) corre local, sin proyecto real ni credenciales cloud. La imagen pre-descarga el JAR del emulador en el build para arrancar sin red.
+
+---
+
+## 🚀 Cómo levantarlo
+
+```bash
+docker-compose --profile case20 up -d      # emulador Firestore + receptor Dart
+```
+
+| Servicio | Rol | Puerto host |
+| :--- | :--- | :---: |
+| `firebase-emu-20` | Emulador de Firestore | interno (`:8200`) |
+| `dest-dart-20` | Dart/Shelf + dashboard | **8100** |
+
+- **Dashboard del caso**: <http://localhost:8100>
+- **Probar desde el dashboard maestro**: <http://localhost:8080> → tarjeta **CASE-20**.
 
 ---
 
 ## 🎯 Objetivos didácticos
 
-- Swift on Linux: ecosistema fuera de Apple, paquetes con SwiftPM.
-- Dart server-side: alternativa al stack Node con tipado estático.
-- Firestore: NoSQL documental con sub-collections y reglas declarativas.
-- Patrón mobile-backend: cómo el backend "habla móvil" sin ser el cliente.
+- **Swift y Dart server-side**: dos lenguajes "mobile-first" usados como backend compilado.
+- **Firebase Emulator Suite**: desarrollo local contra Firestore sin tocar la nube.
+- **API REST de Firestore**: documentos con `fields` tipados (`stringValue`, `integerValue`).
 
 ---
 
-## ⚠️ Consideraciones operacionales
+## ⚠️ Consideraciones (modelo del laboratorio)
 
-- Imagen Swift Linux pesada (~500 MB). Usar multi-stage build agresivo.
-- Firebase Emulator Suite requiere Java 11+ y Node.js para correr.
-- **NUNCA** mezclar emulador local con proyecto Firebase real → variables de entorno claras.
-
----
-
-## 📋 TODO de implementación
-
-- [ ] `Package.swift` Vapor 4 con módulos mínimos.
-- [ ] `pubspec.yaml` Dart con `shelf` + `firebase_dart`.
-- [ ] `firebase.json` configurando emuladores: firestore, auth, functions, storage.
-- [ ] Reglas Firestore versionadas en `dest/firestore.rules`.
-- [ ] Workflow n8n `case20-mobile-backend.json`.
-- [ ] Perfil `case20` en `docker-compose.yml`.
+- Puerto `8100` = `8080 + 20` (regla canónica, ver [docs/PORTS.md](../../docs/PORTS.md)).
+- Bind a `127.0.0.1`; el receptor valida `id`/`text` (→ HTTP 422).
+- El emulador (JVM) es el servicio pesado del caso; los datos no persisten entre reinicios.
 
 ---
 
-*Pendiente — parte del backlog exploratorio v5.0+.*
+## ✅ Estado
+
+Implementado y verificado (build + boot + health). Parte del **Lote 3** del roadmap v5.0 → v4.7.

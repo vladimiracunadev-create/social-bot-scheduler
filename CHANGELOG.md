@@ -4,6 +4,24 @@ Todos los cambios notables en este proyecto se documentan sistemáticamente en e
 
 ---
 
+## 🚀 [4.7.0] — 2026-07-08
+
+### ✨ Matriz Tecnológica — Lote 3: gRPC/CockroachDB (15) y Swift/Dart/Firestore (20)
+
+Dos casos más pasan a **implementados y verificados** (build + boot + health con Docker). La matriz operativa crece de **15 → 17 casos**. El caso **19** (F#/Clojure/XTDB) queda con el **código completo pero pendiente de verificación** (se cierra al final).
+
+#### Añadido
+
+- **Caso 15 · Go (gRPC server) → n8n → Python (gRPC client) + CockroachDB** (puerto `8095`): protocolo binario gRPC entre servidor Go y cliente Python (stubs generados desde un `.proto` compartido); el receiver Python adapta el contrato REST a llamadas gRPC. Persistencia en CockroachDB (SQL distribuido).
+- **Caso 20 · Swift → n8n → Dart (Shelf) + Firestore emulator** (puerto `8100`): stack mobile-backend server-side. Receiver Dart compilado AOT que persiste en el **emulador de Firestore** (Firebase Emulator Suite) vía su API REST v1.
+
+#### Notas
+
+- Ambos respetan la regla de puertos `8080 + id` y pasan `scripts/validate_ports.py`.
+- **Caso 19**: se corrigió un bug de arranque (XTDB se iniciaba en tiempo de compilación AOT → build colgado); el nodo se difiere con `delay`. Marcado como planificado hasta su verificación end-to-end.
+
+---
+
 ## 🚀 [4.6.0] — 2026-07-08
 
 ### ✨ Matriz Tecnológica — Lote 2 de casos planificados implementados (10, 12, 18)

@@ -1,6 +1,6 @@
 # 🧩 Índice de la Matriz Tecnológica
 
-Bienvenidos a la cartografía del **Social Bot Scheduler**. Este laboratorio se compone de **15 ejes de integración implementados** y **5 casos planificados adicionales** (ver [PLANNED_CASES](../PLANNED_CASES.md)) que demuestran la ductilidad de la orquestación moderna.
+Bienvenidos a la cartografía del **Social Bot Scheduler**. Este laboratorio se compone de **17 ejes de integración implementados** y **3 casos planificados adicionales** (ver [PLANNED_CASES](../PLANNED_CASES.md)) que demuestran la ductilidad de la orquestación moderna.
 
 ---
 

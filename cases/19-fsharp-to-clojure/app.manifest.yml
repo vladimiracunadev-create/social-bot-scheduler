@@ -1,5 +1,5 @@
 id: "19"
-name: "F# (.NET) -> n8n -> Clojure (Ring/Reitit) -> XTDB"
+name: "F# (.NET) -> n8n -> Clojure (Ring) + XTDB"
 path: "cases/19-fsharp-to-clojure"
 status: "planned"
 origin:
@@ -8,12 +8,12 @@ origin:
   entrypoint: "origin/Publisher.fs"
 destination:
   language: "clojure"
-  framework: "ring+reitit"
+  framework: "ring"
   port: 8099
   url: "http://localhost:8099"
 database:
   engine: "xtdb"
-  version: "2.x"
-  features: ["bitemporal", "datalog", "sql"]
-stack: ["fsharp", "dotnet", "n8n", "clojure", "ring", "reitit", "xtdb", "functional", "bitemporal"]
-description: "Paradigma funcional puro multi-runtime + DB bitemporal inmutable."
+  version: "1.24"
+  features: ["bitemporal", "datalog", "embebida"]
+stack: ["fsharp", "dotnet", "n8n", "clojure", "ring", "xtdb", "functional", "bitemporal"]
+description: "Paradigma funcional puro multi-runtime: emisor F# (.NET) y receptor Clojure/Ring con XTDB bitemporal embebido in-process (sin contenedor de BD)."

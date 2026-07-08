@@ -624,6 +624,148 @@ services:
       retries: 10
       start_period: 15s
 
+  # ---------------------------------------------------------------------------
+  # Case 15: Go (gRPC server) -> n8n -> Python (gRPC client) + CockroachDB
+  # ---------------------------------------------------------------------------
+  cockroach-15:
+    image: cockroachdb/cockroach:v24.2.5
+    container_name: social-bot-cockroach-15
+    profiles: ["case15", "full"]
+    command: start-single-node --insecure
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.35"
+    networks:
+      - bot-network
+    healthcheck:
+      test: ["CMD", "/cockroach/cockroach", "sql", "--insecure", "-e", "SELECT 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 20s
+
+  grpc-server-15:
+    build:
+      context: ./cases/15-grpc-go-to-python
+      dockerfile: origin/Dockerfile
+    container_name: social-bot-grpc-server-15
+    profiles: ["case15", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.20"
+    environment:
+      - DB_HOST=cockroach-15
+      - DB_PORT=26257
+    networks:
+      - bot-network
+    depends_on:
+      cockroach-15:
+        condition: service_healthy
+
+  dest-grpc-15:
+    build:
+      context: ./cases/15-grpc-go-to-python
+      dockerfile: dest/Dockerfile
+    container_name: social-bot-dest-grpc-15
+    profiles: ["case15", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.20"
+    ports:
+      - "${HOST_BIND_IP:-127.0.0.1}:8095:8000"
+    environment:
+      - GRPC_TARGET=grpc-server-15:50051
+    networks:
+      - bot-network
+    depends_on:
+      - grpc-server-15
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request;urllib.request.urlopen('http://localhost:8000/health')\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  # ---------------------------------------------------------------------------
+  # Case 19: F# (.NET) -> n8n -> Clojure (Ring) + XTDB
+  # Sin contenedor de BD: XTDB corre embebido in-process en el receptor Clojure.
+  # ---------------------------------------------------------------------------
+  dest-clojure-19:
+    build: ./cases/19-fsharp-to-clojure/dest
+    container_name: social-bot-dest-clojure-19
+    profiles: ["case19", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.35"
+    ports:
+      - "${HOST_BIND_IP:-127.0.0.1}:8099:8080"
+    environment:
+      - PORT=8080
+    networks:
+      - bot-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://localhost:8080/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
+
+  # ---------------------------------------------------------------------------
+  # Case 20: Swift -> n8n -> Dart (Shelf) + Firebase/Firestore emulator
+  # ---------------------------------------------------------------------------
+  firebase-emu-20:
+    build: ./cases/20-swift-to-dart/firebase
+    container_name: social-bot-firebase-emu-20
+    profiles: ["case20", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: "0.35"
+    networks:
+      - bot-network
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/8200' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  dest-dart-20:
+    build: ./cases/20-swift-to-dart/dest
+    container_name: social-bot-dest-dart-20
+    profiles: ["case20", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.20"
+    ports:
+      - "${HOST_BIND_IP:-127.0.0.1}:8100:8080"
+    environment:
+      - PORT=8080
+      - FIRESTORE_HOST=firebase-emu-20:8200
+      - FIREBASE_PROJECT=demo-lab
+    networks:
+      - bot-network
+    depends_on:
+      firebase-emu-20:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/8080' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
   # Observability: optional profile, local-only by default
   prometheus:
     image: ${PROMETHEUS_IMAGE:-prom/prometheus:v2.54.1}

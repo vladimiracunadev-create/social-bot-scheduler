@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package social;
+
+// go_package "./;main": los stubs generados quedan en el paquete main del servidor Go.
+option go_package = "./;main";
+
+// Un post social. Contrato binario compartido entre el servidor Go y el cliente Python.
+message Post {
+  string id = 1;
+  string text = 2;
+  string channel = 3;
+  string scheduled_at = 4;
+}
+
+message Ack {
+  bool ok = 1;
+  string message = 2;
+}
+
+message Empty {}
+
+message LogLine { string line = 1; }
+
+message Logs { repeated LogLine logs = 1; }
+
+// Servicio gRPC: el cliente Python (dest) llama a estos RPC sobre el servidor Go (origin).
+service SocialService {
+  rpc Publish(Post) returns (Ack);          // unary: persiste un post
+  rpc ListRecent(Empty) returns (Logs);     // unary: últimos posts para el dashboard
+}

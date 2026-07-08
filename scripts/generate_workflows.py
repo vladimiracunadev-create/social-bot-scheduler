@@ -92,6 +92,24 @@ CASES = {
         "dest_url": "http://dest-crystal-18:8080/webhook",
         "error_url": "http://dest-crystal-18:8080/errors",
     },
+    "15": {
+        "name": "gRPC Go to Python",
+        "webhook_path": "social-bot-scheduler-grpc",
+        "dest_url": "http://dest-grpc-15:8000/webhook",
+        "error_url": "http://dest-grpc-15:8000/errors",
+    },
+    "19": {
+        "name": "FSharp to Clojure",
+        "webhook_path": "social-bot-scheduler-xtdb",
+        "dest_url": "http://dest-clojure-19:8080/webhook",
+        "error_url": "http://dest-clojure-19:8080/errors",
+    },
+    "20": {
+        "name": "Swift to Dart",
+        "webhook_path": "social-bot-scheduler-firestore",
+        "dest_url": "http://dest-dart-20:8080/webhook",
+        "error_url": "http://dest-dart-20:8080/errors",
+    },
 }
 
 
@@ -301,6 +319,9 @@ def main():
         "10": "case-10-java-to-kotlin.json",
         "12": "case-12-python-to-rag.json",
         "18": "case-18-zig-to-crystal.json",
+        "15": "case-15-grpc-go-to-python.json",
+        "19": "case-19-fsharp-to-clojure.json",
+        "20": "case-20-swift-to-dart.json",
     }
 
     for case_id, config in CASES.items():

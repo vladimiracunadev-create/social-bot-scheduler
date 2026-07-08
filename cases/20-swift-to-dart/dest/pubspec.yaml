@@ -1,0 +1,9 @@
+name: case20_receiver
+description: Receptor Dart/Shelf (Case 20) que persiste en el emulador de Firestore.
+version: 1.0.0
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+dependencies:
+  shelf: ^1.4.2
+  shelf_router: ^1.1.4
+  http: ^1.2.2

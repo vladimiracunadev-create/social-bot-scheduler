@@ -222,6 +222,34 @@ EXPECTED_CASES = (
         ),
         workflow_file="case-18-zig-to-crystal.json",
     ),
+    CaseExpectation(
+        slug="15-grpc-go-to-python",
+        case_id="15",
+        origin_language="go",
+        origin_entrypoint="origin/server.go",
+        destination_language="python",
+        destination_files=(
+            "dest/main.py",
+            "dest/requirements.txt",
+            "dest/index.html",
+            "dest/Dockerfile",
+        ),
+        workflow_file="case-15-grpc-go-to-python.json",
+    ),
+    CaseExpectation(
+        slug="20-swift-to-dart",
+        case_id="20",
+        origin_language="swift",
+        origin_entrypoint="origin/Sources/Publisher/main.swift",
+        destination_language="dart",
+        destination_files=(
+            "dest/bin/server.dart",
+            "dest/pubspec.yaml",
+            "dest/public/index.html",
+            "dest/Dockerfile",
+        ),
+        workflow_file="case-20-swift-to-dart.json",
+    ),
 )
 
 

@@ -6,6 +6,13 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 
 ## ✅ Hitos Completados
 
+### `v4.7.0` — "Matriz +2: gRPC/CockroachDB, Mobile-backend" 🚀 Ready
+
+- [x] **Caso 15 — Go gRPC → Python gRPC + CockroachDB** (`8095`): protocolo binario + SQL distribuido.
+- [x] **Caso 20 — Swift → Dart/Shelf + Firestore emulator** (`8100`): mobile-backend server-side.
+- [x] **Matriz operativa 15 → 17 casos**; todos bajo la regla `8080 + id`.
+- [ ] **Caso 19 — F# → Clojure/XTDB** (`8099`): código completo; **verificación end-to-end pendiente** (bug de arranque AOT ya corregido).
+
 ### `v4.6.0` — "Matriz +3: JVM, RAG/pgvector, Grafos" 🚀 Ready
 
 - [x] **Caso 10 — Java Spring → Kotlin Ktor + PostgreSQL** (`8090`): bloqueante vs no-bloqueante en la JVM.
@@ -109,12 +116,12 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 
 ### 🧩 Tier 2/3 — Scaffolding también creado (cases 15-20)
 
-- [ ] **Caso 15 — gRPC**: Go server ↔ Python client + CockroachDB (protocolo binario + SQL distribuido).
+- [x] **Caso 15 — gRPC**: Go server ↔ Python client + CockroachDB (protocolo binario + SQL distribuido). ✅ v4.7.0
 - [x] **Caso 16 — GraphQL**: Apollo Server ↔ Hasura + TimescaleDB (schema-first vs DB-first + series temporales). ✅ v4.5.0
 - [x] **Caso 17 — IoT**: Rust MQTT publisher ↔ Node subscriber + InfluxDB (pub/sub + telemetría). ✅ v4.5.0
 - [x] **Caso 18 — Grafos**: Zig ↔ Crystal (Kemal) + Neo4j (lenguajes emergentes sin GC + Cypher). ✅ v4.6.0
 - [ ] **Caso 19 — Funcional**: F# (.NET) ↔ Clojure (Ring/Reitit) + XTDB (paradigma puro + DB bitemporal).
-- [ ] **Caso 20 — Mobile-backend**: Swift Vapor ↔ Dart Shelf + Firebase emulator local.
+- [x] **Caso 20 — Mobile-backend**: Swift ↔ Dart Shelf + Firestore emulator local. ✅ v4.7.0
 
 ### 🧪 Casos exploratorios (sin scaffolding — solo brainstorm)
 

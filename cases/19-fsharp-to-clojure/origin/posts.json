@@ -1,0 +1,16 @@
+[
+  {
+    "id": "post-19-001",
+    "text": "F# funcional-first emite hacia un receptor Clojure sobre la JVM.",
+    "channel": "fsharp",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  },
+  {
+    "id": "post-19-002",
+    "text": "XTDB es bitemporal e inmutable: cada put es una version, nunca sobrescribe.",
+    "channel": "xtdb",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  }
+]

@@ -1,7 +1,7 @@
 id: "15"
-name: "Go (gRPC server) -> n8n -> Python (gRPC client)"
+name: "Go (gRPC server) -> n8n -> Python (gRPC client) + CockroachDB"
 path: "cases/15-grpc-go-to-python"
-status: "planned"
+status: "ready"
 origin:
   language: "go"
   protocol: "grpc"
@@ -14,6 +14,7 @@ destination:
   url: "http://localhost:8095"
 database:
   engine: "cockroachdb"
-  notes: "SQL distribuido, Postgres wire-compatible"
+  version: "24"
+  notes: "SQL distribuido (Raft), wire-compatible con PostgreSQL"
 stack: ["go", "grpc", "protobuf", "n8n", "python", "fastapi", "cockroachdb"]
-description: "Protocolo binario gRPC + persistencia SQL distribuida con consenso Raft."
+description: "Protocolo binario gRPC (servidor Go + cliente Python) sobre CockroachDB. El receiver Python traduce el contrato REST del laboratorio a llamadas gRPC unary contra el servidor Go."
