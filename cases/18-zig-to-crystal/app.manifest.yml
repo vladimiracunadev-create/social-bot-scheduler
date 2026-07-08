@@ -1,10 +1,10 @@
 id: "18"
-name: "Zig -> n8n -> Crystal (Kemal) -> Neo4j"
+name: "Zig -> n8n -> Crystal (Kemal) + Neo4j"
 path: "cases/18-zig-to-crystal"
-status: "planned"
+status: "ready"
 origin:
   language: "zig"
-  entrypoint: "origin/publisher.zig"
+  entrypoint: "origin/src/main.zig"
 destination:
   language: "crystal"
   framework: "kemal"
@@ -12,7 +12,7 @@ destination:
   url: "http://localhost:8098"
 database:
   engine: "neo4j"
-  version: "5.x"
+  version: "5"
   query_language: "cypher"
-stack: ["zig", "n8n", "crystal", "kemal", "neo4j", "graph-database"]
-description: "Lenguajes emergentes (Zig sin GC, Crystal Ruby-like) + base de grafos."
+stack: ["zig", "n8n", "crystal", "kemal", "neo4j", "graph-database", "cypher"]
+description: "Lenguajes emergentes: emisor Zig (sin GC) y receptor Crystal/Kemal que persiste nodos (:Post) en el grafo Neo4j via su API HTTP transaccional (Cypher)."

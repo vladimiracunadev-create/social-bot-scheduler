@@ -1,0 +1,16 @@
+[
+  {
+    "id": "post-12-001",
+    "text": "RAG combina retrieval semantico con generacion: embeddings + contexto para el LLM.",
+    "channel": "rag",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  },
+  {
+    "id": "post-12-002",
+    "text": "pgvector indexa embeddings en Postgres y busca por similitud coseno con el operador <=>.",
+    "channel": "embeddings",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  }
+]

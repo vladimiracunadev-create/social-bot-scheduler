@@ -1,0 +1,16 @@
+[
+  {
+    "id": "post-18-001",
+    "text": "Zig: lenguaje de sistemas sin GC, control explicito de memoria.",
+    "channel": "zig",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  },
+  {
+    "id": "post-18-002",
+    "text": "Neo4j modela los posts como nodos de un grafo consultables con Cypher.",
+    "channel": "graph",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "post-10-001",
+    "text": "Spring Boot MVC bloqueante emite hacia el receptor Ktor no-bloqueante.",
+    "channel": "jvm",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  },
+  {
+    "id": "post-10-002",
+    "text": "Kotlin corrutinas + Ktor sobre Netty: alto throughput sin bloquear hilos.",
+    "channel": "kotlin",
+    "scheduled_at": "2025-01-01T00:00:00Z",
+    "published": false
+  }
+]

@@ -461,6 +461,169 @@ services:
       influxdb-17:
         condition: service_healthy
 
+  # ---------------------------------------------------------------------------
+  # Case 10: Java (Spring Boot) -> n8n -> Kotlin (Ktor) + PostgreSQL
+  # ---------------------------------------------------------------------------
+  db-postgres-10:
+    image: postgres:16-alpine
+    container_name: social-bot-db-postgres-10
+    profiles: ["case10", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.25"
+    environment:
+      - POSTGRES_DB=social_bot
+      - POSTGRES_PASSWORD=${CASE10_DB_PASSWORD:-change-me-case10-local}
+    networks:
+      - bot-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d social_bot"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 10s
+
+  dest-ktor-10:
+    build: ./cases/10-java-to-kotlin/dest
+    container_name: social-bot-dest-ktor-10
+    profiles: ["case10", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.35"
+    ports:
+      - "${HOST_BIND_IP:-127.0.0.1}:8090:8080"
+    environment:
+      - PORT=8080
+      - DB_HOST=db-postgres-10
+      - DB_NAME=social_bot
+      - DB_USER=postgres
+      - DB_PASS=${CASE10_DB_PASSWORD:-change-me-case10-local}
+    networks:
+      - bot-network
+    depends_on:
+      db-postgres-10:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://localhost:8080/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  # ---------------------------------------------------------------------------
+  # Case 12: Python (LLM) -> n8n -> FastAPI RAG + pgvector
+  # ---------------------------------------------------------------------------
+  db-pgvector-12:
+    image: pgvector/pgvector:pg16
+    container_name: social-bot-db-pgvector-12
+    profiles: ["case12", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.25"
+    environment:
+      - POSTGRES_DB=social_bot
+      - POSTGRES_PASSWORD=${CASE12_DB_PASSWORD:-change-me-case12-local}
+    networks:
+      - bot-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d social_bot"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 10s
+
+  dest-rag-12:
+    build: ./cases/12-python-to-rag/dest
+    container_name: social-bot-dest-rag-12
+    profiles: ["case12", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.25"
+    ports:
+      - "${HOST_BIND_IP:-127.0.0.1}:8092:8000"
+    environment:
+      - DB_HOST=db-pgvector-12
+      - DB_NAME=social_bot
+      - DB_USER=postgres
+      - DB_PASS=${CASE12_DB_PASSWORD:-change-me-case12-local}
+    networks:
+      - bot-network
+    depends_on:
+      db-pgvector-12:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request;urllib.request.urlopen('http://localhost:8000/health')\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  # ---------------------------------------------------------------------------
+  # Case 18: Zig -> n8n -> Crystal (Kemal) + Neo4j (grafo)
+  # ---------------------------------------------------------------------------
+  neo4j-18:
+    image: neo4j:5.24-community
+    container_name: social-bot-neo4j-18
+    profiles: ["case18", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: "0.50"
+        reservations:
+          memory: 512M
+    environment:
+      - NEO4J_AUTH=neo4j/${CASE18_DB_PASSWORD:-change-me-case18-local}
+      - NEO4J_server_memory_heap_initial__size=256m
+      - NEO4J_server_memory_heap_max__size=512m
+      - NEO4J_server_memory_pagecache_size=256m
+    networks:
+      - bot-network
+    # Chequeo TCP ligero del puerto HTTP (cypher-shell arranca una JVM y excede cualquier
+    # timeout razonable). La readiness real (auth + queries) la reintenta el receptor Crystal.
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/7474' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 40s
+
+  dest-crystal-18:
+    build: ./cases/18-zig-to-crystal/dest
+    container_name: social-bot-dest-crystal-18
+    profiles: ["case18", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.15"
+    ports:
+      - "${HOST_BIND_IP:-127.0.0.1}:8098:8080"
+    environment:
+      - PORT=8080
+      - NEO4J_URL=http://neo4j-18:7474
+      - NEO4J_USER=neo4j
+      - NEO4J_PASS=${CASE18_DB_PASSWORD:-change-me-case18-local}
+    networks:
+      - bot-network
+    depends_on:
+      neo4j-18:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://localhost:8080/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
   # Observability: optional profile, local-only by default
   prometheus:
     image: ${PROMETHEUS_IMAGE:-prom/prometheus:v2.54.1}

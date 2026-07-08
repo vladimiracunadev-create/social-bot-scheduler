@@ -1,53 +1,58 @@
-# 🧩 Caso 12: 🐍 Python (LLM Producer) -> 🌉 n8n -> ⚡ FastAPI + RAG
+# 🧩 Caso 12: 🧠 Python (LLM) → 🌉 n8n → ⚡ FastAPI RAG + pgvector
 
-[![Status: Planned](https://img.shields.io/badge/Status-Planned-orange.svg)]()
-[![Language: Python](https://img.shields.io/badge/Language-Python%203.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Framework: FastAPI](https://img.shields.io/badge/Framework-FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Vector DB: pgvector](https://img.shields.io/badge/Vector%20DB-pgvector-336791?logo=postgresql&logoColor=white)](https://github.com/pgvector/pgvector)
+[![Status: Ready](https://img.shields.io/badge/Status-Ready-brightgreen.svg)]()
+[![Language: Python](https://img.shields.io/badge/Language-Python%203.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Pattern: RAG](https://img.shields.io/badge/Pattern-RAG-10a37f)](https://www.pinecone.io/learn/retrieval-augmented-generation/)
+[![Database: pgvector](https://img.shields.io/badge/Database-pgvector-336791?logo=postgresql&logoColor=white)](https://github.com/pgvector/pgvector)
 
-> [!WARNING]
-> **🚧 Caso pendiente de implementación.** Solo scaffolding y diseño.
-
-El caso "estrella" de 2026: integración **RAG** (Retrieval-Augmented Generation). Un productor genera embeddings, n8n los rutea a un servicio FastAPI que indexa en `pgvector` y sirve queries semánticas.
+Pipeline **RAG (Retrieval-Augmented Generation)** a nivel de infraestructura: cada post se convierte en un **embedding** y se indexa en **pgvector**; el endpoint `/search` recupera los posts más parecidos a una consulta por **similitud coseno** — el paso *retrieval* que alimentaría a un LLM.
 
 ---
 
-## 🏗️ Arquitectura del Flujo (Propuesta)
+## 🏗️ Arquitectura del Flujo
 
-1. **📤 Origen**: `embed_producer.py` — chunks documentos, llama a un endpoint de embeddings (modelo local con `sentence-transformers` o API externa configurable).
-2. **🌉 Puente**: **n8n** — Webhook + transformación + batching.
-3. **📥 Destino**: `rag_service.py` (FastAPI) — endpoints `/index` y `/query`.
-4. **📁 Persistencia**: **PostgreSQL 16 + pgvector** (alternativa: **Qdrant**).
+1. **📤 Origen** — `origin/bot.py`: emisor Python (stdlib `urllib`) que reenvía los posts vencidos a n8n.
+2. **🌉 Puente** — **n8n**: guardrails canónicos (fingerprint → circuit breaker → idempotencia → HTTP con reintentos → DLQ).
+3. **📥 Destino** — `dest/main.py`: **FastAPI** que embebe el texto (vector 256d) y lo persiste en pgvector con `INSERT ... ON CONFLICT`.
+4. **📁 Persistencia** — **pgvector** (PostgreSQL 16 + extensión `vector`): búsqueda por operador coseno `<=>`.
+
+> [!NOTE]
+> El embedding es una **función hashing determinista** (bag-of-words → 256d, L2-normalizada): sin descargar modelos ni claves de API. Es un stand-in reproducible; se sustituye por `sentence-transformers` o un endpoint de embeddings **sin tocar el resto del flujo**.
+
+---
+
+## 🚀 Cómo levantarlo
+
+```bash
+docker-compose --profile case12 up -d      # pgvector + receptor FastAPI
+```
+
+| Servicio | Rol | Puerto host |
+| :--- | :--- | :---: |
+| `db-pgvector-12` | PostgreSQL 16 + pgvector | interno |
+| `dest-rag-12` | FastAPI RAG + dashboard | **8092** |
+
+- **Dashboard del caso** (con búsqueda semántica): <http://localhost:8092>
+- **Retrieval directo**: `curl "http://localhost:8092/search?q=embeddings"`
+- **Probar desde el dashboard maestro**: <http://localhost:8080> → tarjeta **CASE-12**.
 
 ---
 
 ## 🎯 Objetivos didácticos
 
-- Pipeline RAG end-to-end: chunking → embedding → indexing → retrieval.
-- Búsqueda por similitud coseno con índice HNSW en `pgvector`.
-- Diseño del schema: dimensión del embedding según modelo (384, 768, 1536…).
-- Patrón **batch ingestion** vs **streaming ingestion**.
-- *Sin* hardcodear API keys de proveedores externos — todo vía `.env`.
+- **RAG end-to-end**: embed → index → retrieve por similitud coseno.
+- **pgvector**: columnas `vector(N)` y el operador de distancia `<=>` en SQL.
+- **Desacople del modelo**: la función de embedding es un punto de extensión aislado.
 
 ---
 
-## ⚠️ Consideraciones de seguridad
+## ⚠️ Consideraciones (modelo del laboratorio)
 
-- Los embeddings pueden filtrar información sensible si se exponen → endpoint `/query` requiere auth.
-- Los modelos locales evitan exfiltración a terceros.
-- Validar tamaño máximo de payload para evitar DoS por documentos gigantes.
-
----
-
-## 📋 TODO de implementación
-
-- [ ] `requirements.txt` con `fastapi`, `pgvector`, `sentence-transformers`, `pydantic`.
-- [ ] Migración SQL para extensión `pgvector` y tabla `embeddings`.
-- [ ] Workflow n8n `case12-rag.json` con nodo Function para batching.
-- [ ] Tests con corpus de prueba reproducible.
-- [ ] Dashboard Apache mostrando top-k resultados de queries.
-- [ ] Perfil `case12` en `docker-compose.yml`.
+- Puerto `8092` = `8080 + 12` (regla canónica, ver [docs/PORTS.md](../../docs/PORTS.md)).
+- Bind a `127.0.0.1`; el receptor valida `id`/`text` (→ HTTP 422).
 
 ---
 
-*Pendiente — parte del roadmap v5.0. Caso de mayor diferenciación competitiva.*
+## ✅ Estado
+
+Implementado y verificado (build + boot + health + retrieval). Parte del **Lote 2** del roadmap v5.0 → v4.6.

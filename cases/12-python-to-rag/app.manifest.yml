@@ -1,19 +1,18 @@
 id: "12"
-name: "Python (LLM) -> n8n -> FastAPI + RAG"
+name: "Python (LLM) -> n8n -> FastAPI RAG + pgvector"
 path: "cases/12-python-to-rag"
-status: "planned"
+status: "ready"
 origin:
   language: "python"
-  framework: "sentence-transformers"
-  entrypoint: "origin/embed_producer.py"
+  framework: "urllib"
+  entrypoint: "origin/bot.py"
 destination:
   language: "python"
   framework: "fastapi"
   port: 8092
   url: "http://localhost:8092"
 database:
-  engine: "postgresql"
-  extension: "pgvector"
-  alternative: "qdrant"
-stack: ["python", "fastapi", "n8n", "pgvector", "sentence-transformers", "rag", "embeddings"]
-description: "Pipeline RAG: chunking, embeddings, indexacion vectorial y retrieval semantico."
+  engine: "pgvector"
+  version: "16"
+stack: ["python", "n8n", "fastapi", "rag", "embeddings", "pgvector", "postgresql"]
+description: "Pipeline RAG: el receptor FastAPI embebe cada post (vector 256d) en pgvector y expone busqueda semantica por similitud coseno (/search)."

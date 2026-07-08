@@ -6,6 +6,18 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 
 ## ✅ Hitos Completados
 
+### `v4.6.0` — "Matriz +3: JVM, RAG/pgvector, Grafos" 🚀 Ready
+
+- [x] **Caso 10 — Java Spring → Kotlin Ktor + PostgreSQL** (`8090`): bloqueante vs no-bloqueante en la JVM.
+- [x] **Caso 12 — Python → FastAPI RAG + pgvector** (`8092`): embeddings + retrieval semántico (`/search`).
+- [x] **Caso 18 — Zig → Crystal/Kemal + Neo4j** (`8098`): lenguajes emergentes + base de grafos (Cypher).
+- [x] **Matriz operativa 12 → 15 casos**; todos bajo la regla de puertos `8080 + id`.
+
+### `v4.5.1` — "Esquema de puertos canónico" 🔌 Ready
+
+- [x] **Regla `puerto = 8080 + id`** + `scripts/validate_ports.py` en CI: colisiones y desvíos fallan el build.
+- [x] **Renumeración** 09/11/16/17 a la fórmula; cAdvisor 8089→9091.
+
 ### `v4.5.0` — "Matriz +3: GraphQL/Hasura, BEAM, MQTT/IoT" 🚀 Ready
 
 - [x] **Caso 16 — Apollo GraphQL → Hasura + TimescaleDB** (`8096`): schema-first vs DB-first sobre hypertables.
@@ -89,9 +101,9 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 
 ### 🧩 Expansión de la Matriz Tecnológica (casos 10-14 — scaffolding ya creado)
 
-- [ ] **Caso 10 — JVM**: Java (Spring Boot) → Kotlin (Ktor) + PostgreSQL. Cubre el hueco enterprise JVM.
+- [x] **Caso 10 — JVM**: Java (Spring Boot) → Kotlin (Ktor) + PostgreSQL. Cubre el hueco enterprise JVM. ✅ v4.6.0
 - [x] **Caso 11 — BEAM**: Elixir → Erlang (Cowboy) + Mnesia. Modelo de actores y supervisión OTP. ✅ v4.5.0
-- [ ] **Caso 12 — RAG/IA**: Python LLM → FastAPI + pgvector. Pipeline embeddings + retrieval semántico.
+- [x] **Caso 12 — RAG/IA**: Python LLM → FastAPI + pgvector. Pipeline embeddings + retrieval semántico. ✅ v4.6.0
 - [ ] **Caso 13 — Streaming**: Node + Kafka → Go consumer + ClickHouse. Event streaming real + OLAP columnar.
 - [ ] **Caso 14 — BaaS**: Next.js 15 → Supabase (Edge Functions + RLS + Realtime). Primer caso BaaS de la matriz.
 
@@ -100,7 +112,7 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 - [ ] **Caso 15 — gRPC**: Go server ↔ Python client + CockroachDB (protocolo binario + SQL distribuido).
 - [x] **Caso 16 — GraphQL**: Apollo Server ↔ Hasura + TimescaleDB (schema-first vs DB-first + series temporales). ✅ v4.5.0
 - [x] **Caso 17 — IoT**: Rust MQTT publisher ↔ Node subscriber + InfluxDB (pub/sub + telemetría). ✅ v4.5.0
-- [ ] **Caso 18 — Grafos**: Zig ↔ Crystal (Kemal) + Neo4j (lenguajes emergentes sin GC + Cypher).
+- [x] **Caso 18 — Grafos**: Zig ↔ Crystal (Kemal) + Neo4j (lenguajes emergentes sin GC + Cypher). ✅ v4.6.0
 - [ ] **Caso 19 — Funcional**: F# (.NET) ↔ Clojure (Ring/Reitit) + XTDB (paradigma puro + DB bitemporal).
 - [ ] **Caso 20 — Mobile-backend**: Swift Vapor ↔ Dart Shelf + Firebase emulator local.
 

@@ -74,6 +74,24 @@ CASES = {
         "dest_url": "http://dest-mqtt-17:3000/webhook",
         "error_url": "http://dest-mqtt-17:3000/errors",
     },
+    "10": {
+        "name": "Java to Kotlin",
+        "webhook_path": "social-bot-scheduler-ktor",
+        "dest_url": "http://dest-ktor-10:8080/webhook",
+        "error_url": "http://dest-ktor-10:8080/errors",
+    },
+    "12": {
+        "name": "Python to RAG",
+        "webhook_path": "social-bot-scheduler-rag",
+        "dest_url": "http://dest-rag-12:8000/webhook",
+        "error_url": "http://dest-rag-12:8000/errors",
+    },
+    "18": {
+        "name": "Zig to Crystal",
+        "webhook_path": "social-bot-scheduler-graph",
+        "dest_url": "http://dest-crystal-18:8080/webhook",
+        "error_url": "http://dest-crystal-18:8080/errors",
+    },
 }
 
 
@@ -280,6 +298,9 @@ def main():
         "16": "case-16-graphql-to-hasura.json",
         "11": "case-11-elixir-to-erlang.json",
         "17": "case-17-mqtt-rust-to-node.json",
+        "10": "case-10-java-to-kotlin.json",
+        "12": "case-12-python-to-rag.json",
+        "18": "case-18-zig-to-crystal.json",
     }
 
     for case_id, config in CASES.items():

@@ -71,12 +71,15 @@ Si decides hacer un `docker-compose --profile full pull`, este es el impacto en 
 | **07** | Ruby | 128 MB | Cassandra | **2 GB** | **2.13 GB** | ~3.25 GB | 🔴 Pesado |
 | **08** | Flask | 128 MB | SQL Server | **2 GB** | **2.13 GB** | ~3.25 GB | 🔴 Pesado |
 | **09** | FastAPI Gateway | 256 MB | DuckDB (embebida) | 0 MB | **256 MB** | ~1.4 GB | 🟢 Ligero |
+| **10** | Kotlin/Ktor (JVM) | 512 MB | PostgreSQL 16 | 256 MB | **768 MB** | ~2.15 GB | 🟡 Medio |
 | **11** | Erlang/Cowboy | 256 MB | Mnesia (embebida) | 0 MB | **256 MB** | ~1.4 GB | 🟢 Ligero |
+| **12** | FastAPI RAG | 256 MB | pgvector | 256 MB | **512 MB** | ~1.65 GB | 🟢 Ligero |
 | **16** | Hasura + receiver | 448 MB | TimescaleDB | 512 MB | **960 MB** | ~1.9 GB | 🟡 Medio |
 | **17** | Node + Mosquitto | 160 MB | InfluxDB 1.8 | 512 MB | **672 MB** | ~1.85 GB | 🟡 Medio |
+| **18** | Crystal/Kemal | 128 MB | Neo4j 5 | 1 GB | **1.13 GB** | ~2.3 GB | 🟡 Medio |
 
 > [!NOTE]
-> **Casos 11, 16 y 17** (implementados en `v4.5.0`) son los primeros del roadmap v5.0. El **11** no añade contenedor de BD (Mnesia vive en el runtime BEAM). Los límites `deploy.resources` son valores medidos por `docker-compose.yml`, no estimaciones.
+> **Casos 11, 16, 17** (`v4.5.0`) y **10, 12, 18** (`v4.6.0`) son los del roadmap v5.0 ya implementados. El **11** no añade contenedor de BD (Mnesia vive en el runtime BEAM); el **18** (Neo4j) es el más pesado del grupo. Los límites `deploy.resources` son valores del `docker-compose.yml`.
 
 > [!IMPORTANT]
 > **Casos 07 y 08** son los únicos "pesados" del laboratorio: cada uno consume **~3.25 GB** por culpa de Cassandra/SQL Server. Si tu máquina tiene <8 GB de RAM disponibles, evita ejecutarlos en paralelo con otros casos.

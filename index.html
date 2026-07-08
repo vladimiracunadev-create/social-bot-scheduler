@@ -819,20 +819,21 @@
              ===================================================== -->
 
         <!-- Case 10: Java -> Kotlin -->
-        <div class="case-card" data-case="10" data-planned="true">
+        <div class="case-card" data-case="10">
             <div class="case-header">
                 <span class="case-id">CASE-10</span>
-                <span class="case-status status-planned">PLANNED</span>
+                <span class="case-status" id="status-10">READY</span>
             </div>
-            <h3 class="case-title">Java (Spring) ➔ n8n ➔ Kotlin (Ktor) <span class="ram-tag" title="Estimado, sin medir">💾 ~2.15 GB</span></h3>
-            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <h3 class="case-title">Java (Spring) ➔ n8n ➔ Kotlin (Ktor) <span class="ram-tag" title="Núcleo (1.13 GB) + PostgreSQL + Ktor JVM">💾 ~2.15 GB</span></h3>
             <div class="db-tag">Database: PostgreSQL</div>
             <div class="tech-stack">
                 <span class="tech-tag">JVM</span>
                 <span class="tech-tag">Spring Boot</span>
                 <span class="tech-tag">Ktor + Coroutines</span>
             </div>
-            <button class="btn-test" disabled>No disponible</button>
+            <button class="btn-test" id="btn-10">🔗 Probar Integración</button>
+            <div class="db-records" id="db-records-10" style="display:none"></div>
+            <div class="case-result" id="result-10"></div>
         </div>
 
         <!-- Case 11: Elixir -> Erlang -->
@@ -854,20 +855,21 @@
         </div>
 
         <!-- Case 12: Python -> RAG -->
-        <div class="case-card" data-case="12" data-planned="true">
+        <div class="case-card" data-case="12">
             <div class="case-header">
                 <span class="case-id">CASE-12</span>
-                <span class="case-status status-planned">PLANNED</span>
+                <span class="case-status" id="status-12">READY</span>
             </div>
-            <h3 class="case-title">Python (LLM) ➔ n8n ➔ FastAPI + RAG <span class="ram-tag" title="Estimado, sin medir">💾 ~2.65 GB</span></h3>
-            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <h3 class="case-title">Python (LLM) ➔ n8n ➔ FastAPI + RAG <span class="ram-tag" title="Núcleo (1.13 GB) + pgvector + FastAPI">💾 ~1.65 GB</span></h3>
             <div class="db-tag">Database: pgvector</div>
             <div class="tech-stack">
                 <span class="tech-tag">RAG</span>
                 <span class="tech-tag">Embeddings</span>
                 <span class="tech-tag">FastAPI</span>
             </div>
-            <button class="btn-test" disabled>No disponible</button>
+            <button class="btn-test" id="btn-12">🔗 Probar Integración</button>
+            <div class="db-records" id="db-records-12" style="display:none"></div>
+            <div class="case-result" id="result-12"></div>
         </div>
 
         <!-- Case 13: Node + Kafka -> Go -->
@@ -958,20 +960,21 @@
         </div>
 
         <!-- Case 18: Zig -> Crystal -->
-        <div class="case-card" data-case="18" data-planned="true">
+        <div class="case-card" data-case="18">
             <div class="case-header">
                 <span class="case-id">CASE-18</span>
-                <span class="case-status status-planned">PLANNED</span>
+                <span class="case-status" id="status-18">READY</span>
             </div>
-            <h3 class="case-title">Zig ➔ n8n ➔ Crystal (Kemal) <span class="ram-tag" title="Estimado, sin medir">💾 ~1.75 GB</span></h3>
-            <div class="planned-banner">🚧 Scaffolding only — sin implementación</div>
+            <h3 class="case-title">Zig ➔ n8n ➔ Crystal (Kemal) <span class="ram-tag" title="Núcleo (1.13 GB) + Neo4j (~1 GB) + Crystal">💾 ~2.3 GB</span></h3>
             <div class="db-tag">Database: Neo4j</div>
             <div class="tech-stack">
                 <span class="tech-tag">Zig (no GC)</span>
                 <span class="tech-tag">Crystal</span>
                 <span class="tech-tag">Cypher / Grafos</span>
             </div>
-            <button class="btn-test" disabled>No disponible</button>
+            <button class="btn-test" id="btn-18">🔗 Probar Integración</button>
+            <div class="db-records" id="db-records-18" style="display:none"></div>
+            <div class="case-result" id="result-18"></div>
         </div>
 
         <!-- Case 19: F# -> Clojure -->
@@ -1055,9 +1058,12 @@
             '07': { webhook: 'social-bot-scheduler-ruby',    port: 8087, origin: 'Rust',   dest: 'Ruby',            ram: '~3.25 GB ⚠️ pesado (Cassandra)' },
             '08': { webhook: 'social-bot-scheduler-flask',   port: 8088, origin: 'C#',     dest: 'Flask',           ram: '~3.25 GB ⚠️ pesado (SQL Server)' },
             '09': { webhook: 'social-bot-scheduler-gateway', port: 8089, origin: 'Python', dest: 'FastAPI Gateway', ram: '~1.4 GB'  },
+            '10': { webhook: 'social-bot-scheduler-ktor',    port: 8090, origin: 'Java (Spring)', dest: 'Kotlin/Ktor + Postgres', ram: '~2.15 GB' },
             '11': { webhook: 'social-bot-scheduler-beam',    port: 8091, origin: 'Elixir',        dest: 'Erlang/Cowboy + Mnesia', ram: '~1.4 GB' },
+            '12': { webhook: 'social-bot-scheduler-rag',     port: 8092, origin: 'Python (LLM)',  dest: 'FastAPI RAG + pgvector', ram: '~1.65 GB' },
             '16': { webhook: 'social-bot-scheduler-graphql', port: 8096, origin: 'Apollo GraphQL', dest: 'Hasura + TimescaleDB', ram: '~1.9 GB' },
-            '17': { webhook: 'social-bot-scheduler-mqtt',    port: 8097, origin: 'Rust (MQTT)',   dest: 'Node + InfluxDB',        ram: '~1.85 GB' }
+            '17': { webhook: 'social-bot-scheduler-mqtt',    port: 8097, origin: 'Rust (MQTT)',   dest: 'Node + InfluxDB',        ram: '~1.85 GB' },
+            '18': { webhook: 'social-bot-scheduler-graph',   port: 8098, origin: 'Zig',           dest: 'Crystal/Kemal + Neo4j',  ram: '~2.3 GB' }
         };
 
         const N8N_BASE = 'http://localhost:5678';

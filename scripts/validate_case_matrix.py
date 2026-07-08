@@ -181,6 +181,47 @@ EXPECTED_CASES = (
         ),
         workflow_file="case-17-mqtt-rust-to-node.json",
     ),
+    CaseExpectation(
+        slug="10-java-to-kotlin",
+        case_id="10",
+        origin_language="java",
+        origin_entrypoint="origin/src/main/java/socialbot/OrderPublisher.java",
+        destination_language="kotlin",
+        destination_files=(
+            "dest/src/main/kotlin/Application.kt",
+            "dest/build.gradle.kts",
+            "dest/Dockerfile",
+        ),
+        workflow_file="case-10-java-to-kotlin.json",
+    ),
+    CaseExpectation(
+        slug="12-python-to-rag",
+        case_id="12",
+        origin_language="python",
+        origin_entrypoint="origin/bot.py",
+        destination_language="python",
+        destination_files=(
+            "dest/main.py",
+            "dest/index.html",
+            "dest/Dockerfile",
+            "dest/requirements.txt",
+        ),
+        workflow_file="case-12-python-to-rag.json",
+    ),
+    CaseExpectation(
+        slug="18-zig-to-crystal",
+        case_id="18",
+        origin_language="zig",
+        origin_entrypoint="origin/src/main.zig",
+        destination_language="crystal",
+        destination_files=(
+            "dest/src/app.cr",
+            "dest/shard.yml",
+            "dest/public/index.html",
+            "dest/Dockerfile",
+        ),
+        workflow_file="case-18-zig-to-crystal.json",
+    ),
 )
 
 

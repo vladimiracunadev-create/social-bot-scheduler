@@ -3,7 +3,7 @@
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker Hub](https://img.shields.io/badge/Docker-Ready-blue.svg?logo=docker&logoColor=white)](https://hub.docker.com/)
-[![Version](https://img.shields.io/badge/version-4.5.1-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
+[![Version](https://img.shields.io/badge/version-4.6.0-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
 [![Security: Hardened](https://img.shields.io/badge/Security-Hardened-🛡️?color=red&labelColor=black)](SECURITY.md)
 
 Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. El **Social Bot Scheduler** actúa como una **Matriz Tecnológica** donde **n8n** orquesta la comunicación entre bots emisores y receptores políglotas.
@@ -70,28 +70,28 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 | **07** | `Rust` | **n8n** | `Ruby (Sinatra)` | 👁️ **Cassandra** | `case07` | [📐 Ver](cases/07-rust-to-ruby/ARCHITECTURE.md) |
 | **08** | `C# (.NET)` | **n8n** | `Flask` | 🏢 **SQL Server** | `case08` | [📐 Ver](cases/08-csharp-to-flask/ARCHITECTURE.md) |
 | **09** | `Python` | **n8n** | `FastAPI Gateway` | 🦆 **DuckDB** | `case09` | [📐 Ver](cases/09-python-to-gateway/ARCHITECTURE.md) |
+| **10** | `Java (Spring)` | **n8n** | `Kotlin (Ktor)` | 🐘 **PostgreSQL** | `case10` | [📐 Ver](cases/10-java-to-kotlin/ARCHITECTURE.md) |
 | **11** | `Elixir` | **n8n** | `Erlang (Cowboy)` | 🟣 **Mnesia** | `case11` | [📐 Ver](cases/11-elixir-to-erlang/ARCHITECTURE.md) |
+| **12** | `Python (LLM)` | **n8n** | `FastAPI RAG` | 🧠 **pgvector** | `case12` | [📐 Ver](cases/12-python-to-rag/ARCHITECTURE.md) |
 | **16** | `Apollo (GraphQL)` | **n8n** | `Hasura` | 📈 **TimescaleDB** | `case16` | [📐 Ver](cases/16-graphql-to-hasura/ARCHITECTURE.md) |
 | **17** | `Rust (MQTT)` | **n8n** | `Node + InfluxDB` | 📊 **InfluxDB** | `case17` | [📐 Ver](cases/17-mqtt-rust-to-node/ARCHITECTURE.md) |
+| **18** | `Zig` | **n8n** | `Crystal (Kemal)` | 🕸️ **Neo4j** | `case18` | [📐 Ver](cases/18-zig-to-crystal/ARCHITECTURE.md) |
 
 > [!TIP]
-> **Casos 11, 16 y 17** (`v4.5.0`) son el **Lote 1** del roadmap v5.0, ya operativos: `docker-compose --profile case11|case16|case17 up -d` (puertos `8091`, `8096`, `8097`).
+> **Lote 1** (`v4.5.0`): casos 11, 16, 17. **Lote 2** (`v4.6.0`): casos 10, 12, 18. Ya operativos vía `docker-compose --profile caseNN up -d`. Los puertos siguen la regla `8080 + id` (ver [docs/PORTS.md](docs/PORTS.md)).
 
 ### 🚧 Casos planificados (v5.0 — pendientes de implementación)
 
 | ID | 📤 Origen (Emisor) | 🌉 Puente | 📥 Destino (Receptor) | 📁 Persistencia | 📌 Estado |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **10** | `Java (Spring Boot)` | **n8n** | `Kotlin (Ktor)` | 🐘 **PostgreSQL** | 🚧 Planned |
-| **12** | `Python (LLM)` | **n8n** | `FastAPI + RAG` | 🧠 **pgvector** | 🚧 Planned |
 | **13** | `Node.js + Kafka` | **n8n** | `Go consumer` | 🟡 **ClickHouse** | 🚧 Planned |
 | **14** | `Next.js 15` | **n8n** | `Supabase Edge Fn` | 🟢 **Supabase (Postgres + RLS)** | 🚧 Planned |
 | **15** | `Go (gRPC)` | **n8n** | `Python (gRPC)` | 🪳 **CockroachDB** | 🚧 Planned |
-| **18** | `Zig` | **n8n** | `Crystal (Kemal)` | 🕸️ **Neo4j** | 🚧 Planned |
 | **19** | `F# (.NET)` | **n8n** | `Clojure (Ring)` | ⏳ **XTDB** | 🚧 Planned |
 | **20** | `Swift (Vapor)` | **n8n** | `Dart (Shelf)` | 🔥 **Firebase Emul.** | 🚧 Planned |
 
 > [!NOTE]
-> Los **8 casos restantes** (10, 12–15, 18–20) contienen únicamente scaffolding y documentación de diseño. Ver [docs/PLANNED_CASES.md](docs/PLANNED_CASES.md) como single source of truth, y [ROADMAP.md](ROADMAP.md) para priorización.
+> Los **5 casos restantes** (13, 14, 15, 19, 20) contienen únicamente scaffolding y documentación de diseño. Ver [docs/PLANNED_CASES.md](docs/PLANNED_CASES.md) como single source of truth, y [ROADMAP.md](ROADMAP.md) para priorización.
 
 ---
 
@@ -120,7 +120,7 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 | :--- | :--- | :--- |
 | **n8n** | `5678` | Alto (Orquestación maestra) |
 | **Grafana** | `3000` | Medio (Métricas y visualización) |
-| **Dashboards** | `8080-8093` | Bajo (Visualización de casos) |
+| **Dashboards** | `8080-8098` | Bajo (Visualización de casos) |
 | **cAdvisor** | `9091` | **Muy Alto** (Monta `/var/run/docker.sock`) |
 
 ---
@@ -133,7 +133,7 @@ El sistema no es solo una integración; es un catálogo vivo con **11 patrones a
 2. **Event-Driven**: Comunicación 100% vía Webhooks.
 3. **Mediador**: n8n centraliza la lógica empresarial.
 4. **Resiliencia**: Idempotencia, Circuit Breaker y DLQ.
-5. **Persistencia Políglota**: 12 motores de bases de datos distintos.
+5. **Persistencia Políglota**: 14 motores de bases de datos distintos.
 6. *...y más!* Lee el detalle en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ---

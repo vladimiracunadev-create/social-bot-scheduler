@@ -4,6 +4,25 @@ Todos los cambios notables en este proyecto se documentan sistemáticamente en e
 
 ---
 
+## 🚀 [4.6.0] — 2026-07-08
+
+### ✨ Matriz Tecnológica — Lote 2 de casos planificados implementados (10, 12, 18)
+
+Tres casos más pasan de **scaffolding** a **implementados y verificados** (build + boot + health con Docker). La matriz operativa crece de **12 → 15 casos**.
+
+#### Añadido
+
+- **Caso 10 · Java (Spring Boot) → n8n → Kotlin (Ktor) + PostgreSQL** (puerto `8090`): contraste JVM entre el modelo **bloqueante** (Spring MVC) y **no-bloqueante** (Ktor + corrutinas sobre Netty). Receptor empaquetado como fat-jar (Shadow).
+- **Caso 12 · Python (LLM) → n8n → FastAPI RAG + pgvector** (puerto `8092`): pipeline **RAG** — cada post se embebe (vector 256d) y se indexa en pgvector; `/search` hace retrieval por similitud coseno (`<=>`). Embedding hashing determinista, swappable por un modelo real.
+- **Caso 18 · Zig → n8n → Crystal (Kemal) + Neo4j** (puerto `8098`): lenguajes emergentes (Zig sin GC, Crystal compilado) + base de **grafos**. El receptor Crystal persiste nodos `(:Post)` vía la API HTTP transaccional de Neo4j con **Cypher**.
+
+#### Notas
+
+- Los tres casos respetan la regla de puertos canónica `8080 + id` (ver [docs/PORTS.md](docs/PORTS.md)) y pasan el validador `scripts/validate_ports.py`.
+- Cada caso es **independiente** (perfil `caseNN`) y **aditivo**: ningún servicio previo fue modificado.
+
+---
+
 ## 🔌 [4.5.1] — 2026-07-08
 
 ### 🧭 Esquema de puertos canónico + validador anti-colisión

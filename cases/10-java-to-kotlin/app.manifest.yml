@@ -1,11 +1,11 @@
 id: "10"
-name: "Java (Spring Boot) -> n8n -> Kotlin (Ktor)"
+name: "Java (Spring Boot) -> n8n -> Kotlin (Ktor) + PostgreSQL"
 path: "cases/10-java-to-kotlin"
-status: "planned"
+status: "ready"
 origin:
   language: "java"
   framework: "spring-boot"
-  entrypoint: "origin/OrderPublisher.java"
+  entrypoint: "origin/src/main/java/socialbot/OrderPublisher.java"
 destination:
   language: "kotlin"
   framework: "ktor"
@@ -14,5 +14,5 @@ destination:
 database:
   engine: "postgresql"
   version: "16"
-stack: ["java", "spring-boot", "n8n", "kotlin", "ktor", "postgresql"]
-description: "Cobertura JVM: integracion entre Spring Boot (bloqueante) y Ktor (no-bloqueante con corrutinas)."
+stack: ["java", "spring-boot", "n8n", "kotlin", "ktor", "postgresql", "jvm"]
+description: "Cobertura JVM: emisor Spring Boot (MVC bloqueante) y receptor Ktor (no-bloqueante con corrutinas) persistiendo en PostgreSQL."

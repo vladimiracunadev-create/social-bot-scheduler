@@ -1,0 +1,14 @@
+name: case18-crystal-receiver
+version: 1.0.0
+
+targets:
+  app:
+    main: src/app.cr
+
+dependencies:
+  kemal:
+    github: kemalcr/kemal
+    version: ~> 1.6.0
+
+crystal: ">= 1.10.0"
+license: MIT
