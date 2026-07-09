@@ -79,11 +79,15 @@ graph TB
             ECS3[ECS Fargate: Receptores]
         end
         subgraph "Private Subnets - Data"
-            RDS[(RDS Multi-AZ<br/>PostgreSQL/MySQL)]
-            DDB[(DynamoDB)]
+            RDS[(RDS/Aurora Multi-AZ<br/>PostgreSQL/MySQL<br/>+ pgvector/Timescale/RLS)]
+            DDB[(DynamoDB<br/>Mnesia/Firestore)]
             REDIS[(ElastiCache Redis)]
             DOCDB[(DocumentDB)]
             KEYS[(Keyspaces - Cassandra)]
+            NEP[(Neptune - Neo4j)]
+            TS[(Timestream - InfluxDB)]
+            MSK[[Amazon MSK - Kafka]]
+            IOT[[IoT Core - MQTT]]
         end
         ALB --> ECS1
         ALB --> ECS2
@@ -92,6 +96,9 @@ graph TB
         ECS2 --> RDS
         ECS3 --> DDB
         ECS3 --> REDIS
+        ECS3 --> NEP
+        ECS3 --> TS
+        IOT --> MSK --> ECS3
     end
 
     ECS1 -.-> SM[Secrets Manager]
@@ -156,6 +163,8 @@ graph TB
 | 📈 **InfluxDB** | **Amazon Timestream** | Métricas IoT/MQTT. |
 | 🕸️ **Neo4j** | **Amazon Neptune** | Base de datos de grafos (Cypher). |
 | 🔥 **Firestore** *(emulador)* | **DynamoDB** | Documental para mobile-backend. |
+| 📨 **Kafka (KRaft)** *(caso 13, bus de eventos)* | **Amazon MSK** o **MSK Serverless** | Streaming / event sourcing (patrón CQRS que alimenta a ClickHouse). |
+| 🦟 **Mosquitto (MQTT)** *(caso 17, broker IoT)* | **AWS IoT Core** | Ingesta de telemetría MQTT hacia el sink de series temporales. |
 | 🕰️ **XTDB** *(caso 19, verificación pendiente)* | **EC2/EKS self-managed** | Bitemporal (funcional puro). |
 
 ### 🌐 Red y Edge
@@ -285,7 +294,7 @@ graph LR
 
 ```mermaid
 graph LR
-    subgraph "Local Docker"
+    subgraph "Local Docker — Núcleo (01-09)"
         L1[MySQL]
         L2[MariaDB]
         L3[PostgreSQL]
@@ -297,14 +306,33 @@ graph LR
         L9[DuckDB]
     end
 
+    subgraph "Local Docker — Matriz (10-20)"
+        M1[Mnesia]
+        M2[pgvector]
+        M3[ClickHouse]
+        M4[Postgres+RLS]
+        M5[CockroachDB]
+        M6[TimescaleDB]
+        M7[InfluxDB]
+        M8[Neo4j]
+        M9[Firestore emu]
+        M10[Kafka]
+    end
+
     subgraph "AWS Managed"
         A1[RDS / Aurora MySQL]
-        A2[RDS / Aurora PostgreSQL]
+        A2[RDS / Aurora PostgreSQL<br/>+pgvector/Timescale/RLS]
         A3[DocumentDB]
         A4[ElastiCache Redis]
         A5[Keyspaces]
         A6[RDS SQL Server]
         A7[Athena + S3 Parquet]
+        A8[DynamoDB]
+        A9[ClickHouse self-managed]
+        A10[CockroachDB Cloud]
+        A11[Timestream]
+        A12[Neptune]
+        A13[Amazon MSK]
     end
 
     L1 --> A1
@@ -316,6 +344,16 @@ graph LR
     L7 --> A5
     L8 --> A6
     L9 --> A7
+    M1 --> A8
+    M9 --> A8
+    M2 --> A2
+    M4 --> A2
+    M6 --> A2
+    M3 --> A9
+    M5 --> A10
+    M7 --> A11
+    M8 --> A12
+    M10 --> A13
 ```
 
 ### 🔄 Estrategias de Carga Inicial
@@ -327,6 +365,13 @@ graph LR
 | Redis | **ElastiCache import RDB** | Restore desde S3 |
 | Cassandra → Keyspaces | **DSBulk** | Batch CSV |
 | SQLite | **Script Python** | One-shot ETL |
+| PostgreSQL + pgvector / TimescaleDB / RLS | **AWS DMS** o `pg_dump`/`pg_restore` | Full; recrear extensiones (`vector`, `timescaledb`) y políticas RLS en destino |
+| CockroachDB | `cockroach dump` → `IMPORT` (Cockroach Cloud) | Batch; o CDC vía changefeeds |
+| ClickHouse | `clickhouse-client` `INSERT ... FROM S3` (Parquet) | Bulk columnar desde S3 |
+| Neo4j → Neptune | **Neptune Bulk Loader** (CSV en S3) | Exportar nodos/aristas Cypher → CSV |
+| InfluxDB → Timestream | **Batch API** / script de reescritura | Migrar por *measurement* |
+| Kafka → Amazon MSK | **MirrorMaker 2** | Réplica de topics en vivo |
+| Firestore (emu) → DynamoDB | Script export → `BatchWriteItem` | One-shot por colección |
 
 ---
 
@@ -533,6 +578,9 @@ python verify_n8n.py --remote https://n8n.sbs.example.com
 | Backups + S3 | 100 GB | **~$10** |
 | Data Transfer | 200 GB out | **~$18** |
 | **TOTAL** | | **≈ $1,200/mes** |
+
+> [!NOTE]
+> Esta estimación cubre el **núcleo** (RDS/DocumentDB/ElastiCache). Desplegar la **matriz completa de 19 casos** añade servicios gestionados adicionales — orientativo: **Neptune** `db.r6g.large` (~$400), **Timestream** (~$50 según ingesta), **Amazon MSK** 2 brokers `kafka.m7g.large` (~$300), **Keyspaces** (serverless, por uso), y **CockroachDB/ClickHouse** self-managed en EC2/EKS (~$150-300). Presupuesta **+$900-1,100/mes** extra para la matriz completa en producción.
 
 ### 💸 Optimizaciones Recomendadas
 

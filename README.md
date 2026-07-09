@@ -3,7 +3,7 @@
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker Hub](https://img.shields.io/badge/Docker-Ready-blue.svg?logo=docker&logoColor=white)](https://hub.docker.com/)
-[![Version](https://img.shields.io/badge/version-4.8.0-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
+[![Version](https://img.shields.io/badge/version-4.9.0-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
 [![Security: Hardened](https://img.shields.io/badge/Security-Hardened-🛡️?color=red&labelColor=black)](SECURITY.md)
 
 Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. El **Social Bot Scheduler** actúa como una **Matriz Tecnológica** donde **n8n** orquesta la comunicación entre bots emisores y receptores políglotas.
@@ -108,7 +108,7 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 - **HTTP Security Headers**: Todos los servicios Apache sirven `X-Frame-Options`, `X-Content-Type-Options`, `Content-Security-Policy`, `Referrer-Policy` y `Permissions-Policy`. Listado de directorios deshabilitado.
 - **Caddy Edge Proxy**: HTTPS + Basic Auth + HSTS + CSP + Permissions-Policy completos.
 - **Supply Chain**: Trivy v0.35.0, pip-audit, Gitleaks, detección de Unicode bidi (CVE-2021-42574) y ofuscación base64 en CI.
-- **Dependabot**: PRs automáticos para 11 ecosistemas (pip, docker, gomod, cargo, npm, github-actions).
+- **Dependabot**: PRs automáticos para 12 manifiestos en 6 ecosistemas (pip, docker, gomod, cargo, npm, github-actions).
 - **Line endings**: `.gitattributes` garantiza LF en scripts shell para evitar `bad interpreter` en contenedores Linux.
 - **Proceso no-root**: Todos los contenedores corren como usuario sin privilegios.
 
@@ -133,7 +133,7 @@ El sistema no es solo una integración; es un catálogo vivo con **11 patrones a
 2. **Event-Driven**: Comunicación 100% vía Webhooks.
 3. **Mediador**: n8n centraliza la lógica empresarial.
 4. **Resiliencia**: Idempotencia, Circuit Breaker y DLQ.
-5. **Persistencia Políglota**: 17 motores de bases de datos distintos.
+5. **Persistencia Políglota**: 18+ motores de bases de datos distintos.
 6. *...y más!* Lee el detalle en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ---
