@@ -117,7 +117,7 @@ docker compose --profile edge up -d
 | Auditoría de otras dependencias (Go, Node, Rust, .NET, Ruby) | **CORREGIDO** | CI ejecuta `govulncheck` (Go), `pnpm audit --audit-level high` (Node), `dotnet list package --vulnerable` (.NET), `cargo audit` (Rust) y `bundler-audit` (Ruby) — **todos bloqueantes** desde v4.4.1. (P-04 v4.4.0; P-05/P-06 v4.4.1) |
 | SHA-pinning de GitHub Actions | **CORREGIDO** | Las 27 referencias `uses:` de `ci-cd.yml` y `wiki-sync.yml` están pinneadas a SHA de 40 chars con comentario `# vX`. Cierra la ventana de un tag reescrito maliciosamente; Dependabot sigue proponiendo bumps. (P-07, v4.4.1) |
 | Escaneo de imagen Docker | **OK** | Trivy `v0.35.0` filtra `CRITICAL,HIGH` antes del push. |
-| Dependabot | **CORREGIDO** | Creado `.github/dependabot.yml` con ecosistemas: `github-actions`, `pip` (hub + 3 cases), `docker`, `gomod` (3 cases), `cargo`, `npm` (2 cases). |
+| Dependabot | **CORREGIDO** | Creado `.github/dependabot.yml` con ecosistemas: `github-actions`, `pip` (hub + 3 cases), `docker`, `gomod` (3 cases), `cargo`, `npm` (2 cases, rastrea los `pnpm-lock.yaml` — Dependabot no tiene un ecosistema `pnpm` propio). |
 
 ---
 

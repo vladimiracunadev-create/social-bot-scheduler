@@ -4,6 +4,33 @@ Todos los cambios notables en este proyecto se documentan sistemáticamente en e
 
 ---
 
+## 📦 [4.9.1] — 2026-07-09
+
+### ✨ Migración de npm a pnpm en toda la superficie Node + follow-ups de coherencia
+
+Se estandariza el tooling JS del laboratorio en **pnpm** (el proyecto ya usaba `pnpm-lock.yaml`
+y `pnpm audit` en CI; quedaban usos de `npm` en Dockerfiles y runtime).
+
+#### Cambiado
+
+- **Dockerfiles Node** (casos 03, 13, 14, 16, 17): `npm install` → `corepack enable && corepack prepare pnpm@10.0.0 --activate` + `pnpm install --prod`.
+- **Firebase** (caso 20): `firebase-tools` global vía `pnpm add -g` con `PNPM_HOME` en PATH.
+- **docker-compose** (caso 05, runtime): el `command` usa corepack + `CI=1 pnpm install --prod`.
+- **packageManager** `pnpm@11.0.0` → `pnpm@10.0.0` en casos 03/04/05 (pnpm 11 exige Node ≥22.13 `node:sqlite`; las imágenes son node:20-alpine y el CI ya usa pnpm 10).
+- **Docs/comandos**: `npm` → `pnpm` en cases/16 README, `setup.py`, `killed.md`, TROUBLESHOOTING; se aclara que el ecosistema `npm` de Dependabot rastrea los `pnpm-lock.yaml`.
+
+#### Corregido
+
+- **`docs/API.md`**: el contrato de canal no era homogéneo — se documentan las dos formas (`channel` string en casos 10-20, `channels` array en el núcleo 01-06; 07-09 sin campo) y se marca la unificación como deuda técnica.
+- **README**: badge de versión, conteo de motores (17 → 18+), y Dependabot ("11 ecosistemas" → "12 manifiestos en 6 ecosistemas").
+- **`docs/AWS_MIGRATION.md`**: se completan los motores 10-20 (Kafka→MSK, MQTT→IoT Core, Neo4j→Neptune, InfluxDB→Timestream, CockroachDB, ClickHouse, pgvector) en tablas, diagramas y costos.
+
+#### Verificado
+
+- Builds Docker OK de todos los Dockerfiles pnpm; flujos end-to-end confirmados en casos 03, 05, 14, 16, 17 y 20 (incl. el CLI global firebase-tools arrancando el emulador en runtime). CI verde.
+
+---
+
 ## 🔍 [4.9.0] — 2026-07-08
 
 ### ✨ Auditoría Docker end-to-end de los 19 casos + sincronización documental
