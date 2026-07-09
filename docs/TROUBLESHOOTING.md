@@ -6,8 +6,8 @@ Si encuentras dificultades al orquestar los contenedores o ejecutar los bots pol
 
 ## 🏗️ Docker e Infraestructura
 
-### ❌ Error: `npm error code EJSONPARSE` (Caso 03)
-**Síntoma**: El contenedor `dest-node` falla con un error de "Unexpected token" al parsear el `package.json`.
+### ❌ Error al parsear `package.json` (`EJSONPARSE` / pnpm parse error) (Caso 03)
+**Síntoma**: El contenedor `dest-node` falla con un error de "Unexpected token" al parsear el `package.json` durante `pnpm install`.
 - **Causa**: Codificación de archivo incorrecta (UTF-16 en lugar de UTF-8).
 - **Solución**: Asegúrate de que `package.json` esté en **UTF-8 (sin BOM)**. Usa el comando:
   ```bash

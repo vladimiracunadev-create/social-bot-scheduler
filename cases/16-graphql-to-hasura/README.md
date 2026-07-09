@@ -43,8 +43,8 @@ Servicios que arranca el perfil `case16`:
 
 ```bash
 cd cases/16-graphql-to-hasura/origin
-npm install
-WEBHOOK_URL=http://localhost:5678/webhook/social-bot-scheduler-graphql npm start
+pnpm install
+WEBHOOK_URL=http://localhost:5678/webhook/social-bot-scheduler-graphql pnpm start
 # Playground GraphQL del emisor en http://localhost:4016
 ```
 

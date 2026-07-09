@@ -63,7 +63,7 @@ def setup():
     elif choice in ["3", "6"]:  # Go
         print("Asegúrate de tener Go instalado para ejecutar el emisor.")
     elif choice == "4":  # Node
-        run_cmd("npm install axios", cwd=origin_path)
+        run_cmd("pnpm add axios", cwd=origin_path)
     elif choice == "5":  # Laravel (PHP)
         print("Asegúrate de tener PHP instalado para ejecutar el comando Artisan.")
     elif choice == "7":  # Rust

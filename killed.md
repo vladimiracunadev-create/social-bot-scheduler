@@ -29,4 +29,4 @@ Todas las ejecuciones via `hub run` son registradas.
 
 ## 5. Prevención de Secretos
 - Uso de `detect-secrets` en el pre-commit.
-- Auditoría periódica de dependencias con `pip audit` y `npm audit`.
+- Auditoría periódica de dependencias con `pip audit` y `pnpm audit`.

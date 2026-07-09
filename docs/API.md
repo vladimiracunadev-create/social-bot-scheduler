@@ -10,6 +10,21 @@ Todas las integraciones utilizan el protocolo **HTTPS/POST** para el envío de p
 
 ### Estructura del Payload Estándar
 
+Campos universales en toda la matriz: `id`, `text`, `scheduled_at`. El campo de canal tiene **dos formas** según la generación del caso (ver nota abajo).
+
+**Matriz políglota (casos 10–20) — canal singular:**
+
+```json
+{
+  "id": "uuid-v4-string",
+  "text": "Contenido del post o mensaje a programar",
+  "channel": "graphql",
+  "scheduled_at": "2026-04-06T14:30:00Z"
+}
+```
+
+**Núcleo original (casos 01–06) — multi-canal (array):**
+
 ```json
 {
   "id": "uuid-v4-string",
@@ -25,10 +40,14 @@ Todas las integraciones utilizan el protocolo **HTTPS/POST** para el envío de p
 
 | Atributo | Tipo | Restricción | Descripción |
 | :--- | :--- | :--- | :--- |
-| `id` | `UUID` | Único | Identificador de trazabilidad para evitar duplicados en n8n. |
+| `id` | `UUID` / `String` | Único | Identificador de trazabilidad para evitar duplicados en n8n (fingerprint/idempotencia). |
 | `text` | `String` | Máx. 280-3000 | El contenido real que será publicado en el destino final. |
-| `channels` | `Array` | No vacío | Lista de identificadores que n8n usará para el ruteo. |
+| `channel` | `String` | — | Identificador de canal único. **Contrato de los casos 10–20.** |
+| `channels` | `Array` | No vacío | Lista de canales para ruteo multi-destino. **Contrato del núcleo (casos 01–06).** |
 | `scheduled_at` | `DateTime` | ISO8601 | Marca de tiempo original de programación del evento. |
+
+> [!NOTE]
+> El laboratorio arrastra **dos convenciones de canal**: el núcleo original (01–06) usa `channels` (array, multi-destino); la matriz políglota (10–20) usa `channel` (string). Los casos 07–09 no incluyen campo de canal. Unificar ambas convenciones queda como deuda técnica pendiente.
 
 ---
 

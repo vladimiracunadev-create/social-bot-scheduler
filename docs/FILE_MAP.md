@@ -242,7 +242,7 @@ cases/XX-origen-to-destino/
 |-------------|-------------|
 | `.github/workflows/ci-cd.yml` | Pipeline principal: linting, tests, auditoría de seguridad (Trivy, Gitleaks, pip-audit), detección de bidi/ofuscación (`supply-chain-checks`) y deploy a GHCR. |
 | `.github/workflows/wiki-sync.yml` | Sincronización de `docs/wiki/` al GitHub Wiki. |
-| `.github/dependabot.yml` | Actualizaciones automáticas de dependencias para 11 ecosistemas: `github-actions`, `pip` (hub + 3 cases), `docker`, `gomod` (3 cases), `cargo`, `npm` (2 cases). Abre PRs con `security` label. |
+| `.github/dependabot.yml` | Actualizaciones automáticas de dependencias para 12 manifiestos en 6 ecosistemas: `github-actions`, `pip` (hub + 3 cases), `docker`, `gomod` (3 cases), `cargo`, `npm` (2 cases, lockfiles pnpm). Abre PRs con `security` label. |
 
 ---
 

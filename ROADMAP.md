@@ -71,7 +71,7 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 ### `v4.2.0` — "Auditoría de Seguridad de 8 Capas" 🛡️ Ready
 
 - [x] **HTTP Security Headers**: `X-Frame-Options`, `X-Content-Type-Options`, `Content-Security-Policy`, `Referrer-Policy`, `Permissions-Policy` y `Options -Indexes` en todos los servicios Apache y en el edge proxy Caddy.
-- [x] **Dependabot**: Configurado para 11 ecosistemas (pip, docker, gomod, cargo, npm, github-actions).
+- [x] **Dependabot**: Configurado para 12 manifiestos en 6 ecosistemas (pip, docker, gomod, cargo, npm, github-actions).
 - [x] **Line endings LF**: `.gitattributes` fuerza LF en scripts shell/Python/Go para eliminar errores `bad interpreter` en Windows.
 - [x] **Detección Trojan Source**: CI detecta caracteres Unicode bidireccionales (CVE-2021-42574) en todo el código fuente.
 - [x] **Detección de ofuscación**: CI detecta patrones `eval(base64_decode(...))` y equivalentes.
