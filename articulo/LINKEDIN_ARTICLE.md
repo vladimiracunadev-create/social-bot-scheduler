@@ -1,4 +1,4 @@
-# 🚀 Construí un Ecosistema con 8 Lenguajes, 8 Bases de Datos y 11 Patrones Arquitectónicos. Esto es lo que aprendí.
+# 🚀 Construí un Ecosistema con 19 Lenguajes, 18 Bases de Datos y 11 Patrones Arquitectónicos. Esto es lo que aprendí.
 
 ---
 
@@ -6,7 +6,7 @@ En el mundo real, los sistemas no hablan un solo idioma. 🌐
 
 Tu equipo de backend usa **Python**. El equipo de pagos, **Go**. El legacy está en **PHP** y el nuevo microservicio arrancó en **Rust**. Cada uno con su base de datos favorita. Y de alguna manera, todo tiene que funcionar junto.
 
-Decidí construir un **laboratorio de integración industrial** que simula exactamente este escenario. El resultado: **Social Bot Scheduler**, un ecosistema donde 8 lenguajes de programación se comunican entre sí a través de un bus de orquestación, persistiendo datos en 8 motores de bases de datos distintos.
+Decidí construir un **laboratorio de integración industrial** que simula exactamente este escenario. El resultado: **Social Bot Scheduler**, un ecosistema donde ~19 lenguajes de programación se comunican entre sí a través de un bus de orquestación, persistiendo datos en 18+ motores de bases de datos distintos.
 
 No es un tutorial. Es una demostración funcional de **ingeniería de resiliencia a escala**. 🏗️
 
@@ -27,8 +27,19 @@ Cada fila es un sistema completo e independiente: un emisor, un puente de orques
 | **07** | Rust (reqwest) | Ruby / Sinatra | 👁️ **Cassandra** |
 | **08** | C# (.NET) | Flask | 🏢 **SQL Server** |
 | **09** | Python | FastAPI Gateway | 🦆 **DuckDB** |
+| **10** | Java (Spring) | Kotlin (Ktor) | 🐘 **PostgreSQL** |
+| **11** | Elixir | Erlang (Cowboy) | 🧬 **Mnesia** |
+| **12** | Python (LLM) | FastAPI RAG | 🧠 **pgvector** |
+| **13** | Node.js + Kafka | Go Consumer | 📊 **ClickHouse** |
+| **14** | Next.js | Supabase (PostgREST) | 🔐 **Postgres + RLS** |
+| **15** | Go (gRPC) | Python (gRPC) | 🪳 **CockroachDB** |
+| **16** | Apollo GraphQL | Hasura | ⏱️ **TimescaleDB** |
+| **17** | Rust (MQTT) | Node.js | 📈 **InfluxDB** |
+| **18** | Zig | Crystal (Kemal) | 🕸️ **Neo4j** |
+| **19** 🧪 | F# | Clojure | 🕰️ **XTDB** *(código listo, verificación pendiente)* |
+| **20** | Swift | Dart (Shelf) | 🔥 **Firestore** |
 
-**12 flujos. 20+ contenedores Docker. Todo orquestado.** 🛡️
+**19 flujos operativos + 1 en verificación (caso 19). 50+ contenedores Docker. Todo orquestado.** 🛡️
 
 ---
 
@@ -37,7 +48,7 @@ Cada fila es un sistema completo e independiente: un emisor, un puente de orques
 Lo que comenzó como un proyecto de integración terminó siendo un catálogo vivo de patrones de ingeniería de software:
 
 ### 1. 🏗️ Microservices Architecture
-Cada caso es un servicio independiente con su propio contenedor, runtime y límites de recursos. El `docker-compose.yml` define una infraestructura masiva de **20+ servicios**.
+Cada caso es un servicio independiente con su propio contenedor, runtime y límites de recursos. El `docker-compose.yml` define una infraestructura masiva de **50+ servicios**.
 
 ### 2. ⚡ Event-Driven / Webhooks
 Comunicación 100% asíncrona. El emisor **nunca** conoce la existencia del receptor; solo dispara un evento hacia el puente inteligente.

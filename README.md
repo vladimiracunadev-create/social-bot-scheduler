@@ -129,7 +129,7 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 
 El sistema no es solo una integración; es un catálogo vivo con **11 patrones arquitectónicos**:
 
-1. **Microservicios**: 20+ contenedores independientes.
+1. **Microservicios**: 40+ contenedores independientes.
 2. **Event-Driven**: Comunicación 100% vía Webhooks.
 3. **Mediador**: n8n centraliza la lógica empresarial.
 4. **Resiliencia**: Idempotencia, Circuit Breaker y DLQ.

@@ -22,7 +22,7 @@ Dependiendo de tu sistema operativo, puedes invocar al orquestador mediante los 
 ## 🏗️ Funcionalidades del HUB
 
 ### 1. Diagnóstico de Salud (Doctor)
-Verifica que el daemon de Docker esté activo y que todos los servicios necesarios (incluyendo las 8 DBs) estén configurados.
+Verifica que el daemon de Docker esté activo y que todos los servicios necesarios (incluyendo los 18+ motores de base de datos) estén configurados.
 ```bash
 python hub.py doctor
 ```
@@ -70,4 +70,4 @@ destination:
 ```
 
 ---
-*Documentación técnica del orquestador v4.0 — Social Bot Scheduler*
+*Documentación técnica del orquestador v4.9.0 — Social Bot Scheduler*

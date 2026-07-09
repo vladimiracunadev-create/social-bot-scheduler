@@ -9,7 +9,7 @@ Esta guía proporciona las instrucciones operativas para interactuar con el labo
 Asegúrate de haber configurado tu entorno siguiendo la [Guía de Instalación](../../docs/INSTALL.md).
 
 ### 🖥️ Interacción con el HUB (CLI)
-El **HUB** es la herramienta maestra para gestionar la matriz de 19 casos implementados (el [1 caso planificado](../PLANNED_CASES.md) aún no son operables desde el HUB):
+El **HUB** es la herramienta maestra para gestionar la matriz de 19 casos operativos (solo el [caso 19](../PLANNED_CASES.md) aún no es operable desde el HUB, a la espera de su verificación end-to-end):
 - **Windows**: `.\hub.ps1 doctor`
 - **Linux / macOS**: `./hub.sh doctor`
 
@@ -44,7 +44,7 @@ Para desarrolladores que deseen depurar el código de los emisores:
 
 ## 🏗️ Gestión de Infraestructura Docker
 
-Operar 20+ contenedores requiere comandos precisos:
+Operar 50+ contenedores requiere comandos precisos:
 - **🎛️ Activar Todo (`full`)**: `make up` o `python hub.py up`.
 - **🛡️ Núcleo Seguro**: `make up-secure` (n8n + Dashboard).
 - **📊 Monitoreo**: `make up-observability` (Prometheus/Grafana).
@@ -61,4 +61,4 @@ Operar 20+ contenedores requiere comandos precisos:
 - **Check Security**: `python scripts/check_runtime_security.py`
 
 ---
-*Manual de operaciones v4.0 — Social Bot Scheduler*
+*Manual de operaciones v4.9.0 — Social Bot Scheduler*

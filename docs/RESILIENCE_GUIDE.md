@@ -6,7 +6,7 @@ Esta guía detalla la implementación completa de resiliencia en el Social Bot S
 
 ## 📊 Resumen Ejecutivo
 
-**Cobertura:** 100% en todos los casos (01-09)
+**Cobertura:** 100% en los 19 casos implementados (01-18 y 20)
 
 | Mecanismo | Descripción | Estado |
 |-----------|-------------|--------|

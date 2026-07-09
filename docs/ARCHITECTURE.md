@@ -89,7 +89,7 @@ graph LR
 
 ### 1. 🏗️ Microservices Architecture
 El sistema se descompone en servicios independientes, cada uno en su propio contenedor Docker.
-- **Evidencia**: `docker-compose.yml` define **~50+ servicios** (19 casos × origen + receptor + BD, más núcleo y observabilidad).
+- **Evidencia**: `docker-compose.yml` define **~46 servicios** (perfil `full`: 19 casos con receptor + BD, más núcleo n8n y observabilidad).
 - **Beneficio**: Aislamiento total. Un fallo en el Caso 02 no afecta al resto.
 
 ### 2. ⚡ Event-Driven / Webhooks
@@ -138,7 +138,7 @@ El despliegue soporta múltiples entornos:
 
 | # | Categoría | Patrón | Implementación Principal |
 | :--- | :--- | :--- | :--- |
-| 1 | Estructura | **Microservices** | 20+ Contenedores Docker |
+| 1 | Estructura | **Microservices** | 40+ Contenedores Docker |
 | 2 | Comunicación | **Webhooks** | n8n HTTP Broker |
 | 3 | Datos | **Polyglot Persistence** | **18+ Motores de BD distintos** |
 | 4 | Resiliencia | **Guardrails** | Circuit Breaker & Idempotency |

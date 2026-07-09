@@ -15,12 +15,12 @@ docker-compose up -d
 **Servicios activos**: `n8n` y el `Master Dashboard`.
 
 ### 🚀 Opción B: Laboratorio Completo (Demo)
-Activa la matriz completa de 19 casos implementados y el stack de observabilidad. (El [1 caso planificado](PLANNED_CASES.md) no se levanta: solo existen como scaffolding documental.)
+Activa la matriz completa de 19 casos implementados y el stack de observabilidad. (El [1 caso planificado](PLANNED_CASES.md) —caso 19— no se levanta: su código está presente pero aún sin verificar end-to-end.)
 ```bash
 cp .env.demo.example .env
 make up
 ```
-**Efecto**: Levanta 20+ contenedores con persistencia políglota y métricas en tiempo real.
+**Efecto**: Levanta 40+ contenedores con persistencia políglota y métricas en tiempo real.
 
 ---
 
@@ -92,4 +92,4 @@ Aunque el laboratorio se valida principalmente en Docker, incluimos manifiestos 
 - **Hardening**: Revisa las guías de [Seguridad Runtime](./RUNTIME_SECURITY.md) antes del despliegue.
 
 ---
-*Manual de despliegue v4.0 — Social Bot Scheduler*
+*Manual de despliegue v4.9.0 — Social Bot Scheduler*

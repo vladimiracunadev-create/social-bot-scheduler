@@ -14,13 +14,13 @@ El sistema implementa una **defensa en profundidad** con 4 capas críticas de pr
 4.  **📥 Dead Letter Queue (DLQ)**: Captura fallos definitivos para auditoría y recuperación.
 
 > [!IMPORTANT]
-> Todos los casos (01-09) comparten una lógica de protección centralizada ubicada en el directorio `scripts/`.
+> Todos los casos implementados (01-18 y 20) comparten una lógica de protección centralizada ubicada en el directorio `scripts/`.
 
 ---
 
 ## 1. ✅ Idempotencia (SQLite)
 
-- **Estado**: Operativo Globalmente (Casos 01-09)
+- **Estado**: Operativo Globalmente (19 casos implementados: 01-18 y 20)
 - **Script**: [`scripts/check_idempotency.py`](../scripts/check_idempotency.py)
 - **Motor**: SQLite (Transacciones atómicas y alta concurrencia)
 
@@ -33,7 +33,7 @@ Previene que un post sea procesado más de una vez, incluso si el emisor reinten
 
 ## 2. ⚡ Circuit Breaker (Cortafuegos)
 
-- **Estado**: Operativo Globalmente (Casos 01-09)
+- **Estado**: Operativo Globalmente (19 casos implementados: 01-18 y 20)
 - **Script**: [`scripts/circuit_breaker.py`](../scripts/circuit_breaker.py)
 - **Almacenamiento**: `scripts/shared/circuit_state.json`
 
@@ -49,7 +49,7 @@ Protege la salud del sistema abriendo el circuito si un destino falla repetidame
 
 ## 3. 📥 Dead Letter Queue (DLQ)
 
-- **Estado**: Operativo Globalmente (Casos 01-09)
+- **Estado**: Operativo Globalmente (19 casos implementados: 01-18 y 20)
 - **Endpoint**: `/errors` en cada microservicio de destino.
 
 Si una publicación falla tras agotar todos los reintentos, el payload completo se deriva al DLQ.
@@ -85,7 +85,7 @@ python hub.py doctor
 
 | Caso | Idempotencia | Circuit Breaker | DLQ | Reintentos |
 | :--- | :---: | :---: | :---: | :---: |
-| **01-08** | ✅ | ✅ | ✅ | ✅ |
+| **01-18 y 20** (19 implementados) | ✅ | ✅ | ✅ | ✅ |
 | **09 (Gateway)** | ✅ | ✅ | ✅ | ✅ |
 
 > [!TIP]

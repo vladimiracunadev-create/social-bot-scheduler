@@ -16,7 +16,7 @@ Este documento detalla el consumo de recursos (Disco y RAM) del proyecto **Socia
 > Tu entorno actual puede estar "incompleto" si solo has descargado algunos servicios. Para ejecutar el laboratorio completo, debes considerar el **Tamaño Real Total**.
 
 ### 🧹 Gestión de Recursos y Limpieza
-Dada la alta demanda técnica de este repositorio (8 bases de datos simultáneas), es vital saber cómo liberar recursos:
+Dada la alta demanda técnica de este repositorio (múltiples bases de datos simultáneas), es vital saber cómo liberar recursos:
 - Consulta la [Guía de Recursos Docker](file:///c:/dev/social-bot-scheduler/docs/DOCKER_RESOURCES.md) para ver el reporte de estrés y límites.
 - Usa `make clean` o `python hub.py clean` para una limpieza estándar.
 - Usa `docker system prune -a -f --volumes` para una limpieza total (Deep Cleanup).
@@ -31,7 +31,7 @@ Este documento detalla el consumo de recursos (Disco y RAM) del proyecto **Socia
 | Escenario | Almacenamiento (Disco) | RAM Sugerida | Notas |
 |-----------|------------------------|--------------|-------|
 | **Estado Parcial** | Variable (~600 MB - 1 GB) | 4 GB | Solo servicios básicos o un caso individual. |
-| **Repositorio Total** | **~8.0 GB** | **16 GB** | Los 19+ servicios, 8 bases de datos externas, 1 gateway con DuckDB y herramientas de observabilidad. |
+| **Núcleo (9 casos)** | **~8.0 GB** | **16 GB** | Los servicios del núcleo, sus bases de datos externas, 1 gateway con DuckDB y observabilidad. La matriz completa de 19 casos añade más motores (Kafka, ClickHouse, CockroachDB, Neo4j, TimescaleDB, etc.) — ver la tabla de RAM **medida por caso** más abajo. |
 
 ---
 
@@ -50,7 +50,7 @@ Si decides hacer un `docker-compose --profile full pull`, este es el impacto en 
 
 ### 💾 Volúmenes y Persistencia (Total: ~1.2 GB)
 - **Caché de Construcción**: ~500 MB (Capas intermedias de Dockerfiles personalizados).
-- **Datos de DBs**: ~550 MB (Espacio reservado para persistencia de los 8 motores externos y DuckDB embebida).
+- **Datos de DBs**: ~550 MB (Espacio reservado para persistencia de los motores externos del núcleo y DuckDB embebida).
 - **Configuración**: ~200 MB (Logs, n8n workflows, grafana dashboards).
 
 ---

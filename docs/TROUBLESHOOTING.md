@@ -96,4 +96,4 @@ make up
 ```
 
 ---
-*Manual de resolución de incidentes v4.0 — Social Bot Scheduler*
+*Manual de resolución de incidentes v4.9.0 — Social Bot Scheduler*

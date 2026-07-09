@@ -54,4 +54,4 @@ La seguridad no es solo evitar ataques, sino garantizar que el sistema se recupe
 - **📥 DLQ (Dead Letter Queue)**: Captura fallos irrecuperables para auditoría posterior.
 
 ---
-*Manual de seguridad industrial v4.0 — Social Bot Scheduler*
+*Manual de seguridad industrial v4.9.0 — Social Bot Scheduler*

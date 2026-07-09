@@ -20,8 +20,8 @@ Bienvenidos al centro de conocimiento del **Social Bot Scheduler**. Este laborat
 
 Este no es un producto final, sino un **Ecosistema de Experimentación** que resuelve tres desafíos críticos en arquitecturas modernas:
 
-1.  **Interoperabilidad**: Cómo lograr que 8 lenguajes hablen el mismo idioma sin acoplamiento rígido.
-2.  **Persistencia Políglota**: Gestión de 8 motores de bases de datos bajo un orquestador único.
+1.  **Interoperabilidad**: Cómo lograr que 19 lenguajes hablen el mismo idioma sin acoplamiento rígido.
+2.  **Persistencia Políglota**: Gestión de 18+ motores de bases de datos bajo un orquestador único.
 3.  **Seguridad Proactiva**: Implementación de defensas contra ataques de cadena de suministro y exposición accidental.
 
 ---

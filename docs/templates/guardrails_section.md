@@ -12,7 +12,7 @@ Este caso incluye mecanismos de resiliencia en la capa de n8n:
 - Esto permite auditoría y reintentos manuales posteriores.
 
 ### Idempotencia
-- Implementada globalmente en todos los casos (01-09) mediante `scripts/check_idempotency.py`.
+- Implementada globalmente en los 19 casos implementados (01-18 y 20) mediante `scripts/check_idempotency.py`.
 - Genera un hash del payload y lo persiste en SQLite (`fingerprints.db`).
 - Si el hash ya existe, retorna `200 OK` sin reenviar el mensaje.
 

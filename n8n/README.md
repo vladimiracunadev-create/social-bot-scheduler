@@ -5,7 +5,7 @@ Esta carpeta contiene la configuracion necesaria para que **n8n se auto-configur
 ## Contenido
 
 ### `workflows/`
-Los 12 workflows de integracion preconfigurados, listos para importacion automatica.
+Los 19 workflows de integracion preconfigurados, listos para importacion automatica.
 
 ## Como funciona
 

@@ -62,7 +62,7 @@ python verify_n8n.py
 ```
 **Puntos de control**:
 - [ ] Salud del endpoint `/healthz`.
-- [ ] Estado de los 12 flujos de la matriz (Active/Inactive).
+- [ ] Estado de los 20 flujos de la matriz (Active/Inactive).
 - [ ] Conectividad con la base de datos interna.
 
 ---
@@ -115,4 +115,4 @@ Si el Caddy Reverse Proxy está en uso (`make up-edge`):
 - **Entorno**: Si no tienes Docker disponible, limita las pruebas a `python -m py_compile` y validación estática de scripts.
 
 ---
-*Manual de verificación v4.0 — Social Bot Scheduler*
+*Manual de verificación v4.9.0 — Social Bot Scheduler*

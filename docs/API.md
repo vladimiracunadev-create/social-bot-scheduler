@@ -43,4 +43,4 @@ Todas las integraciones utilizan el protocolo **HTTPS/POST** para el envío de p
 > **Hardening de API**: En entornos de producción, todas las peticiones deben incluir un encabezado `X-API-KEY` o `Authorization: Bearer` para validar la autenticidad del origen.
 
 ---
-*Especificación técnica v4.0 — Social Bot Scheduler*
+*Especificación técnica v4.9.0 — Social Bot Scheduler*

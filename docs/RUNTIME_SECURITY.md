@@ -53,7 +53,7 @@ Por defecto, todos los servicios publican sus puertos exclusivamente en el inter
 | **n8n** | `5678` | Loopback / Proxy Autenticado |
 | **Grafana** | `3000` | Loopback |
 | **cAdvisor** | `9091` | **NUNCA EXPONER**. Acceso al Socket Docker. |
-| **Gateways** | `8080-8093`| Loopback |
+| **Gateways** | `8081-8100`| Loopback |
 
 ---
 
@@ -63,7 +63,7 @@ El sistema orquesta más de 40 variables de entorno críticas que deben gestiona
 
 ### Componentes Clave:
 - **Orquestación**: `N8N_ENCRYPTION_KEY`, `N8N_OWNER_PASSWORD`.
-- **Persistencia**: `CASE[01-08]_DB_PASSWORD`.
+- **Persistencia**: `CASE[01-20]_DB_PASSWORD`.
 - **Integración**: `INTEGRATION_API_KEY`, `GITHUB_TOKEN`.
 - **Edge**: `EDGE_BASIC_AUTH_HASH` (Bcrypt).
 

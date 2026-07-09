@@ -15,12 +15,12 @@ El objetivo fundamental no es crear un producto comercial, sino un **entorno de 
 
 ## ⛰️ Desafíos de Ingeniería (Challenges)
 
-Durante el desarrollo de la matriz de 19 casos implementados (con [1 más planificado](PLANNED_CASES.md)), enfrentamos retos técnicos significativos:
+Durante el desarrollo de la matriz de 19 casos operativos (resta únicamente el [caso 19, pendiente de verificación end-to-end](PLANNED_CASES.md)), enfrentamos retos técnicos significativos:
 
 1.  **Estandarización de Payloads**: Lograr que un `struct` de Rust, un `record` de C# y un `array` de PHP emitan exactamente el mismo esquema JSON.
-2.  **Orquestación de Puertos**: Gestión de 20+ servicios web simultáneos sin colisiones de red (puertos `8080-8093`).
+2.  **Orquestación de Puertos**: Gestión de 50+ servicios simultáneos sin colisiones de red mediante la fórmula canónica `8080 + id` (dashboards en `8081-8100`).
 3.  **Contenerización Heterogénea**: Optimización de Dockerfiles para ecosistemas diversos (Alpine para Go/Rust vs. imágenes de Windows para SQL Server).
-4.  **Multi-Persistencia Políglota**: Sincronizar 8 motores de bases de datos (SQL, NoSQL, Key-Value) en un único entorno Docker con auto-migración de esquemas.
+4.  **Multi-Persistencia Políglota**: Sincronizar 18+ motores de bases de datos (relacional, documental, key-value, columnar, grafo, time-series, vectorial y bitemporal) en un único entorno Docker con auto-migración de esquemas.
 
 ---
 
@@ -29,7 +29,7 @@ Durante el desarrollo de la matriz de 19 casos implementados (con [1 más planif
 ¿Por qué este repositorio es una referencia técnica?
 - **🛠️ Interoperabilidad Real**: Proyectos que conectan C# con Flask en un flujo de eventos asíncronos son escasos. Aquí es el estándar.
 - **🧱 Modularidad Pura**: Cada "Caso" puede ser extraído y utilizado como plantilla (Boilerplate) para microservicios del mundo real.
-- **🐳 Docker-First**: Aislamiento total. No es necesario instalar compiladores de 7 lenguajes diferentes en el host.
+- **🐳 Docker-First**: Aislamiento total. No es necesario instalar compiladores ni runtimes de ~19 lenguajes diferentes en el host.
 - **📊 Observabilidad Industrial**: Integración nativa con el stack CNCF (Prometheus/Grafana) para monitoreo de métricas vitales.
 
 ---
@@ -41,4 +41,4 @@ Durante el desarrollo de la matriz de 19 casos implementados (con [1 más planif
 - **Confianza**: Los dashboards permiten a los stakeholders visualizar la salud del sistema de un solo vistazo.
 
 ---
-*Perspectiva arquitectónica v4.0 — Social Bot Scheduler*
+*Perspectiva arquitectónica v4.9.0 — Social Bot Scheduler*

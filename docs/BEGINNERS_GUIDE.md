@@ -42,7 +42,7 @@ Usamos Python para nuestros asistentes automáticos.
     ```bash
     python setup.py
     ```
-    -   Verás un menú con las 8 opciones.
+    -   Verás un menú con las opciones disponibles.
     -   Escribe `1` y presiona Enter para elegir el **Caso 01 (Python -> PHP)**.
     -   El script creará archivos ocultos (`.env`) y carpetas necesarias.
 
@@ -76,7 +76,7 @@ Deberías ver una lista con `social-bot-n8n` y `social-bot-dest-php` en estado *
 
 A diferencia de antes, **ya no necesitas configurar n8n manualmente**. El sistema se auto-configura al arrancar:
 
--   ? Los 12 workflows se importan autom?ticamente
+-   ✅ Los 20 workflows se importan automáticamente
 -   ✅ Se activan solos (webhooks listos para recibir)
 -   ✅ Se crea un usuario admin automáticamente
 
@@ -137,7 +137,7 @@ Puedes probar esto apagando el contenedor destino (`docker stop social-bot-dest-
 ---
 
 ## 🗄️ Fase 8: Persistencia Real (Bases de Datos)
-En esta v4.0, tus mensajes no solo se "muestran" en pantalla, sino que se guardan para siempre en una base de datos. Cada lenguaje usa una distinta:
+Desde la v4.0, tus mensajes no solo se "muestran" en pantalla, sino que se guardan para siempre en una base de datos. Cada lenguaje usa una distinta:
 - Si usas el **Caso 01**, revisa el motor **MySQL**.
 - Si usas el **Caso 05**, tus posts viven en **MongoDB**.
 - Si usas el **Caso 08**, se guardan en **SQL Server**.

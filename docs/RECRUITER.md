@@ -10,7 +10,7 @@
 **Social Bot Scheduler** es un laboratorio de ingeniería de software que demuestra **interoperabilidad multi-lenguaje y persistencia políglota a escala industrial**. 
 
 ### 💎 Diferenciadores de Valor
-- **Agnoticismo Tecnológico**: 19 casos implementados con 15+ lenguajes (Python, Go, Node, PHP/Laravel, Rust, Ruby, C#, Elixir, Erlang, Java, Kotlin, Zig, Crystal, Swift, Dart) sobre 17 motores de bases de datos heterogéneos. Roadmap escalado a 20 casos cubriendo JVM, BEAM, RAG/IA, streaming, BaaS, gRPC, GraphQL, IoT, funcional puro y mobile-backend (ver [PLANNED_CASES](PLANNED_CASES.md)).
+- **Agnosticismo Tecnológico**: 19 casos operativos con ~19 lenguajes de origen (Python, Go, Node, PHP/Laravel, Rust, Ruby, C#, Elixir, Erlang, Java, Kotlin, Zig, Crystal, Next.js, GraphQL, gRPC, Swift, F#, Dart) sobre 18+ motores de bases de datos heterogéneos — de MySQL/PostgreSQL a Cassandra, ClickHouse, CockroachDB, Neo4j, InfluxDB, pgvector y Firestore. La matriz completa (20 casos) cubre JVM, BEAM, RAG/IA, streaming, BaaS, gRPC, GraphQL, IoT, funcional puro y mobile-backend; resta únicamente verificar end-to-end el caso 19 (F#/Clojure/XTDB) (ver [PLANNED_CASES](PLANNED_CASES.md)).
 - **Resiliencia Enterprise**: Implementación nativa de patrones de tolerancia a fallos (Circuit Breakers, Idempotencia, DLQ).
 - **Seguridad Proactiva**: Mitigación en tiempo real de ataques de cadena de suministro (vulnerabilidad Trivy mitigada vía pin a v0.35.0, única versión protegida por immutable releases).
 - **Master Dashboard interactivo (v4.3.0)**: detección client-side del estado de los contenedores por caso, modal con el comando `docker-compose` listo para copiar, badges de RAM y contadores live — sin añadir backend privilegiado.
@@ -42,8 +42,8 @@ El proyecto implementa **11 patrones arquitectónicos** críticos, documentados 
 
 | Capa | Tecnologías Clave |
 | :--- | :--- |
-| **Lenguajes** | 🐍 Python, 🐹 Go, 🟢 Node.js, 🐘 PHP, 🦀 Rust, 💎 Ruby, 🟦 C# |
-| **Databases** | 🐬 MySQL, 🍃 MongoDB, 🏎️ Redis, 🐘 Postgres, 👁️ Cassandra, 🏢 SQL Server |
+| **Lenguajes** | 🐍 Python, 🐹 Go, 🟢 Node.js/Next.js, 🐘 PHP/Laravel, 🦀 Rust, 💎 Ruby, 🟦 C#, ☕ Java, 🅺 Kotlin, 💧 Elixir/Erlang, ⚡ Zig, 🔮 Crystal, 🕊️ Swift, 🎯 Dart, 🔷 F# *(+ Clojure, gRPC, GraphQL)* |
+| **Databases** | 🐬 MySQL/MariaDB, 🐘 Postgres/pgvector/Timescale/Cockroach, 🍃 MongoDB, 🏎️ Redis, 👁️ Cassandra, 🏢 SQL Server, 🦆 DuckDB, 📊 ClickHouse, 📈 InfluxDB, 🕸️ Neo4j, 🔥 Firestore *(18+ motores)* |
 | **Orchestration** | 🐳 Docker Compose, ☸️ Kubernetes (Kustomize), 🤖 n8n |
 | **Monitoring** | 🔥 Prometheus, 📊 Grafana, 👁️ cAdvisor |
 
@@ -78,7 +78,7 @@ make demo
 ```
 
 > [!TIP]
-> El sistema incluye un **Zero-Touch Setup**: n8n se configura automáticamente con los 12 flujos operativos al primer arranque.
+> El sistema incluye un **Zero-Touch Setup**: n8n se configura automáticamente con los 19 flujos operativos al primer arranque.
 
 ---
 
@@ -91,4 +91,4 @@ Permite orquestar sistemas políglotas visualmente, reduciendo la fricción entr
 Mediante el script `check_runtime_security.py` que audita puertos, tags Docker y secretos antes de permitir cualquier ejecución en el laboratorio.
 
 ---
-*Perfil técnico v4.1 — Social Bot Scheduler*
+*Perfil técnico v4.9.0 — Social Bot Scheduler*

@@ -17,7 +17,7 @@ Como complemento al `hub.py doctor`, el **Master Dashboard** (`http://localhost:
 
 - **Ping automático cada 20 s** al puerto del receptor de cada caso (`fetch` con `no-cors` y timeout 2.5 s).
 - **Estado por tarjeta**: `READY` (verde) si el receptor responde, `OFFLINE` (rojo) si no.
-- **Contadores en vivo** en la barra superior: `🟢 N/9 READY · 🔴 N/9 OFFLINE · 🚧 11 PLANNED`.
+- **Contadores en vivo** en la barra superior: `🟢 N/19 READY · 🔴 N/19 OFFLINE · 🚧 1 PLANNED`.
 - **Última comprobación** con timestamp + botón **🔄 Re-comprobar** para forzar un ciclo.
 - **Modal con comando** cuando un caso está OFFLINE: muestra `docker-compose --profile caseXX up -d` con botón copiar.
 - **Toasts** notifican transiciones `ONLINE → OFFLINE` o viceversa entre comprobaciones.

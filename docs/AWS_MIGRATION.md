@@ -51,7 +51,7 @@
 graph TB
     subgraph "🖥️ Host Único (Docker Compose)"
         N[n8n :5678]
-        D[Dashboards :8080-8093]
+        D[Dashboards :8081-8100]
         DB1[(MySQL/MariaDB/PG/...)]
         OBS[Prometheus + Grafana]
         N --> DB1
@@ -141,6 +141,22 @@ graph TB
 | 👁️ **Cassandra** | **Amazon Keyspaces** | Serverless, API CQL. |
 | 🏢 **SQL Server** | **RDS for SQL Server** | Licencia BYOL o License Included. |
 | 🦆 **DuckDB** | **Athena + S3 (Parquet)** | Patrón data-lake serverless. |
+
+> [!NOTE]
+> A partir de la v4.9.0 la matriz alcanza **18+ motores heterogéneos** (casos 01–20). Los motores incorporados en los casos 10–20 mapean así:
+
+| Motor Local | Equivalente AWS | Notas |
+| :--- | :--- | :--- |
+| 🧬 **Mnesia** *(embebida BEAM)* | **DynamoDB** o **EFS** | Estado embebido de Erlang/Elixir. |
+| 🧠 **pgvector** *(Postgres)* | **RDS/Aurora PostgreSQL + pgvector** | Persistencia vectorial para RAG/IA. |
+| 📊 **ClickHouse** | **EC2/EKS self-managed** o **Athena** | OLAP columnar de alto volumen. |
+| 🔐 **Supabase** *(Postgres + RLS)* | **RDS PostgreSQL + PostgREST** | BaaS con Row-Level Security. |
+| 🪳 **CockroachDB** | **CockroachDB Cloud** o self-managed en EKS | SQL distribuido compatible con Postgres. |
+| ⏱️ **TimescaleDB** | **RDS PostgreSQL + extensión** o **Timestream** | Series temporales sobre GraphQL. |
+| 📈 **InfluxDB** | **Amazon Timestream** | Métricas IoT/MQTT. |
+| 🕸️ **Neo4j** | **Amazon Neptune** | Base de datos de grafos (Cypher). |
+| 🔥 **Firestore** *(emulador)* | **DynamoDB** | Documental para mobile-backend. |
+| 🕰️ **XTDB** *(caso 19, verificación pendiente)* | **EC2/EKS self-managed** | Bitemporal (funcional puro). |
 
 ### 🌐 Red y Edge
 
@@ -376,8 +392,8 @@ aws ecr get-login-password | docker login --username AWS \
   --password-stdin <account>.dkr.ecr.us-east-1.amazonaws.com
 
 docker build -t sbs/case01-emisor cases/case01/emisor/
-docker tag  sbs/case01-emisor <account>.dkr.ecr.us-east-1.amazonaws.com/sbs/case01-emisor:v4.2.0
-docker push <account>.dkr.ecr.us-east-1.amazonaws.com/sbs/case01-emisor:v4.2.0
+docker tag  sbs/case01-emisor <account>.dkr.ecr.us-east-1.amazonaws.com/sbs/case01-emisor:v4.9.0
+docker push <account>.dkr.ecr.us-east-1.amazonaws.com/sbs/case01-emisor:v4.9.0
 ```
 
 ### 🗄️ Fase 3 — Bases de Datos
@@ -421,7 +437,7 @@ resource "aws_ecs_task_definition" "n8n" {
 
   container_definitions = jsonencode([{
     name  = "n8n"
-    image = "${aws_ecr_repository.n8n.repository_url}:v4.2.0"
+    image = "${aws_ecr_repository.n8n.repository_url}:v4.9.0"
     portMappings = [{ containerPort = 5678 }]
     secrets = [
       { name = "DB_POSTGRESDB_PASSWORD",
@@ -456,7 +472,7 @@ aws secretsmanager create-secret \
 
 1. Crear **ACM cert** en `us-east-1` para `*.sbs.example.com`.
 2. Aprovisionar **ALB** con listeners 80→443 redirect y 443 con cert.
-3. Configurar **Target Groups** por servicio (n8n/5678, dashboards/8080-8093).
+3. Configurar **Target Groups** por servicio (n8n/5678, dashboards/8081-8100).
 4. Crear **Route 53 A-Alias** apuntando al ALB.
 5. (Opcional) **CloudFront** + **WAF** delante del ALB para los dashboards estáticos.
 
