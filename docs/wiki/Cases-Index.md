@@ -17,7 +17,17 @@ Bienvenidos a la cartografía del **Social Bot Scheduler**. Este laboratorio se 
 | **07** | Rust -> **n8n** -> Ruby | `8087` | 👁️ **Cassandra**| 🔴 Avanzado |
 | **08** | C# (.NET) -> **n8n** -> Flask | `8088` | 🏢 **SQL Server**| 🔴 Avanzado |
 | **09** | Python -> **n8n** -> FastAPI Gateway| `8089` | 🦆 **DuckDB** | 🔴 Avanzado |
-| **10–20** | 🚧 *Casos planificados (JVM, BEAM, RAG, Kafka, Supabase, gRPC, GraphQL, MQTT, Zig/Crystal, F#/Clojure, Swift/Dart)* | `8090–8100` | *11 nuevos motores* | 📐 Diseñado |
+| **10** | Java (Spring) -> **n8n** -> Kotlin (Ktor) | `8090` | 🐘 **PostgreSQL** | 🔴 Avanzado |
+| **11** | Elixir -> **n8n** -> Erlang (Cowboy) | `8091` | 📇 **Mnesia** | 🔴 Avanzado |
+| **12** | Python (LLM) -> **n8n** -> FastAPI RAG | `8092` | 🧬 **pgvector** | 🔴 Avanzado |
+| **13** | Node + Kafka -> **n8n** -> Go consumer | `8093` | ⚡ **ClickHouse** | 🔴 Avanzado |
+| **14** | Next.js -> **n8n** -> Supabase (PostgREST)| `8094` | 🔐 **Postgres + RLS** | 🔴 Avanzado |
+| **15** | Go (gRPC) -> **n8n** -> Python (gRPC) | `8095` | 🪳 **CockroachDB** | 🔴 Avanzado |
+| **16** | Apollo GraphQL -> **n8n** -> Hasura | `8096` | ⏱️ **TimescaleDB** | 🔴 Avanzado |
+| **17** | Rust (MQTT) -> **n8n** -> Node | `8097` | 📈 **InfluxDB** | 🔴 Avanzado |
+| **18** | Zig -> **n8n** -> Crystal (Kemal) | `8098` | 🕸️ **Neo4j** | 🔴 Avanzado |
+| **19** | F# (.NET) -> **n8n** -> Clojure (Ring) | `8099` | 🕰️ **XTDB** | 📐 Diseñado |
+| **20** | Swift -> **n8n** -> Dart (Shelf) | `8100` | 🔥 **Firestore** | 🔴 Avanzado |
 
 ---
 
@@ -35,7 +45,7 @@ El **Caso 09** es el pináculo arquitectónico del laboratorio, demostrando:
 
 1.  **Añade flujos**: Sigue el [Manual de Activación](../../COMO_ACTIVAR_WORKFLOWS.md).
 2.  **Lanza bots**: Utiliza el comando `python hub.py ejecutar <id>`.
-3.  **Audita estados**: Verifica la persistencia en los dashboards correspondientes (`:8081-8093`).
+3.  **Audita estados**: Verifica la persistencia en los dashboards correspondientes (`:8081-8100`).
 
 ---
 *Catálogo técnico v4.1 — Social Bot Scheduler*

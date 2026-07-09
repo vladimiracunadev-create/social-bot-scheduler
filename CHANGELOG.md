@@ -4,6 +4,36 @@ Todos los cambios notables en este proyecto se documentan sistemáticamente en e
 
 ---
 
+## 🔍 [4.9.0] — 2026-07-08
+
+### ✨ Auditoría Docker end-to-end de los 19 casos + sincronización documental
+
+Barrido **caso por caso** levantando cada stack con Docker (limpieza total de contenedores e
+imágenes **entre cada caso**) y verificando la **persistencia real** en cada motor. Objetivo:
+eliminar incoherencias y falsas promesas no validadas. Detalle completo en
+[docs/AUDIT_v4.9.0.md](docs/AUDIT_v4.9.0.md).
+
+#### Corregido — bugs reales encontrados
+
+- **Caso 09** (FastAPI Gateway): `from __future__ import annotations` + el wrapper de `@limiter.limit` hacían que FastAPI tratara `payload` como *query param* → `/webhook` daba 422 y `/openapi.json` 500. **El endpoint nunca funcionó**; se elimina el import.
+- **Casos 11, 14, 18**: healthcheck con `localhost` resolvía a `::1` (IPv6) mientras el servidor escucha IPv4 → `unhealthy` permanente pese a responder `200`. Se fija `127.0.0.1`.
+- **Caso 06** (Symfony): faltaba la extensión phpredis (`Class "Redis" not found`) → nuevo Dockerfile con `pecl install redis`.
+- **Caso 07** (Ruby/Cassandra): `cassandra-driver` usa `SortedSet` (removido del stdlib en Ruby 3.2) → gema `sorted_set`.
+- **Caso 08** (Flask): `python:3.9` no resolvía `click>=8.4` → `python:3.11` + repo mssql bookworm.
+- **Casos 03, 14, 16, 17**: `.dockerignore` para evitar que `node_modules` del host rompa el build.
+
+#### Documentación
+
+- Sincronizada toda la suite de docs (README, index.html, ROADMAP, FILE_MAP, PLANNED_CASES, DOCKER_RESOURCES, ARCHITECTURE, wiki, REQUIREMENTS): se eliminan los claims obsoletos de *"12 implementados / 8 planificados"* y *"scaffolding"*; ahora reflejan **19 casos operativos** y **sólo el 19 pendiente**.
+- Dashboard maestro: el contador **PLANNED** se calcula en vivo (ya no queda fijo en "11").
+- **Caso 19**: sus badges/estado se corrigen de *"Ready/verificado"* a **pendiente de verificación** (era una falsa promesa).
+
+#### Notas
+
+- CI en verde: `black --check .` (47 OK), `validate_ports`, `validate_case_matrix`, `docker compose --profile full config`, `flake8`.
+
+---
+
 ## 🚀 [4.8.0] — 2026-07-08
 
 ### ✨ Matriz Tecnológica — Lote 4: Kafka/ClickHouse (13) y Next.js/Supabase (14)

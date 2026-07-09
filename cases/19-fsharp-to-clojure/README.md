@@ -1,6 +1,6 @@
 # 🧩 Caso 19: #️⃣ F# (.NET) → 🌉 n8n → 🍀 Clojure (Ring) + XTDB
 
-[![Status: Ready](https://img.shields.io/badge/Status-Ready-brightgreen.svg)]()
+[![Status: Pendiente](https://img.shields.io/badge/Status-Pendiente_de_verificaci%C3%B3n-yellow.svg)]()
 [![Language: F#](https://img.shields.io/badge/Language-F%23-378BBA?logo=dotnet&logoColor=white)](https://fsharp.org/)
 [![Language: Clojure](https://img.shields.io/badge/Language-Clojure-5881D8?logo=clojure&logoColor=white)](https://clojure.org/)
 [![Database: XTDB](https://img.shields.io/badge/Database-XTDB%20(bitemporal)-63B132)](https://xtdb.com/)
@@ -52,6 +52,6 @@ docker-compose --profile case19 up -d      # sólo el receptor Clojure (XTDB emb
 
 ---
 
-## ✅ Estado
+## 🚧 Estado
 
-Implementado y verificado (build + boot + health). Parte del **Lote 3** del roadmap v5.0 → v4.7.
+**Pendiente de verificación end-to-end.** El código y el scaffolding están completos (emisor F#, receptor Clojure/Ring + XTDB, workflow n8n) y se corrigió el bug de arranque AOT, pero el caso **aún no ha sido validado con Docker** (build + boot + health) como los otros 19 casos del laboratorio. Parte del **Lote 3** del roadmap v5.0 → v4.7; queda como único caso pendiente hasta completar su verificación.

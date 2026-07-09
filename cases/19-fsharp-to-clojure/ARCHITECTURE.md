@@ -1,5 +1,6 @@
 # 📐 Arquitectura — Caso 19: #️⃣ F# (.NET) → 🌉 n8n → 🍀 Clojure (Ring) + XTDB
 
+[![Status: Pendiente](https://img.shields.io/badge/Status-Pendiente_de_verificaci%C3%B3n-yellow.svg)]()
 [![Origen: F#](https://img.shields.io/badge/Origen-F%23-378BBA?logo=dotnet&logoColor=white)](https://fsharp.org/)
 [![Destino: Clojure](https://img.shields.io/badge/Destino-Clojure%2FRing-5881D8?logo=clojure&logoColor=white)](https://clojure.org/)
 [![Persistencia: XTDB](https://img.shields.io/badge/Persistencia-XTDB%20bitemporal-63B132)](https://xtdb.com/)

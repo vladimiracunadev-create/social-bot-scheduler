@@ -8,7 +8,7 @@ El **Social Bot Scheduler** ha evolucionado hacia una infraestructura de **Matri
 
 ### 1. 📤 Eje de Origen (Emisores)
 Es el componente que posee la **lógica de programación**. Revisa el archivo `posts.json`, valida las fechas y "dispara" el evento hacia el puente.
-- **Implementaciones**: Python (Pydantic), Go (Native), Node.js (Axios), Laravel (Artisan), Rust (reqwest), C# (.NET HttpClient).
+- **Implementaciones**: Python (Pydantic), Go (Native), Node.js (Axios), Laravel (Artisan), Rust (reqwest), C# (.NET HttpClient), Java (Spring Boot), Elixir, Zig, Swift, Next.js 15, Apollo (GraphQL), Rust (MQTT), Go (gRPC), Node + Kafka.
 
 ### 2. 🌉 Eje del Puente (n8n + Guardrails)
 Es la **capa de abstracción y resiliencia**. Recibe un Webhook genérico y asegura que la entrega a redes sociales sea segura.
@@ -17,7 +17,7 @@ Es la **capa de abstracción y resiliencia**. Recibe un Webhook genérico y aseg
 
 ### 3. 📥 Eje de Destino (Receptores + Dashboards)
 Es la **capa de auditoría y visualización**. n8n envía una copia del post finalizado a estos servicios.
-- **Implementaciones**: PHP, Go, Node.js, FastAPI, React, Symfony, Ruby, Flask.
+- **Implementaciones**: PHP, Go, Node.js, FastAPI, React, Symfony, Ruby, Flask, Kotlin (Ktor), Erlang (Cowboy), FastAPI + RAG, Go consumer, Supabase (PostgREST), Python (gRPC), Hasura, Crystal (Kemal), Dart (Shelf).
 - **Persistencia**: Cada destino orquesta su propio motor de base de datos (MySQL, PostgreSQL, MongoDB, Cassandra, etc.).
 
 ---
@@ -35,6 +35,19 @@ Es la **capa de auditoría y visualización**. n8n envía una copia del post fin
 | **07** | Rust | n8n | Ruby (Sinatra) | 👁️ **Cassandra** | 8087 |
 | **08** | C# (.NET) | n8n | Flask | 🏢 **SQL Server** | 8088 |
 | **09** | Python | n8n | FastAPI Gateway | 🦆 **DuckDB** | 8089 |
+| **10** | Java (Spring Boot) | n8n | Kotlin (Ktor) | 🐘 **PostgreSQL** | 8090 |
+| **11** | Elixir | n8n | Erlang (Cowboy) | 💾 **Mnesia** | 8091 |
+| **12** | Python (LLM) | n8n | FastAPI + RAG | 🧠 **pgvector** | 8092 |
+| **13** | Node + Kafka | n8n | Go consumer | 📊 **ClickHouse** | 8093 |
+| **14** | Next.js 15 | n8n | Supabase (PostgREST) | 🔐 **Postgres + RLS** | 8094 |
+| **15** | Go (gRPC) | n8n | Python (gRPC) | 🪳 **CockroachDB** | 8095 |
+| **16** | Apollo (GraphQL) | n8n | Hasura | ⏱️ **TimescaleDB** | 8096 |
+| **17** | Rust (MQTT) | n8n | Node (MQTT) | 📈 **InfluxDB** | 8097 |
+| **18** | Zig | n8n | Crystal (Kemal) | 🕸️ **Neo4j** | 8098 |
+| **20** | Swift | n8n | Dart (Shelf) | 🔥 **Firestore** | 8100 |
+
+> [!NOTE]
+> **Caso 19** (F# → Clojure/Ring, XTDB, puerto 8099) es el único caso **pendiente** (diferido). Los 19 casos restantes (01–18 y 20) están implementados y operativos.
 
 ---
 
@@ -76,7 +89,7 @@ graph LR
 
 ### 1. 🏗️ Microservices Architecture
 El sistema se descompone en servicios independientes, cada uno en su propio contenedor Docker.
-- **Evidencia**: `docker-compose.yml` define **~20 servicios**.
+- **Evidencia**: `docker-compose.yml` define **~50+ servicios** (19 casos × origen + receptor + BD, más núcleo y observabilidad).
 - **Beneficio**: Aislamiento total. Un fallo en el Caso 02 no afecta al resto.
 
 ### 2. ⚡ Event-Driven / Webhooks
@@ -127,7 +140,7 @@ El despliegue soporta múltiples entornos:
 | :--- | :--- | :--- | :--- |
 | 1 | Estructura | **Microservices** | 20+ Contenedores Docker |
 | 2 | Comunicación | **Webhooks** | n8n HTTP Broker |
-| 3 | Datos | **Polyglot Persistence** | 12 Motores de BD distintos |
+| 3 | Datos | **Polyglot Persistence** | **18+ Motores de BD distintos** |
 | 4 | Resiliencia | **Guardrails** | Circuit Breaker & Idempotency |
 | 5 | Operación | **CLI Facade** | `hub.py` Management Hub |
 

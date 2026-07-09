@@ -6,6 +6,10 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 
 ## ✅ Hitos Completados
 
+### `v4.9.0` — "Auditoría Docker End-to-End" 🐳 Ready
+
+- [x] **Auditoría Docker end-to-end de los 19 casos** + corrección de bugs reales de arranque/healthcheck; documentación sincronizada.
+
 ### `v4.8.0` — "Matriz +2: Streaming Kafka/ClickHouse, BaaS Supabase" 🚀 Ready
 
 - [x] **Caso 13 — Node+Kafka → Go + ClickHouse** (`8093`): event streaming (KRaft) + sink columnar (CQRS).
@@ -113,7 +117,7 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 
 ## 🔮 Futuro (v5.0+)
 
-### 🧩 Expansión de la Matriz Tecnológica (casos 10-14 — scaffolding ya creado)
+### 🧩 Expansión de la Matriz Tecnológica (casos 10-14 — implementados ✅)
 
 - [x] **Caso 10 — JVM**: Java (Spring Boot) → Kotlin (Ktor) + PostgreSQL. Cubre el hueco enterprise JVM. ✅ v4.6.0
 - [x] **Caso 11 — BEAM**: Elixir → Erlang (Cowboy) + Mnesia. Modelo de actores y supervisión OTP. ✅ v4.5.0
@@ -121,7 +125,7 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 - [x] **Caso 13 — Streaming**: Node + Kafka → Go consumer + ClickHouse. Event streaming real + OLAP columnar. ✅ v4.8.0
 - [x] **Caso 14 — BaaS**: Next.js 15 → Supabase (Postgres + PostgREST + RLS). Primer caso BaaS de la matriz. ✅ v4.8.0
 
-### 🧩 Tier 2/3 — Scaffolding también creado (cases 15-20)
+### 🧩 Tier 2/3 — Implementados (cases 15-20, salvo el 19 pendiente)
 
 - [x] **Caso 15 — gRPC**: Go server ↔ Python client + CockroachDB (protocolo binario + SQL distribuido). ✅ v4.7.0
 - [x] **Caso 16 — GraphQL**: Apollo Server ↔ Hasura + TimescaleDB (schema-first vs DB-first + series temporales). ✅ v4.5.0

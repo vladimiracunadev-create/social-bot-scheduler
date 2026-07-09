@@ -82,7 +82,7 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 | **20** | `Swift` | **n8n** | `Dart (Shelf)` | 🔥 **Firestore (emu)** | `case20` | [📐 Ver](cases/20-swift-to-dart/ARCHITECTURE.md) |
 
 > [!TIP]
-> **Lote 1** (`v4.5.0`): 11, 16, 17. **Lote 2** (`v4.6.0`): 10, 12, 18. **Lote 3** (`v4.7.0`): 15, 20. **Lote 4** (`v4.8.0`): 13, 14. **Auditoría Docker** (`v4.9.0`): los 19 casos verificados end-to-end uno a uno con Docker (persistencia real por cada motor), corrigiendo bugs reales de arranque y de healthcheck. **19 de 20 casos operativos** vía `docker-compose --profile caseNN up -d`. Puertos por la regla `8080 + id` (ver [docs/PORTS.md](docs/PORTS.md)).
+> **Lote 1** (`v4.5.0`): 11, 16, 17. **Lote 2** (`v4.6.0`): 10, 12, 18. **Lote 3** (`v4.7.0`): 15, 20. **Lote 4** (`v4.8.0`): 13, 14. **Auditoría Docker** (`v4.9.0`): los 19 casos verificados end-to-end uno a uno con Docker (persistencia real por cada motor), corrigiendo bugs reales de arranque y de healthcheck — detalle en [docs/AUDIT_v4.9.0.md](docs/AUDIT_v4.9.0.md). **19 de 20 casos operativos** vía `docker-compose --profile caseNN up -d`. Puertos por la regla `8080 + id` (ver [docs/PORTS.md](docs/PORTS.md)).
 
 ### 🧪 Único caso pendiente
 

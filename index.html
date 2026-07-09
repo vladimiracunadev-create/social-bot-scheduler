@@ -636,7 +636,7 @@
             <strong style="color: var(--text-secondary); font-weight: 600; margin-right: 0.3rem;">🐳 Docker:</strong>
             <span class="pill pill-ready"    id="pill-ready">🟢 0 READY</span>
             <span class="pill pill-offline"  id="pill-offline">🔴 0 OFFLINE</span>
-            <span class="pill pill-planned"  id="pill-planned">🚧 11 PLANNED</span>
+            <span class="pill pill-planned"  id="pill-planned">🚧 1 PLANNED</span>
         </div>
         <div style="display: flex; gap: 0.7rem; align-items: center;">
             <span class="checked-info" id="last-checked">Verificando...</span>
@@ -1520,8 +1520,14 @@
             const total = Object.keys(CASES).length;
             const pillReady   = document.getElementById('pill-ready');
             const pillOffline = document.getElementById('pill-offline');
+            const pillPlanned = document.getElementById('pill-planned');
             if (pillReady)   pillReady.textContent   = `🟢 ${readyCount}/${total} READY`;
             if (pillOffline) pillOffline.textContent = `🔴 ${offlineCount}/${total} OFFLINE`;
+            // Cuenta viva de casos planificados (data-planned) — evita quedar fijo en un valor obsoleto.
+            if (pillPlanned) {
+                const planned = document.querySelectorAll('.case-card[data-planned="true"]').length;
+                pillPlanned.textContent = `🚧 ${planned} PLANNED`;
+            }
         }
 
         function updateLastChecked() {

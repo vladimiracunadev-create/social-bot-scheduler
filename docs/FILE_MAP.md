@@ -10,7 +10,7 @@
 social-bot-scheduler/
 ├── 🏠 Raíz ................... Configuración, orquestación y entrada principal
 ├── 🛡️ apache/ ................ Config Apache de hardening (security headers)
-├── 📦 cases/ ................. 12 Casos implementados + 8 planificados (ver docs/PLANNED_CASES.md)
+├── 📦 cases/ ................. 19 Casos implementados + 1 planificado (ver docs/PLANNED_CASES.md)
 ├── 📚 docs/ .................. Documentación técnica y guías
 ├── 🌐 edge/ .................. Caddy reverse proxy (perfil edge)
 ├── 🔄 n8n/ ................... Workflows de orquestación (JSON exportados)
@@ -29,7 +29,7 @@ social-bot-scheduler/
 
 | Archivo | Importancia | Descripción |
 |---------|:-----------:|-------------|
-| `docker-compose.yml` | 🔴 **Crítico** | Define los servicios del ecosistema completo: 9 receptores, 8 bases de datos externas, n8n, Grafana, Prometheus, cAdvisor, Caddy edge proxy y el dashboard maestro. Contiene perfiles `caseXX`, `full`, `observability` y `edge`. |
+| `docker-compose.yml` | 🔴 **Crítico** | Define los servicios del ecosistema completo: 20 receptores, bases de datos externas (SQL, NoSQL, columnar, grafos, vectoriales), n8n, Grafana, Prometheus, cAdvisor, Caddy edge proxy y el dashboard maestro. Contiene perfiles `caseXX`, `full`, `observability` y `edge`. |
 | `docker-compose.dev.yml` | 🟡 Media | Override para desarrollo local. Añade hot-reload y puertos de depuración. |
 | `Dockerfile` | 🟡 Media | Imagen Docker multi-stage para el hub. Corre como `botuser` (no-root). |
 | `Makefile` | 🟢 Alta | Automatización de comandos frecuentes: `make up`, `make up-secure`, `make up-observability`, `make up-edge`, `make clean` y `make nuke`. |
@@ -49,7 +49,7 @@ social-bot-scheduler/
 
 | Archivo | Importancia | Descripción |
 |---------|:-----------:|-------------|
-| `import_workflows.py` | ?? Alta | Importa autom?ticamente los 12 workflows JSON al motor n8n v?a API REST. Esencial para el primer despliegue. |
+| `import_workflows.py` | 🟢 Alta | Importa automáticamente los 19 workflows JSON al motor n8n vía API REST. Esencial para el primer despliegue. |
 | `generate_workflows.py` | 🟡 Media | Genera plantillas base de workflows n8n para nuevos casos de integración. |
 | `check_workflows.py` | 🟡 Media | Verifica que los workflows importados estén activos y sus webhooks registrados. |
 | `diagnose_n8n.py` | 🟡 Media | Diagnóstico profundo del estado de n8n: nodos registrados, credenciales, errores de arranque. |
@@ -58,7 +58,7 @@ social-bot-scheduler/
 
 | Archivo | Importancia | Descripción |
 |---------|:-----------:|-------------|
-| `verify_all_cases.py` | 🟢 Alta | Ejecuta una verificación end-to-end de los 8 casos: levanta el bot, envía un payload al webhook, y comprueba la respuesta del receptor. |
+| `verify_all_cases.py` | 🟢 Alta | Ejecuta una verificación end-to-end de los 19 casos: levanta el bot, envía un payload al webhook, y comprueba la respuesta del receptor. |
 | `run_all_verifications.py` | 🟢 Alta | Orquestador maestro de verificaciones: ejecuta tests unitarios, de integración, y análisis de seguridad en secuencia. |
 | `verify_n8n.py` | 🟡 Media | Verifica que n8n esté operativo y que los webhooks de cada caso estén accesibles. |
 | `audit_schema.py` | 🟡 Media | Auditoría de esquemas JSON de los workflows para detectar incompatibilidades. |
@@ -76,14 +76,14 @@ social-bot-scheduler/
 | Archivo | Importancia | Descripción |
 |---------|:-----------:|-------------|
 | `README.md` | 🔴 **Crítico** | Puerta de entrada principal al proyecto. Contiene visión general, instrucciones de despliegue, arquitectura resumida y enlaces a toda la documentación. |
-| `CHANGELOG.md` | 🟢 Alta | Historial de cambios por versión (`v1.0.0` → `v4.0.x`). Documenta cada feature, fix y breaking change. |
+| `CHANGELOG.md` | 🟢 Alta | Historial de cambios por versión (`v1.0.0` → `v4.9.0`). Documenta cada feature, fix y breaking change. |
 | `ROADMAP.md` | 🟡 Media | Planificación a futuro: migración a K8s, integración con LangChain, soporte multi-tenant. |
 | `CONTRIBUTING.md` | 🟡 Media | Guía para contribuidores: convenciones de commits, branching strategy, y code review. |
 | `CODE_OF_CONDUCT.md` | 🟢 Baja | Código de conducta estándar para la comunidad del proyecto. |
 | `SECURITY.md` | 🟢 Alta | Política de seguridad: cómo reportar vulnerabilidades de forma responsable. |
 | `LICENSE` | 🟡 Media | Licencia del proyecto (MIT/Apache). |
 | `NOTICE` | 🟢 Baja | Atribuciones legales de dependencias de terceros. |
-| `index.html` | 🟢 Alta | **Dashboard Maestro (v4.3.0+)** — Interfaz web unificada con: (a) detección automática client-side cada 20 s del estado `READY/OFFLINE` de cada caso vía ping al receptor; (b) modal con `docker-compose --profile caseXX up -d` y copy-to-clipboard para casos OFFLINE; (c) barra Docker con contadores live + última comprobación + botón Re-comprobar; (d) sistema de toasts para transiciones; (e) badges de RAM en las 20 tarjetas (19 implementadas + 1 planificada marcada con scaffolding). Sin backend nuevo: el navegador nunca ejecuta `docker`, solo muestra el comando exacto. |
+| `index.html` | 🟢 Alta | **Dashboard Maestro (v4.3.0+)** — Interfaz web unificada con: (a) detección automática client-side cada 20 s del estado `READY/OFFLINE` de cada caso vía ping al receptor; (b) modal con `docker-compose --profile caseXX up -d` y copy-to-clipboard para casos OFFLINE; (c) barra Docker con contadores live + última comprobación + botón Re-comprobar; (d) sistema de toasts para transiciones; (e) badges de RAM en las 20 tarjetas (19 implementadas + 1 planificada, caso 19, pendiente de verificación end-to-end). Sin backend nuevo: el navegador nunca ejecuta `docker`, solo muestra el comando exacto. |
 | `llms.txt` | 🟢 Baja | Metadatos del proyecto optimizados para consumo por modelos de lenguaje (LLMs). |
 | `COMO_ACTIVAR_WORKFLOWS.md` | 🟢 Alta | Guía paso a paso para importar y activar los workflows de n8n. |
 | `IMPORT_WORKFLOWS.md` | 🟡 Media | Documentación técnica del proceso de importación de workflows. |
@@ -185,7 +185,7 @@ cases/XX-origen-to-destino/
 | `ARCHITECTURE.md` | 🏗️ Arquitectos | Diagramas del sistema, flujo de datos, y decisiones de diseño. |
 | `RECRUITER.md` | 👔 Reclutadores | Evaluación técnica rápida: valor de negocio, complejidad demostrada, skills cubiertos. |
 | `BEGINNERS_GUIDE.md` | 🐣 Novatos | Guía paso a paso para entender el proyecto sin experiencia previa. |
-| `CASES_INDEX.md` | 📊 Referencia | Matriz técnica de los 8 casos: lenguajes, DBs, puertos, y estado. |
+| `CASES_INDEX.md` | 📊 Referencia | Matriz técnica de los 20 casos (19 implementados + 1 planificado): lenguajes, DBs, puertos, y estado. |
 | `DOCKER_RESOURCES.md` | 🐳 DevOps | Análisis detallado de uso de RAM y disco. Incluye el **Stress Test Report**. |
 | `RESILIENCE_GUIDE.md` | 🛡️ SREs | Guía de resiliencia: Circuit Breakers, DLQ, Idempotencia, y reintentos. |
 | `GUARDRAILS.md` | 🔒 Seguridad | Implementación de guardrails: validación, sanitización, rate limiting. |
@@ -212,7 +212,7 @@ cases/XX-origen-to-destino/
 
 | Archivo/Dir | Descripción |
 |-------------|-------------|
-| `workflows/*.json` | 9 archivos JSON, uno por caso. Contienen la lógica de transformación, enrutamiento y manejo de errores del bus de eventos. |
+| `workflows/*.json` | 19 archivos JSON, uno por caso. Contienen la lógica de transformación, enrutamiento y manejo de errores del bus de eventos. |
 | `data/` | Datos persistentes de n8n (base de datos SQLite interna, credenciales, ejecuciones). Excluido de Git. |
 | `README.md` | Documentación específica de la configuración de n8n. |
 

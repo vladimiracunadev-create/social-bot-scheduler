@@ -12,7 +12,7 @@ Bienvenidos al centro de conocimiento del **Social Bot Scheduler**. Este laborat
 
 ### 🚀 Guías de Operación
 - **[Guía de Uso](Usage-Guide.md)**: Cómo interactuar con el HUB y ejecutar los casos.
-- **[Índice de Casos](Cases-Index.md)**: Detalle de los 12 ejes tecnológicos implementados (+ [8 planificados](../PLANNED_CASES.md)).
+- **[Índice de Casos](Cases-Index.md)**: Detalle de los 19 ejes tecnológicos implementados (+ [1 planificado](../PLANNED_CASES.md)).
 
 ---
 

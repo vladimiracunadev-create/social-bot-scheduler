@@ -15,7 +15,7 @@ Ejecutar más de 20 contenedores simultáneamente (incluyendo 8 motores de bases
 | **Disco** | 2 GB | 5 GB | **8-10 GB** |
 
 > [!NOTE]
-> **Casos planificados 10–20** (ver [PLANNED_CASES.md](PLANNED_CASES.md)): si todos se implementaran, la estimación crecería a **24+ GB RAM** y **15+ GB disco** por la adición de Kafka, ClickHouse, CockroachDB, Neo4j, XTDB, Firebase Emulator y stacks Swift/Hasura.
+> **Único caso pendiente (19)** (ver [PLANNED_CASES.md](PLANNED_CASES.md)): los casos 10–18 y 20 ya están implementados y medidos. Implementar el caso **19** (F#/Clojure/XTDB) añadiría **~2.65 GB RAM** sobre el perfil `full` actual.
 
 ---
 

@@ -97,26 +97,16 @@ Si decides hacer un `docker-compose --profile full pull`, este es el impacto en 
 | **8 GB** | Núcleo + todos los ligeros (01-06, 09) | ~4 GB |
 | **16 GB** | `--profile full` (incluye 07/08 y observabilidad) | ~10 GB |
 
-### 🚧 Estimaciones para casos planificados (10-20)
+### 🚧 Estimación para el único caso planificado (19)
 
 > [!WARNING]
-> Cifras estimadas, sin medición real (los casos no están implementados todavía). Ver [PLANNED_CASES.md](PLANNED_CASES.md).
+> Cifra estimada, sin medición real (el caso 19 aún no está verificado end-to-end). Ver [PLANNED_CASES.md](PLANNED_CASES.md).
 
 | Caso | Stack resumido | Δ Caso (est.) | Total con núcleo (est.) |
 | :---: | :--- | :---: | :---: |
-| **10** | Spring Boot + Ktor + PostgreSQL | ~1.0 GB | ~2.15 GB 🟡 |
-| **11** | Phoenix + Cowboy + Mnesia | ~384 MB | ~1.5 GB 🟢 |
-| **12** | LLM producer + FastAPI RAG + pgvector | ~1.5 GB | ~2.65 GB 🟡 |
-| **13** | Node + Kafka + Go + ClickHouse | **~2.2 GB** | **~3.35 GB 🔴** |
-| **14** | Next.js + Supabase local stack | **~2.25 GB** | **~3.4 GB 🔴** |
-| **15** | Go gRPC + Python gRPC + CockroachDB | ~832 MB | ~2.0 GB 🟡 |
-| **16** | Apollo + Hasura + TimescaleDB | ~768 MB | ~1.9 GB 🟢 |
-| **17** | Rust MQTT + Node + Mosquitto + InfluxDB | ~736 MB | ~1.85 GB 🟢 |
-| **18** | Zig + Crystal + Neo4j | ~608 MB | ~1.75 GB 🟢 |
 | **19** | F# + Clojure + XTDB | ~1.5 GB | ~2.65 GB 🟡 |
-| **20** | Swift Vapor + Dart Shelf + Firebase emulator | ~1.4 GB | ~2.55 GB 🟡 |
 
-**Implementar los 11 simultáneamente** requeriría ~25 GB de RAM adicionales sobre el `--profile full` actual.
+**Implementar el caso 19 restante** requeriría ~2.65 GB de RAM adicionales sobre el `--profile full` actual.
 
 ---
 
@@ -130,7 +120,7 @@ Si decides hacer un `docker-compose --profile full pull`, este es el impacto en 
 | Caddy edge proxy | ~80 MB | `--profile edge` |
 
 > [!NOTE]
-> Los [casos planificados 10–20](PLANNED_CASES.md) no se contabilizan aquí (no tienen perfiles aún). Estimación bruta si todos se implementaran: **+6 a +8 GB adicionales** por la incorporación de Kafka, ClickHouse, CockroachDB, Neo4j, XTDB y Firebase Emulator.
+> El [caso planificado 19](PLANNED_CASES.md) no se contabiliza aquí (no tiene perfil aún). Estimación bruta si se implementara: **+2.65 GB adicionales** por la incorporación de XTDB (F#/Clojure).
 
 ---
 
