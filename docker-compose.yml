@@ -190,7 +190,7 @@ services:
       - "${HOST_BIND_IP:-127.0.0.1}:8085:4000"
     volumes:
       - ./cases/05-laravel-to-react/dest:/app
-    command: sh -c "npm install express cors && node server.js"
+    command: sh -c "corepack enable && corepack prepare pnpm@10.0.0 --activate && CI=1 pnpm install --prod && node server.js"
     networks:
       - bot-network
     environment:

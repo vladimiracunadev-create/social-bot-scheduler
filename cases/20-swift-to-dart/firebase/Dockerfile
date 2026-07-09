@@ -7,7 +7,11 @@ RUN apt-get update \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && rm -rf /var/lib/apt/lists/*
-RUN npm install -g firebase-tools
+# pnpm (vía corepack) para el CLI global firebase-tools; PNPM_HOME en PATH expone el binario.
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+ENV PNPM_HOME=/usr/local/share/pnpm
+ENV PATH=$PNPM_HOME:$PATH
+RUN corepack enable && corepack prepare pnpm@10.0.0 --activate && pnpm add -g firebase-tools
 WORKDIR /app
 COPY firebase.json firestore.rules ./
 # Pre-descarga el JAR del emulador de Firestore para que el arranque no dependa de red.

@@ -19,6 +19,9 @@ cases/*/dest/data/
 # Lockfiles npm espurios: los casos JS del lab estandarizan en pnpm-lock.yaml
 cases/*/dest/package-lock.json
 
+# Store local de pnpm creado por instalaciones en bind-mounts (runtime)
+.pnpm-store/
+
 # Python caches
 __pycache__/
 *.pyc
