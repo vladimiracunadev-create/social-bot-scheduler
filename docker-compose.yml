@@ -199,9 +199,9 @@ services:
     depends_on:
       - db-mongodb
 
-  # Case 06: destino Symfony (PHP)
+  # Case 06: destino Symfony (PHP) — build con extensión phpredis
   dest-symfony:
-    image: php:8.2-apache
+    build: ./cases/06-go-to-symfony/dest
     container_name: social-bot-dest-symfony
     profiles: ["case06", "full"]
     deploy:
@@ -381,7 +381,10 @@ services:
     networks:
       - bot-network
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O- http://localhost:8080/health || exit 1"]
+      # 127.0.0.1 (no "localhost"): la imagen Erlang trae GNU wget, que resuelve
+      # "localhost" a ::1 (IPv6) primero, pero Cowboy sólo escucha IPv4 → el
+      # healthcheck marcaba unhealthy pese a que el servicio respondía 200 OK.
+      test: ["CMD-SHELL", "wget -q -O- http://127.0.0.1:8080/health || exit 1"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -618,7 +621,10 @@ services:
       neo4j-18:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O- http://localhost:8080/health || exit 1"]
+      # 127.0.0.1 (no "localhost"): en esta imagen el wget resuelve "localhost"
+      # a ::1 (IPv6) primero, pero Kemal escucha en 0.0.0.0 (IPv4) → el
+      # healthcheck marcaba unhealthy pese a que /health respondía 200 OK.
+      test: ["CMD-SHELL", "wget -q -O- http://127.0.0.1:8080/health || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -922,7 +928,10 @@ services:
     depends_on:
       - postgrest-14
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O- http://localhost:3000/health || exit 1"]
+      # 127.0.0.1 (no "localhost"): la imagen node es Debian con GNU wget, que
+      # resuelve "localhost" a ::1 (IPv6) primero, pero Express escucha en IPv4
+      # → el healthcheck marcaba unhealthy pese a que /health respondía 200 OK.
+      test: ["CMD-SHELL", "wget -q -O- http://127.0.0.1:3000/health || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10

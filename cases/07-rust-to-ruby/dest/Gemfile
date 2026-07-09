@@ -6,3 +6,4 @@ source 'https://rubygems.org'
 
 gem 'sinatra'
 gem 'cassandra-driver'
+gem 'sorted_set' # SortedSet salió del stdlib en Ruby 3.2; cassandra-driver lo requiere

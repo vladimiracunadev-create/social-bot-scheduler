@@ -12,6 +12,13 @@ logs/
 *.log
 resources.json
 
+# Runtime DB artifacts de bind-mounts (p.ej. case 09 DuckDB en dest/data/)
+*.duckdb
+cases/*/dest/data/
+
+# Lockfiles npm espurios: los casos JS del lab estandarizan en pnpm-lock.yaml
+cases/*/dest/package-lock.json
+
 # Python caches
 __pycache__/
 *.pyc
