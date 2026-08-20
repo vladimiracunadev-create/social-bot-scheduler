@@ -146,7 +146,10 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          python -m pip install --upgrade pip
+          # setuptools/wheel entran tambien en el audit: el runner trae
+          # setuptools 79.x (PYSEC-2026-3447) y sin actualizarlo pip-audit falla
+          # por una dependencia que no declara este repositorio.
+          python -m pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
           pip install -r cases/01-python-to-php/origin/requirements.txt
           pip install -r cases/02-python-to-go/origin/requirements.txt

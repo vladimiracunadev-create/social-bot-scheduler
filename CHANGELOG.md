@@ -42,6 +42,10 @@ puede afirmar algo distinto de lo que dice el código.
 - **Enlaces rotos en la documentación**: `docs/DOCKER_RESOURCES.md` apuntaba a un `file:///`
   local; el índice del `README.md` tenía tres anchors desactualizados; `BEGINNERS_GUIDE`, `HUB`
   y `wiki/Usage-Guide` apuntaban a un anchor inexistente de `HEALTH_CHECK.md`.
+- **CI en verde**: `axios` sube a `^1.18.0` en los casos 03 y 04 (GHSA-gcfj-64vw-6mp9, el
+  adaptador HTTP de Node podía reutilizar un proxy heredado tras clonar la config del
+  interceptor) con sus `pnpm-lock.yaml` regenerados, y el job de Python actualiza
+  `setuptools`/`wheel` antes de `pip-audit` (PYSEC-2026-3447 venía del runner, no del repo).
 
 ---
 
