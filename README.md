@@ -3,10 +3,13 @@
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker Hub](https://img.shields.io/badge/Docker-Ready-blue.svg?logo=docker&logoColor=white)](https://hub.docker.com/)
-[![Version](https://img.shields.io/badge/version-4.9.1-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
+[![Version](https://img.shields.io/badge/version-4.10.0-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
+[![Sitio](https://img.shields.io/badge/Sitio-GitHub%20Pages-6366f1.svg?logo=githubpages&logoColor=white)](https://vladimiracunadev-create.github.io/social-bot-scheduler/)
 [![Security: Hardened](https://img.shields.io/badge/Security-Hardened-🛡️?color=red&labelColor=black)](SECURITY.md)
 
 Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. El **Social Bot Scheduler** actúa como una **Matriz Tecnológica** donde **n8n** orquesta la comunicación entre bots emisores y receptores políglotas.
+
+> 🌐 **Sitio del laboratorio**: <https://vladimiracunadev-create.github.io/social-bot-scheduler/> — la matriz de casos y toda esta documentación navegable como HTML (se regenera desde el repositorio en cada push a `main`).
 
 > [!NOTE]
 > **¿Qué significa "🛡️ Security: Hardened"?**
@@ -17,10 +20,10 @@ Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. 
 ## 📋 Tabla de Contenidos
 
 - [🚀 Quickstart](#-quickstart)
-- [🧩 Casos de Integración](#-casos-de-integración)
+- [🧩 Casos de Integración (Tech Matrix)](#-casos-de-integración-tech-matrix)
 - [🛡️ Modelo de Seguridad Runtime](#️-modelo-de-seguridad-runtime)
-- [📊 Observabilidad y Riesgo](#-observabilidad-y-riesgo)
-- [🏗️ Arquitectura](#️-arquitectura)
+- [🏢 Superficies de Riesgo (No exponer a Internet)](#-superficies-de-riesgo-no-exponer-a-internet)
+- [🏗️ Arquitectura y Patrones](#️-arquitectura-y-patrones)
 - [⚙️ Comandos Útiles](#️-comandos-útiles)
 - [📚 Documentación Relacionada](#-documentación-relacionada)
 
@@ -160,6 +163,7 @@ El sistema no es solo una integración; es un catálogo vivo con **11 patrones a
 | 🎓 **Guías** | [docs/INSTALL.md](docs/INSTALL.md) \| [docs/VERIFICATION_GUIDE.md](docs/VERIFICATION_GUIDE.md) |
 | 🛠️ **Operación** | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) \| [n8n/README.md](n8n/README.md) |
 | 🛣️ **Progreso** | [ROADMAP.md](ROADMAP.md) |
+| 🌐 **Sitio publicado** | [vladimiracunadev-create.github.io/social-bot-scheduler](https://vladimiracunadev-create.github.io/social-bot-scheduler/) |
 
 ---
 

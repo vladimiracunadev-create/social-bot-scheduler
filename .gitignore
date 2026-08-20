@@ -60,3 +60,6 @@ _build/
 erl_crash.dump
 
 .claude/
+
+# Sitio publico generado por scripts/build_site.py (se reconstruye en cada despliegue)
+site/

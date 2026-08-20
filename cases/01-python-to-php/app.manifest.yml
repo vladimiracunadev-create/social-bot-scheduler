@@ -1,6 +1,7 @@
 id: "01"
 name: "Python -> n8n -> PHP"
 path: "cases/01-python-to-php"
+status: "ready"
 origin:
   language: "python"
   entrypoint: "origin/bot.py"
@@ -8,5 +9,8 @@ destination:
   language: "php"
   port: 8081
   url: "http://localhost:8081"
+database:
+  engine: "mysql"
+  version: "8.0"
 stack: ["python", "n8n", "php"]
 description: "Integración de bot Python con dashboard PHP Vanilla"

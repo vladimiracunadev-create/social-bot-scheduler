@@ -17,7 +17,7 @@ Este documento detalla el consumo de recursos (Disco y RAM) del proyecto **Socia
 
 ### 🧹 Gestión de Recursos y Limpieza
 Dada la alta demanda técnica de este repositorio (múltiples bases de datos simultáneas), es vital saber cómo liberar recursos:
-- Consulta la [Guía de Recursos Docker](file:///c:/dev/social-bot-scheduler/docs/DOCKER_RESOURCES.md) para ver el reporte de estrés y límites.
+- Consulta el [Reporte de Recursos Docker](DOCKER_REPORT.md) para ver el uso real de imágenes, volúmenes y caché de build.
 - Usa `make clean` o `python hub.py clean` para una limpieza estándar.
 - Usa `docker system prune -a -f --volumes` para una limpieza total (Deep Cleanup).
 

@@ -1,6 +1,7 @@
 id: "06"
 name: "Go -> n8n -> Symfony"
 path: "cases/06-go-to-symfony"
+status: "ready"
 origin:
   language: "go"
   entrypoint: "origin/main.go"
@@ -8,5 +9,8 @@ destination:
   language: "php"
   port: 8086
   url: "http://localhost:8086"
+database:
+  engine: "redis"
+  version: "7"
 stack: ["go", "n8n", "symfony", "php"]
 description: "Integración de emisor Go con framework Symfony"

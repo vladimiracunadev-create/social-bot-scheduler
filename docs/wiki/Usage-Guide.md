@@ -14,7 +14,7 @@ El **HUB** es la herramienta maestra para gestionar la matriz de 19 casos operat
 - **Linux / macOS**: `./hub.sh doctor`
 
 ### 🎛️ Master Dashboard (v4.3.0+)
-Alternativa visual al HUB: abre `http://localhost:8080`. Detecta automáticamente qué casos están ON/OFF, muestra contadores live, badges de RAM por caso y, para los casos OFFLINE, un modal con el comando `docker-compose --profile caseXX up -d` listo para copiar. Útil cuando solo quieres levantar el caso concreto que vas a probar sin recordar el perfil. Ver [HEALTH_CHECK.md](../HEALTH_CHECK.md#diagnóstico-desde-el-master-dashboard-v430).
+Alternativa visual al HUB: abre `http://localhost:8080`. Detecta automáticamente qué casos están ON/OFF, muestra contadores live, badges de RAM por caso y, para los casos OFFLINE, un modal con el comando `docker-compose --profile caseXX up -d` listo para copiar. Útil cuando solo quieres levantar el caso concreto que vas a probar sin recordar el perfil. Ver [HEALTH_CHECK.md](../HEALTH_CHECK.md#️-diagnóstico-desde-el-master-dashboard-v430).
 
 ---
 

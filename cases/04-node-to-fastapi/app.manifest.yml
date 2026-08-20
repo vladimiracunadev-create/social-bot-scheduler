@@ -1,6 +1,7 @@
 id: "04"
 name: "Node.js -> n8n -> FastAPI"
 path: "cases/04-node-to-fastapi"
+status: "ready"
 origin:
   language: "nodejs"
   entrypoint: "origin/index.js"
@@ -8,5 +9,8 @@ destination:
   language: "python"
   port: 8084
   url: "http://localhost:8084"
+database:
+  engine: "sqlite"
+  notes: "Fichero embebido en el receptor; sin contenedor de base de datos separado."
 stack: ["nodejs", "n8n", "fastapi", "python"]
 description: "Integración de Node.js con backend Python FastAPI"

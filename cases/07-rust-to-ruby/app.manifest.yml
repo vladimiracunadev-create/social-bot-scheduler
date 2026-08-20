@@ -1,6 +1,7 @@
 id: "07"
 name: "Rust -> n8n -> Ruby"
 path: "cases/07-rust-to-ruby"
+status: "ready"
 origin:
   language: "rust"
   entrypoint: "origin/src/main.rs"
@@ -8,5 +9,8 @@ destination:
   language: "ruby"
   port: 8087
   url: "http://localhost:8087"
+database:
+  engine: "cassandra"
+  version: "4.1"
 stack: ["rust", "n8n", "ruby", "sinatra"]
 description: "Integración de alta performance Rust con Ruby Sinatra"

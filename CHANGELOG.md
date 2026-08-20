@@ -4,6 +4,47 @@ Todos los cambios notables en este proyecto se documentan sistemáticamente en e
 
 ---
 
+## 📦 [4.10.0] — 2026-08-19
+
+### 🌐 Sitio público del laboratorio en GitHub Pages
+
+El repositorio pasa a publicar un sitio propio en
+<https://vladimiracunadev-create.github.io/social-bot-scheduler/>: portada con la matriz de
+casos, tabla completa de integraciones y **toda la documentación del repo navegable como HTML**.
+
+El sitio **no se versiona**. Se genera en cada despliegue desde las fuentes de verdad del
+repositorio (`cases/*/app.manifest.yml` y los 85 documentos Markdown), de modo que la web no
+puede afirmar algo distinto de lo que dice el código.
+
+#### Añadido
+
+- **`scripts/build_site.py`**: generador del sitio (solo stdlib). Lee los manifiestos de los 20
+  casos, renderiza los 85 `.md` a HTML y produce `index.html`, `casos.html`,
+  `documentacion.html`, `404.html`, `sitemap.xml`, `robots.txt` y `.nojekyll`.
+- **`scripts/site_markdown.py`**: renderizador Markdown → HTML sin dependencias, con soporte de
+  tablas, listas anidadas, bloques de código y alertas de GitHub (`> [!NOTE]`).
+- **`scripts/check_site_links.py`**: verificador que falla si hay un enlace roto, un anchor
+  muerto, un destino `.md`, una ruta absoluta o un recurso cargado desde otro host.
+- **`.github/workflows/pages.yml`**: genera → **verifica** → publica. La verificación ocurre
+  antes de subir el artefacto: Pages despliega un 404 con el mismo éxito que una página buena.
+- **`site-src/assets/site.css`**: hoja de estilo del sitio, con la paleta del Master Dashboard y
+  sin fuentes ni recursos remotos.
+
+#### Cambiado
+
+- **Manifiestos 01–09**: se declara explícitamente `status: "ready"` y el bloque `database:`
+  (MySQL, MariaDB, PostgreSQL, SQLite, MongoDB, Redis, Cassandra, SQL Server, DuckDB). Los
+  manifiestos quedan como catálogo completo y legible por máquina de los 20 casos.
+- **`.gitignore`**: se ignora `site/` (artefacto generado).
+
+#### Corregido
+
+- **Enlaces rotos en la documentación**: `docs/DOCKER_RESOURCES.md` apuntaba a un `file:///`
+  local; el índice del `README.md` tenía tres anchors desactualizados; `BEGINNERS_GUIDE`, `HUB`
+  y `wiki/Usage-Guide` apuntaban a un anchor inexistente de `HEALTH_CHECK.md`.
+
+---
+
 ## 📦 [4.9.1] — 2026-07-09
 
 ### ✨ Migración de npm a pnpm en toda la superficie Node + follow-ups de coherencia

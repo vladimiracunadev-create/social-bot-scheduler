@@ -1,6 +1,7 @@
 id: "05"
 name: "Laravel -> n8n -> React"
 path: "cases/05-laravel-to-react"
+status: "ready"
 origin:
   language: "php"
   entrypoint: "origin/ArtisanPost.php"
@@ -8,5 +9,8 @@ destination:
   language: "react"
   port: 8085
   url: "http://localhost:8085"
+database:
+  engine: "mongodb"
+  version: "6.0"
 stack: ["laravel", "n8n", "react", "vite"]
 description: "Integracion de comando Laravel con frontend React"
