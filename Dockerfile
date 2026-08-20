@@ -32,6 +32,19 @@ RUN groupadd -r botgroup && useradd -r -g botgroup botuser && \
 COPY --from=builder /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
+# Runtime image without a package manager. `hub.py` never installs anything at
+# run time, and pip ships a vendored tree (msgpack, setuptools' pkg_resources)
+# that no `pip install --upgrade` can patch — it was the only source of HIGH
+# findings in the Trivy container scan. Dropping pip removes the finding and
+# the attack surface at once.
+RUN rm -rf /opt/venv/lib/python3.11/site-packages/pip \
+           /opt/venv/lib/python3.11/site-packages/pip-*.dist-info \
+           /opt/venv/bin/pip /opt/venv/bin/pip3 /opt/venv/bin/pip3.11 \
+           /usr/local/lib/python3.11/site-packages/pip \
+           /usr/local/lib/python3.11/site-packages/pip-*.dist-info \
+           /usr/local/bin/pip /usr/local/bin/pip3 /usr/local/bin/pip3.11 \
+           /usr/local/lib/python3.11/ensurepip
+
 COPY --chown=botuser:botgroup . .
 
 USER botuser

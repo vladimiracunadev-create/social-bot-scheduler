@@ -46,6 +46,9 @@ puede afirmar algo distinto de lo que dice el código.
   adaptador HTTP de Node podía reutilizar un proxy heredado tras clonar la config del
   interceptor) con sus `pnpm-lock.yaml` regenerados, y el job de Python actualiza
   `setuptools`/`wheel` antes de `pip-audit` (PYSEC-2026-3447 venía del runner, no del repo).
+- **Escaneo de contenedor limpio**: la imagen final ya no lleva `pip`. `hub.py` no instala nada
+  en ejecución y el árbol vendorizado de pip (`msgpack`, el `pkg_resources` de setuptools) era el
+  único origen de hallazgos HIGH en Trivy — y ningún `pip install --upgrade` lo parchea.
 
 ---
 
