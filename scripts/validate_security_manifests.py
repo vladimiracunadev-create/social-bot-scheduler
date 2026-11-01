@@ -299,12 +299,21 @@ HISTORICO_RE = re.compile(r"v4\.(?:[0-9]|10)\b")
 
 
 def texto_actual(doc: Path) -> str:
-    """El documento sin sus lineas de registro historico."""
-    return "\n".join(
-        linea
-        for linea in doc.read_text(encoding="utf-8").splitlines()
-        if not HISTORICO_RE.search(linea)
-    )
+    """El documento sin su registro historico.
+
+    No basta con filtrar linea a linea: una fila de tabla no repite la version, la
+    lleva su ENCABEZADO ("### Resueltos en v4.4.1"). Al entrar en la seccion de un
+    release anterior se salta entera, hasta el siguiente encabezado.
+    """
+    fuera: list[str] = []
+    en_historico = False
+    for linea in doc.read_text(encoding="utf-8").splitlines():
+        if linea.startswith("#"):
+            en_historico = bool(HISTORICO_RE.search(linea))
+        if en_historico or HISTORICO_RE.search(linea):
+            continue
+        fuera.append(linea)
+    return "\n".join(fuera)
 
 
 def check_doc_claims() -> list[str]:
@@ -383,6 +392,59 @@ def check_doc_claims() -> list[str]:
                     f"{rel}: afirma {m.group(1)} paquetes Node, pero hay {n_node} "
                     f"con pnpm-lock.yaml"
                 )
+
+    # GitHub Actions: ninguna referencia `uses:` puede quedar sin SHA-pinnear, y la
+    # cifra que afirme la documentacion tiene que ser la real. Un tag movil deja la
+    # puerta abierta a que lo reescriban; es el riesgo que P-07 cerro.
+    wf_dir = ROOT / ".github" / "workflows"
+    if wf_dir.is_dir():
+        total_uses = 0
+        sin_pin: list[str] = []
+        versiones: dict[str, set[str]] = {}
+        for wf in sorted(wf_dir.glob("*.yml")):
+            for linea in wf.read_text(encoding="utf-8").splitlines():
+                s = linea.strip()
+                if not s.startswith("- uses:") and not s.startswith("uses:"):
+                    continue
+                total_uses += 1
+                ref = s.split("uses:", 1)[1].strip()
+                # Lo que importa es el SHA de 40, no que el comentario sea una
+                # version: `dtolnay/rust-toolchain@<sha> # stable` esta pinneada
+                # igual de bien, y esa action no publica tags de version.
+                if not re.match(r"^[^@]+@[0-9a-f]{40}(\s|$)", ref):
+                    sin_pin.append(f"{wf.name}: {ref[:60]}")
+                else:
+                    nombre, resto = ref.split("@", 1)
+                    if "#" in resto:
+                        etiqueta = resto.split("#", 1)[1].strip()
+                        if re.match(r"^v?[0-9]", etiqueta):
+                            versiones.setdefault(nombre, set()).add(etiqueta)
+
+        for s in sin_pin:
+            issues.append(
+                f".github/workflows/{s} no esta pinneada a SHA de 40 caracteres"
+            )
+
+        # La misma action con dos versiones distintas entre workflows es deriva.
+        for nombre, vs in sorted(versiones.items()):
+            if len(vs) > 1:
+                issues.append(
+                    f".github/workflows: {nombre} aparece con versiones distintas "
+                    f"({', '.join(sorted(vs))})"
+                )
+
+        for rel in ("SECURITY.md", "README.md"):
+            doc = ROOT / rel
+            if not doc.is_file():
+                continue
+            for m in re.finditer(
+                r"[Ll]as (\d+) referencias `uses:`", texto_actual(doc)
+            ):
+                if int(m.group(1)) != total_uses:
+                    issues.append(
+                        f"{rel}: afirma {m.group(1)} referencias `uses:`, "
+                        f"pero los workflows tienen {total_uses}"
+                    )
 
     return issues
 
