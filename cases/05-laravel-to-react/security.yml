@@ -38,6 +38,7 @@ runtimes:
     from: "8.2-apache"
     to: "8.4-apache"
     reason: fin-de-soporte
+    applied_in: "`docker-compose.yml` (image del servicio)"
     detail: >-
       Soporte activo de PHP 8.2 cerrado el 2024-12-31.
   - component: "dest"
@@ -45,6 +46,7 @@ runtimes:
     from: "20-alpine"
     to: "24-alpine"
     reason: eol
+    applied_in: "`docker-compose.yml` (image del servicio)"
     detail: >-
       Node 20 EOL 2026-04-30.
   - component: "dest"
@@ -52,6 +54,7 @@ runtimes:
     from: "10.0.0"
     to: "11.2.2"
     reason: endurecimiento
+    applied_in: "`cases/05-laravel-to-react/dest/package.json` (dependencias / packageManager); `docker-compose.yml` (image del servicio)"
     detail: >-
       Instalacion en runtime via bind-mount: ahora con --frozen-lockfile.
 
@@ -63,6 +66,7 @@ dependencies:
     to: "^4.22.3"
     advisories: []
     severity: "-"
+    applied_in: "`cases/05-laravel-to-react/dest/package.json` (dependencias / packageManager)"
     note: >-
       Sin advisory en 4.22.1: se sube al ultimo parche de la linea 4.x.
   - ecosystem: "npm"
@@ -71,6 +75,7 @@ dependencies:
     to: "^6.21.0"
     advisories: []
     severity: "-"
+    applied_in: "`cases/05-laravel-to-react/dest/package.json` (dependencias / packageManager)"
     note: >-
       Sin advisory: mantenimiento dentro del major 6 (el 7 es ruptura).
   - ecosystem: "npm"
@@ -80,6 +85,7 @@ dependencies:
     advisories:
       - "GHSA-jqcg-44mw-7w3h"
     severity: "CRITICAL"
+    applied_in: "`cases/05-laravel-to-react/dest/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       Igual que el caso 03.
   - ecosystem: "npm"
@@ -90,6 +96,7 @@ dependencies:
       - "GHSA-27r3-jxmh-p828"
       - "GHSA-v422-hmwv-36x6"
     severity: "HIGH"
+    applied_in: "`cases/05-laravel-to-react/dest/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       Igual que el caso 03.
   - ecosystem: "npm"
@@ -101,6 +108,7 @@ dependencies:
       - "GHSA-x5fp-wj9c-mxmx"
       - "GHSA-6pq8-jhm2-2vcw"
     severity: "MODERATE"
+    applied_in: "`cases/05-laravel-to-react/dest/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       El piso anterior ya no alcanzaba: los tres advisories nuevos piden 6.16.1.
   - ecosystem: "npm"
@@ -110,5 +118,6 @@ dependencies:
     advisories:
       - "GHSA-37ch-88jc-xwx2"
     severity: "HIGH"
+    applied_in: "`cases/05-laravel-to-react/dest/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       Se conserva el piso ya existente (ReDoS).

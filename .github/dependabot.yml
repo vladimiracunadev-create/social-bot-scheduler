@@ -91,6 +91,16 @@ updates:
       - "security"
       - "dependencies"
 
+  # Rust — Case 17 origin. Faltaba: tiene Cargo.toml Y Cargo.lock, asi que las
+  # transitivas (tokio y compania) solo se mantienen al dia si Dependabot las ve.
+  - package-ecosystem: "cargo"
+    directory: "/cases/17-mqtt-rust-to-node/origin"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
   # npm — Case 03 destination (Node.js)
   - package-ecosystem: "npm"
     directory: "/cases/03-go-to-node/dest"

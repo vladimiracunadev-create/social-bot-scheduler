@@ -38,6 +38,7 @@ runtimes:
     from: "3.11-slim"
     to: "3.13-slim-trixie"
     reason: fin-de-soporte-activo
+    applied_in: "`cases/12-python-to-rag/dest/Dockerfile` (FROM de la imagen); `Dockerfile` (FROM de la imagen)"
     detail: >-
       Python 3.11 en modo solo-seguridad; base Debian 12 -> 13.
 
@@ -49,6 +50,7 @@ dependencies:
     to: "0.162.0"
     advisories: []
     severity: "-"
+    applied_in: "`cases/12-python-to-rag/dest/requirements.in` (pin de entrada (se recompila con hash)); `cases/12-python-to-rag/dest/requirements.txt` (lock con hash SHA256)"
     note: >-
       0.115.6 no tiene advisory propio, pero resolvia starlette < 0.49.1 en tiempo de build. Ahora el
       lock trae hashes y la transitiva queda fijada.
@@ -58,6 +60,7 @@ dependencies:
     to: "0.54.0"
     advisories: []
     severity: "-"
+    applied_in: "`cases/12-python-to-rag/dest/requirements.in` (pin de entrada (se recompila con hash)); `cases/12-python-to-rag/dest/requirements.txt` (lock con hash SHA256)"
     note: >-
       Mantenimiento.
   - ecosystem: "PyPI"
@@ -66,6 +69,7 @@ dependencies:
     to: "2.9.13"
     advisories: []
     severity: "-"
+    applied_in: "`cases/12-python-to-rag/dest/requirements.in` (pin de entrada (se recompila con hash)); `cases/12-python-to-rag/dest/requirements.txt` (lock con hash SHA256)"
     note: >-
       Mantenimiento.
   - ecosystem: "PyPI"
@@ -74,6 +78,8 @@ dependencies:
     to: "15 pins con hash SHA256"
     advisories: []
     severity: "-"
+    applied_in: >-
+      `cases/12-python-to-rag/dest/requirements.in` (pins de entrada) + `requirements.txt` (lock con hash SHA256, 15 paquetes)
     note: >-
       El fichero pasa a compilarse con uv --generate-hashes, de modo que pip entra en modo
       --require-hashes y las transitivas dejan de resolverse en el build.

@@ -38,6 +38,7 @@ runtimes:
     from: "1.23-alpine"
     to: "1.27-alpine"
     reason: eol
+    applied_in: "`cases/15-grpc-go-to-python/origin/Dockerfile` (FROM de la imagen)"
     detail: >-
       Go 1.23 EOL 2025-08-12; 59 advisories de stdlib.
   - component: "origin"
@@ -45,6 +46,7 @@ runtimes:
     from: "3.20"
     to: "3.23.7"
     reason: eol
+    applied_in: "`cases/15-grpc-go-to-python/origin/Dockerfile` (FROM de la imagen)"
     detail: >-
       Alpine 3.20 sin parches.
   - component: "dest"
@@ -52,6 +54,7 @@ runtimes:
     from: "3.11-slim"
     to: "3.13-slim-trixie"
     reason: fin-de-soporte-activo
+    applied_in: "`cases/15-grpc-go-to-python/dest/Dockerfile` (FROM de la imagen); `Dockerfile` (FROM de la imagen)"
     detail: >-
       Python 3.11 en modo solo-seguridad; base Debian 12 -> 13.
 
@@ -67,6 +70,7 @@ dependencies:
       - "CVE-2026-84445"
       - "CVE-2026-84303"
     severity: "CRITICAL"
+    applied_in: "`cases/15-grpc-go-to-python/origin/go.mod` (directiva go / require)"
     note: >-
       Bypass de autorizacion por falta de barra inicial en :path (CVE-2026-33186), agotamiento de
       memoria via fragmentacion de DATA frames HTTP/2 y panic del servidor sin cabecera
@@ -77,6 +81,7 @@ dependencies:
     to: "v1.36.12"
     advisories: []
     severity: "-"
+    applied_in: "`cases/15-grpc-go-to-python/origin/Dockerfile` (FROM de la imagen); `cases/15-grpc-go-to-python/origin/go.mod` (directiva go / require)"
     note: >-
       Sin advisory: se alinea con el plugin protoc-gen-go del build.
   - ecosystem: "Go"
@@ -85,6 +90,7 @@ dependencies:
     to: "v1.12.3"
     advisories: []
     severity: "-"
+    applied_in: "`cases/15-grpc-go-to-python/origin/go.mod` (directiva go / require)"
     note: >-
       Sin advisory.
   - ecosystem: "Go"
@@ -95,6 +101,8 @@ dependencies:
       - "CVE-2025-47907"
       - "CVE-2025-47906"
     severity: "HIGH"
+    applied_in: >-
+      `cases/15-grpc-go-to-python/origin/go.mod` (directiva `go 1.27`); `cases/15-grpc-go-to-python/origin/Dockerfile` (FROM golang:1.27-alpine). La stdlib no es una linea de `require`: su version la fija el toolchain.
     note: >-
       Igual que el caso 13.
   - ecosystem: "PyPI"
@@ -103,6 +111,7 @@ dependencies:
     to: "1.85.1"
     advisories: []
     severity: "-"
+    applied_in: "`cases/15-grpc-go-to-python/dest/requirements.in` (pin de entrada (se recompila con hash)); `cases/15-grpc-go-to-python/dest/requirements.txt` (lock con hash SHA256)"
     note: >-
       Sin advisory, pero se alinea con la version del servidor Go.
   - ecosystem: "PyPI"
@@ -111,6 +120,7 @@ dependencies:
     to: "1.85.1"
     advisories: []
     severity: "-"
+    applied_in: "`cases/15-grpc-go-to-python/dest/requirements.in` (pin de entrada (se recompila con hash)); `cases/15-grpc-go-to-python/dest/requirements.txt` (lock con hash SHA256)"
     note: >-
       Idem.
   - ecosystem: "PyPI"
@@ -119,5 +129,7 @@ dependencies:
     to: "18 pins con hash SHA256"
     advisories: []
     severity: "-"
+    applied_in: >-
+      `cases/15-grpc-go-to-python/dest/requirements.in` (pins de entrada) + `requirements.txt` (lock con hash SHA256, 18 paquetes)
     note: >-
       Compilado con uv --generate-hashes: pip entra en modo --require-hashes.

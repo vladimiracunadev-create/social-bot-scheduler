@@ -6,8 +6,7 @@
 [![Version](https://img.shields.io/badge/version-4.11.0-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
 [![Sitio](https://img.shields.io/badge/Sitio-GitHub%20Pages-6366f1.svg?logo=githubpages&logoColor=white)](https://vladimiracunadev-create.github.io/social-bot-scheduler/)
 [![Security: Hardened](https://img.shields.io/badge/Security-Hardened-🛡️?color=red&labelColor=black)](SECURITY.md)
-[![CVE remediados](https://img.shields.io/badge/CVE%20remediados-78%20advisories-success.svg?logo=shieldsdotio&logoColor=white)](docs/CVE_REMEDIATION_v4.11.0.md)
-[![Runtimes](https://img.shields.io/badge/Runtimes-0%20en%20EOL-success.svg)](docs/CVE_REMEDIATION_v4.11.0.md)
+[![Runtimes sin EOL](https://img.shields.io/badge/runtimes-0%20en%20EOL-success.svg?logo=shieldsdotio&logoColor=white)](docs/VERSION_UPGRADES.md)
 
 Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. El **Social Bot Scheduler** actúa como una **Matriz Tecnológica** donde **n8n** orquesta la comunicación entre bots emisores y receptores políglotas.
 
@@ -19,67 +18,9 @@ Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. 
 
 ---
 
-## 🛡️ Remediación de CVE — ningún runtime en EOL (v4.11.0)
-
-**Un runtime en fin de vida no arrastra "un CVE": arrastra todos los publicados desde su último parche.** Por eso la revisión de la v4.11.0 no fue un bump de rutina — se recorrieron los **20 casos**, lenguaje por lenguaje, hasta que ninguno quedara sobre una versión sin soporte.
-
-| | |
-| :--- | ---: |
-| 🔴 **Advisories cerrados** | **78** (41 con identificador CVE) |
-| 🔧 **Cambios de runtime / imagen base** | **51** |
-| 📦 **Entradas de dependencia revisadas** | **92** |
-| ✅ **Runtimes en EOL que quedan** | **0** |
-
-### Los runtimes que estaban sin parches
-
-| Runtime | Antes | Ahora | Por qué era urgente |
-| :--- | :--- | :--- | :--- |
-| **Go** | 1.21 / 1.23 | **1.27** | EOL desde 2024-08-13. OSV reportaba **72 advisories de stdlib** |
-| **Node.js** | 20 | **24 LTS** | EOL desde 2026-04-30 |
-| **.NET** | net6.0 / net9.0 | **net10.0** | .NET 6 llevaba **2 años sin parches** |
-| **Ruby** | 3.2 | **3.4** | EOL desde 2026-03-31 |
-| **Alpine** | 3.20 | **3.23.7** | Sin parches desde 2026-04-01 |
-| **PHP** | 8.2 | **8.4** | Soporte activo cerrado en 2024-12-31 |
-| **Python** | 3.11 (Debian 12) | **3.13** (Debian 13) | En modo solo-seguridad |
-
-Y además: Rust 1.83 → 1.99, Erlang/OTP 27 → 28, Elixir 1.17 → 1.18, Crystal 1.14 → 1.22, Swift 6.0 → 6.2, Gradle 8.11 → 8.14.
-
-### Los agujeros más graves que se cerraron
-
-- **RCE sin autenticar** en la Image Optimization API de Next.js — dos vías distintas, vía SVG y vía AVIF (`GHSA-2464-fhr4-w9xw`, `GHSA-2xp9-vwfh-vxw4`).
-- **Bypass de autorización en gRPC** por falta de barra inicial en `:path` (`CVE-2026-33186`, CRITICAL).
-- **Spoofing de IP** con direcciones IPv4 mapeadas en IPv6 (`GHSA-jqcg-44mw-7w3h`, CRITICAL) — lo arrastraba `express` incluso en su última versión 4.x, así que se fija por `override`.
-- **Raíces de CA comprometidas** en el bundle de `certifi` (`GHSA-6q48-6c7w-9gw2`, CRITICAL).
-- **Confusión de certificados TLS** por codificación IDNA 2003 en `anyio` (`GHSA-82r6-8w77-94w6`, CRITICAL).
-
-### Cadena de suministro: `npm` fuera del laboratorio
-
-`npm` **no se invoca en ninguna superficie** del repositorio. pnpm 11 se activa por `corepack`, y la política vive en un `pnpm-workspace.yaml` por paquete:
-
-```yaml
-onlyBuiltDependencies: []   # ningún paquete ejecuta postinstall/preinstall
-minimumReleaseAge: 1440     # cuarentena de 24 h antes de instalar algo recién publicado
-```
-
-Esas dos líneas son la defensa concreta contra campañas tipo **Shai-Hulud**: el vector es un `postinstall` en un paquete recién comprometido, y aquí no se ejecutan scripts ni se instala nada con menos de 24 h de vida. Los **9 paquetes Node** cierran con `pnpm audit` sin vulnerabilidades, y los **8 locks de Python** llevan hash SHA256 en sus 162 paquetes.
-
-### Una base de datos de advisories no basta
-
-Al pasar el pipeline, `bundler-audit` tumbó el job de Ruby con **cuatro advisories de `rack` 3.2.6 publicados ese mismo día** — uno de ellos HIGH, agotamiento de memoria en el parser multipart. La consulta a OSV para esa misma versión devolvía **cero**: su `ruby-advisory-db` iba más fresca. Se corrigió subiendo a 3.2.8 y fijando el piso en el `Gemfile`.
-
-Por eso los auditores nativos de cada ecosistema (`bundler-audit`, `govulncheck`, `pnpm audit`, `cargo audit`, `pip-audit`) siguen en CI y **bloqueando**: no son redundantes con una consulta centralizada.
-
-### Cómo se evita que esto vuelva a envejecer
-
-Cada caso declara su propio **manifiesto de seguridad** (`cases/NN-*/security.yml`): de qué versión viene cada runtime y cada dependencia, a cuál va, qué advisories cierra y por qué. El guardrail `scripts/validate_security_manifests.py` lo cruza en CI contra los Dockerfiles, el compose y los manifiestos de proyecto, y **falla el pipeline** si el manifiesto va por delante del código o si alguien reintroduce una versión declarada abandonada.
-
-> 📄 **Informe completo, método de verificación y alcance**: [docs/CVE_REMEDIATION_v4.11.0.md](docs/CVE_REMEDIATION_v4.11.0.md) — incluye qué **no** se cambió y por qué, y separa lo verificado con ejecución real de lo que queda en manos del pipeline.
-
----
-
 ## 📋 Tabla de Contenidos
 
-- [🛡️ Remediación de CVE — ningún runtime en EOL (v4.11.0)](#️-remediación-de-cve--ningún-runtime-en-eol-v4110)
+- [🛡️ Seguridad de versiones: remediación de CVE](#️-seguridad-de-versiones-remediación-de-cve)
 - [🚀 Quickstart](#-quickstart)
 - [🧩 Casos de Integración (Tech Matrix)](#-casos-de-integración-tech-matrix)
 - [🛡️ Modelo de Seguridad Runtime](#️-modelo-de-seguridad-runtime)
@@ -87,6 +28,42 @@ Cada caso declara su propio **manifiesto de seguridad** (`cases/NN-*/security.ym
 - [🏗️ Arquitectura y Patrones](#️-arquitectura-y-patrones)
 - [⚙️ Comandos Útiles](#️-comandos-útiles)
 - [📚 Documentación Relacionada](#-documentación-relacionada)
+
+---
+
+## 🛡️ Seguridad de versiones: remediación de CVE
+
+<!-- UPGRADES:INICIO (generado por scripts/build_upgrade_docs.py) -->
+
+**Un runtime en fin de vida no arrastra «un CVE»: arrastra todos los publicados desde su último parche.** Por eso la revisión de la v4.11.0 recorrió los 20 casos lenguaje por lenguaje, hasta que ninguno quedara sobre una versión sin soporte.
+
+| Advisories cerrados | Cambios de runtime | Dependencias revisadas | Runtimes en EOL | Hallazgos abiertos |
+| ---: | ---: | ---: | ---: | ---: |
+| **78** (41 con CVE) | **51** | **92** | **0** | **5** (declarados) |
+
+Cada fila de la tabla enlaza a su documentación completa: ventanas de soporte con gráfico, justificación, la tabla de implementación fichero a fichero, los advisories del stack y el riesgo de ruptura.
+
+| Stack | Cambio | Casos | Advisories | Por qué | Documentación |
+| :--- | :--- | :--- | ---: | :--- | :--- |
+| 🐹 | **Go 1.21 / 1.23 → 1.27** | 02, 03, 06, 13, 15 | 12 | EOL desde 2024-08-13; 72 advisories de stdlib | [Ver detalle](docs/upgrades/go.md) |
+| 🟩 | **Node.js 20 → 24 LTS** | 03, 04, 05, 13, 14, 16, 17 | 31 | EOL desde 2026-04-30 | [Ver detalle](docs/upgrades/nodejs.md) |
+| 🐍 | **Python 3.11 → 3.13 (Debian 12 → 13)** | 01, 02, 04, 08, 09, 12, 15 | 15 | Solo-seguridad; base Debian 12 → 13 | [Ver detalle](docs/upgrades/python.md) |
+| 🐘 | **PHP 8.2 → 8.4** | 01, 05, 06 | — | Soporte activo cerrado en 2024-12-31 | [Ver detalle](docs/upgrades/php.md) |
+| 💎 | **Ruby 3.2 → 3.4** | 07 | 4 | EOL desde 2026-03-31 | [Ver detalle](docs/upgrades/ruby.md) |
+| 🟦 | **.NET 6 / 9 → 10 (LTS)** | 08, 19 | — | .NET 6 llevaba 2 años sin parches | [Ver detalle](docs/upgrades/dotnet.md) |
+| 🏔️ | **Alpine 3.20 → 3.23.7** | 02, 13, 15, 17, 18 | — | Sin parches desde 2026-04-01 | [Ver detalle](docs/upgrades/alpine.md) |
+| 🦀 | **Rust 1.83 → 1.99** | 07, 17 | — | 16 releases de retraso | [Ver detalle](docs/upgrades/rust.md) |
+| 💜 | **Erlang/OTP 27 → 28 · Elixir 1.17 → 1.18** | 11 | 3 | `cowboy` con 3 advisories, uno HIGH | [Ver detalle](docs/upgrades/beam.md) |
+| 💠 | **Crystal 1.14 → 1.22** | 18 | — | `kemal` 1.15 exige Crystal ≥ 1.12 | [Ver detalle](docs/upgrades/crystal.md) |
+| 🧡 | **Swift 6.0 → 6.2** | 20 | — | 2 años de retraso | [Ver detalle](docs/upgrades/swift.md) |
+| 🎯 | **Dart y Debian: fuera los tags flotantes** | 20 | — | Tags flotantes: build irreproducible | [Ver detalle](docs/upgrades/dart.md) |
+| ☕ | **JVM: Temurin 21 se queda, Gradle 8.11 → 8.14** | 10, 19, 20 | 13 | Jackson, pgjdbc y Jetty vulnerables | [Ver detalle](docs/upgrades/jvm.md) |
+| 📦 | **pnpm 10 → 11: npm fuera del laboratorio** | 03, 04, 05, 13, 14, 16, 17, 20 | — | Mitigación Shai-Hulud + npm fuera | [Ver detalle](docs/upgrades/pnpm.md) |
+| ⚡ | **Zig 0.13: por qué NO se subió** | 18 | — | **No se subió**: sin advisory y rompe el build | [Ver detalle](docs/upgrades/zig.md) |
+
+> 📘 **Procedimiento, historial y hallazgos abiertos**: [docs/VERSION_UPGRADES.md](docs/VERSION_UPGRADES.md) — el documento vivo que explica cómo se hace una subida de versión aquí, para este pase y los siguientes.
+
+<!-- UPGRADES:FIN -->
 
 ---
 
@@ -172,7 +149,7 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 - **HTTP Security Headers**: Todos los servicios Apache sirven `X-Frame-Options`, `X-Content-Type-Options`, `Content-Security-Policy`, `Referrer-Policy` y `Permissions-Policy`. Listado de directorios deshabilitado.
 - **Caddy Edge Proxy**: HTTPS + Basic Auth + HSTS + CSP + Permissions-Policy completos.
 - **Supply Chain**: Trivy v0.35.0, pip-audit, Gitleaks, detección de Unicode bidi (CVE-2021-42574) y ofuscación base64 en CI.
-- **Versiones de runtime sin deuda**: ningún lenguaje del laboratorio corre sobre una versión en EOL, y el guardrail `validate_security_manifests.py` falla el pipeline si alguna vuelve a quedarse atrás. Ver [Remediación de CVE](#️-remediación-de-cve--ningún-runtime-en-eol-v4110).
+- **Versiones de runtime sin deuda**: ningún lenguaje del laboratorio corre sobre una versión en EOL, y el guardrail `validate_security_manifests.py` falla el pipeline si alguna vuelve a quedarse atrás. Ver [Seguridad de versiones](#️-seguridad-de-versiones-remediación-de-cve).
 - **Cero `npm`**: pnpm 11 vía `corepack`, con scripts de instalación bloqueados y cuarentena de 24 h sobre publicaciones nuevas (mitigación Shai-Hulud). Builds con `--frozen-lockfile`.
 - **Dependencias con hash**: los 8 `requirements.txt` se compilan con `uv --generate-hashes`, lo que fuerza el modo `--require-hashes` de pip; los 9 paquetes Node llevan `pnpm-lock.yaml` commiteado y auditado.
 - **Dependabot**: PRs automáticos para **31 manifiestos en 10 ecosistemas** (pip, docker, gomod, cargo, nuget, gradle, bundler, pub, github-actions y `npm` —que rastrea los `pnpm-lock.yaml` sin ejecutar npm—), cubriendo los 20 casos.
@@ -221,7 +198,7 @@ El sistema no es solo una integración; es un catálogo vivo con **11 patrones a
 
 | Tipo | Documento |
 | :--- | :--- |
-| 🛡️ **Seguridad** | [SECURITY.md](SECURITY.md) \| [docs/RUNTIME_SECURITY.md](docs/RUNTIME_SECURITY.md) \| [docs/CVE_REMEDIATION_v4.11.0.md](docs/CVE_REMEDIATION_v4.11.0.md) |
+| 🛡️ **Seguridad** | [SECURITY.md](SECURITY.md) \| [docs/RUNTIME_SECURITY.md](docs/RUNTIME_SECURITY.md) \| [docs/VERSION_UPGRADES.md](docs/VERSION_UPGRADES.md) |
 | 🏗️ **Arquitectura** | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
 | ☁️ **Migración a AWS** | [docs/AWS_MIGRATION.md](docs/AWS_MIGRATION.md) |
 | 🎓 **Guías** | [docs/INSTALL.md](docs/INSTALL.md) \| [docs/VERIFICATION_GUIDE.md](docs/VERIFICATION_GUIDE.md) |

@@ -38,6 +38,7 @@ runtimes:
     from: "net6.0"
     to: "net10.0"
     reason: eol
+    applied_in: "`cases/08-csharp-to-flask/origin/SocialBot.csproj` (TargetFramework)"
     detail: >-
       .NET 6 quedo EOL el 2024-11-12: dos anos sin parches de runtime. .NET 10 es LTS hasta
       2028-11-14. El CI pasa de dotnet 6.0.x a 10.0.x.
@@ -46,6 +47,7 @@ runtimes:
     from: "3.11-slim (bookworm)"
     to: "3.13-slim-trixie"
     reason: fin-de-soporte-activo
+    applied_in: "`cases/08-csharp-to-flask/dest/Dockerfile` (FROM de la imagen); `Dockerfile` (FROM de la imagen)"
     detail: >-
       Ademas de la version de Python, la base salta de Debian 12 a 13; el repositorio de msodbcsql18
       apunta ahora a debian/13 trixie.
@@ -60,6 +62,7 @@ dependencies:
       - "GHSA-g6x2-hccm-hh4m"
       - "PYSEC-2026-4312"
     severity: "MODERATE"
+    applied_in: "`cases/08-csharp-to-flask/dest/requirements.txt` (lock con hash SHA256)"
     note: >-
       safe_join() aceptaba nombres de dispositivo especiales de Windows.
   - ecosystem: "PyPI"
@@ -68,6 +71,7 @@ dependencies:
     to: "3.1.3"
     advisories: []
     severity: "-"
+    applied_in: "`cases/08-csharp-to-flask/dest/requirements.txt` (lock con hash SHA256)"
     note: >-
       Ultimo parche de la linea 3.1.
   - ecosystem: "PyPI"
@@ -76,5 +80,6 @@ dependencies:
     to: "5.3.0"
     advisories: []
     severity: "-"
+    applied_in: "`cases/08-csharp-to-flask/dest/requirements.txt` (lock con hash SHA256)"
     note: >-
       Mantenimiento.

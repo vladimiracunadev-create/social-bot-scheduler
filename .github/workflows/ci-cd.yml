@@ -122,6 +122,19 @@ jobs:
         # manifiesto (o reintroduce una version declarada abandonada), esto falla.
         run: python scripts/validate_security_manifests.py
 
+      - name: Upgrade docs are in sync with the manifests [P-08]
+        # docs/upgrades/*.md, docs/VERSION_UPGRADES.md y el bloque del README se
+        # GENERAN desde los security.yml. Si alguien los edita a mano o cambia un
+        # manifiesto sin regenerar, el diff deja de estar vacio y esto falla.
+        run: |
+          python scripts/build_upgrade_docs.py
+          if ! git diff --exit-code -- docs/ README.md; then
+            echo "::error::La documentacion de upgrades esta desincronizada."
+            echo "Ejecuta: python scripts/build_upgrade_docs.py"
+            exit 1
+          fi
+        shell: bash
+
       - name: Validate compose rendering
         run: |
           if docker compose version >/dev/null 2>&1; then

@@ -38,6 +38,7 @@ runtimes:
     from: "9.0 (sdk/runtime, net9.0)"
     to: "10.0 (sdk/runtime, net10.0)"
     reason: eol
+    applied_in: "`cases/19-fsharp-to-clojure/origin/Dockerfile` (FROM de la imagen); `cases/19-fsharp-to-clojure/origin/Publisher.fsproj` (TargetFramework)"
     detail: >-
       .NET 9 queda EOL el 2026-11-10 (dentro de 9 dias) y no es LTS. .NET 10 es LTS hasta 2028-11-14.
   - component: "dest"
@@ -45,6 +46,7 @@ runtimes:
     from: "clojure:temurin-21-lein + temurin:21-jre-alpine"
     to: "sin cambio"
     reason: sin-cambio
+    applied_in: "(sin cambio: no se toco ningun fichero)"
     detail: >-
       Java 21 es LTS con soporte hasta 2029-12-31.
 
@@ -56,6 +58,7 @@ dependencies:
     to: "1.15.6"
     advisories: []
     severity: "-"
+    applied_in: "`cases/19-fsharp-to-clojure/dest/project.clj` (dependencia Leiningen)"
     note: >-
       Sin advisory propio, pero arrastra el adaptador.
   - ecosystem: "Maven"
@@ -69,6 +72,7 @@ dependencies:
       - "CVE-2026-1605"
       - "CVE-2026-10051"
     severity: "HIGH"
+    applied_in: "`cases/19-fsharp-to-clojure/dest/project.clj` (dependencia Leiningen)"
     note: >-
       ring 1.12.2 fija Jetty 11.0.x, con 3 advisories abiertos. ring 1.15.6 pasa a Jetty 12.1.14, que
       esta por encima del piso de los cinco.
@@ -78,6 +82,7 @@ dependencies:
     to: "6.2.0"
     advisories: []
     severity: "-"
+    applied_in: "`cases/19-fsharp-to-clojure/dest/project.clj` (dependencia Leiningen)"
     note: >-
       Sin advisory propio: se sube para quedar sobre jackson 2.21.x.
   - ecosystem: "Maven"
@@ -90,6 +95,7 @@ dependencies:
       - "CVE-2026-68494"
       - "CVE-2026-18401"
     severity: "HIGH"
+    applied_in: "`cases/19-fsharp-to-clojure/dest/project.clj` (dependencia Leiningen)"
     note: >-
       cheshire 6.2.0 fija jackson-core 2.21.1, por debajo del piso 2.21.7. Se anade como dependencia
       directa para pisar la transitiva.
@@ -99,6 +105,7 @@ dependencies:
     to: "1.12.0"
     advisories: []
     severity: "-"
+    applied_in: "`cases/19-fsharp-to-clojure/dest/project.clj` (dependencia Leiningen)"
     note: >-
       Mantenimiento.
   - ecosystem: "Maven"
@@ -107,5 +114,6 @@ dependencies:
     to: "1.24.3"
     advisories: []
     severity: "-"
+    applied_in: "`cases/19-fsharp-to-clojure/dest/project.clj` (dependencia Leiningen)"
     note: >-
       Sin advisory. XTDB 2.x es una reescritura completa y queda fuera de este pase.

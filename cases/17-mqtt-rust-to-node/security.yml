@@ -38,6 +38,7 @@ runtimes:
     from: "1.83-alpine"
     to: "1.99-alpine"
     reason: mantenimiento
+    applied_in: "`cases/17-mqtt-rust-to-node/origin/Dockerfile` (FROM de la imagen)"
     detail: >-
       Rust 1.83 es de noviembre de 2024. 1.99 es la ultima estable.
   - component: "origin"
@@ -45,6 +46,7 @@ runtimes:
     from: "3.20"
     to: "3.23.7"
     reason: eol
+    applied_in: "`cases/17-mqtt-rust-to-node/origin/Dockerfile` (FROM de la imagen)"
     detail: >-
       Alpine 3.20 sin parches.
   - component: "dest"
@@ -52,6 +54,7 @@ runtimes:
     from: "20-alpine"
     to: "24-alpine"
     reason: eol
+    applied_in: "`cases/17-mqtt-rust-to-node/dest/Dockerfile` (FROM de la imagen); `docker-compose.yml` (image del servicio)"
     detail: >-
       Node 20 EOL 2026-04-30.
   - component: "dest"
@@ -59,6 +62,7 @@ runtimes:
     from: "10.0.0"
     to: "11.2.2"
     reason: endurecimiento
+    applied_in: "`cases/17-mqtt-rust-to-node/dest/Dockerfile` (FROM de la imagen); `cases/17-mqtt-rust-to-node/dest/package.json` (dependencias / packageManager); `docker-compose.yml` (image del servicio)"
     detail: >-
       Scripts de instalacion bloqueados + cuarentena de 24 h + lockfile commiteado.
 
@@ -70,6 +74,7 @@ dependencies:
     to: "5.16.1"
     advisories: []
     severity: "-"
+    applied_in: "`cases/17-mqtt-rust-to-node/dest/package.json` (dependencias / packageManager)"
     note: >-
       Sin advisory: mantenimiento.
   - ecosystem: "npm"
@@ -78,6 +83,7 @@ dependencies:
     to: "4.22.3"
     advisories: []
     severity: "-"
+    applied_in: "`cases/17-mqtt-rust-to-node/dest/package.json` (dependencias / packageManager)"
     note: >-
       Ultimo parche de la linea 4.x.
   - ecosystem: "npm"
@@ -87,6 +93,7 @@ dependencies:
     advisories:
       - "GHSA-jqcg-44mw-7w3h"
     severity: "CRITICAL"
+    applied_in: "`cases/17-mqtt-rust-to-node/dest/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       Transitiva de express.
   - ecosystem: "npm"
@@ -97,6 +104,7 @@ dependencies:
       - "GHSA-27r3-jxmh-p828"
       - "GHSA-v422-hmwv-36x6"
     severity: "HIGH"
+    applied_in: "`cases/17-mqtt-rust-to-node/dest/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       Transitiva de express.
   - ecosystem: "npm"
@@ -108,6 +116,7 @@ dependencies:
       - "GHSA-x5fp-wj9c-mxmx"
       - "GHSA-6pq8-jhm2-2vcw"
     severity: "MODERATE"
+    applied_in: "`cases/17-mqtt-rust-to-node/dest/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       Transitiva de express.
   - ecosystem: "crates.io"
@@ -116,6 +125,24 @@ dependencies:
     to: "0.24"
     advisories: []
     severity: "-"
+    applied_in: "`cases/17-mqtt-rust-to-node/origin/Cargo.toml` (dependencia de cargo)"
     note: >-
       Sin advisory. El salto a 0.25 no es verificable sin toolchain Rust local y queda para una
       revision aparte.
+
+# --- Hallazgos ABIERTOS (conocidos y NO remediados) --------------------------------
+# Lo contrario de `dependencies`: esto sigue vulnerable. `rumqttc` se compila con
+# default-features = false (sin TLS), asi que aqui no entra rustls; tokio si.
+open_findings:
+  - ecosystem: "crates.io"
+    package: "tokio"
+    version: "1.52.3"
+    advisories:
+      - "RUSTSEC-2026-0386"
+    severity: "SIN-CLASIFICAR"
+    fix_version: "1.53.3"
+    blocked_by: >-
+      Requiere `cargo update -p <crate>` en una maquina con toolchain Rust: el Cargo.lock lleva checksum por crate y la lista de dependencias de cada version, asi que editarlo a mano no es verificable y romperia el build. Dependabot (ecosistema cargo) lo regenera correctamente.
+    note: >-
+      Transitiva de rumqttc: AsyncFd::new y constructores afines violan la seguridad de
+      E/S (I/O safety). RUSTSEC no publica severidad textual para este advisory.

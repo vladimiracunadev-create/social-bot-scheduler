@@ -38,6 +38,7 @@ runtimes:
     from: "1.21 (go.mod)"
     to: "1.27 (go.mod)"
     reason: eol
+    applied_in: "`cases/03-go-to-node/origin/go.mod` (directiva go / require)"
     detail: >-
       Go 1.21 EOL 2024-08-13; 72 advisories de stdlib.
   - component: "dest"
@@ -45,6 +46,7 @@ runtimes:
     from: "20-alpine"
     to: "24-alpine"
     reason: eol
+    applied_in: "`cases/03-go-to-node/dest/Dockerfile` (FROM de la imagen); `docker-compose.yml` (image del servicio)"
     detail: >-
       Node.js 20 quedo EOL el 2026-04-30 (ultimo parche 20.20.2). Node 24 LTS llega a 2028-04-30.
   - component: "dest"
@@ -52,6 +54,7 @@ runtimes:
     from: "10.0.0"
     to: "11.2.2"
     reason: endurecimiento
+    applied_in: "`cases/03-go-to-node/dest/Dockerfile` (FROM de la imagen); `cases/03-go-to-node/dest/package.json` (dependencias / packageManager); `docker-compose.yml` (image del servicio)"
     detail: >-
       pnpm 11 bloquea scripts de instalacion por defecto y aplica cuarentena de 24 h
       (minimumReleaseAge). Node 24 cumple el requisito Node >= 22.13.
@@ -66,6 +69,7 @@ dependencies:
       - "CVE-2024-43796"
       - "CVE-2024-29041"
     severity: "MODERATE"
+    applied_in: "`cases/03-go-to-node/dest/package.json` (dependencias / packageManager)"
     note: >-
       XSS via response.redirect() y open redirect con URLs malformadas.
   - ecosystem: "npm"
@@ -80,6 +84,7 @@ dependencies:
       - "CVE-2026-101906"
       - "CVE-2026-101907"
     severity: "HIGH"
+    applied_in: "`cases/03-go-to-node/dest/package.json` (dependencias / packageManager)"
     note: >-
       El adaptador HTTP/2 saltaba los controles de DNS y proxy, ReDoS en el parser de data: URL,
       prototype pollution en el adaptador Node y maxRedirects: 0 ignorado.
@@ -89,6 +94,7 @@ dependencies:
     to: "^8.23.1"
     advisories: []
     severity: "-"
+    applied_in: "`cases/03-go-to-node/dest/package.json` (dependencias / packageManager)"
     note: >-
       Sin advisory: mantenimiento.
   - ecosystem: "npm"
@@ -98,6 +104,7 @@ dependencies:
     advisories:
       - "GHSA-jqcg-44mw-7w3h"
     severity: "CRITICAL"
+    applied_in: "`cases/03-go-to-node/dest/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       Spoofing de IP con direcciones IPv4 mapeadas en IPv6; express 4.22.3 todavia arrastra la version
       vulnerable.
@@ -109,6 +116,7 @@ dependencies:
       - "GHSA-27r3-jxmh-p828"
       - "GHSA-v422-hmwv-36x6"
     severity: "HIGH"
+    applied_in: "`cases/03-go-to-node/dest/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       DoS por bytes residuales tras un cuerpo comprimido y limite de tamano ignorado.
   - ecosystem: "npm"
@@ -120,6 +128,7 @@ dependencies:
       - "GHSA-x5fp-wj9c-mxmx"
       - "GHSA-6pq8-jhm2-2vcw"
     severity: "MODERATE"
+    applied_in: "`cases/03-go-to-node/dest/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       DoS via isBuffer controlado por el atacante y bypass del array-limit.
   - ecosystem: "npm"
@@ -131,6 +140,7 @@ dependencies:
       - "GHSA-q3jh-wrc6-jgq8"
       - "GHSA-8r9p-f939-6h3c"
     severity: "HIGH"
+    applied_in: "`cases/03-go-to-node/dest/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       Fuga de cabeceras sensibles al seguir redirecciones cross-origin.
   - ecosystem: "npm"
@@ -140,5 +150,6 @@ dependencies:
     advisories:
       - "CVE-2025-7783"
     severity: "CRITICAL"
+    applied_in: "`cases/03-go-to-node/dest/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       Se conserva el piso ya existente; axios 1.21 resuelve 4.0.6 por si mismo.

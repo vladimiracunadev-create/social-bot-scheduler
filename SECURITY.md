@@ -195,7 +195,7 @@ docker compose --profile edge up -d
 > **GHSA-6q48-6c7w-9gw2** (raíces emSign comprometidas en `certifi`) y
 > **GHSA-82r6-8w77-94w6** (confusión de certificados TLS en `anyio`). Detalle completo, método
 > de obtención y alcance de la verificación en
-> [`docs/CVE_REMEDIATION_v4.11.0.md`](docs/CVE_REMEDIATION_v4.11.0.md).
+> [`docs/VERSION_UPGRADES.md`](docs/VERSION_UPGRADES.md).
 
 ### Follow-ups abiertos
 

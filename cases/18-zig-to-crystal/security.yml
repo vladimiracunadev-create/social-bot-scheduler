@@ -38,6 +38,7 @@ runtimes:
     from: "3.20"
     to: "3.23.7"
     reason: eol
+    applied_in: "`cases/18-zig-to-crystal/origin/Dockerfile` (FROM de la imagen)"
     detail: >-
       Alpine 3.20 dejo de recibir parches el 2026-04-01.
   - component: "origin"
@@ -45,6 +46,7 @@ runtimes:
     from: "0.13.0"
     to: "0.13.0"
     reason: sin-cambio
+    applied_in: "(sin cambio: no se toco ningun fichero)"
     detail: >-
       Zig no tiene advisories en OSV y la ruta 0.13 -> 0.17 rompe el sistema de build (Writergate en
       0.15). Se deja fijo y se documenta; lo que si se parchea es la capa de SO sobre la que compila.
@@ -53,6 +55,7 @@ runtimes:
     from: "1.14-alpine"
     to: "1.22-alpine"
     reason: mantenimiento
+    applied_in: "`cases/18-zig-to-crystal/dest/Dockerfile` (FROM de la imagen)"
     detail: >-
       Crystal 1.22.2 es la ultima estable (2026-10-30).
 
@@ -64,6 +67,8 @@ dependencies:
     to: "~> 1.15.0"
     advisories: []
     severity: "-"
+    applied_in: >-
+      `cases/18-zig-to-crystal/dest/shard.yml` (`dependencies.kemal.version`, linea 11)
     note: >-
       Sin advisory. Se sube porque kemal 1.15.0 exige crystal >= 1.12.0 y es la version soportada
       sobre Crystal 1.22.

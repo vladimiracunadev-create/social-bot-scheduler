@@ -38,6 +38,7 @@ runtimes:
     from: "20-alpine"
     to: "24-alpine"
     reason: eol
+    applied_in: "`cases/14-nextjs-to-supabase/dest/Dockerfile` (FROM de la imagen); `cases/14-nextjs-to-supabase/origin/Dockerfile` (FROM de la imagen); `docker-compose.yml` (image del servicio)"
     detail: >-
       Node 20 EOL 2026-04-30.
   - component: "origin+dest"
@@ -45,6 +46,7 @@ runtimes:
     from: "10.0.0"
     to: "11.2.2"
     reason: endurecimiento
+    applied_in: "`cases/14-nextjs-to-supabase/dest/Dockerfile` (FROM de la imagen); `cases/14-nextjs-to-supabase/dest/package.json` (dependencias / packageManager); `cases/14-nextjs-to-supabase/origin/Dockerfile` (FROM de la imagen)"
     detail: >-
       Scripts de instalacion bloqueados + cuarentena de 24 h + lockfiles commiteados.
 
@@ -62,6 +64,7 @@ dependencies:
       - "CVE-2026-64649"
       - "GHSA-8h8q-6873-q5fj"
     severity: "CRITICAL"
+    applied_in: "`cases/14-nextjs-to-supabase/origin/package.json` (dependencias / packageManager)"
     note: >-
       38 advisories, dos de ellos RCE sin autenticar en la Image Optimization API (SVG y AVIF).
       Tambien bypass de middleware con i18n, SSRF en Server Actions y DoS por cache poisoning. Se
@@ -76,6 +79,7 @@ dependencies:
       - "GHSA-fxqj-rqcc-2cmp"
       - "GHSA-qx2v-qp2m-jg93"
     severity: "HIGH"
+    applied_in: "`cases/14-nextjs-to-supabase/origin/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       Lectura arbitraria de ficheros .map via sourceMappingURL controlado por el atacante; next
       15.5.28 todavia arrastra la version vulnerable.
@@ -85,6 +89,7 @@ dependencies:
     to: "19.3.1"
     advisories: []
     severity: "-"
+    applied_in: "`cases/14-nextjs-to-supabase/origin/package.json` (dependencias / packageManager)"
     note: >-
       Sin advisory: mantenimiento.
   - ecosystem: "npm"
@@ -93,6 +98,7 @@ dependencies:
     to: "19.3.1"
     advisories: []
     severity: "-"
+    applied_in: "`cases/14-nextjs-to-supabase/origin/package.json` (dependencias / packageManager)"
     note: >-
       Sin advisory: mantenimiento.
   - ecosystem: "npm"
@@ -101,6 +107,7 @@ dependencies:
     to: "4.22.3"
     advisories: []
     severity: "-"
+    applied_in: "`cases/14-nextjs-to-supabase/dest/package.json` (dependencias / packageManager)"
     note: >-
       Sin advisory en 4.21.2; se sube al ultimo parche de la linea 4.x.
   - ecosystem: "npm"
@@ -110,6 +117,7 @@ dependencies:
     advisories:
       - "GHSA-jqcg-44mw-7w3h"
     severity: "CRITICAL"
+    applied_in: "`cases/14-nextjs-to-supabase/dest/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       Transitiva de express.
   - ecosystem: "npm"
@@ -120,6 +128,7 @@ dependencies:
       - "GHSA-27r3-jxmh-p828"
       - "GHSA-v422-hmwv-36x6"
     severity: "HIGH"
+    applied_in: "`cases/14-nextjs-to-supabase/dest/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       Transitiva de express.
   - ecosystem: "npm"
@@ -131,5 +140,6 @@ dependencies:
       - "GHSA-x5fp-wj9c-mxmx"
       - "GHSA-6pq8-jhm2-2vcw"
     severity: "MODERATE"
+    applied_in: "`cases/14-nextjs-to-supabase/dest/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       Transitiva de express.

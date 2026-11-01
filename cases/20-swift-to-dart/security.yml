@@ -38,6 +38,7 @@ runtimes:
     from: "6.0 / 6.0-slim"
     to: "6.2 / 6.2-slim"
     reason: mantenimiento
+    applied_in: "`cases/20-swift-to-dart/origin/Dockerfile` (FROM de la imagen)"
     detail: >-
       Swift 6.0 es de septiembre de 2024; la rama 6.2 es la soportada.
   - component: "dest"
@@ -45,6 +46,7 @@ runtimes:
     from: "dart:stable"
     to: "dart:3.10-sdk"
     reason: endurecimiento
+    applied_in: "`cases/20-swift-to-dart/dest/Dockerfile` (FROM de la imagen)"
     detail: >-
       `stable` es un tag movil: el build no era reproducible y el guardrail de imagenes no podia
       comprobar nada. Ahora queda fijado a una linea concreta.
@@ -53,6 +55,7 @@ runtimes:
     from: "debian:stable-slim"
     to: "debian:13-slim"
     reason: endurecimiento
+    applied_in: "`cases/20-swift-to-dart/dest/Dockerfile` (FROM de la imagen)"
     detail: >-
       Mismo motivo: `stable` es movil. 13 = trixie, la estable actual.
   - component: "firebase"
@@ -60,6 +63,7 @@ runtimes:
     from: "eclipse-temurin:21-jdk-jammy"
     to: "eclipse-temurin:21-jdk-noble"
     reason: mantenimiento
+    applied_in: "`cases/20-swift-to-dart/firebase/Dockerfile` (FROM de la imagen)"
     detail: >-
       jammy es Ubuntu 22.04; noble es 24.04 LTS, con soporte mas largo para el emulador de Firestore.
   - component: "firebase"
@@ -67,6 +71,7 @@ runtimes:
     from: "10.0.0"
     to: "11.2.2"
     reason: endurecimiento
+    applied_in: "`cases/20-swift-to-dart/firebase/Dockerfile` (FROM de la imagen); `docker-compose.yml` (image del servicio)"
     detail: >-
       firebase-tools se instala global con pnpm 11: scripts de instalacion bloqueados.
 
@@ -78,6 +83,7 @@ dependencies:
     to: "^1.4.3"
     advisories: []
     severity: "-"
+    applied_in: "`cases/20-swift-to-dart/dest/pubspec.yaml` (dependencia de pub)"
     note: >-
       Sin advisory: mantenimiento.
   - ecosystem: "Pub"
@@ -86,6 +92,7 @@ dependencies:
     to: "^1.1.5"
     advisories: []
     severity: "-"
+    applied_in: "`cases/20-swift-to-dart/dest/pubspec.yaml` (dependencia de pub)"
     note: >-
       Sin advisory: mantenimiento.
   - ecosystem: "Pub"
@@ -94,5 +101,6 @@ dependencies:
     to: "^1.6.0"
     advisories: []
     severity: "-"
+    applied_in: "`cases/20-swift-to-dart/dest/pubspec.yaml` (dependencia de pub)"
     note: >-
       Sin advisory: mantenimiento.

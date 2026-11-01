@@ -19,5 +19,6 @@ stack: ["nodejs", "apollo-server", "graphql", "n8n", "hasura", "timescaledb", "p
 description: "Emisor Apollo GraphQL (schema-first) que reenvia posts vencidos a n8n; un micro-receiver traduce REST a mutaciones/queries GraphQL sobre Hasura + TimescaleDB (database-first)."
 
 # Manifiesto de seguridad de versiones del caso: que runtime y que dependencia
-# estan en que version, y contra que advisory de OSV. Ver docs/CVE_REMEDIATION_v4.11.0.md.
+# estan en que version, y contra que advisory de OSV. Indice de cambios y
+# procedimiento en docs/VERSION_UPGRADES.md.
 security_manifest: "security.yml"

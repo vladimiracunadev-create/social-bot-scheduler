@@ -38,6 +38,7 @@ runtimes:
     from: "1.17-otp-27-alpine"
     to: "1.18-otp-28-alpine"
     reason: mantenimiento
+    applied_in: "`cases/11-elixir-to-erlang/origin/Dockerfile` (FROM de la imagen)"
     detail: >-
       Alinea el emisor con OTP 28 y mantiene el modulo :json de OTP.
   - component: "dest"
@@ -45,6 +46,7 @@ runtimes:
     from: "27-alpine"
     to: "28-alpine"
     reason: mantenimiento
+    applied_in: "`cases/11-elixir-to-erlang/dest/Dockerfile` (FROM de la imagen); `cases/11-elixir-to-erlang/origin/Dockerfile` (FROM de la imagen)"
     detail: >-
       OTP 27 llega a 2027-05-20; OTP 28 a 2028-05-20.
 
@@ -59,6 +61,7 @@ dependencies:
       - "CVE-2026-65624"
       - "CVE-2026-43966"
     severity: "HIGH"
+    applied_in: "`cases/11-elixir-to-erlang/dest/rebar.config` (deps de rebar3)"
     note: >-
       Acumulacion de buffer sin limite al parsear cabeceras multipart (DoS), bypass de max_headers con
       nombres duplicados y HTTP request/response splitting.

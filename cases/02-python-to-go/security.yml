@@ -38,6 +38,7 @@ runtimes:
     from: "3.11"
     to: "3.13"
     reason: fin-de-soporte-activo
+    applied_in: "`cases/02-python-to-go/origin/requirements.in` (pin de entrada (se recompila con hash)); `cases/02-python-to-go/origin/requirements.txt` (lock con hash SHA256); `Dockerfile` (FROM de la imagen)"
     detail: >-
       Mismo criterio que el caso 01.
   - component: "dest"
@@ -45,6 +46,7 @@ runtimes:
     from: "1.21-alpine"
     to: "1.27-alpine"
     reason: eol
+    applied_in: "`cases/02-python-to-go/dest/Dockerfile` (FROM de la imagen)"
     detail: >-
       Go 1.21 quedo EOL el 2024-08-13. OSV reporta 72 advisories de la stdlib para 1.21.13; 1.27.3
       sale limpio.
@@ -53,6 +55,7 @@ runtimes:
     from: "3.20.6"
     to: "3.23.7"
     reason: eol
+    applied_in: "`cases/02-python-to-go/dest/Dockerfile` (FROM de la imagen)"
     detail: >-
       Alpine 3.20 dejo de recibir parches el 2026-04-01. La 3.23 llega a 2027-11-01.
 
@@ -70,6 +73,8 @@ dependencies:
       - "CVE-2024-45341"
       - "CVE-2025-0913"
     severity: "HIGH"
+    applied_in: >-
+      `cases/02-python-to-go/dest/go.mod` (directiva `go 1.27`); `cases/02-python-to-go/dest/Dockerfile` (FROM golang:1.27-alpine). La stdlib no es una linea de `require`: su version la fija el toolchain.
     note: >-
       Request smuggling en net/http, cabeceras sensibles no limpiadas en redirecciones cross-origin,
       resultados incorrectos en database/sql Rows.Scan, entre otros 72.
@@ -79,6 +84,7 @@ dependencies:
     to: "v1.10.1"
     advisories: []
     severity: "-"
+    applied_in: "`cases/02-python-to-go/dest/go.mod` (directiva go / require)"
     note: >-
       Sin advisory: se sube por mantenimiento junto al toolchain.
   - ecosystem: "Go"
@@ -87,6 +93,7 @@ dependencies:
     to: "v1.2.0"
     advisories: []
     severity: "-"
+    applied_in: "`cases/02-python-to-go/dest/go.mod` (directiva go / require)"
     note: >-
       Sin advisory: dependencia indirecta del driver MySQL.
   - ecosystem: "PyPI"
@@ -96,6 +103,7 @@ dependencies:
     advisories:
       - "GHSA-6q48-6c7w-9gw2"
     severity: "CRITICAL"
+    applied_in: "`cases/02-python-to-go/origin/requirements.txt` (lock con hash SHA256)"
     note: >-
       Igual que el caso 01.
   - ecosystem: "PyPI"
@@ -106,5 +114,6 @@ dependencies:
       - "GHSA-8988-9cw3-xx77"
       - "GHSA-vxq7-64xx-v4gw"
     severity: "HIGH"
+    applied_in: "`cases/02-python-to-go/origin/requirements.txt` (lock con hash SHA256)"
     note: >-
       Igual que el caso 01.

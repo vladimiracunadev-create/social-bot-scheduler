@@ -49,7 +49,10 @@ VALID_REASONS = {
     "endurecimiento",
     "sin-cambio",
 }
-VALID_SEVERITIES = {"CRITICAL", "HIGH", "MODERATE", "LOW", "-"}
+# "SIN-CLASIFICAR" existe porque no todo advisory publica una severidad textual:
+# muchos RUSTSEC solo traen el vector CVSS. Traducirlo a una etiqueta seria una
+# interpretacion nuestra, no un dato de la fuente, asi que se declara como lo que es.
+VALID_SEVERITIES = {"CRITICAL", "HIGH", "MODERATE", "LOW", "SIN-CLASIFICAR", "-"}
 ADVISORY_RE = re.compile(
     r"^(CVE-\d{4}-\d{4,}|GHSA-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}|"
     r"PYSEC-\d{4}-\d+|RUSTSEC-\d{4}-\d{4}|GO-\d{4}-\d+|EEF-CVE-\d{4}-\d+)$"
@@ -178,7 +181,15 @@ def check_structure(path: Path, doc: Any, lab_version: str) -> list[str]:
         issues.append(f"{rel}: 'runtimes' no puede estar vacio")
 
     for i, rt in enumerate(doc["runtimes"] or []):
-        for key in ("component", "language", "from", "to", "reason", "detail"):
+        for key in (
+            "component",
+            "language",
+            "from",
+            "to",
+            "reason",
+            "detail",
+            "applied_in",
+        ):
             if key not in rt:
                 issues.append(f"{rel}: runtimes[{i}] sin '{key}'")
         if rt.get("reason") not in VALID_REASONS:
@@ -202,6 +213,7 @@ def check_structure(path: Path, doc: Any, lab_version: str) -> list[str]:
             "advisories",
             "severity",
             "note",
+            "applied_in",
         ):
             if key not in dep:
                 issues.append(f"{rel}: dependencies[{i}] sin '{key}'")
@@ -224,6 +236,60 @@ def check_structure(path: Path, doc: Any, lab_version: str) -> list[str]:
                 f"{rel}: dependencies[{i}] sin advisories pero severity="
                 f"{dep.get('severity')!r}"
             )
+
+    # `applied_in` dice DONDE quedo escrito el cambio. Si cita un fichero que no
+    # existe, la documentacion esta mintiendo sobre su propia implementacion, asi que
+    # se comprueba ruta por ruta. Las rutas van entre acentos graves.
+    for scope in ("runtimes", "dependencies"):
+        for i, entry in enumerate(doc.get(scope) or []):
+            applied = str(entry.get("applied_in") or "")
+            if "(sin cambio" in applied or "(no localizado" in applied:
+                if "(no localizado" in applied:
+                    issues.append(f"{rel}: {scope}[{i}] tiene applied_in sin resolver")
+                continue
+            rutas = re.findall(r"`([^`]+)`", applied)
+            if not rutas:
+                issues.append(
+                    f"{rel}: {scope}[{i}] applied_in no cita ninguna ruta entre "
+                    f"acentos graves: {applied[:60]!r}"
+                )
+            for ruta in rutas:
+                limpia = ruta.split()[0].strip("`")
+                if limpia.startswith("<") or "/" not in limpia:
+                    continue  # descripcion, no ruta (p. ej. una propiedad de Gradle)
+                if not (ROOT / limpia).is_file():
+                    issues.append(
+                        f"{rel}: {scope}[{i}] applied_in cita '{limpia}', que no existe"
+                    )
+
+    # `open_findings` es opcional y describe lo contrario que `dependencies`: un
+    # advisory CONOCIDO y NO remediado. Existe para que el informe no pueda
+    # presentar como cerrado algo que sigue abierto. Exige decir que lo bloquea.
+    for i, finding in enumerate(doc.get("open_findings") or []):
+        for key in (
+            "ecosystem",
+            "package",
+            "version",
+            "advisories",
+            "severity",
+            "fix_version",
+            "blocked_by",
+            "note",
+        ):
+            if key not in finding:
+                issues.append(f"{rel}: open_findings[{i}] sin '{key}'")
+        if finding.get("severity") not in VALID_SEVERITIES - {"-"}:
+            issues.append(
+                f"{rel}: open_findings[{i}] severity={finding.get('severity')!r} no es "
+                f"valido (un hallazgo abierto no puede tener severity '-')"
+            )
+        if not (finding.get("advisories") or []):
+            issues.append(f"{rel}: open_findings[{i}] no lista ningun advisory")
+        for a in finding.get("advisories") or []:
+            if not ADVISORY_RE.match(a):
+                issues.append(
+                    f"{rel}: open_findings[{i}] advisory con formato raro: {a!r}"
+                )
     return issues
 
 
@@ -314,6 +380,14 @@ def main() -> int:
         f"  - {applied} versiones de runtime verificadas contra Dockerfiles, compose y manifiestos"
     )
     print(f"  - {checked_stale} versiones abandonadas comprobadas como ausentes")
+    abiertos = sum(
+        len(yaml.safe_load(m.read_text(encoding="utf-8")).get("open_findings") or [])
+        for m in manifests
+    )
+    if abiertos:
+        print(f"  - {abiertos} hallazgos ABIERTOS declarados (ver open_findings)")
+    else:
+        print("  - 0 hallazgos abiertos declarados")
     return 0
 
 

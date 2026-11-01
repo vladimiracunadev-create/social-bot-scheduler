@@ -38,6 +38,7 @@ runtimes:
     from: "20-alpine"
     to: "24-alpine"
     reason: eol
+    applied_in: "`docker-compose.yml` (image del servicio)"
     detail: >-
       Node 20 EOL 2026-04-30.
   - component: "origin"
@@ -45,6 +46,7 @@ runtimes:
     from: "10.0.0"
     to: "11.2.2"
     reason: endurecimiento
+    applied_in: "`cases/04-node-to-fastapi/origin/package.json` (dependencias / packageManager); `docker-compose.yml` (image del servicio)"
     detail: >-
       Scripts de instalacion bloqueados + cuarentena de 24 h.
   - component: "dest"
@@ -52,6 +54,7 @@ runtimes:
     from: "3.11-alpine"
     to: "3.13-alpine"
     reason: fin-de-soporte-activo
+    applied_in: "`cases/04-node-to-fastapi/dest/Dockerfile` (FROM de la imagen)"
     detail: >-
       Python 3.11 en modo solo-seguridad.
 
@@ -69,6 +72,7 @@ dependencies:
       - "CVE-2026-101906"
       - "CVE-2026-101907"
     severity: "HIGH"
+    applied_in: "`cases/04-node-to-fastapi/origin/package.json` (dependencias / packageManager)"
     note: >-
       Igual que el caso 03.
   - ecosystem: "npm"
@@ -80,6 +84,7 @@ dependencies:
       - "GHSA-q3jh-wrc6-jgq8"
       - "GHSA-8r9p-f939-6h3c"
     severity: "HIGH"
+    applied_in: "`cases/04-node-to-fastapi/origin/pnpm-workspace.yaml` (override de pnpm)"
     note: >-
       Transitiva de axios.
   - ecosystem: "PyPI"
@@ -88,6 +93,7 @@ dependencies:
     to: "0.162.0 con hash SHA256"
     advisories: []
     severity: "-"
+    applied_in: "`cases/04-node-to-fastapi/dest/requirements.in` (pin de entrada (se recompila con hash)); `cases/04-node-to-fastapi/dest/requirements.txt` (lock con hash SHA256)"
     note: >-
       El Dockerfile instalaba fastapi/uvicorn/pydantic SIN pin ni hash: cualquier publicacion
       maliciosa en PyPI entraba en el build. Ahora hay requirements.in + requirements.txt con hashes,
@@ -98,6 +104,7 @@ dependencies:
     to: "2.14.2 con hash SHA256"
     advisories: []
     severity: "-"
+    applied_in: "`cases/04-node-to-fastapi/dest/requirements.in` (pin de entrada (se recompila con hash)); `cases/04-node-to-fastapi/dest/requirements.txt` (lock con hash SHA256)"
     note: >-
       Idem.
   - ecosystem: "PyPI"
@@ -106,5 +113,6 @@ dependencies:
     to: "0.54.0 con hash SHA256"
     advisories: []
     severity: "-"
+    applied_in: "`cases/04-node-to-fastapi/dest/requirements.in` (pin de entrada (se recompila con hash)); `cases/04-node-to-fastapi/dest/requirements.txt` (lock con hash SHA256)"
     note: >-
       Idem.

@@ -15,7 +15,7 @@ EOL el 2026-04-30**.
 
 Se recorrieron los 20 casos: **51 cambios de runtime o imagen base** y **92 entradas de
 dependencia** revisadas, que cierran **78 advisories distintos** (41 con identificador CVE).
-Informe completo en [`docs/CVE_REMEDIATION_v4.11.0.md`](docs/CVE_REMEDIATION_v4.11.0.md).
+Detalle por stack, con una pagina por cambio de version, en [`docs/VERSION_UPGRADES.md`](docs/VERSION_UPGRADES.md).
 
 Nada sale de memoria: cada versión pinneada se consultó contra **OSV.dev** (`/v1/query`, por
 versión exacta), el fin de soporte contra **endoflife.date**, la última versión de cada rama
@@ -33,9 +33,25 @@ contra Docker Hub / MCR **antes** de escribir cada `FROM`.
   contra los Dockerfiles, el compose y los manifiestos de proyecto. Falla si el manifiesto va
   por delante del código, si un caso pierde su `security.yml` o si se reintroduce una versión
   que otro caso declara abandonada. Corre en el job `runtime-security`.
-- **`docs/CVE_REMEDIATION_v4.11.0.md`**: informe transversal. Sus tablas se **generan** desde
-  los 20 `security.yml`, de modo que no pueden desincronizarse. Incluye sección explícita de
-  lo que NO se cambió y por qué, y separa lo verificado con ejecución real de lo que queda en CI.
+- **`docs/VERSION_UPGRADES.md`**: documento **vivo** de mejoras de versión. No es el
+  informe de un release: es el **procedimiento** (los 8 pasos de una subida de versión en
+  este repositorio, con los comandos reales), el índice de cambios, el historial de pases,
+  los hallazgos abiertos y lo que no se subió con su motivo. Se amplía en cada pase.
+- **`docs/upgrades/<stack>.md`** (15 páginas): una por cambio de versión. Cada una lleva
+  las ventanas de soporte con **gráfico Mermaid**, la justificación, la tabla de
+  implementación **fichero a fichero**, las dependencias del stack con sus advisories, el
+  riesgo de ruptura y las fuentes. Son las que enlaza la tabla del README.
+- **`scripts/build_upgrade_docs.py`**: genera esas 15 páginas, el índice y el bloque del
+  README desde los 20 `security.yml`. Nada de eso se edita a mano, y un paso nuevo de CI
+  falla si alguien lo intenta o si cambia un manifiesto sin regenerar.
+- **`applied_in`** en las 143 entradas de los `security.yml`: el fichero y el mecanismo
+  concretos donde quedó escrito cada cambio (`FROM` de la imagen, `require` del go.mod,
+  override de pnpm, propiedad del BOM de Gradle, piso del Gemfile…). El guardrail
+  **comprueba que cada ruta citada exista**: si la documentación miente sobre su propia
+  implementación, el pipeline falla.
+- **`open_findings`** en los `security.yml`: lo contrario de `dependencies` — advisories
+  **conocidos y NO remediados**, con su versión de corrección y qué los bloquea. Existe
+  para que el informe no pueda presentar como cerrado algo que sigue abierto.
 - **`pnpm-workspace.yaml`** en los 9 paquetes Node: `onlyBuiltDependencies: []` (ningún
   `postinstall`), `minimumReleaseAge: 1440` (cuarentena de 24 h) y los `overrides` por CVE.
 - **`requirements.in` + `requirements.txt` con hashes** en los casos 04, 12 y 15, que antes
@@ -101,6 +117,21 @@ contra Docker Hub / MCR **antes** de escribir cada `FROM`.
 - **postcss** ≤ 8.5.22 (caso 14), **body-parser** < 1.20.9, **qs** ≤ 6.16.0 y
   **follow-redirects** ≤ 1.16.1: transitivas con advisory que las versiones parcheadas de
   `next`, `express` y `axios` siguen arrastrando. Cerradas por `overrides`.
+
+#### Declarado ABIERTO — no remediado
+
+- **5 crates vulnerables en los `Cargo.lock`** de los casos 07 y 17: `rustls` 0.23.41
+  (8 advisories, entre ellos secretos TLS expuestos por los `impl Debug` de sesión),
+  `h2` 0.4.15, `rustls-webpki` 0.103.13 y `tokio` 1.52.3 en los dos casos. **No están
+  corregidos**: el `Cargo.lock` lleva un checksum por crate y la lista de dependencias de
+  cada versión, así que editarlo a mano no es verificable y rompería el build. La
+  corrección correcta es `cargo update -p <crate>` con toolchain Rust, que no hay en esta
+  máquina. Quedan declarados como `open_findings` y Dependabot los regenerará.
+- **`cargo audit` pasó en verde** en CI: fue la consulta a OSV sobre las versiones exactas
+  del lock la que los encontró. El espejo exacto del caso de `rack`, donde acertó
+  `bundler-audit` y falló OSV.
+- **Dependabot no cubría el caso 17** (tiene `Cargo.toml` **y** `Cargo.lock`, pero no
+  entrada `cargo`). Añadida: 32 entradas en total.
 
 #### Corregido — cadena de suministro
 

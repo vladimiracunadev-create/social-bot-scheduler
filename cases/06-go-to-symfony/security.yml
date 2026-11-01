@@ -38,6 +38,7 @@ runtimes:
     from: "1.21 (go.mod)"
     to: "1.27 (go.mod)"
     reason: eol
+    applied_in: "`cases/06-go-to-symfony/origin/go.mod` (directiva go / require)"
     detail: >-
       Go 1.21 EOL 2024-08-13; 72 advisories de stdlib.
   - component: "dest"
@@ -45,6 +46,7 @@ runtimes:
     from: "8.2-apache"
     to: "8.4-apache"
     reason: fin-de-soporte
+    applied_in: "`cases/06-go-to-symfony/dest/Dockerfile` (FROM de la imagen); `docker-compose.yml` (image del servicio)"
     detail: >-
       Soporte activo cerrado el 2024-12-31. La extension phpredis se sigue instalando por pecl sobre
       8.4.

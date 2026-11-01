@@ -38,6 +38,7 @@ runtimes:
     from: "3.11"
     to: "3.13"
     reason: fin-de-soporte-activo
+    applied_in: "`cases/01-python-to-php/origin/requirements.in` (pin de entrada (se recompila con hash)); `cases/01-python-to-php/origin/requirements.txt` (lock con hash SHA256); `Dockerfile` (FROM de la imagen)"
     detail: >-
       Python 3.11 esta en modo solo-seguridad (EOL 2027-10-31); 3.13 llega a 2029-10-31. El lock se
       recompila con --python-version 3.13.
@@ -46,6 +47,7 @@ runtimes:
     from: "8.2-apache"
     to: "8.4-apache"
     reason: fin-de-soporte
+    applied_in: "`docker-compose.yml` (image del servicio)"
     detail: >-
       El soporte activo de PHP 8.2 termino el 2024-12-31 y su EOL es el 2026-12-31. PHP 8.4 recibe
       parches hasta 2028-12-31.
@@ -60,6 +62,7 @@ dependencies:
       - "GHSA-6q48-6c7w-9gw2"
       - "PYSEC-2026-4320"
     severity: "CRITICAL"
+    applied_in: "`cases/01-python-to-php/origin/requirements.txt` (lock con hash SHA256)"
     note: >-
       El bundle incluia raices emSign con claves de CA intermedia comprometidas.
   - ecosystem: "PyPI"
@@ -71,6 +74,7 @@ dependencies:
       - "GHSA-vxq7-64xx-v4gw"
       - "GHSA-gh4c-6fx4-qh6g"
     severity: "HIGH"
+    applied_in: "`cases/01-python-to-php/origin/requirements.txt` (lock con hash SHA256)"
     note: >-
       La config TLS del proxy HTTPS podia ignorarse y stream()/read_chunked() bufferizaba un chunk sin
       limite.

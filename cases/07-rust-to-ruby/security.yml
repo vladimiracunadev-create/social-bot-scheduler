@@ -38,6 +38,7 @@ runtimes:
     from: "3.2-alpine"
     to: "3.4-alpine"
     reason: eol
+    applied_in: "`cases/07-rust-to-ruby/dest/Dockerfile` (FROM de la imagen)"
     detail: >-
       Ruby 3.2 quedo EOL el 2026-03-31. La rama 3.4 llega a 2028-03-31. sorted_set sigue siendo
       necesario (SortedSet salio del stdlib en 3.2).
@@ -46,6 +47,7 @@ runtimes:
     from: "toolchain stable en CI"
     to: "toolchain stable en CI"
     reason: sin-cambio
+    applied_in: "(sin cambio: no se toco ningun fichero)"
     detail: >-
       El emisor Rust no tiene imagen propia: compila con el toolchain stable del CI.
 
@@ -57,6 +59,7 @@ dependencies:
     to: "4.2.1"
     advisories: []
     severity: "-"
+    applied_in: "`cases/07-rust-to-ruby/dest/Gemfile.lock` (version resuelta por bundler)"
     note: >-
       Ya estaba por encima del piso: CVE-2024-21510 se corrige en 4.1.0 y CVE-2025-61921 en 4.2.0.
   - ecosystem: "RubyGems"
@@ -69,6 +72,7 @@ dependencies:
       - "GHSA-wvg4-6p58-3gh3"
       - "GHSA-p8x9-v4hv-2w4g"
     severity: "HIGH"
+    applied_in: "`cases/07-rust-to-ruby/dest/Gemfile` (piso de version de bundler); `cases/07-rust-to-ruby/dest/Gemfile.lock` (version resuelta por bundler)"
     note: >-
       3.2.6 ya cubria los 25 advisories previos de la rama 3.x, pero el 2026-11-01 se publicaron
       otros cuatro: el parser multipart retiene lo ya parseado en su buffer de scan
@@ -84,6 +88,7 @@ dependencies:
     to: "0.12"
     advisories: []
     severity: "-"
+    applied_in: "`cases/07-rust-to-ruby/origin/Cargo.toml` (dependencia de cargo)"
     note: >-
       Sin advisory. El salto a 0.13 es ruptura de API y queda para una revision aparte.
   - ecosystem: "crates.io"
@@ -92,5 +97,69 @@ dependencies:
     to: "0.15"
     advisories: []
     severity: "-"
+    applied_in: "`cases/07-rust-to-ruby/origin/Cargo.toml` (dependencia de cargo)"
     note: >-
       Se conserva: ya es el fork mantenido que cierra RUSTSEC-2021-0141.
+
+# --- Hallazgos ABIERTOS (conocidos y NO remediados) --------------------------------
+# Lo contrario de `dependencies`: esto sigue vulnerable. Esta aqui para que el informe
+# no pueda presentarlo como cerrado. `cargo audit` salio verde en CI, pero la consulta
+# a OSV sobre las versiones exactas del Cargo.lock encontro estos cuatro.
+open_findings:
+  - ecosystem: "crates.io"
+    package: "rustls"
+    version: "0.23.41"
+    advisories:
+      - "RUSTSEC-2026-0285"
+      - "RUSTSEC-2026-0346"
+      - "RUSTSEC-2026-0348"
+      - "RUSTSEC-2026-0349"
+      - "GHSA-2mjx-qc3c-rqvc"
+      - "GHSA-c8m5-c952-6cm4"
+      - "GHSA-h2v8-394m-p7vv"
+      - "GHSA-w44r-93j7-qv28"
+    severity: "MODERATE"
+    fix_version: "0.23.46"
+    blocked_by: >-
+      Requiere `cargo update -p <crate>` en una maquina con toolchain Rust: el Cargo.lock lleva checksum por crate y la lista de dependencias de cada version, asi que editarlo a mano no es verificable y romperia el build. Dependabot (ecosistema cargo) lo regenera correctamente.
+    note: >-
+      Transitiva de reqwest. Mensajes de handshake TLS 1.3 aceptados entre epocas de
+      cifrado distintas, los impl Debug de los valores de sesion de cliente filtran
+      secretos TLS, la descompresion Brotli de certificados puede reservar hasta 1 GiB
+      antes de validar, y un ServerHello sin autenticar envenena la cache por nombre.
+  - ecosystem: "crates.io"
+    package: "h2"
+    version: "0.4.15"
+    advisories:
+      - "RUSTSEC-2026-0258"
+    severity: "SIN-CLASIFICAR"
+    fix_version: "0.4.16"
+    blocked_by: >-
+      Requiere `cargo update -p <crate>` en una maquina con toolchain Rust: el Cargo.lock lleva checksum por crate y la lista de dependencias de cada version, asi que editarlo a mano no es verificable y romperia el build. Dependabot (ecosistema cargo) lo regenera correctamente.
+    note: >-
+      Transitiva de reqwest: frames DATA vacios sin limite en HTTP/2. RUSTSEC no publica
+      severidad textual para este advisory, solo el aviso.
+  - ecosystem: "crates.io"
+    package: "rustls-webpki"
+    version: "0.103.13"
+    advisories:
+      - "RUSTSEC-2026-0382"
+    severity: "SIN-CLASIFICAR"
+    fix_version: "0.103.16"
+    blocked_by: >-
+      Requiere `cargo update -p <crate>` en una maquina con toolchain Rust: el Cargo.lock lleva checksum por crate y la lista de dependencias de cada version, asi que editarlo a mano no es verificable y romperia el build. Dependabot (ecosistema cargo) lo regenera correctamente.
+    note: >-
+      Transitiva de rustls: la verificacion de certificados puede aceptar intermedios
+      que ya no son de confianza.
+  - ecosystem: "crates.io"
+    package: "tokio"
+    version: "1.52.3"
+    advisories:
+      - "RUSTSEC-2026-0386"
+    severity: "SIN-CLASIFICAR"
+    fix_version: "1.53.3"
+    blocked_by: >-
+      Requiere `cargo update -p <crate>` en una maquina con toolchain Rust: el Cargo.lock lleva checksum por crate y la lista de dependencias de cada version, asi que editarlo a mano no es verificable y romperia el build. Dependabot (ecosistema cargo) lo regenera correctamente.
+    note: >-
+      Transitiva de reqwest: AsyncFd::new y constructores afines violan la seguridad de
+      E/S (I/O safety).

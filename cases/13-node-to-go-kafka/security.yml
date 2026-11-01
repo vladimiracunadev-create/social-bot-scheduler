@@ -38,6 +38,7 @@ runtimes:
     from: "20-alpine"
     to: "24-alpine"
     reason: eol
+    applied_in: "`cases/13-node-to-go-kafka/origin/Dockerfile` (FROM de la imagen); `docker-compose.yml` (image del servicio)"
     detail: >-
       Node 20 EOL 2026-04-30.
   - component: "origin"
@@ -45,6 +46,7 @@ runtimes:
     from: "10.0.0"
     to: "11.2.2"
     reason: endurecimiento
+    applied_in: "`cases/13-node-to-go-kafka/origin/Dockerfile` (FROM de la imagen); `cases/13-node-to-go-kafka/origin/package.json` (dependencias / packageManager); `docker-compose.yml` (image del servicio)"
     detail: >-
       Scripts de instalacion bloqueados + cuarentena de 24 h + lockfile commiteado.
   - component: "dest"
@@ -52,6 +54,7 @@ runtimes:
     from: "1.23-alpine"
     to: "1.27-alpine"
     reason: eol
+    applied_in: "`cases/13-node-to-go-kafka/dest/Dockerfile` (FROM de la imagen)"
     detail: >-
       Go 1.23 quedo EOL el 2025-08-12; OSV reporta 59 advisories de stdlib para 1.23.12.
   - component: "dest"
@@ -59,6 +62,7 @@ runtimes:
     from: "3.20"
     to: "3.23.7"
     reason: eol
+    applied_in: "`cases/13-node-to-go-kafka/dest/Dockerfile` (FROM de la imagen)"
     detail: >-
       Alpine 3.20 sin parches desde 2026-04-01.
 
@@ -73,6 +77,8 @@ dependencies:
       - "CVE-2025-47906"
       - "CVE-2026-97032"
     severity: "HIGH"
+    applied_in: >-
+      `cases/13-node-to-go-kafka/dest/go.mod` (directiva `go 1.27`); `cases/13-node-to-go-kafka/dest/Dockerfile` (FROM golang:1.27-alpine). La stdlib no es una linea de `require`: su version la fija el toolchain.
     note: >-
       59 advisories, entre ellos resultados incorrectos en database/sql Rows.Scan y rutas inesperadas
       desde os/exec LookPath.
@@ -82,6 +88,7 @@ dependencies:
     to: "v0.4.51"
     advisories: []
     severity: "-"
+    applied_in: "`cases/13-node-to-go-kafka/dest/go.mod` (directiva go / require)"
     note: >-
       Sin advisory: mantenimiento.
   - ecosystem: "npm"
@@ -90,5 +97,6 @@ dependencies:
     to: "2.2.4"
     advisories: []
     severity: "-"
+    applied_in: "`cases/13-node-to-go-kafka/origin/package.json` (dependencias / packageManager)"
     note: >-
       Ya es la ultima version publicada y no tiene advisory.

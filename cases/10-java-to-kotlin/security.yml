@@ -38,6 +38,7 @@ runtimes:
     from: "8.11-jdk21"
     to: "8.14-jdk21"
     reason: mantenimiento
+    applied_in: "`cases/10-java-to-kotlin/dest/Dockerfile` (FROM de la imagen); `cases/10-java-to-kotlin/origin/Dockerfile` (FROM de la imagen)"
     detail: >-
       Ultimo parche de la linea 8.x compatible con el plugin de Spring Boot 3.5.
   - component: "origin+dest"
@@ -45,6 +46,7 @@ runtimes:
     from: "eclipse-temurin:21-jre-alpine"
     to: "sin cambio"
     reason: sin-cambio
+    applied_in: "(sin cambio: no se toco ningun fichero)"
     detail: >-
       Java 21 es LTS con soporte hasta 2029-12-31 y el tag movil ya trae el ultimo parche.
 
@@ -56,6 +58,7 @@ dependencies:
     to: "3.5.16"
     advisories: []
     severity: "-"
+    applied_in: "`cases/10-java-to-kotlin/origin/build.gradle.kts` (dependencia Gradle)"
     note: >-
       La rama 3.3 salio del soporte OSS. 3.5.16 es el ultimo parche de la 3.x; el salto a Spring Boot
       4 es ruptura y queda aparte.
@@ -69,6 +72,7 @@ dependencies:
       - "CVE-2026-89407"
       - "CVE-2026-68494"
     severity: "HIGH"
+    applied_in: "`cases/10-java-to-kotlin/origin/build.gradle.kts` (dependencia Gradle)"
     note: >-
       Spring Boot 3.5.16 fija jackson-bom 2.21.4, que arrastra jackson-databind con 9 advisories
       abiertos. Subir la propiedad del BOM reemplaza toda la familia.
@@ -81,6 +85,7 @@ dependencies:
       - "CVE-2026-42198"
       - "CVE-2026-54291"
     severity: "HIGH"
+    applied_in: "`cases/10-java-to-kotlin/dest/build.gradle.kts` (dependencia Gradle)"
     note: >-
       Fallback a autenticacion insegura con channelBinding=require, iteraciones PBKDF2 sin limite en
       SCRAM y downgrade silencioso del channel binding.
@@ -90,6 +95,7 @@ dependencies:
     to: "1.5.18"
     advisories: []
     severity: "-"
+    applied_in: "`cases/10-java-to-kotlin/dest/build.gradle.kts` (dependencia Gradle)"
     note: >-
       Sin advisory en OSV para 1.5.12, pero la linea 1.5.x acumula correcciones de seguridad desde
       1.5.13.
@@ -99,5 +105,7 @@ dependencies:
     to: "2.3.13"
     advisories: []
     severity: "-"
+    applied_in: >-
+      `cases/10-java-to-kotlin/dest/build.gradle.kts` (`val ktorVersion = "2.3.13"`, linea 16)
     note: >-
       Sin advisory. Ktor 3.x cambia la API (kotlinx-io) y el salto queda para una revision aparte.

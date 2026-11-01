@@ -18,5 +18,6 @@ stack: ["elixir", "n8n", "erlang", "cowboy", "mnesia", "otp", "beam"]
 description: "Modelo de actores BEAM: emisor Elixir y receptor Erlang/Cowboy con persistencia Mnesia embebida en el runtime."
 
 # Manifiesto de seguridad de versiones del caso: que runtime y que dependencia
-# estan en que version, y contra que advisory de OSV. Ver docs/CVE_REMEDIATION_v4.11.0.md.
+# estan en que version, y contra que advisory de OSV. Indice de cambios y
+# procedimiento en docs/VERSION_UPGRADES.md.
 security_manifest: "security.yml"

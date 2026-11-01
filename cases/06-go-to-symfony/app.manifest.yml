@@ -16,5 +16,6 @@ stack: ["go", "n8n", "symfony", "php"]
 description: "Integración de emisor Go con framework Symfony"
 
 # Manifiesto de seguridad de versiones del caso: que runtime y que dependencia
-# estan en que version, y contra que advisory de OSV. Ver docs/CVE_REMEDIATION_v4.11.0.md.
+# estan en que version, y contra que advisory de OSV. Indice de cambios y
+# procedimiento en docs/VERSION_UPGRADES.md.
 security_manifest: "security.yml"
