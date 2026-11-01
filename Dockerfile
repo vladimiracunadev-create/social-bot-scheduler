@@ -1,5 +1,5 @@
 # Build stage
-FROM python:3.13-slim-trixie AS builder
+FROM python:3.15-slim-trixie AS builder
 
 WORKDIR /app
 
@@ -18,7 +18,7 @@ RUN pip install --upgrade pip setuptools wheel && \
     pip install --no-cache-dir -r requirements.txt
 
 # Final stage
-FROM python:3.13-slim-trixie
+FROM python:3.15-slim-trixie
 
 WORKDIR /app
 
