@@ -1,7 +1,7 @@
 # ==================================================================================================
 # Case 10 — Build multi-stage del receptor Ktor (fat-jar con Shadow) + runtime JRE slim.
 # ==================================================================================================
-FROM gradle:8.11-jdk21 AS build
+FROM gradle:8.14-jdk21 AS build
 WORKDIR /src
 COPY settings.gradle.kts build.gradle.kts ./
 # Precalienta dependencias (capa cacheable) antes de copiar el código.

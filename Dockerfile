@@ -1,5 +1,5 @@
 # Build stage
-FROM python:3.11-slim-bookworm AS builder
+FROM python:3.13-slim-trixie AS builder
 
 WORKDIR /app
 
@@ -18,7 +18,7 @@ RUN pip install --upgrade pip setuptools wheel && \
     pip install --no-cache-dir -r requirements.txt
 
 # Final stage
-FROM python:3.11-slim-bookworm
+FROM python:3.13-slim-trixie
 
 WORKDIR /app
 
@@ -37,13 +37,13 @@ ENV PATH="/opt/venv/bin:$PATH"
 # that no `pip install --upgrade` can patch — it was the only source of HIGH
 # findings in the Trivy container scan. Dropping pip removes the finding and
 # the attack surface at once.
-RUN rm -rf /opt/venv/lib/python3.11/site-packages/pip \
-           /opt/venv/lib/python3.11/site-packages/pip-*.dist-info \
-           /opt/venv/bin/pip /opt/venv/bin/pip3 /opt/venv/bin/pip3.11 \
-           /usr/local/lib/python3.11/site-packages/pip \
-           /usr/local/lib/python3.11/site-packages/pip-*.dist-info \
-           /usr/local/bin/pip /usr/local/bin/pip3 /usr/local/bin/pip3.11 \
-           /usr/local/lib/python3.11/ensurepip
+RUN rm -rf /opt/venv/lib/python3.13/site-packages/pip \
+           /opt/venv/lib/python3.13/site-packages/pip-*.dist-info \
+           /opt/venv/bin/pip /opt/venv/bin/pip3 /opt/venv/bin/pip3.13 \
+           /usr/local/lib/python3.13/site-packages/pip \
+           /usr/local/lib/python3.13/site-packages/pip-*.dist-info \
+           /usr/local/bin/pip /usr/local/bin/pip3 /usr/local/bin/pip3.13 \
+           /usr/local/lib/python3.13/ensurepip
 
 COPY --chown=botuser:botgroup . .
 

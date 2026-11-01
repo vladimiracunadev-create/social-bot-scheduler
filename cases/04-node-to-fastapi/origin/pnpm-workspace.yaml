@@ -1,0 +1,22 @@
+# ==================================================================================================
+# Caso 04 — Política de supply-chain de pnpm (origin).
+# pnpm >= 11 ya NO lee el campo `pnpm` de package.json: `overrides` y
+# `onlyBuiltDependencies` viven aquí (https://pnpm.io/settings).
+# ==================================================================================================
+
+# Ningún paquete puede ejecutar scripts de instalación (postinstall/preinstall).
+# Es la mitigación central contra campañas tipo Shai-Hulud en el registro npm.
+onlyBuiltDependencies: []
+
+# Cuarentena: no se instala ninguna versión publicada hace menos de 1440 min (24 h),
+# la ventana en la que se detectan y despublican los paquetes comprometidos.
+minimumReleaseAge: 1440
+
+# Pisos de versión para dependencias transitivas con advisory abierto que las
+# versiones actuales de `express` 4.x / `axios` 1.x todavía arrastran.
+overrides:
+  # form-data < 4.0.6 — boundary predecible (CVE-2025-7783).
+  form-data: '>=4.0.6'
+  # follow-redirects <= 1.16.1 — fuga de cabeceras sensibles en redirecciones
+  # cross-origin (GHSA-mrwp-f3q8-3g9p, GHSA-q3jh-wrc6-jgq8, GHSA-8r9p-f939-6h3c).
+  follow-redirects: '>=1.16.2'

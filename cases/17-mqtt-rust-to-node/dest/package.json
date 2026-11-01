@@ -9,10 +9,11 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "express": "4.21.2",
-    "mqtt": "5.10.3"
+    "express": "4.22.3",
+    "mqtt": "5.16.1"
   },
   "engines": {
-    "node": ">=20"
-  }
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@11.2.2"
 }

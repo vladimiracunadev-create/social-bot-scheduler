@@ -43,7 +43,7 @@ services:
 
   # Dashboard maestro: local-only by default, keeps the browser-based lab usable
   master-dashboard:
-    image: php:8.2-apache
+    image: php:8.4-apache
     container_name: social-bot-master
     deploy:
       resources:
@@ -92,7 +92,7 @@ services:
 
   # Case 01: destino PHP
   dest-php:
-    image: php:8.2-apache
+    image: php:8.4-apache
     container_name: social-bot-dest-php
     profiles: ["case01", "full"]
     deploy:
@@ -177,7 +177,7 @@ services:
 
   # Case 05: destino React (Node)
   dest-react:
-    image: node:20-alpine
+    image: node:24-alpine
     container_name: social-bot-dest-react
     profiles: ["case05", "full"]
     working_dir: /app
@@ -190,7 +190,7 @@ services:
       - "${HOST_BIND_IP:-127.0.0.1}:8085:4000"
     volumes:
       - ./cases/05-laravel-to-react/dest:/app
-    command: sh -c "corepack enable && corepack prepare pnpm@10.0.0 --activate && CI=1 pnpm install --prod && node server.js"
+    command: sh -c "corepack enable && corepack prepare pnpm@11.2.2 --activate && CI=1 pnpm install --prod --frozen-lockfile && node server.js"
     networks:
       - bot-network
     environment:

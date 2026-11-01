@@ -1,0 +1,114 @@
+# ==================================================================================================
+# Caso 05 — manifiesto de seguridad de versiones
+# ==================================================================================================
+# Que es esto
+#   El registro de POR QUE cada runtime y cada dependencia de este caso estan en la version en
+#   que estan. `app.manifest.yml` dice QUE tecnologias usa el caso; este fichero dice en que
+#   version y contra que advisory.
+#
+# Como se obtuvo
+#   - Advisories: OSV.dev, endpoint /v1/query, consultando la version exacta que estaba pinneada
+#     antes del cambio (no rangos ni heuristicas).
+#   - Fin de soporte: endoflife.date.
+#   - Existencia de los tags de imagen: Docker Hub / MCR, antes de escribir el Dockerfile.
+#
+# Como leerlo
+#   `reason` explica por que se movio la version:
+#     eol                    el runtime ya no recibe parches de seguridad
+#     fin-de-soporte         sigue recibiendo parches pero el soporte activo ya cerro
+#     fin-de-soporte-activo  en modo solo-seguridad
+#     mantenimiento          sin advisory abierto; se sube para no acumular deuda
+#     endurecimiento         el cambio cierra una superficie, no un CVE concreto
+#     sin-cambio             se evaluo y se deja como esta (el motivo va en `detail`)
+#   `severity` es la mas alta que OSV reporta para los advisories listados; `-` = sin advisory.
+# ==================================================================================================
+
+case: "05"
+name: "PHP/Laravel -> n8n -> React (Node)"
+lab_version: "4.11.0"
+reviewed: "2026-11-01"
+sources:
+  advisories: "https://osv.dev/ (/v1/query por version exacta)"
+  end_of_life: "https://endoflife.date/"
+
+# --- Runtimes de lenguaje / imagenes base -------------------------------------------
+runtimes:
+  - component: "origin"
+    language: "php"
+    from: "8.2-apache"
+    to: "8.4-apache"
+    reason: fin-de-soporte
+    detail: >-
+      Soporte activo de PHP 8.2 cerrado el 2024-12-31.
+  - component: "dest"
+    language: "nodejs"
+    from: "20-alpine"
+    to: "24-alpine"
+    reason: eol
+    detail: >-
+      Node 20 EOL 2026-04-30.
+  - component: "dest"
+    language: "pnpm"
+    from: "10.0.0"
+    to: "11.2.2"
+    reason: endurecimiento
+    detail: >-
+      Instalacion en runtime via bind-mount: ahora con --frozen-lockfile.
+
+# --- Dependencias ------------------------------------------------------------------
+dependencies:
+  - ecosystem: "npm"
+    package: "express"
+    from: "^4.22.1"
+    to: "^4.22.3"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory en 4.22.1: se sube al ultimo parche de la linea 4.x.
+  - ecosystem: "npm"
+    package: "mongodb"
+    from: "^6.3.0"
+    to: "^6.21.0"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory: mantenimiento dentro del major 6 (el 7 es ruptura).
+  - ecosystem: "npm"
+    package: "proxy-addr"
+    from: "transitiva < 2.0.8"
+    to: "override >=2.0.8"
+    advisories:
+      - "GHSA-jqcg-44mw-7w3h"
+    severity: "CRITICAL"
+    note: >-
+      Igual que el caso 03.
+  - ecosystem: "npm"
+    package: "body-parser"
+    from: "transitiva < 1.20.9"
+    to: "override >=1.20.9 <2.0.0"
+    advisories:
+      - "GHSA-27r3-jxmh-p828"
+      - "GHSA-v422-hmwv-36x6"
+    severity: "HIGH"
+    note: >-
+      Igual que el caso 03.
+  - ecosystem: "npm"
+    package: "qs"
+    from: "override >=6.15.2 <7.0.0"
+    to: "override >=6.16.1 <7.0.0"
+    advisories:
+      - "GHSA-4mjr-xmp4-gh2g"
+      - "GHSA-x5fp-wj9c-mxmx"
+      - "GHSA-6pq8-jhm2-2vcw"
+    severity: "MODERATE"
+    note: >-
+      El piso anterior ya no alcanzaba: los tres advisories nuevos piden 6.16.1.
+  - ecosystem: "npm"
+    package: "path-to-regexp"
+    from: "override >=0.1.13 <0.2.0"
+    to: "override >=0.1.13 <0.2.0"
+    advisories:
+      - "GHSA-37ch-88jc-xwx2"
+    severity: "HIGH"
+    note: >-
+      Se conserva el piso ya existente (ReDoS).

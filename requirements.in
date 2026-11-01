@@ -1,5 +1,7 @@
 # Top-level Python dependencies for the shared tooling / hub.
-# Compile with:  pip-compile --generate-hashes requirements.in
+# Compile with:
+#   uv pip compile --upgrade --universal --generate-hashes --python-version 3.13 \
+#       requirements.in -o requirements.txt
 # The generated requirements.txt pins exact versions with SHA256 hashes so
 # `pip install -r requirements.txt` runs in --require-hashes mode (P-01).
 python-dotenv
@@ -12,5 +14,5 @@ mypy
 types-requests
 PyYAML
 werkzeug>=3.1.5
-wheel==0.46.2
-jaraco.context==6.1.0
+wheel==0.48.0
+jaraco.context==6.1.2

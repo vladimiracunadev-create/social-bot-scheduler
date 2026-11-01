@@ -9,10 +9,11 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "@apollo/server": "4.11.3",
-    "graphql": "16.10.0"
+    "@apollo/server": "5.5.1",
+    "graphql": "16.14.2"
   },
   "engines": {
-    "node": ">=20"
-  }
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@11.2.2"
 }

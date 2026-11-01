@@ -1,9 +1,9 @@
 module socialbot/case15
 
-go 1.23
+go 1.27
 
 require (
-	github.com/lib/pq v1.10.9
-	google.golang.org/grpc v1.67.1
-	google.golang.org/protobuf v1.35.1
+	github.com/lib/pq v1.12.3
+	google.golang.org/grpc v1.85.0
+	google.golang.org/protobuf v1.36.12
 )

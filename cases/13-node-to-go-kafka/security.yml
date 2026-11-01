@@ -1,0 +1,94 @@
+# ==================================================================================================
+# Caso 13 — manifiesto de seguridad de versiones
+# ==================================================================================================
+# Que es esto
+#   El registro de POR QUE cada runtime y cada dependencia de este caso estan en la version en
+#   que estan. `app.manifest.yml` dice QUE tecnologias usa el caso; este fichero dice en que
+#   version y contra que advisory.
+#
+# Como se obtuvo
+#   - Advisories: OSV.dev, endpoint /v1/query, consultando la version exacta que estaba pinneada
+#     antes del cambio (no rangos ni heuristicas).
+#   - Fin de soporte: endoflife.date.
+#   - Existencia de los tags de imagen: Docker Hub / MCR, antes de escribir el Dockerfile.
+#
+# Como leerlo
+#   `reason` explica por que se movio la version:
+#     eol                    el runtime ya no recibe parches de seguridad
+#     fin-de-soporte         sigue recibiendo parches pero el soporte activo ya cerro
+#     fin-de-soporte-activo  en modo solo-seguridad
+#     mantenimiento          sin advisory abierto; se sube para no acumular deuda
+#     endurecimiento         el cambio cierra una superficie, no un CVE concreto
+#     sin-cambio             se evaluo y se deja como esta (el motivo va en `detail`)
+#   `severity` es la mas alta que OSV reporta para los advisories listados; `-` = sin advisory.
+# ==================================================================================================
+
+case: "13"
+name: "Node.js/Kafka -> n8n -> Go + ClickHouse"
+lab_version: "4.11.0"
+reviewed: "2026-11-01"
+sources:
+  advisories: "https://osv.dev/ (/v1/query por version exacta)"
+  end_of_life: "https://endoflife.date/"
+
+# --- Runtimes de lenguaje / imagenes base -------------------------------------------
+runtimes:
+  - component: "origin"
+    language: "nodejs"
+    from: "20-alpine"
+    to: "24-alpine"
+    reason: eol
+    detail: >-
+      Node 20 EOL 2026-04-30.
+  - component: "origin"
+    language: "pnpm"
+    from: "10.0.0"
+    to: "11.2.2"
+    reason: endurecimiento
+    detail: >-
+      Scripts de instalacion bloqueados + cuarentena de 24 h + lockfile commiteado.
+  - component: "dest"
+    language: "go"
+    from: "1.23-alpine"
+    to: "1.27-alpine"
+    reason: eol
+    detail: >-
+      Go 1.23 quedo EOL el 2025-08-12; OSV reporta 59 advisories de stdlib para 1.23.12.
+  - component: "dest"
+    language: "alpine"
+    from: "3.20"
+    to: "3.23.7"
+    reason: eol
+    detail: >-
+      Alpine 3.20 sin parches desde 2026-04-01.
+
+# --- Dependencias ------------------------------------------------------------------
+dependencies:
+  - ecosystem: "Go"
+    package: "stdlib"
+    from: "1.23.12"
+    to: "1.27.3"
+    advisories:
+      - "CVE-2025-47907"
+      - "CVE-2025-47906"
+      - "CVE-2026-97032"
+    severity: "HIGH"
+    note: >-
+      59 advisories, entre ellos resultados incorrectos en database/sql Rows.Scan y rutas inesperadas
+      desde os/exec LookPath.
+  - ecosystem: "Go"
+    package: "github.com/segmentio/kafka-go"
+    from: "v0.4.47"
+    to: "v0.4.51"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory: mantenimiento.
+  - ecosystem: "npm"
+    package: "kafkajs"
+    from: "2.2.4"
+    to: "2.2.4"
+    advisories: []
+    severity: "-"
+    note: >-
+      Ya es la ultima version publicada y no tiene advisory.

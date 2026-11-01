@@ -5,9 +5,14 @@
   "description": "Productor Node/kafkajs (Case 13): publica posts en Kafka y los reenvía a n8n.",
   "type": "module",
   "main": "producer.js",
-  "scripts": { "start": "node producer.js" },
+  "scripts": {
+    "start": "node producer.js"
+  },
   "dependencies": {
     "kafkajs": "2.2.4"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@11.2.2"
 }

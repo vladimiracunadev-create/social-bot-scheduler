@@ -16,8 +16,14 @@ resources.json
 *.duckdb
 cases/*/dest/data/
 
-# Lockfiles npm espurios: los casos JS del lab estandarizan en pnpm-lock.yaml
+# Lockfiles npm espurios: los casos JS del lab estandarizan en pnpm-lock.yaml.
+# npm no se usa en ninguna superficie del laboratorio (supply chain); si aparece
+# un package-lock.json es porque alguien corrió npm por error y no debe subirse.
+package-lock.json
 cases/*/dest/package-lock.json
+cases/*/origin/package-lock.json
+cases/*/dest/receiver/package-lock.json
+npm-shrinkwrap.json
 
 # Store local de pnpm creado por instalaciones en bind-mounts (runtime)
 .pnpm-store/

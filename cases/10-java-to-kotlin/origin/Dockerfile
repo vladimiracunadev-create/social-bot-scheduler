@@ -1,5 +1,5 @@
 # Emisor Spring Boot (Case 10) — build multi-stage; se ejecuta bajo demanda.
-FROM gradle:8.11-jdk21 AS build
+FROM gradle:8.14-jdk21 AS build
 WORKDIR /src
 COPY settings.gradle.kts build.gradle.kts ./
 COPY src ./src

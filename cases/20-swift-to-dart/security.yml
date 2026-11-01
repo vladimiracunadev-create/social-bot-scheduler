@@ -1,0 +1,98 @@
+# ==================================================================================================
+# Caso 20 — manifiesto de seguridad de versiones
+# ==================================================================================================
+# Que es esto
+#   El registro de POR QUE cada runtime y cada dependencia de este caso estan en la version en
+#   que estan. `app.manifest.yml` dice QUE tecnologias usa el caso; este fichero dice en que
+#   version y contra que advisory.
+#
+# Como se obtuvo
+#   - Advisories: OSV.dev, endpoint /v1/query, consultando la version exacta que estaba pinneada
+#     antes del cambio (no rangos ni heuristicas).
+#   - Fin de soporte: endoflife.date.
+#   - Existencia de los tags de imagen: Docker Hub / MCR, antes de escribir el Dockerfile.
+#
+# Como leerlo
+#   `reason` explica por que se movio la version:
+#     eol                    el runtime ya no recibe parches de seguridad
+#     fin-de-soporte         sigue recibiendo parches pero el soporte activo ya cerro
+#     fin-de-soporte-activo  en modo solo-seguridad
+#     mantenimiento          sin advisory abierto; se sube para no acumular deuda
+#     endurecimiento         el cambio cierra una superficie, no un CVE concreto
+#     sin-cambio             se evaluo y se deja como esta (el motivo va en `detail`)
+#   `severity` es la mas alta que OSV reporta para los advisories listados; `-` = sin advisory.
+# ==================================================================================================
+
+case: "20"
+name: "Swift -> n8n -> Dart/Shelf + Firestore"
+lab_version: "4.11.0"
+reviewed: "2026-11-01"
+sources:
+  advisories: "https://osv.dev/ (/v1/query por version exacta)"
+  end_of_life: "https://endoflife.date/"
+
+# --- Runtimes de lenguaje / imagenes base -------------------------------------------
+runtimes:
+  - component: "origin"
+    language: "swift"
+    from: "6.0 / 6.0-slim"
+    to: "6.2 / 6.2-slim"
+    reason: mantenimiento
+    detail: >-
+      Swift 6.0 es de septiembre de 2024; la rama 6.2 es la soportada.
+  - component: "dest"
+    language: "dart"
+    from: "dart:stable"
+    to: "dart:3.10-sdk"
+    reason: endurecimiento
+    detail: >-
+      `stable` es un tag movil: el build no era reproducible y el guardrail de imagenes no podia
+      comprobar nada. Ahora queda fijado a una linea concreta.
+  - component: "dest"
+    language: "debian"
+    from: "debian:stable-slim"
+    to: "debian:13-slim"
+    reason: endurecimiento
+    detail: >-
+      Mismo motivo: `stable` es movil. 13 = trixie, la estable actual.
+  - component: "firebase"
+    language: "java"
+    from: "eclipse-temurin:21-jdk-jammy"
+    to: "eclipse-temurin:21-jdk-noble"
+    reason: mantenimiento
+    detail: >-
+      jammy es Ubuntu 22.04; noble es 24.04 LTS, con soporte mas largo para el emulador de Firestore.
+  - component: "firebase"
+    language: "pnpm"
+    from: "10.0.0"
+    to: "11.2.2"
+    reason: endurecimiento
+    detail: >-
+      firebase-tools se instala global con pnpm 11: scripts de instalacion bloqueados.
+
+# --- Dependencias ------------------------------------------------------------------
+dependencies:
+  - ecosystem: "Pub"
+    package: "shelf"
+    from: "^1.4.2"
+    to: "^1.4.3"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory: mantenimiento.
+  - ecosystem: "Pub"
+    package: "shelf_router"
+    from: "^1.1.4"
+    to: "^1.1.5"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory: mantenimiento.
+  - ecosystem: "Pub"
+    package: "http"
+    from: "^1.2.2"
+    to: "^1.6.0"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory: mantenimiento.

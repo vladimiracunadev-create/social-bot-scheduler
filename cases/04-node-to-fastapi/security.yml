@@ -1,0 +1,110 @@
+# ==================================================================================================
+# Caso 04 — manifiesto de seguridad de versiones
+# ==================================================================================================
+# Que es esto
+#   El registro de POR QUE cada runtime y cada dependencia de este caso estan en la version en
+#   que estan. `app.manifest.yml` dice QUE tecnologias usa el caso; este fichero dice en que
+#   version y contra que advisory.
+#
+# Como se obtuvo
+#   - Advisories: OSV.dev, endpoint /v1/query, consultando la version exacta que estaba pinneada
+#     antes del cambio (no rangos ni heuristicas).
+#   - Fin de soporte: endoflife.date.
+#   - Existencia de los tags de imagen: Docker Hub / MCR, antes de escribir el Dockerfile.
+#
+# Como leerlo
+#   `reason` explica por que se movio la version:
+#     eol                    el runtime ya no recibe parches de seguridad
+#     fin-de-soporte         sigue recibiendo parches pero el soporte activo ya cerro
+#     fin-de-soporte-activo  en modo solo-seguridad
+#     mantenimiento          sin advisory abierto; se sube para no acumular deuda
+#     endurecimiento         el cambio cierra una superficie, no un CVE concreto
+#     sin-cambio             se evaluo y se deja como esta (el motivo va en `detail`)
+#   `severity` es la mas alta que OSV reporta para los advisories listados; `-` = sin advisory.
+# ==================================================================================================
+
+case: "04"
+name: "Node.js -> n8n -> FastAPI"
+lab_version: "4.11.0"
+reviewed: "2026-11-01"
+sources:
+  advisories: "https://osv.dev/ (/v1/query por version exacta)"
+  end_of_life: "https://endoflife.date/"
+
+# --- Runtimes de lenguaje / imagenes base -------------------------------------------
+runtimes:
+  - component: "origin"
+    language: "nodejs"
+    from: "20-alpine"
+    to: "24-alpine"
+    reason: eol
+    detail: >-
+      Node 20 EOL 2026-04-30.
+  - component: "origin"
+    language: "pnpm"
+    from: "10.0.0"
+    to: "11.2.2"
+    reason: endurecimiento
+    detail: >-
+      Scripts de instalacion bloqueados + cuarentena de 24 h.
+  - component: "dest"
+    language: "python"
+    from: "3.11-alpine"
+    to: "3.13-alpine"
+    reason: fin-de-soporte-activo
+    detail: >-
+      Python 3.11 en modo solo-seguridad.
+
+# --- Dependencias ------------------------------------------------------------------
+dependencies:
+  - ecosystem: "npm"
+    package: "axios"
+    from: "^1.18.0"
+    to: "^1.21.0"
+    advisories:
+      - "CVE-2026-101898"
+      - "CVE-2026-101901"
+      - "CVE-2026-101903"
+      - "CVE-2026-101905"
+      - "CVE-2026-101906"
+      - "CVE-2026-101907"
+    severity: "HIGH"
+    note: >-
+      Igual que el caso 03.
+  - ecosystem: "npm"
+    package: "follow-redirects"
+    from: "transitiva <= 1.16.1"
+    to: "override >=1.16.2"
+    advisories:
+      - "GHSA-mrwp-f3q8-3g9p"
+      - "GHSA-q3jh-wrc6-jgq8"
+      - "GHSA-8r9p-f939-6h3c"
+    severity: "HIGH"
+    note: >-
+      Transitiva de axios.
+  - ecosystem: "PyPI"
+    package: "fastapi"
+    from: "sin pin (pip install fastapi)"
+    to: "0.162.0 con hash SHA256"
+    advisories: []
+    severity: "-"
+    note: >-
+      El Dockerfile instalaba fastapi/uvicorn/pydantic SIN pin ni hash: cualquier publicacion
+      maliciosa en PyPI entraba en el build. Ahora hay requirements.in + requirements.txt con hashes,
+      lo que fuerza el modo --require-hashes de pip.
+  - ecosystem: "PyPI"
+    package: "pydantic"
+    from: "sin pin"
+    to: "2.14.2 con hash SHA256"
+    advisories: []
+    severity: "-"
+    note: >-
+      Idem.
+  - ecosystem: "PyPI"
+    package: "uvicorn"
+    from: "sin pin"
+    to: "0.54.0 con hash SHA256"
+    advisories: []
+    severity: "-"
+    note: >-
+      Idem.

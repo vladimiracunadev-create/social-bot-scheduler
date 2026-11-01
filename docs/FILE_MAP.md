@@ -250,7 +250,7 @@ cases/XX-origen-to-destino/
 
 | Archivo | Descripción |
 |---------|-------------|
-| `apache/security-headers.conf` | Configuración Apache de hardening montada en todos los servicios `php:8.2-apache`. Configura `X-Frame-Options`, `X-Content-Type-Options`, `Content-Security-Policy`, `Referrer-Policy`, `Permissions-Policy` y deshabilita el listado de directorios (`Options -Indexes`). Requiere `mod_headers` (habilitado vía `command: sh -c "a2enmod headers && apache2-foreground"`). |
+| `apache/security-headers.conf` | Configuración Apache de hardening montada en todos los servicios `php:8.4-apache`. Configura `X-Frame-Options`, `X-Content-Type-Options`, `Content-Security-Policy`, `Referrer-Policy`, `Permissions-Policy` y deshabilita el listado de directorios (`Options -Indexes`). Requiere `mod_headers` (habilitado vía `command: sh -c "a2enmod headers && apache2-foreground"`). |
 
 ---
 

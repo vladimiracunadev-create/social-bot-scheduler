@@ -1,0 +1,86 @@
+# ==================================================================================================
+# Caso 07 — manifiesto de seguridad de versiones
+# ==================================================================================================
+# Que es esto
+#   El registro de POR QUE cada runtime y cada dependencia de este caso estan en la version en
+#   que estan. `app.manifest.yml` dice QUE tecnologias usa el caso; este fichero dice en que
+#   version y contra que advisory.
+#
+# Como se obtuvo
+#   - Advisories: OSV.dev, endpoint /v1/query, consultando la version exacta que estaba pinneada
+#     antes del cambio (no rangos ni heuristicas).
+#   - Fin de soporte: endoflife.date.
+#   - Existencia de los tags de imagen: Docker Hub / MCR, antes de escribir el Dockerfile.
+#
+# Como leerlo
+#   `reason` explica por que se movio la version:
+#     eol                    el runtime ya no recibe parches de seguridad
+#     fin-de-soporte         sigue recibiendo parches pero el soporte activo ya cerro
+#     fin-de-soporte-activo  en modo solo-seguridad
+#     mantenimiento          sin advisory abierto; se sube para no acumular deuda
+#     endurecimiento         el cambio cierra una superficie, no un CVE concreto
+#     sin-cambio             se evaluo y se deja como esta (el motivo va en `detail`)
+#   `severity` es la mas alta que OSV reporta para los advisories listados; `-` = sin advisory.
+# ==================================================================================================
+
+case: "07"
+name: "Rust -> n8n -> Ruby/Sinatra"
+lab_version: "4.11.0"
+reviewed: "2026-11-01"
+sources:
+  advisories: "https://osv.dev/ (/v1/query por version exacta)"
+  end_of_life: "https://endoflife.date/"
+
+# --- Runtimes de lenguaje / imagenes base -------------------------------------------
+runtimes:
+  - component: "dest"
+    language: "ruby"
+    from: "3.2-alpine"
+    to: "3.4-alpine"
+    reason: eol
+    detail: >-
+      Ruby 3.2 quedo EOL el 2026-03-31. La rama 3.4 llega a 2028-03-31. sorted_set sigue siendo
+      necesario (SortedSet salio del stdlib en 3.2).
+  - component: "origin"
+    language: "rust"
+    from: "toolchain stable en CI"
+    to: "toolchain stable en CI"
+    reason: sin-cambio
+    detail: >-
+      El emisor Rust no tiene imagen propia: compila con el toolchain stable del CI.
+
+# --- Dependencias ------------------------------------------------------------------
+dependencies:
+  - ecosystem: "RubyGems"
+    package: "sinatra"
+    from: "4.2.1 (Gemfile.lock)"
+    to: "4.2.1"
+    advisories: []
+    severity: "-"
+    note: >-
+      Ya estaba por encima del piso: CVE-2024-21510 se corrige en 4.1.0 y CVE-2025-61921 en 4.2.0.
+  - ecosystem: "RubyGems"
+    package: "rack"
+    from: "3.2.6 (Gemfile.lock)"
+    to: "3.2.6"
+    advisories: []
+    severity: "-"
+    note: >-
+      Ya estaba en el piso de los 25 advisories de la rama 3.x (el ultimo, CVE-2026-34829, se corrige
+      en 3.2.6).
+  - ecosystem: "crates.io"
+    package: "reqwest"
+    from: "0.12"
+    to: "0.12"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory. El salto a 0.13 es ruptura de API y queda para una revision aparte.
+  - ecosystem: "crates.io"
+    package: "dotenvy"
+    from: "0.15"
+    to: "0.15"
+    advisories: []
+    severity: "-"
+    note: >-
+      Se conserva: ya es el fork mantenido que cierra RUSTSEC-2021-0141.

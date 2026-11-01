@@ -1,0 +1,31 @@
+# ==================================================================================================
+# Caso 03 — Política de supply-chain de pnpm.
+# pnpm >= 11 ya NO lee el campo `pnpm` de package.json: `overrides` y
+# `onlyBuiltDependencies` viven aquí (https://pnpm.io/settings).
+# ==================================================================================================
+
+# Ningún paquete puede ejecutar scripts de instalación (postinstall/preinstall).
+# Es la mitigación central contra campañas tipo Shai-Hulud en el registro npm.
+onlyBuiltDependencies: []
+
+# Cuarentena: no se instala ninguna versión publicada hace menos de 1440 min (24 h),
+# la ventana en la que se detectan y despublican los paquetes comprometidos.
+minimumReleaseAge: 1440
+
+# Pisos de versión para dependencias transitivas con advisory abierto que las
+# versiones actuales de `express` 4.x / `axios` 1.x todavía arrastran.
+overrides:
+  # form-data < 4.0.6 — boundary predecible (CVE-2025-7783).
+  form-data: '>=4.0.6'
+  # body-parser < 1.20.9 — DoS por bytes residuales tras un cuerpo comprimido
+  # (GHSA-27r3-jxmh-p828) y límite de tamaño ignorado (GHSA-v422-hmwv-36x6).
+  body-parser: '>=1.20.9 <2.0.0'
+  # qs <= 6.16.0 — DoS vía isBuffer controlado (GHSA-4mjr-xmp4-gh2g), bypass de
+  # array-limit (GHSA-x5fp-wj9c-mxmx) y TypeError no capturado (GHSA-6pq8-jhm2-2vcw).
+  qs: '>=6.16.1 <7.0.0'
+  # proxy-addr < 2.0.8 — spoofing de IP con direcciones IPv4 mapeadas en IPv6
+  # (GHSA-jqcg-44mw-7w3h, CRITICAL).
+  proxy-addr: '>=2.0.8'
+  # follow-redirects <= 1.16.1 — fuga de cabeceras sensibles en redirecciones
+  # cross-origin (GHSA-mrwp-f3q8-3g9p, GHSA-q3jh-wrc6-jgq8, GHSA-8r9p-f939-6h3c).
+  follow-redirects: '>=1.16.2'

@@ -4,6 +4,149 @@ Todos los cambios notables en este proyecto se documentan sistemáticamente en e
 
 ---
 
+## 📦 [4.11.0] — 2026-11-01
+
+### 🛡️ Remediación de CVE multi-lenguaje en los 20 casos
+
+Los runtimes de lenguaje del laboratorio habían quedado atrás y varios ya no reciben parches
+de seguridad. Un runtime en EOL no arrastra «un CVE»: arrastra todos los publicados desde su
+último parche. **Go 1.21 acumulaba 72 advisories de stdlib** según OSV.dev, y **Node 20 quedó
+EOL el 2026-04-30**.
+
+Se recorrieron los 20 casos: **51 cambios de runtime o imagen base** y **92 entradas de
+dependencia** revisadas, que cierran **74 advisories distintos** (41 con identificador CVE).
+Informe completo en [`docs/CVE_REMEDIATION_v4.11.0.md`](docs/CVE_REMEDIATION_v4.11.0.md).
+
+Nada sale de memoria: cada versión pinneada se consultó contra **OSV.dev** (`/v1/query`, por
+versión exacta), el fin de soporte contra **endoflife.date**, la última versión de cada rama
+contra el registro nativo del ecosistema, y la existencia de los 26 tags de imagen nuevos
+contra Docker Hub / MCR **antes** de escribir cada `FROM`.
+
+#### Añadido
+
+- **`cases/NN-*/security.yml`** (20 ficheros): manifiesto de seguridad por caso. Registra, para
+  cada runtime y cada dependencia, la versión de la que se viene, la que se adopta, los
+  advisories que cierra y el motivo (`eol`, `fin-de-soporte`, `fin-de-soporte-activo`,
+  `mantenimiento`, `endurecimiento`, `sin-cambio`). `app.manifest.yml` dice QUÉ tecnologías usa
+  un caso; `security.yml` dice EN QUÉ VERSIÓN y CONTRA QUÉ.
+- **`scripts/validate_security_manifests.py`** (P-08): guardrail que cruza los 20 manifiestos
+  contra los Dockerfiles, el compose y los manifiestos de proyecto. Falla si el manifiesto va
+  por delante del código, si un caso pierde su `security.yml` o si se reintroduce una versión
+  que otro caso declara abandonada. Corre en el job `runtime-security`.
+- **`docs/CVE_REMEDIATION_v4.11.0.md`**: informe transversal. Sus tablas se **generan** desde
+  los 20 `security.yml`, de modo que no pueden desincronizarse. Incluye sección explícita de
+  lo que NO se cambió y por qué, y separa lo verificado con ejecución real de lo que queda en CI.
+- **`pnpm-workspace.yaml`** en los 9 paquetes Node: `onlyBuiltDependencies: []` (ningún
+  `postinstall`), `minimumReleaseAge: 1440` (cuarentena de 24 h) y los `overrides` por CVE.
+- **`requirements.in` + `requirements.txt` con hashes** en los casos 04, 12 y 15, que antes
+  resolvían dependencias en tiempo de build.
+- **`pnpm-lock.yaml`** en los casos 13, 14 (×2), 16 (×2) y 17, que instalaban sin lockfile.
+
+#### Cambiado — runtimes de lenguaje
+
+| Runtime | Antes | Ahora | Motivo |
+| :--- | :--- | :--- | :--- |
+| Go | 1.21 / 1.23 | **1.27** | EOL 2024-08-13 y 2025-08-12; 72 y 59 advisories de stdlib |
+| Node.js | 20 | **24 LTS** | EOL 2026-04-30 |
+| Python | 3.11 (bookworm) | **3.13** (trixie) | Solo-seguridad; base Debian 12 → 13 |
+| PHP | 8.2 | **8.4** | Soporte activo cerrado el 2024-12-31 |
+| Ruby | 3.2 | **3.4** | EOL 2026-03-31 |
+| .NET | net6.0 / net9.0 | **net10.0** | .NET 6 EOL 2024-11-12; .NET 9 EOL 2026-11-10 y no es LTS |
+| Alpine | 3.20 / 3.20.6 | **3.23.7** | Sin parches desde 2026-04-01 |
+| Rust | 1.83 | **1.99** | Toolchain de noviembre de 2024 |
+| Erlang / Elixir | OTP 27 / 1.17 | **OTP 28 / 1.18** | Margen de soporte |
+| Crystal | 1.14 | **1.22** | Última estable |
+| Swift | 6.0 | **6.2** | Rama soportada |
+| Dart / Debian | `dart:stable` / `debian:stable-slim` | **`dart:3.10-sdk` / `debian:13-slim`** | Tags flotantes: build irreproducible |
+| Gradle | 8.11 | **8.14** | Último parche de la línea 8.x |
+| pnpm | 10.0.0 | **11.2.2** | Scripts de instalación bloqueados + cuarentena de 24 h |
+
+#### Corregido — advisories de severidad alta y crítica
+
+- **gRPC Go** 1.67.1 → 1.85.0 (caso 15): **CVE-2026-33186** (CRITICAL), bypass de autorización
+  por falta de barra inicial en `:path`. Más CVE-2026-84304 (OOM vía fragmentación de DATA
+  frames HTTP/2) y CVE-2026-84445 (panic del servidor sin cabecera `:authority`).
+- **Next.js** 15.1.3 → 15.5.28 (caso 14): 38 advisories, **dos de ellos RCE sin autenticar** en
+  la Image Optimization API (GHSA-2464-fhr4-w9xw con SVG, GHSA-2xp9-vwfh-vxw4 con AVIF).
+  También bypass de middleware con i18n y SSRF en Server Actions.
+- **axios** 1.18.0 → 1.21.0 (casos 03, 04): 7 HIGH — el adaptador HTTP/2 saltaba los controles
+  de DNS y proxy, ReDoS en el parser de `data:` URL y `maxRedirects: 0` ignorado por `fetch`.
+- **proxy-addr** < 2.0.8 (casos 03, 05, 14, 16, 17): **GHSA-jqcg-44mw-7w3h** (CRITICAL),
+  spoofing de IP con direcciones IPv4 mapeadas en IPv6. `express` 4.22.3 todavía la arrastra,
+  así que va por `overrides`.
+- **certifi** → 2026.10.23 (casos 01, 02, 09): **GHSA-6q48-6c7w-9gw2** (CRITICAL), el bundle
+  incluía raíces emSign con claves de CA intermedia comprometidas.
+- **anyio** → 4.16.0 (caso 09): **GHSA-82r6-8w77-94w6** (CRITICAL), `TLSStream` codificaba
+  hostnames con IDNA 2003 y permitía confusión de certificados.
+- **jackson-databind** 2.21.4 → 2.21.8 (caso 10): 9 advisories abiertos que Spring Boot 3.5.16
+  todavía gestiona; se cierran subiendo la propiedad del BOM.
+- **pgjdbc** 42.7.4 → 42.7.12 (caso 10): CVE-2025-49146, CVE-2026-42198 y CVE-2026-54291 —
+  fallback a autenticación insegura y downgrade silencioso del channel binding.
+- **ring-jetty-adapter** 1.12.2 → 1.15.6 (caso 19): pasa de Jetty 11 a 12.1.14 y sale de
+  CVE-2024-7708, CVE-2024-8184, CVE-2026-6790, CVE-2026-1605 y CVE-2026-10051.
+- **cowboy** 2.12.0 → 2.20.0 (caso 11): CVE-2026-8466, CVE-2026-65624 y CVE-2026-43966 — DoS
+  por buffer sin límite en multipart y request/response splitting.
+- **Apollo Server** 4.11.3 → 5.5.1 (caso 16): CVE-2026-23897 (DoS) y GHSA-9q82-xgwf-vj6h, que
+  solo se cierra en 5.5.0. Único salto de major del pase y el único verificado en ejecución:
+  se arrancó el emisor y se resolvió una query GraphQL real.
+- **postcss** ≤ 8.5.22 (caso 14), **body-parser** < 1.20.9, **qs** ≤ 6.16.0 y
+  **follow-redirects** ≤ 1.16.1: transitivas con advisory que las versiones parcheadas de
+  `next`, `express` y `axios` siguen arrastrando. Cerradas por `overrides`.
+
+#### Corregido — cadena de suministro
+
+- **`npm` fuera del repositorio.** Quedaba un `npm install -g pnpm@10` en el job `node-cases`:
+  se sustituye por `corepack enable && corepack prepare pnpm@11.2.2 --activate`. También sale
+  el `npx` de `.claude/settings.local.json`, y `.gitignore` rechaza ahora `package-lock.json`
+  y `npm-shrinkwrap.json` en todas las rutas de casos.
+- **Política de pnpm reactivada.** pnpm 11 **ya no lee el campo `pnpm` de `package.json`**: los
+  `overrides` y `onlyBuiltDependencies` del repositorio estaban a punto de quedar desactivados
+  en silencio al subir de versión. Se trasladan a `pnpm-workspace.yaml`, donde pnpm 11 sí los
+  aplica — verificado: el `overrides` aparece de nuevo en el lockfile resuelto.
+- **Caso 04 dest** instalaba `fastapi uvicorn pydantic` sin pin ni hash: cualquier publicación
+  maliciosa en PyPI entraba en el build. Ahora usa `requirements.txt` con hashes SHA256.
+- **Builds Node reproducibles**: los 7 Dockerfiles pasan a `pnpm install --prod
+  --frozen-lockfile` y copian el `pnpm-workspace.yaml` para que la política aplique en el build.
+- **Dependabot de 9 a 31 entradas**, cubriendo los 20 casos (`npm` ×9, `pip` ×8, `gomod` ×5,
+  `nuget` ×2, `gradle` ×2, `cargo`, `bundler`, `pub`, `docker`, `github-actions`). El caso 11
+  queda fuera a propósito y documentado: no hay nada que Dependabot pueda resolver.
+- **Imagen del hub**: la purga de `pip` del runtime apuntaba a rutas `python3.11` hardcodeadas.
+  Con la base en 3.13 habría fallado en silencio y habría devuelto los hallazgos HIGH de Trivy;
+  las rutas se actualizan a `python3.13`.
+
+#### Cambiado — CI
+
+- `python-version` 3.11 → **3.13** en los tres jobs; `node-version` 22 → **24**;
+  `php-version` 8.2 → **8.4**; `ruby-version` 3.3 → **3.4**; `dotnet-version` 6.0.x → **10.0.x**.
+- El job `node-cases` pasa de 3 a **9 paquetes** auditados con `pnpm audit` y de 3 a 9
+  `node --check`. Renombrado a «Node Cases (03-05, 13, 14, 16, 17)».
+- Nuevo paso `Validate per-case security manifests [P-08]` en `runtime-security`.
+
+#### Verificación
+
+En verde con ejecución real: `pnpm audit --prod --audit-level high` **sin vulnerabilidades en
+los 9 paquetes Node**; OSV **sin advisories sobre los 162 paquetes** de los 8 locks Python con
+hash; `node --check` 10/10; `pytest` de los casos 01 y 02; `mypy` con `python_version = 3.13`;
+`py_compile`; `php -l`; `docker compose config` en los 5 perfiles; `actionlint`;
+`black --check .`; y los cuatro guardrails del repo, incluido el nuevo con dos pruebas
+negativas que confirman que detecta regresiones.
+
+**No ejecutado**, y declarado como tal en el informe: el `docker build` de las 29 imágenes
+(se pidió no levantar Docker repetidamente) y la compilación de Go, Rust, JVM, Clojure, BEAM,
+Crystal, Zig, Swift, Dart y .NET, por no haber toolchain local de esos lenguajes. Los saltos
+con más riesgo en el build son Crystal 1.14 → 1.22, ring 1.12 → 1.15 (Jetty 11 → 12),
+.NET 6 → 10 y Spring Boot 3.3 → 3.5.
+
+#### Fuera de alcance (deliberado)
+
+Este pase cubre **lenguajes de programación**. Las imágenes de base de datos e infraestructura
+(`mongo:6.0` e `influxdb:1.8` son las más atrasadas) no se tocaron y merecen un pase propio.
+Tampoco se saltó de major donde no había advisory abierto: Zig 0.13, Ktor 2.3.13, XTDB 1.24.3,
+Express 4.x, Next 15.x, Spring Boot 3.5.x, driver MongoDB 6.x, `reqwest` 0.12 y `rumqttc` 0.24
+se conservan con su motivo documentado en el informe.
+
+---
+
 ## 📦 [4.10.0] — 2026-08-19
 
 ### 🌐 Sitio público del laboratorio en GitHub Pages

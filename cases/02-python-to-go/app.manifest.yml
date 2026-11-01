@@ -14,3 +14,7 @@ database:
   version: "10.11"
 stack: ["python", "n8n", "go"]
 description: "Integración de bot Python con dashboard escrito en Go (Gin)"
+
+# Manifiesto de seguridad de versiones del caso: que runtime y que dependencia
+# estan en que version, y contra que advisory de OSV. Ver docs/CVE_REMEDIATION_v4.11.0.md.
+security_manifest: "security.yml"

@@ -1,10 +1,10 @@
 # ==================================================================================================
 # Case 15 — Servidor gRPC Go. Contexto de build = raíz del caso (para acceder a proto/).
 # ==================================================================================================
-FROM golang:1.23-alpine AS build
+FROM golang:1.27-alpine AS build
 RUN apk add --no-cache protobuf git
-RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.35.1 \
-    && go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.5.1
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.12 \
+    && go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.6.2
 ENV PATH="/root/go/bin:${PATH}"
 WORKDIR /src
 COPY origin/go.mod ./
@@ -15,7 +15,7 @@ RUN protoc --go_out=. --go_opt=paths=source_relative \
 COPY origin/server.go ./
 RUN go mod tidy && go build -o server .
 
-FROM alpine:3.20
+FROM alpine:3.23.7
 WORKDIR /app
 COPY --from=build /src/server ./server
 EXPOSE 50051

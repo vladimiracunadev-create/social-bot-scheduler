@@ -1,0 +1,76 @@
+# ==================================================================================================
+# Caso 01 — manifiesto de seguridad de versiones
+# ==================================================================================================
+# Que es esto
+#   El registro de POR QUE cada runtime y cada dependencia de este caso estan en la version en
+#   que estan. `app.manifest.yml` dice QUE tecnologias usa el caso; este fichero dice en que
+#   version y contra que advisory.
+#
+# Como se obtuvo
+#   - Advisories: OSV.dev, endpoint /v1/query, consultando la version exacta que estaba pinneada
+#     antes del cambio (no rangos ni heuristicas).
+#   - Fin de soporte: endoflife.date.
+#   - Existencia de los tags de imagen: Docker Hub / MCR, antes de escribir el Dockerfile.
+#
+# Como leerlo
+#   `reason` explica por que se movio la version:
+#     eol                    el runtime ya no recibe parches de seguridad
+#     fin-de-soporte         sigue recibiendo parches pero el soporte activo ya cerro
+#     fin-de-soporte-activo  en modo solo-seguridad
+#     mantenimiento          sin advisory abierto; se sube para no acumular deuda
+#     endurecimiento         el cambio cierra una superficie, no un CVE concreto
+#     sin-cambio             se evaluo y se deja como esta (el motivo va en `detail`)
+#   `severity` es la mas alta que OSV reporta para los advisories listados; `-` = sin advisory.
+# ==================================================================================================
+
+case: "01"
+name: "Python -> n8n -> PHP"
+lab_version: "4.11.0"
+reviewed: "2026-11-01"
+sources:
+  advisories: "https://osv.dev/ (/v1/query por version exacta)"
+  end_of_life: "https://endoflife.date/"
+
+# --- Runtimes de lenguaje / imagenes base -------------------------------------------
+runtimes:
+  - component: "origin"
+    language: "python"
+    from: "3.11"
+    to: "3.13"
+    reason: fin-de-soporte-activo
+    detail: >-
+      Python 3.11 esta en modo solo-seguridad (EOL 2027-10-31); 3.13 llega a 2029-10-31. El lock se
+      recompila con --python-version 3.13.
+  - component: "dest"
+    language: "php"
+    from: "8.2-apache"
+    to: "8.4-apache"
+    reason: fin-de-soporte
+    detail: >-
+      El soporte activo de PHP 8.2 termino el 2024-12-31 y su EOL es el 2026-12-31. PHP 8.4 recibe
+      parches hasta 2028-12-31.
+
+# --- Dependencias ------------------------------------------------------------------
+dependencies:
+  - ecosystem: "PyPI"
+    package: "certifi"
+    from: "2026.6.17"
+    to: "2026.10.23"
+    advisories:
+      - "GHSA-6q48-6c7w-9gw2"
+      - "PYSEC-2026-4320"
+    severity: "CRITICAL"
+    note: >-
+      El bundle incluia raices emSign con claves de CA intermedia comprometidas.
+  - ecosystem: "PyPI"
+    package: "urllib3"
+    from: "2.7.0"
+    to: "2.8.0"
+    advisories:
+      - "GHSA-8988-9cw3-xx77"
+      - "GHSA-vxq7-64xx-v4gw"
+      - "GHSA-gh4c-6fx4-qh6g"
+    severity: "HIGH"
+    note: >-
+      La config TLS del proxy HTTPS podia ignorarse y stream()/read_chunked() bufferizaba un chunk sin
+      limite.

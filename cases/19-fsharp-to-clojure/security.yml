@@ -1,0 +1,111 @@
+# ==================================================================================================
+# Caso 19 — manifiesto de seguridad de versiones
+# ==================================================================================================
+# Que es esto
+#   El registro de POR QUE cada runtime y cada dependencia de este caso estan en la version en
+#   que estan. `app.manifest.yml` dice QUE tecnologias usa el caso; este fichero dice en que
+#   version y contra que advisory.
+#
+# Como se obtuvo
+#   - Advisories: OSV.dev, endpoint /v1/query, consultando la version exacta que estaba pinneada
+#     antes del cambio (no rangos ni heuristicas).
+#   - Fin de soporte: endoflife.date.
+#   - Existencia de los tags de imagen: Docker Hub / MCR, antes de escribir el Dockerfile.
+#
+# Como leerlo
+#   `reason` explica por que se movio la version:
+#     eol                    el runtime ya no recibe parches de seguridad
+#     fin-de-soporte         sigue recibiendo parches pero el soporte activo ya cerro
+#     fin-de-soporte-activo  en modo solo-seguridad
+#     mantenimiento          sin advisory abierto; se sube para no acumular deuda
+#     endurecimiento         el cambio cierra una superficie, no un CVE concreto
+#     sin-cambio             se evaluo y se deja como esta (el motivo va en `detail`)
+#   `severity` es la mas alta que OSV reporta para los advisories listados; `-` = sin advisory.
+# ==================================================================================================
+
+case: "19"
+name: "F#/.NET -> n8n -> Clojure/Ring + XTDB"
+lab_version: "4.11.0"
+reviewed: "2026-11-01"
+sources:
+  advisories: "https://osv.dev/ (/v1/query por version exacta)"
+  end_of_life: "https://endoflife.date/"
+
+# --- Runtimes de lenguaje / imagenes base -------------------------------------------
+runtimes:
+  - component: "origin"
+    language: "dotnet"
+    from: "9.0 (sdk/runtime, net9.0)"
+    to: "10.0 (sdk/runtime, net10.0)"
+    reason: eol
+    detail: >-
+      .NET 9 queda EOL el 2026-11-10 (dentro de 9 dias) y no es LTS. .NET 10 es LTS hasta 2028-11-14.
+  - component: "dest"
+    language: "java"
+    from: "clojure:temurin-21-lein + temurin:21-jre-alpine"
+    to: "sin cambio"
+    reason: sin-cambio
+    detail: >-
+      Java 21 es LTS con soporte hasta 2029-12-31.
+
+# --- Dependencias ------------------------------------------------------------------
+dependencies:
+  - ecosystem: "Maven"
+    package: "ring/ring-core"
+    from: "1.12.2"
+    to: "1.15.6"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory propio, pero arrastra el adaptador.
+  - ecosystem: "Maven"
+    package: "ring/ring-jetty-adapter"
+    from: "1.12.2"
+    to: "1.15.6"
+    advisories:
+      - "CVE-2024-7708"
+      - "CVE-2024-8184"
+      - "CVE-2026-6790"
+      - "CVE-2026-1605"
+      - "CVE-2026-10051"
+    severity: "HIGH"
+    note: >-
+      ring 1.12.2 fija Jetty 11.0.x, con 3 advisories abiertos. ring 1.15.6 pasa a Jetty 12.1.14, que
+      esta por encima del piso de los cinco.
+  - ecosystem: "Maven"
+    package: "cheshire/cheshire"
+    from: "5.13.0"
+    to: "6.2.0"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory propio: se sube para quedar sobre jackson 2.21.x.
+  - ecosystem: "Maven"
+    package: "com.fasterxml.jackson.core:jackson-core"
+    from: "2.21.1 (transitiva)"
+    to: "2.21.8 (pin directo)"
+    advisories:
+      - "CVE-2026-89425"
+      - "CVE-2026-89407"
+      - "CVE-2026-68494"
+      - "CVE-2026-18401"
+    severity: "HIGH"
+    note: >-
+      cheshire 6.2.0 fija jackson-core 2.21.1, por debajo del piso 2.21.7. Se anade como dependencia
+      directa para pisar la transitiva.
+  - ecosystem: "Maven"
+    package: "org.clojure/clojure"
+    from: "1.11.4"
+    to: "1.12.0"
+    advisories: []
+    severity: "-"
+    note: >-
+      Mantenimiento.
+  - ecosystem: "Maven"
+    package: "com.xtdb/xtdb-core"
+    from: "1.24.3"
+    to: "1.24.3"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory. XTDB 2.x es una reescritura completa y queda fuera de este pase.

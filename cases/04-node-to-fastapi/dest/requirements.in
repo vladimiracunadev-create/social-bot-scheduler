@@ -1,0 +1,7 @@
+# Case 04 (FastAPI destination) dependencies.
+# Compile with:
+#   uv pip compile --upgrade --universal --generate-hashes --python-version 3.13 \
+#       requirements.in -o requirements.txt
+fastapi==0.162.0
+pydantic==2.14.2
+uvicorn==0.54.0

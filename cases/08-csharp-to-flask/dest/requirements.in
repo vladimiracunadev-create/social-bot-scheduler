@@ -1,4 +1,6 @@
 # Case 08 (Flask destination) dependencies.
-# Compile with:  pip-compile --generate-hashes requirements.in
+# Compile with:
+#   uv pip compile --upgrade --universal --generate-hashes --python-version 3.13 \
+#       requirements.in -o requirements.txt
 flask>=3.0.3
 pyodbc

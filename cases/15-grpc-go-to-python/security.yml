@@ -1,0 +1,123 @@
+# ==================================================================================================
+# Caso 15 — manifiesto de seguridad de versiones
+# ==================================================================================================
+# Que es esto
+#   El registro de POR QUE cada runtime y cada dependencia de este caso estan en la version en
+#   que estan. `app.manifest.yml` dice QUE tecnologias usa el caso; este fichero dice en que
+#   version y contra que advisory.
+#
+# Como se obtuvo
+#   - Advisories: OSV.dev, endpoint /v1/query, consultando la version exacta que estaba pinneada
+#     antes del cambio (no rangos ni heuristicas).
+#   - Fin de soporte: endoflife.date.
+#   - Existencia de los tags de imagen: Docker Hub / MCR, antes de escribir el Dockerfile.
+#
+# Como leerlo
+#   `reason` explica por que se movio la version:
+#     eol                    el runtime ya no recibe parches de seguridad
+#     fin-de-soporte         sigue recibiendo parches pero el soporte activo ya cerro
+#     fin-de-soporte-activo  en modo solo-seguridad
+#     mantenimiento          sin advisory abierto; se sube para no acumular deuda
+#     endurecimiento         el cambio cierra una superficie, no un CVE concreto
+#     sin-cambio             se evaluo y se deja como esta (el motivo va en `detail`)
+#   `severity` es la mas alta que OSV reporta para los advisories listados; `-` = sin advisory.
+# ==================================================================================================
+
+case: "15"
+name: "gRPC Go -> n8n -> Python (gRPC client + FastAPI)"
+lab_version: "4.11.0"
+reviewed: "2026-11-01"
+sources:
+  advisories: "https://osv.dev/ (/v1/query por version exacta)"
+  end_of_life: "https://endoflife.date/"
+
+# --- Runtimes de lenguaje / imagenes base -------------------------------------------
+runtimes:
+  - component: "origin"
+    language: "go"
+    from: "1.23-alpine"
+    to: "1.27-alpine"
+    reason: eol
+    detail: >-
+      Go 1.23 EOL 2025-08-12; 59 advisories de stdlib.
+  - component: "origin"
+    language: "alpine"
+    from: "3.20"
+    to: "3.23.7"
+    reason: eol
+    detail: >-
+      Alpine 3.20 sin parches.
+  - component: "dest"
+    language: "python"
+    from: "3.11-slim"
+    to: "3.13-slim-trixie"
+    reason: fin-de-soporte-activo
+    detail: >-
+      Python 3.11 en modo solo-seguridad; base Debian 12 -> 13.
+
+# --- Dependencias ------------------------------------------------------------------
+dependencies:
+  - ecosystem: "Go"
+    package: "google.golang.org/grpc"
+    from: "v1.67.1"
+    to: "v1.85.0"
+    advisories:
+      - "CVE-2026-33186"
+      - "CVE-2026-84304"
+      - "CVE-2026-84445"
+      - "CVE-2026-84303"
+    severity: "CRITICAL"
+    note: >-
+      Bypass de autorizacion por falta de barra inicial en :path (CVE-2026-33186), agotamiento de
+      memoria via fragmentacion de DATA frames HTTP/2 y panic del servidor sin cabecera
+      :authority/Host.
+  - ecosystem: "Go"
+    package: "google.golang.org/protobuf"
+    from: "v1.35.1"
+    to: "v1.36.12"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory: se alinea con el plugin protoc-gen-go del build.
+  - ecosystem: "Go"
+    package: "github.com/lib/pq"
+    from: "v1.10.9"
+    to: "v1.12.3"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory.
+  - ecosystem: "Go"
+    package: "stdlib"
+    from: "1.23.12"
+    to: "1.27.3"
+    advisories:
+      - "CVE-2025-47907"
+      - "CVE-2025-47906"
+    severity: "HIGH"
+    note: >-
+      Igual que el caso 13.
+  - ecosystem: "PyPI"
+    package: "grpcio"
+    from: "1.68.1"
+    to: "1.85.1"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory, pero se alinea con la version del servidor Go.
+  - ecosystem: "PyPI"
+    package: "grpcio-tools"
+    from: "1.68.1"
+    to: "1.85.1"
+    advisories: []
+    severity: "-"
+    note: >-
+      Idem.
+  - ecosystem: "PyPI"
+    package: "requirements.txt"
+    from: "4 pins sin hash"
+    to: "18 pins con hash SHA256"
+    advisories: []
+    severity: "-"
+    note: >-
+      Compilado con uv --generate-hashes: pip entra en modo --require-hashes.

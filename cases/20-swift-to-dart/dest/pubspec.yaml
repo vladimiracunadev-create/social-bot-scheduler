@@ -4,6 +4,6 @@ version: 1.0.0
 environment:
   sdk: ">=3.5.0 <4.0.0"
 dependencies:
-  shelf: ^1.4.2
-  shelf_router: ^1.1.4
-  http: ^1.2.2
+  shelf: ^1.4.3
+  shelf_router: ^1.1.5
+  http: ^1.6.0

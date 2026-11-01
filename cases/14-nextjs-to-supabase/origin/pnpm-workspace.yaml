@@ -1,0 +1,20 @@
+# ==================================================================================================
+# Caso 14 — Política de supply-chain de pnpm (origin).
+# pnpm >= 11 ya NO lee el campo `pnpm` de package.json: `overrides` y
+# `onlyBuiltDependencies` viven aquí (https://pnpm.io/settings).
+# ==================================================================================================
+
+# Ningún paquete puede ejecutar scripts de instalación (postinstall/preinstall).
+# Es la mitigación central contra campañas tipo Shai-Hulud en el registro npm.
+onlyBuiltDependencies: []
+
+# Cuarentena: no se instala ninguna versión publicada hace menos de 1440 min (24 h),
+# la ventana en la que se detectan y despublican los paquetes comprometidos.
+minimumReleaseAge: 1440
+
+# Piso de versión para una dependencia transitiva de `next` 15.5.x con advisory abierto.
+overrides:
+  # postcss <= 8.5.22 — lectura arbitraria de ficheros .map vía sourceMappingURL
+  # controlado por el atacante (GHSA-6g55-p6wh-862q, GHSA-r28c-9q8g-f849,
+  # GHSA-fxqj-rqcc-2cmp) y XSS en el stringify de CSS (GHSA-qx2v-qp2m-jg93).
+  postcss: '>=8.5.23'

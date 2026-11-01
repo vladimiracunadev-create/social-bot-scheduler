@@ -1,7 +1,7 @@
 # ==================================================================================================
 # Case 15 — Cliente gRPC Python + FastAPI. Contexto de build = raíz del caso (para proto/).
 # ==================================================================================================
-FROM python:3.11-slim
+FROM python:3.13-slim-trixie
 WORKDIR /app
 COPY dest/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt

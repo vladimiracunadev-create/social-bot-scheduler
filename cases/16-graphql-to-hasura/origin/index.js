@@ -4,7 +4,7 @@
  * ==================================================================================================
  * ¿Por qué Apollo Server en el emisor?
  * A diferencia de los emisores REST de los casos 01-09, aquí la fuente de verdad de los posts
- * programados se expone como un **API GraphQL fuertemente tipado** (Apollo Server 4 standalone).
+ * programados se expone como un **API GraphQL fuertemente tipado** (Apollo Server 5 standalone).
  * Esto demuestra el patrón "schema-first" del lado del origen, en contraste con el enfoque
  * "database-first" de Hasura en el destino.
  *

@@ -1,0 +1,130 @@
+# ==================================================================================================
+# Caso 09 — manifiesto de seguridad de versiones
+# ==================================================================================================
+# Que es esto
+#   El registro de POR QUE cada runtime y cada dependencia de este caso estan en la version en
+#   que estan. `app.manifest.yml` dice QUE tecnologias usa el caso; este fichero dice en que
+#   version y contra que advisory.
+#
+# Como se obtuvo
+#   - Advisories: OSV.dev, endpoint /v1/query, consultando la version exacta que estaba pinneada
+#     antes del cambio (no rangos ni heuristicas).
+#   - Fin de soporte: endoflife.date.
+#   - Existencia de los tags de imagen: Docker Hub / MCR, antes de escribir el Dockerfile.
+#
+# Como leerlo
+#   `reason` explica por que se movio la version:
+#     eol                    el runtime ya no recibe parches de seguridad
+#     fin-de-soporte         sigue recibiendo parches pero el soporte activo ya cerro
+#     fin-de-soporte-activo  en modo solo-seguridad
+#     mantenimiento          sin advisory abierto; se sube para no acumular deuda
+#     endurecimiento         el cambio cierra una superficie, no un CVE concreto
+#     sin-cambio             se evaluo y se deja como esta (el motivo va en `detail`)
+#   `severity` es la mas alta que OSV reporta para los advisories listados; `-` = sin advisory.
+# ==================================================================================================
+
+case: "09"
+name: "Python -> n8n -> API Gateway (FastAPI + DuckDB)"
+lab_version: "4.11.0"
+reviewed: "2026-11-01"
+sources:
+  advisories: "https://osv.dev/ (/v1/query por version exacta)"
+  end_of_life: "https://endoflife.date/"
+
+# --- Runtimes de lenguaje / imagenes base -------------------------------------------
+runtimes:
+  - component: "dest"
+    language: "python"
+    from: "3.11-slim"
+    to: "3.13-slim-trixie"
+    reason: fin-de-soporte-activo
+    detail: >-
+      Python 3.11 en modo solo-seguridad; la base pasa de Debian 12 a 13.
+
+# --- Dependencias ------------------------------------------------------------------
+dependencies:
+  - ecosystem: "PyPI"
+    package: "anyio"
+    from: "4.14.1"
+    to: "4.16.0"
+    advisories:
+      - "GHSA-82r6-8w77-94w6"
+      - "GHSA-3w57-8xmc-8v26"
+      - "GHSA-5p39-cfhj-2xmp"
+    severity: "CRITICAL"
+    note: >-
+      TLSStream codificaba hostnames con IDNA 2003, lo que permite confusion de certificados TLS;
+      run_process ignoraba extra_groups.
+  - ecosystem: "PyPI"
+    package: "starlette"
+    from: "0.47.3"
+    to: ">=0.49.1 (resuelta por fastapi 0.162.0)"
+    advisories:
+      - "GHSA-wqp7-x3pw-xc5r"
+      - "GHSA-7f5h-v6xp-fcq8"
+      - "GHSA-x746-7m8f-x49c"
+    severity: "HIGH"
+    note: >-
+      SSRF y robo de credenciales NTLM via rutas UNC en StaticFiles, DoS O(n^2) al fusionar cabeceras
+      Range y dispatch de metodos HTTP arbitrarios.
+  - ecosystem: "PyPI"
+    package: "requests"
+    from: "2.32.4"
+    to: "2.34.2"
+    advisories:
+      - "CVE-2026-25645"
+      - "GHSA-gc5v-m9x4-r6x2"
+    severity: "MODERATE"
+    note: >-
+      Reuso insegable de fichero temporal en extract_zipped_paths().
+  - ecosystem: "PyPI"
+    package: "certifi"
+    from: "2026.6.17"
+    to: "2026.10.23"
+    advisories:
+      - "GHSA-6q48-6c7w-9gw2"
+    severity: "CRITICAL"
+    note: >-
+      Raices emSign comprometidas.
+  - ecosystem: "PyPI"
+    package: "urllib3"
+    from: "2.7.0"
+    to: "2.8.0"
+    advisories:
+      - "GHSA-8988-9cw3-xx77"
+      - "GHSA-vxq7-64xx-v4gw"
+    severity: "HIGH"
+    note: >-
+      Igual que el caso 01.
+  - ecosystem: "PyPI"
+    package: "fastapi"
+    from: "0.116.1"
+    to: "0.162.0"
+    advisories: []
+    severity: "-"
+    note: >-
+      Se sube para poder resolver starlette >= 0.49.1.
+  - ecosystem: "PyPI"
+    package: "duckdb"
+    from: "1.3.2"
+    to: "2.0.0"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory: mantenimiento.
+  - ecosystem: "PyPI"
+    package: "pydantic"
+    from: "2.11.7"
+    to: "2.14.2"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory: mantenimiento.
+  - ecosystem: "PyPI"
+    package: "uvicorn"
+    from: "0.35.0"
+    to: "0.54.0"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory: mantenimiento.

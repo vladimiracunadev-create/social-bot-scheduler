@@ -25,7 +25,9 @@ Cada punto indica su estado: **OK**, **CORREGIDO** (en esta versión) o **RIESGO
 | Healthcheck referencia herramienta inexistente | **OK** | `python -c "import os; ..."` — Python está en la imagen. |
 | Directorios de logs/PID accesibles por usuario no-root | **OK** | `/app` se entrega con `chown botuser:botgroup`. |
 
-> **Nota sobre moving tags**: imágenes como `php:8.2-apache`, `node:20-alpine`, `redis:7-alpine` son minor-pinned pero no SHA-pinned. Son renovadas automáticamente por Dependabot. Riesgo aceptado para un laboratorio local.
+> **Nota sobre moving tags**: imágenes como `php:8.4-apache`, `node:24-alpine`, `redis:7-alpine` son minor-pinned pero no SHA-pinned. Son renovadas automáticamente por Dependabot. Riesgo aceptado para un laboratorio local.
+>
+> **v4.11.0** — Se eliminaron los dos tags *flotantes* que quedaban (`dart:stable` y `debian:stable-slim`, caso 20): un tag móvil hace el build irreproducible y deja al guardrail de imágenes sin nada que comprobar. Ahora son `dart:3.10-sdk` y `debian:13-slim`.
 
 ---
 
@@ -117,7 +119,9 @@ docker compose --profile edge up -d
 | Auditoría de otras dependencias (Go, Node, Rust, .NET, Ruby) | **CORREGIDO** | CI ejecuta `govulncheck` (Go), `pnpm audit --audit-level high` (Node), `dotnet list package --vulnerable` (.NET), `cargo audit` (Rust) y `bundler-audit` (Ruby) — **todos bloqueantes** desde v4.4.1. (P-04 v4.4.0; P-05/P-06 v4.4.1) |
 | SHA-pinning de GitHub Actions | **CORREGIDO** | Las 27 referencias `uses:` de `ci-cd.yml` y `wiki-sync.yml` están pinneadas a SHA de 40 chars con comentario `# vX`. Cierra la ventana de un tag reescrito maliciosamente; Dependabot sigue proponiendo bumps. (P-07, v4.4.1) |
 | Escaneo de imagen Docker | **OK** | Trivy `v0.35.0` filtra `CRITICAL,HIGH` antes del push. |
-| Dependabot | **CORREGIDO** | Creado `.github/dependabot.yml` con ecosistemas: `github-actions`, `pip` (hub + 3 cases), `docker`, `gomod` (3 cases), `cargo`, `npm` (2 cases, rastrea los `pnpm-lock.yaml` — Dependabot no tiene un ecosistema `pnpm` propio). |
+| Dependabot | **CORREGIDO** | `.github/dependabot.yml` con **31 entradas** que cubren los 20 casos: `npm` (9), `pip` (8), `gomod` (5), `nuget` (2), `gradle` (2), `cargo`, `bundler`, `pub`, `docker` y `github-actions`. El ecosistema se llama `npm` porque es el nombre del **registro**, no del gestor: Dependabot lee los `pnpm-lock.yaml` sin ejecutar npm. Ampliado de 9 a 31 en v4.11.0. |
+| Manifiestos de seguridad por caso | **CORREGIDO** | `scripts/validate_security_manifests.py` cruza los 20 `cases/NN-*/security.yml` contra los Dockerfiles, el compose y los manifiestos de proyecto. Falla si el manifiesto va por delante del código o si se reintroduce una versión declarada abandonada. (P-08, v4.11.0) |
+| Invocación de `npm` | **CORREGIDO** | Cero invocaciones de `npm`/`npx` en todo el repositorio: CI activa pnpm por `corepack`, los Dockerfiles usan `pnpm install --prod --frozen-lockfile` y `.gitignore` rechaza `package-lock.json` y `npm-shrinkwrap.json`. (v4.11.0) |
 
 ---
 
@@ -172,9 +176,37 @@ docker compose --profile edge up -d
 | P-06 | `bundler-audit` sin cobertura real | Baja | ✅ CORREGIDO | `Gemfile` + `Gemfile.lock` añadidos al caso Ruby (`sinatra`, `cassandra-driver`); `bundler-audit` corre de verdad y en verde. |
 | P-07 | Actions de GitHub sin SHA-pinning | Media | ✅ CORREGIDO | Las 27 referencias `uses:` en `ci-cd.yml` y `wiki-sync.yml` pinneadas a SHA de 40 chars con comentario `# vX` (Dependabot las sigue actualizando). |
 
+### Resueltos en v4.11.0 (2026-11-01)
+
+| ID | Descripción | Prioridad | Estado | Implementación |
+| :--- | :--- | :---: | :---: | :--- |
+| P-08 | Versiones de runtime sin trazabilidad ni guardrail | Alta | ✅ CORREGIDO | Los 20 casos declaran su `security.yml` (runtime y dependencia → versión, advisory y motivo) y `scripts/validate_security_manifests.py` lo cruza en CI contra los Dockerfiles, el compose y los manifiestos de proyecto. |
+| P-09 | Runtimes de lenguaje en EOL | Alta | ✅ CORREGIDO | 51 cambios de runtime o imagen base. Go 1.21/1.23 → 1.27, Node 20 → 24 LTS, Python 3.11 → 3.13, PHP 8.2 → 8.4, Ruby 3.2 → 3.4, .NET 6/9 → 10, Alpine 3.20 → 3.23.7, Rust 1.83 → 1.99, OTP 27 → 28, Crystal 1.14 → 1.22, Swift 6.0 → 6.2. |
+| P-10 | Tags de imagen flotantes | Media | ✅ CORREGIDO | `dart:stable` → `dart:3.10-sdk` y `debian:stable-slim` → `debian:13-slim` (caso 20). Un tag móvil hace el build irreproducible y deja al guardrail sin nada que comprobar. |
+| P-11 | `npm` presente en la superficie del repositorio | Media | ✅ CORREGIDO | Cero invocaciones de `npm`/`npx`. CI activa pnpm por `corepack`; los Dockerfiles usan `pnpm install --prod --frozen-lockfile`; `.gitignore` rechaza `package-lock.json` y `npm-shrinkwrap.json`. |
+| P-12 | Política de pnpm desactivada en silencio al subir a pnpm 11 | Alta | ✅ CORREGIDO | pnpm 11 **ya no lee el campo `pnpm` de `package.json`**: los `overrides` y `onlyBuiltDependencies` del repo iban a quedar inertes. Se trasladan a `pnpm-workspace.yaml` en los 9 paquetes Node, con `minimumReleaseAge: 1440` añadido. |
+| P-13 | Dependencias instaladas sin pin ni hash | Alta | ✅ CORREGIDO | El caso 04 dest instalaba `fastapi uvicorn pydantic` sueltos desde PyPI. Los casos 04, 12 y 15 pasan a `requirements.in` + `requirements.txt` con hashes SHA256; los casos 13, 14, 16 y 17 ganan `pnpm-lock.yaml` commiteado. |
+| P-14 | Dependabot cubría 9 de 20 casos | Media | ✅ CORREGIDO | 31 entradas: `npm` ×9, `pip` ×8, `gomod` ×5, `nuget` ×2, `gradle` ×2, `cargo`, `bundler`, `pub`, `docker`, `github-actions`. |
+
+> **Hallazgos reales cerrados en v4.11.0**: **74 advisories distintos** (41 con identificador
+> CVE), de los cuales los críticos son **CVE-2026-33186** (bypass de autorización en gRPC-Go),
+> **GHSA-2464-fhr4-w9xw** y **GHSA-2xp9-vwfh-vxw4** (RCE sin autenticar en la Image
+> Optimization API de Next.js), **GHSA-jqcg-44mw-7w3h** (spoofing de IP en `proxy-addr`),
+> **GHSA-6q48-6c7w-9gw2** (raíces emSign comprometidas en `certifi`) y
+> **GHSA-82r6-8w77-94w6** (confusión de certificados TLS en `anyio`). Detalle completo, método
+> de obtención y alcance de la verificación en
+> [`docs/CVE_REMEDIATION_v4.11.0.md`](docs/CVE_REMEDIATION_v4.11.0.md).
+
 ### Follow-ups abiertos
 
-_Ninguno de la auditoría original._ Gestión continua vía Dependabot (23 PRs abiertos tras el release v4.4.0: bumps de deps + majors como Express 5, Python 3.14, reqwest 0.13 — a triar manualmente por su riesgo de ruptura).
+| Qué | Prioridad | Por qué sigue abierto |
+| :--- | :---: | :--- |
+| Imágenes de base de datos e infraestructura | Media | El pase v4.11.0 cubrió **lenguajes de programación**. `mongo:6.0` (EOL) e `influxdb:1.8` son las más atrasadas; también conviene revisar `cassandra:4.1`, `mariadb:10.11`, `postgres:15-alpine`, `redis:7-alpine` y `mssql 2022`. |
+| `docker build` de las 29 imágenes | Media | Los tags están verificados contra Docker Hub / MCR y los `FROM` son correctos, pero el build no se ejecutó en local. Los saltos con más riesgo son Crystal 1.14 → 1.22, `ring` 1.12 → 1.15 (Jetty 11 → 12), .NET 6 → 10 y Spring Boot 3.3 → 3.5. |
+| Saltos de major sin advisory abierto | Baja | Zig 0.13 → 0.17, Ktor 2.3 → 3.x, XTDB 1.24 → 2.x, Express 4 → 5, Next 15 → 16, Spring Boot 3.5 → 4.x, driver MongoDB 6 → 7, `reqwest` 0.12 → 0.13, `rumqttc` 0.24 → 0.25. Ninguno cierra un advisory: todos rompen API y se triarán por separado. |
+| pnpm 11.2.2 → 12.x | Baja | pnpm 12.16.1 está publicado, pero 11.2.2 es la versión con la que se regeneraron y auditaron los 9 lockfiles. Se fija lo verificado, no lo último. |
+| `scripts/validate_workflows.py` en Windows | Baja | Falla por la codificación de la consola (`cp1252` frente a los emoji del script), no por su lógica. En CI (Linux) corre normal. |
+
 
 ---
 

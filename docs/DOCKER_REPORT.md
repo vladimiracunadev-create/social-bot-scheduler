@@ -1,6 +1,16 @@
 # 📊 Reporte de Recursos Docker
 
-Este documento detalla el estado actual y el uso de disco de los procesos, imágenes y volúmenes de Docker en el entorno de desarrollo.
+> [!IMPORTANT]
+> **Esto es una fotografía, no el estado actual.** Los números y los IDs de imagen de
+> abajo se midieron durante la auditoría Docker de la v4.9.0. En la v4.11.0 se vació
+> el entorno Docker por completo (8,34 GB liberados: 3 imágenes, 3 volúmenes y 112
+> entradas de caché de build) y las versiones de imagen cambiaron en los 20 casos
+> — ver [CVE_REMEDIATION_v4.11.0.md](CVE_REMEDIATION_v4.11.0.md). Las imágenes que
+> aquí aparecen como `php:8.2-apache`, `node:20-alpine` o `alpine:3.20.6` ya no se
+> usan. Para el estado real de tu máquina: `docker system df`.
+
+Este documento detalla el uso de disco de los procesos, imágenes y volúmenes de Docker
+en el entorno de desarrollo tal como estaba al cierre de la v4.9.0.
 
 ## 💾 Resumen de Uso del Sistema
 

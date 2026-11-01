@@ -1,5 +1,7 @@
 # Case 01 (Python origin) dependencies.
-# Compile with:  pip-compile --generate-hashes requirements.in
+# Compile with:
+#   uv pip compile --upgrade --universal --generate-hashes --python-version 3.13 \
+#       requirements.in -o requirements.txt
 python-dotenv
 requests
 pydantic>=2.0

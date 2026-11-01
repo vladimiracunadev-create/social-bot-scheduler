@@ -5,9 +5,14 @@
   "description": "Receiver (Case 14) que persiste en Supabase (Postgres + RLS) via PostgREST.",
   "type": "module",
   "main": "index.js",
-  "scripts": { "start": "node index.js" },
-  "dependencies": {
-    "express": "4.21.2"
+  "scripts": {
+    "start": "node index.js"
   },
-  "engines": { "node": ">=20" }
+  "dependencies": {
+    "express": "4.22.3"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@11.2.2"
 }

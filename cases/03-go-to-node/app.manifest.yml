@@ -14,3 +14,7 @@ database:
   version: "15"
 stack: ["go", "n8n", "nodejs", "express"]
 description: "Integracion de emisor en Go con destino Node.js"
+
+# Manifiesto de seguridad de versiones del caso: que runtime y que dependencia
+# estan en que version, y contra que advisory de OSV. Ver docs/CVE_REMEDIATION_v4.11.0.md.
+security_manifest: "security.yml"

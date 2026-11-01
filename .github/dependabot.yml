@@ -108,3 +108,184 @@ updates:
     labels:
       - "security"
       - "dependencies"
+
+  # --------------------------------------------------------------------------------------------
+  # Cobertura ampliada (v4.11.0): hasta esta versión Dependabot solo vigilaba 9 de los 20 casos.
+  # El ecosistema se llama "npm" porque es el nombre del REGISTRO, no del gestor: los casos JS
+  # usan pnpm y Dependabot lee sus pnpm-lock.yaml sin ejecutar npm.
+  # --------------------------------------------------------------------------------------------
+
+  # npm — Case 05 destination (Node/Express + MongoDB)
+  - package-ecosystem: "npm"
+    directory: "/cases/05-laravel-to-react/dest"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # npm — Case 13 origin (Node/kafkajs)
+  - package-ecosystem: "npm"
+    directory: "/cases/13-node-to-go-kafka/origin"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # npm — Case 14 origin (Next.js)
+  - package-ecosystem: "npm"
+    directory: "/cases/14-nextjs-to-supabase/origin"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # npm — Case 14 destination (Node/Express)
+  - package-ecosystem: "npm"
+    directory: "/cases/14-nextjs-to-supabase/dest"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # npm — Case 16 origin (Apollo GraphQL)
+  - package-ecosystem: "npm"
+    directory: "/cases/16-graphql-to-hasura/origin"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # npm — Case 16 receiver (Node/Express)
+  - package-ecosystem: "npm"
+    directory: "/cases/16-graphql-to-hasura/dest/receiver"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # npm — Case 17 destination (Node/MQTT)
+  - package-ecosystem: "npm"
+    directory: "/cases/17-mqtt-rust-to-node/dest"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # pip — Case 04 destination (FastAPI)
+  - package-ecosystem: "pip"
+    directory: "/cases/04-node-to-fastapi/dest"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # pip — Case 08 destination (Flask + pyodbc)
+  - package-ecosystem: "pip"
+    directory: "/cases/08-csharp-to-flask/dest"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # pip — Case 12 destination (FastAPI + pgvector)
+  - package-ecosystem: "pip"
+    directory: "/cases/12-python-to-rag/dest"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # pip — Case 15 destination (gRPC + FastAPI)
+  - package-ecosystem: "pip"
+    directory: "/cases/15-grpc-go-to-python/dest"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # gomod — Case 13 destination (Go + kafka-go)
+  - package-ecosystem: "gomod"
+    directory: "/cases/13-node-to-go-kafka/dest"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # gomod — Case 15 origin (Go + gRPC)
+  - package-ecosystem: "gomod"
+    directory: "/cases/15-grpc-go-to-python/origin"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # nuget — Case 08 origin (.NET 10)
+  - package-ecosystem: "nuget"
+    directory: "/cases/08-csharp-to-flask/origin"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # nuget — Case 19 origin (F# / .NET 10)
+  - package-ecosystem: "nuget"
+    directory: "/cases/19-fsharp-to-clojure/origin"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # gradle — Case 10 origin (Java / Spring Boot)
+  - package-ecosystem: "gradle"
+    directory: "/cases/10-java-to-kotlin/origin"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # gradle — Case 10 destination (Kotlin / Ktor)
+  - package-ecosystem: "gradle"
+    directory: "/cases/10-java-to-kotlin/dest"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # bundler — Case 07 destination (Ruby / Sinatra)
+  - package-ecosystem: "bundler"
+    directory: "/cases/07-rust-to-ruby/dest"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"
+
+  # hex — Case 11 (Elixir/Erlang) queda FUERA a propósito: mix.exs no declara
+  # dependencias externas (usa :httpc e :inets de OTP) y rebar.config no lleva
+  # lockfile, así que Dependabot no tiene nada que resolver. cowboy se revisa a mano.
+
+  # pub — Case 20 destination (Dart / Shelf)
+  - package-ecosystem: "pub"
+    directory: "/cases/20-swift-to-dart/dest"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "security"
+      - "dependencies"

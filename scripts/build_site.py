@@ -2,8 +2,10 @@
 """Genera en `site/` el sitio publico del laboratorio (GitHub Pages).
 
 Por que el sitio no se versiona: se reconstruye en cada despliegue desde el
-propio repositorio -- los manifiestos `cases/*/app.manifest.yml` y los 85
-documentos Markdown. Un HTML escrito a mano permitiria que la web afirmara algo
+propio repositorio -- los manifiestos `cases/*/app.manifest.yml` y todos los
+documentos Markdown que encuentre (el conteo no se escribe aqui a proposito: una
+cifra fija en un comentario envejece en cuanto se anade un documento). Un HTML
+escrito a mano permitiria que la web afirmara algo
 distinto de lo que dice el repo, que es exactamente como envejecen las landings.
 
 Que produce:

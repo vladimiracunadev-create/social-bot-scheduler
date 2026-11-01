@@ -1,0 +1,16 @@
+# ==================================================================================================
+# Caso 16 — Política de supply-chain de pnpm (origin).
+# pnpm >= 11 ya NO lee el campo `pnpm` de package.json: `overrides` y
+# `onlyBuiltDependencies` viven aquí (https://pnpm.io/settings).
+# ==================================================================================================
+
+# Ningún paquete puede ejecutar scripts de instalación (postinstall/preinstall).
+# Es la mitigación central contra campañas tipo Shai-Hulud en el registro npm.
+onlyBuiltDependencies: []
+
+# Cuarentena: no se instala ninguna versión publicada hace menos de 1440 min (24 h),
+# la ventana en la que se detectan y despublican los paquetes comprometidos.
+minimumReleaseAge: 1440
+
+allowBuilds:
+  '@apollo/protobufjs': set this to true or false

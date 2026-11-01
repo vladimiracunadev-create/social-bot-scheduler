@@ -16,3 +16,7 @@ database:
   notes: "DB nativa BEAM embebida (ram_copies); sin contenedor de base de datos separado."
 stack: ["elixir", "n8n", "erlang", "cowboy", "mnesia", "otp", "beam"]
 description: "Modelo de actores BEAM: emisor Elixir y receptor Erlang/Cowboy con persistencia Mnesia embebida en el runtime."
+
+# Manifiesto de seguridad de versiones del caso: que runtime y que dependencia
+# estan en que version, y contra que advisory de OSV. Ver docs/CVE_REMEDIATION_v4.11.0.md.
+security_manifest: "security.yml"

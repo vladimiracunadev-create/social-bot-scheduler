@@ -1,0 +1,69 @@
+# ==================================================================================================
+# Caso 18 — manifiesto de seguridad de versiones
+# ==================================================================================================
+# Que es esto
+#   El registro de POR QUE cada runtime y cada dependencia de este caso estan en la version en
+#   que estan. `app.manifest.yml` dice QUE tecnologias usa el caso; este fichero dice en que
+#   version y contra que advisory.
+#
+# Como se obtuvo
+#   - Advisories: OSV.dev, endpoint /v1/query, consultando la version exacta que estaba pinneada
+#     antes del cambio (no rangos ni heuristicas).
+#   - Fin de soporte: endoflife.date.
+#   - Existencia de los tags de imagen: Docker Hub / MCR, antes de escribir el Dockerfile.
+#
+# Como leerlo
+#   `reason` explica por que se movio la version:
+#     eol                    el runtime ya no recibe parches de seguridad
+#     fin-de-soporte         sigue recibiendo parches pero el soporte activo ya cerro
+#     fin-de-soporte-activo  en modo solo-seguridad
+#     mantenimiento          sin advisory abierto; se sube para no acumular deuda
+#     endurecimiento         el cambio cierra una superficie, no un CVE concreto
+#     sin-cambio             se evaluo y se deja como esta (el motivo va en `detail`)
+#   `severity` es la mas alta que OSV reporta para los advisories listados; `-` = sin advisory.
+# ==================================================================================================
+
+case: "18"
+name: "Zig -> n8n -> Crystal/Kemal"
+lab_version: "4.11.0"
+reviewed: "2026-11-01"
+sources:
+  advisories: "https://osv.dev/ (/v1/query por version exacta)"
+  end_of_life: "https://endoflife.date/"
+
+# --- Runtimes de lenguaje / imagenes base -------------------------------------------
+runtimes:
+  - component: "origin"
+    language: "alpine"
+    from: "3.20"
+    to: "3.23.7"
+    reason: eol
+    detail: >-
+      Alpine 3.20 dejo de recibir parches el 2026-04-01.
+  - component: "origin"
+    language: "zig"
+    from: "0.13.0"
+    to: "0.13.0"
+    reason: sin-cambio
+    detail: >-
+      Zig no tiene advisories en OSV y la ruta 0.13 -> 0.17 rompe el sistema de build (Writergate en
+      0.15). Se deja fijo y se documenta; lo que si se parchea es la capa de SO sobre la que compila.
+  - component: "dest"
+    language: "crystal"
+    from: "1.14-alpine"
+    to: "1.22-alpine"
+    reason: mantenimiento
+    detail: >-
+      Crystal 1.22.2 es la ultima estable (2026-10-30).
+
+# --- Dependencias ------------------------------------------------------------------
+dependencies:
+  - ecosystem: "Crystal/shards"
+    package: "kemal"
+    from: "~> 1.6.0"
+    to: "~> 1.15.0"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory. Se sube porque kemal 1.15.0 exige crystal >= 1.12.0 y es la version soportada
+      sobre Crystal 1.22.

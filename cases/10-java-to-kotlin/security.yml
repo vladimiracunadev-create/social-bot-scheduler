@@ -1,0 +1,103 @@
+# ==================================================================================================
+# Caso 10 — manifiesto de seguridad de versiones
+# ==================================================================================================
+# Que es esto
+#   El registro de POR QUE cada runtime y cada dependencia de este caso estan en la version en
+#   que estan. `app.manifest.yml` dice QUE tecnologias usa el caso; este fichero dice en que
+#   version y contra que advisory.
+#
+# Como se obtuvo
+#   - Advisories: OSV.dev, endpoint /v1/query, consultando la version exacta que estaba pinneada
+#     antes del cambio (no rangos ni heuristicas).
+#   - Fin de soporte: endoflife.date.
+#   - Existencia de los tags de imagen: Docker Hub / MCR, antes de escribir el Dockerfile.
+#
+# Como leerlo
+#   `reason` explica por que se movio la version:
+#     eol                    el runtime ya no recibe parches de seguridad
+#     fin-de-soporte         sigue recibiendo parches pero el soporte activo ya cerro
+#     fin-de-soporte-activo  en modo solo-seguridad
+#     mantenimiento          sin advisory abierto; se sube para no acumular deuda
+#     endurecimiento         el cambio cierra una superficie, no un CVE concreto
+#     sin-cambio             se evaluo y se deja como esta (el motivo va en `detail`)
+#   `severity` es la mas alta que OSV reporta para los advisories listados; `-` = sin advisory.
+# ==================================================================================================
+
+case: "10"
+name: "Java/Spring Boot -> n8n -> Kotlin/Ktor"
+lab_version: "4.11.0"
+reviewed: "2026-11-01"
+sources:
+  advisories: "https://osv.dev/ (/v1/query por version exacta)"
+  end_of_life: "https://endoflife.date/"
+
+# --- Runtimes de lenguaje / imagenes base -------------------------------------------
+runtimes:
+  - component: "origin+dest"
+    language: "gradle"
+    from: "8.11-jdk21"
+    to: "8.14-jdk21"
+    reason: mantenimiento
+    detail: >-
+      Ultimo parche de la linea 8.x compatible con el plugin de Spring Boot 3.5.
+  - component: "origin+dest"
+    language: "java"
+    from: "eclipse-temurin:21-jre-alpine"
+    to: "sin cambio"
+    reason: sin-cambio
+    detail: >-
+      Java 21 es LTS con soporte hasta 2029-12-31 y el tag movil ya trae el ultimo parche.
+
+# --- Dependencias ------------------------------------------------------------------
+dependencies:
+  - ecosystem: "Maven"
+    package: "org.springframework.boot"
+    from: "3.3.5"
+    to: "3.5.16"
+    advisories: []
+    severity: "-"
+    note: >-
+      La rama 3.3 salio del soporte OSS. 3.5.16 es el ultimo parche de la 3.x; el salto a Spring Boot
+      4 es ruptura y queda aparte.
+  - ecosystem: "Maven"
+    package: "com.fasterxml.jackson:jackson-bom"
+    from: "2.21.4 (gestionada por Boot)"
+    to: "2.21.8 (ext[\"jackson-bom.version\"])"
+    advisories:
+      - "GHSA-5gvw-p9qm-jgwh"
+      - "CVE-2026-89425"
+      - "CVE-2026-89407"
+      - "CVE-2026-68494"
+    severity: "HIGH"
+    note: >-
+      Spring Boot 3.5.16 fija jackson-bom 2.21.4, que arrastra jackson-databind con 9 advisories
+      abiertos. Subir la propiedad del BOM reemplaza toda la familia.
+  - ecosystem: "Maven"
+    package: "org.postgresql:postgresql"
+    from: "42.7.4"
+    to: "42.7.12"
+    advisories:
+      - "CVE-2025-49146"
+      - "CVE-2026-42198"
+      - "CVE-2026-54291"
+    severity: "HIGH"
+    note: >-
+      Fallback a autenticacion insegura con channelBinding=require, iteraciones PBKDF2 sin limite en
+      SCRAM y downgrade silencioso del channel binding.
+  - ecosystem: "Maven"
+    package: "ch.qos.logback:logback-classic"
+    from: "1.5.12"
+    to: "1.5.18"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory en OSV para 1.5.12, pero la linea 1.5.x acumula correcciones de seguridad desde
+      1.5.13.
+  - ecosystem: "Maven"
+    package: "io.ktor"
+    from: "2.3.13"
+    to: "2.3.13"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory. Ktor 3.x cambia la API (kotlinx-io) y el salto queda para una revision aparte.

@@ -17,3 +17,7 @@ database:
   features: ["firestore"]
 stack: ["swift", "n8n", "dart", "shelf", "firebase", "firestore", "mobile-backend"]
 description: "Stack mobile-backend server-side: emisor Swift (Linux) y receptor Dart/Shelf que persiste en el emulador de Firestore (Firebase Emulator Suite) via REST."
+
+# Manifiesto de seguridad de versiones del caso: que runtime y que dependencia
+# estan en que version, y contra que advisory de OSV. Ver docs/CVE_REMEDIATION_v4.11.0.md.
+security_manifest: "security.yml"

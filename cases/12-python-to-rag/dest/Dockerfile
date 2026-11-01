@@ -1,5 +1,5 @@
 # Receptor RAG (Case 12) — FastAPI + pgvector. Imagen slim, sin build tools (wheel psycopg2-binary).
-FROM python:3.11-slim
+FROM python:3.13-slim-trixie
 WORKDIR /app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt

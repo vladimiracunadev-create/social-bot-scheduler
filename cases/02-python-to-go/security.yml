@@ -1,0 +1,110 @@
+# ==================================================================================================
+# Caso 02 — manifiesto de seguridad de versiones
+# ==================================================================================================
+# Que es esto
+#   El registro de POR QUE cada runtime y cada dependencia de este caso estan en la version en
+#   que estan. `app.manifest.yml` dice QUE tecnologias usa el caso; este fichero dice en que
+#   version y contra que advisory.
+#
+# Como se obtuvo
+#   - Advisories: OSV.dev, endpoint /v1/query, consultando la version exacta que estaba pinneada
+#     antes del cambio (no rangos ni heuristicas).
+#   - Fin de soporte: endoflife.date.
+#   - Existencia de los tags de imagen: Docker Hub / MCR, antes de escribir el Dockerfile.
+#
+# Como leerlo
+#   `reason` explica por que se movio la version:
+#     eol                    el runtime ya no recibe parches de seguridad
+#     fin-de-soporte         sigue recibiendo parches pero el soporte activo ya cerro
+#     fin-de-soporte-activo  en modo solo-seguridad
+#     mantenimiento          sin advisory abierto; se sube para no acumular deuda
+#     endurecimiento         el cambio cierra una superficie, no un CVE concreto
+#     sin-cambio             se evaluo y se deja como esta (el motivo va en `detail`)
+#   `severity` es la mas alta que OSV reporta para los advisories listados; `-` = sin advisory.
+# ==================================================================================================
+
+case: "02"
+name: "Python -> n8n -> Go"
+lab_version: "4.11.0"
+reviewed: "2026-11-01"
+sources:
+  advisories: "https://osv.dev/ (/v1/query por version exacta)"
+  end_of_life: "https://endoflife.date/"
+
+# --- Runtimes de lenguaje / imagenes base -------------------------------------------
+runtimes:
+  - component: "origin"
+    language: "python"
+    from: "3.11"
+    to: "3.13"
+    reason: fin-de-soporte-activo
+    detail: >-
+      Mismo criterio que el caso 01.
+  - component: "dest"
+    language: "go"
+    from: "1.21-alpine"
+    to: "1.27-alpine"
+    reason: eol
+    detail: >-
+      Go 1.21 quedo EOL el 2024-08-13. OSV reporta 72 advisories de la stdlib para 1.21.13; 1.27.3
+      sale limpio.
+  - component: "dest"
+    language: "alpine"
+    from: "3.20.6"
+    to: "3.23.7"
+    reason: eol
+    detail: >-
+      Alpine 3.20 dejo de recibir parches el 2026-04-01. La 3.23 llega a 2027-11-01.
+
+# --- Dependencias ------------------------------------------------------------------
+dependencies:
+  - ecosystem: "Go"
+    package: "stdlib"
+    from: "1.21.13"
+    to: "1.27.3"
+    advisories:
+      - "CVE-2025-22871"
+      - "CVE-2025-4673"
+      - "CVE-2025-47907"
+      - "CVE-2024-45336"
+      - "CVE-2024-45341"
+      - "CVE-2025-0913"
+    severity: "HIGH"
+    note: >-
+      Request smuggling en net/http, cabeceras sensibles no limpiadas en redirecciones cross-origin,
+      resultados incorrectos en database/sql Rows.Scan, entre otros 72.
+  - ecosystem: "Go"
+    package: "github.com/go-sql-driver/mysql"
+    from: "v1.8.1"
+    to: "v1.10.1"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory: se sube por mantenimiento junto al toolchain.
+  - ecosystem: "Go"
+    package: "filippo.io/edwards25519"
+    from: "v1.1.0"
+    to: "v1.2.0"
+    advisories: []
+    severity: "-"
+    note: >-
+      Sin advisory: dependencia indirecta del driver MySQL.
+  - ecosystem: "PyPI"
+    package: "certifi"
+    from: "2026.6.17"
+    to: "2026.10.23"
+    advisories:
+      - "GHSA-6q48-6c7w-9gw2"
+    severity: "CRITICAL"
+    note: >-
+      Igual que el caso 01.
+  - ecosystem: "PyPI"
+    package: "urllib3"
+    from: "2.7.0"
+    to: "2.8.0"
+    advisories:
+      - "GHSA-8988-9cw3-xx77"
+      - "GHSA-vxq7-64xx-v4gw"
+    severity: "HIGH"
+    note: >-
+      Igual que el caso 01.

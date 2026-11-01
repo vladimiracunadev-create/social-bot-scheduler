@@ -1,7 +1,7 @@
 # ==================================================================================================
 # Case 18 — Build multi-stage del receptor Crystal/Kemal.
 # ==================================================================================================
-FROM crystallang/crystal:1.14-alpine AS build
+FROM crystallang/crystal:1.22-alpine AS build
 WORKDIR /src
 COPY shard.yml ./
 RUN shards install
@@ -9,7 +9,7 @@ COPY src ./src
 COPY public ./public
 RUN crystal build src/app.cr --release --no-debug -o app
 
-FROM crystallang/crystal:1.14-alpine
+FROM crystallang/crystal:1.22-alpine
 WORKDIR /app
 COPY --from=build /src/app ./app
 COPY --from=build /src/public ./public
