@@ -9,7 +9,7 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 ### `v4.11.0` — "Remediación de CVE multi-lenguaje" 🛡️ Ready
 
 - [x] **51 cambios de runtime o imagen base** en los 20 casos: Go 1.21/1.23 → 1.27, Node 20 → 24 LTS, Python 3.11 → 3.13, PHP 8.2 → 8.4, Ruby 3.2 → 3.4, .NET 6/9 → 10, Alpine 3.20 → 3.23.7, Rust 1.83 → 1.99, OTP 27 → 28, Crystal 1.14 → 1.22, Swift 6.0 → 6.2.
-- [x] **74 advisories cerrados** (41 con CVE), verificados contra OSV.dev por versión exacta. Informe en [docs/CVE_REMEDIATION_v4.11.0.md](docs/CVE_REMEDIATION_v4.11.0.md).
+- [x] **78 advisories cerrados** (41 con CVE), verificados contra OSV.dev por versión exacta. Informe en [docs/CVE_REMEDIATION_v4.11.0.md](docs/CVE_REMEDIATION_v4.11.0.md).
 - [x] **Manifiesto de seguridad por caso** (`cases/NN-*/security.yml`) + guardrail `validate_security_manifests.py` en CI (P-08).
 - [x] **npm fuera del repositorio**: pnpm 11 vía corepack, política de supply-chain en `pnpm-workspace.yaml` y 9 lockfiles auditados en verde.
 - [x] **Dependabot de 9 a 31 entradas**, cubriendo los 20 casos.

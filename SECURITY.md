@@ -188,7 +188,7 @@ docker compose --profile edge up -d
 | P-13 | Dependencias instaladas sin pin ni hash | Alta | ✅ CORREGIDO | El caso 04 dest instalaba `fastapi uvicorn pydantic` sueltos desde PyPI. Los casos 04, 12 y 15 pasan a `requirements.in` + `requirements.txt` con hashes SHA256; los casos 13, 14, 16 y 17 ganan `pnpm-lock.yaml` commiteado. |
 | P-14 | Dependabot cubría 9 de 20 casos | Media | ✅ CORREGIDO | 31 entradas: `npm` ×9, `pip` ×8, `gomod` ×5, `nuget` ×2, `gradle` ×2, `cargo`, `bundler`, `pub`, `docker`, `github-actions`. |
 
-> **Hallazgos reales cerrados en v4.11.0**: **74 advisories distintos** (41 con identificador
+> **Hallazgos reales cerrados en v4.11.0**: **78 advisories distintos** (41 con identificador
 > CVE), de los cuales los críticos son **CVE-2026-33186** (bypass de autorización en gRPC-Go),
 > **GHSA-2464-fhr4-w9xw** y **GHSA-2xp9-vwfh-vxw4** (RCE sin autenticar en la Image
 > Optimization API de Next.js), **GHSA-jqcg-44mw-7w3h** (spoofing de IP en `proxy-addr`),

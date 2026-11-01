@@ -14,7 +14,7 @@ de seguridad. Un runtime en EOL no arrastra «un CVE»: arrastra todos los publi
 EOL el 2026-04-30**.
 
 Se recorrieron los 20 casos: **51 cambios de runtime o imagen base** y **92 entradas de
-dependencia** revisadas, que cierran **74 advisories distintos** (41 con identificador CVE).
+dependencia** revisadas, que cierran **78 advisories distintos** (41 con identificador CVE).
 Informe completo en [`docs/CVE_REMEDIATION_v4.11.0.md`](docs/CVE_REMEDIATION_v4.11.0.md).
 
 Nada sale de memoria: cada versión pinneada se consultó contra **OSV.dev** (`/v1/query`, por
@@ -89,6 +89,15 @@ contra Docker Hub / MCR **antes** de escribir cada `FROM`.
 - **Apollo Server** 4.11.3 → 5.5.1 (caso 16): CVE-2026-23897 (DoS) y GHSA-9q82-xgwf-vj6h, que
   solo se cierra en 5.5.0. Único salto de major del pase y el único verificado en ejecución:
   se arrancó el emisor y se resolvió una query GraphQL real.
+- **rack** 3.2.6 → 3.2.8 (caso 07): cuatro advisories publicados el 2026-11-01 que OSV
+  todavia no habia indexado y que `bundler-audit` destapo al correr el pipeline —
+  GHSA-5v64-555j-wjxm (HIGH, el parser multipart retiene lo ya parseado en su buffer de
+  scan y permite agotar la memoria), GHSA-2j8w-xcrc-x985 (`#host_with_port` y `#base_url`
+  devuelven un `Host` invalido verbatim, lo que permite saltarse allowlists),
+  GHSA-wvg4-6p58-3gh3 (bypass de `header_rules` en `Rack::Static` con segmentos de punto
+  sin normalizar) y GHSA-p8x9-v4hv-2w4g (bypass de WAF por boundary multipart vacio o
+  citado). El `Gemfile` fija ahora el piso de forma explicita: `sinatra` solo pide
+  `>= 3.0.0, < 4` y sin el bundler puede volver a resolver una version vulnerable.
 - **postcss** ≤ 8.5.22 (caso 14), **body-parser** < 1.20.9, **qs** ≤ 6.16.0 y
   **follow-redirects** ≤ 1.16.1: transitivas con advisory que las versiones parcheadas de
   `next`, `express` y `axios` siguen arrastrando. Cerradas por `overrides`.
@@ -120,7 +129,20 @@ contra Docker Hub / MCR **antes** de escribir cada `FROM`.
   `php-version` 8.2 → **8.4**; `ruby-version` 3.3 → **3.4**; `dotnet-version` 6.0.x → **10.0.x**.
 - El job `node-cases` pasa de 3 a **9 paquetes** auditados con `pnpm audit` y de 3 a 9
   `node --check`. Renombrado a «Node Cases (03-05, 13, 14, 16, 17)».
+- **Actions al dia y SHA-pinneadas**: `actions/setup-node` v4 → v6, `actions/setup-go`
+  v5 → v6, `actions/setup-dotnet` v4 → v5, `docker/login-action` v3 → v4 y
+  `docker/build-push-action` v5 → v7 (2 usos). Las 25 referencias `uses:` siguen
+  pinneadas a SHA de 40 caracteres con su comentario `# vX`; cierra los 5 PRs de
+  Dependabot que quedaban sobre el workflow.
 - Nuevo paso `Validate per-case security manifests [P-08]` en `runtime-security`.
+
+#### Lección de método
+
+OSV no siempre va primero. El hallazgo de `rack` lo destapó `bundler-audit` en el
+pipeline, no la consulta a OSV, que para esa misma versión devolvía cero: su
+`ruby-advisory-db` iba más fresca. Los auditores nativos de cada ecosistema
+(`bundler-audit`, `govulncheck`, `pnpm audit`, `cargo audit`, `pip-audit`) se quedan en
+CI y bloqueando: no son redundantes con una consulta centralizada.
 
 #### Verificación
 

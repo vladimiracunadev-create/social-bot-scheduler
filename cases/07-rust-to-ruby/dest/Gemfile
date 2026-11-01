@@ -5,5 +5,13 @@
 source 'https://rubygems.org'
 
 gem 'sinatra'
+# Piso explícito de rack: 3.2.6 arrastra 4 advisories publicados el 2026-11-01
+# (GHSA-5v64-555j-wjxm HIGH, agotamiento de memoria en el parser multipart;
+# GHSA-2j8w-xcrc-x985, Host inválido devuelto verbatim por #host_with_port;
+# GHSA-wvg4-6p58-3gh3, bypass de header_rules en Rack::Static; y
+# GHSA-p8x9-v4hv-2w4g, bypass de WAF por boundary multipart vacío o citado).
+# Los cuatro se corrigen en 3.2.8. sinatra solo pide >= 3.0.0, < 4, así que sin
+# este piso bundler podría resolver una versión vulnerable.
+gem 'rack', '>= 3.2.8'
 gem 'cassandra-driver'
 gem 'sorted_set' # SortedSet salió del stdlib en Ruby 3.2; cassandra-driver lo requiere

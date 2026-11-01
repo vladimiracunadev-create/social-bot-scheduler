@@ -6,6 +6,8 @@
 [![Version](https://img.shields.io/badge/version-4.11.0-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
 [![Sitio](https://img.shields.io/badge/Sitio-GitHub%20Pages-6366f1.svg?logo=githubpages&logoColor=white)](https://vladimiracunadev-create.github.io/social-bot-scheduler/)
 [![Security: Hardened](https://img.shields.io/badge/Security-Hardened-🛡️?color=red&labelColor=black)](SECURITY.md)
+[![CVE remediados](https://img.shields.io/badge/CVE%20remediados-78%20advisories-success.svg?logo=shieldsdotio&logoColor=white)](docs/CVE_REMEDIATION_v4.11.0.md)
+[![Runtimes](https://img.shields.io/badge/Runtimes-0%20en%20EOL-success.svg)](docs/CVE_REMEDIATION_v4.11.0.md)
 
 Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. El **Social Bot Scheduler** actúa como una **Matriz Tecnológica** donde **n8n** orquesta la comunicación entre bots emisores y receptores políglotas.
 
@@ -17,8 +19,67 @@ Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. 
 
 ---
 
+## 🛡️ Remediación de CVE — ningún runtime en EOL (v4.11.0)
+
+**Un runtime en fin de vida no arrastra "un CVE": arrastra todos los publicados desde su último parche.** Por eso la revisión de la v4.11.0 no fue un bump de rutina — se recorrieron los **20 casos**, lenguaje por lenguaje, hasta que ninguno quedara sobre una versión sin soporte.
+
+| | |
+| :--- | ---: |
+| 🔴 **Advisories cerrados** | **78** (41 con identificador CVE) |
+| 🔧 **Cambios de runtime / imagen base** | **51** |
+| 📦 **Entradas de dependencia revisadas** | **92** |
+| ✅ **Runtimes en EOL que quedan** | **0** |
+
+### Los runtimes que estaban sin parches
+
+| Runtime | Antes | Ahora | Por qué era urgente |
+| :--- | :--- | :--- | :--- |
+| **Go** | 1.21 / 1.23 | **1.27** | EOL desde 2024-08-13. OSV reportaba **72 advisories de stdlib** |
+| **Node.js** | 20 | **24 LTS** | EOL desde 2026-04-30 |
+| **.NET** | net6.0 / net9.0 | **net10.0** | .NET 6 llevaba **2 años sin parches** |
+| **Ruby** | 3.2 | **3.4** | EOL desde 2026-03-31 |
+| **Alpine** | 3.20 | **3.23.7** | Sin parches desde 2026-04-01 |
+| **PHP** | 8.2 | **8.4** | Soporte activo cerrado en 2024-12-31 |
+| **Python** | 3.11 (Debian 12) | **3.13** (Debian 13) | En modo solo-seguridad |
+
+Y además: Rust 1.83 → 1.99, Erlang/OTP 27 → 28, Elixir 1.17 → 1.18, Crystal 1.14 → 1.22, Swift 6.0 → 6.2, Gradle 8.11 → 8.14.
+
+### Los agujeros más graves que se cerraron
+
+- **RCE sin autenticar** en la Image Optimization API de Next.js — dos vías distintas, vía SVG y vía AVIF (`GHSA-2464-fhr4-w9xw`, `GHSA-2xp9-vwfh-vxw4`).
+- **Bypass de autorización en gRPC** por falta de barra inicial en `:path` (`CVE-2026-33186`, CRITICAL).
+- **Spoofing de IP** con direcciones IPv4 mapeadas en IPv6 (`GHSA-jqcg-44mw-7w3h`, CRITICAL) — lo arrastraba `express` incluso en su última versión 4.x, así que se fija por `override`.
+- **Raíces de CA comprometidas** en el bundle de `certifi` (`GHSA-6q48-6c7w-9gw2`, CRITICAL).
+- **Confusión de certificados TLS** por codificación IDNA 2003 en `anyio` (`GHSA-82r6-8w77-94w6`, CRITICAL).
+
+### Cadena de suministro: `npm` fuera del laboratorio
+
+`npm` **no se invoca en ninguna superficie** del repositorio. pnpm 11 se activa por `corepack`, y la política vive en un `pnpm-workspace.yaml` por paquete:
+
+```yaml
+onlyBuiltDependencies: []   # ningún paquete ejecuta postinstall/preinstall
+minimumReleaseAge: 1440     # cuarentena de 24 h antes de instalar algo recién publicado
+```
+
+Esas dos líneas son la defensa concreta contra campañas tipo **Shai-Hulud**: el vector es un `postinstall` en un paquete recién comprometido, y aquí no se ejecutan scripts ni se instala nada con menos de 24 h de vida. Los **9 paquetes Node** cierran con `pnpm audit` sin vulnerabilidades, y los **8 locks de Python** llevan hash SHA256 en sus 162 paquetes.
+
+### Una base de datos de advisories no basta
+
+Al pasar el pipeline, `bundler-audit` tumbó el job de Ruby con **cuatro advisories de `rack` 3.2.6 publicados ese mismo día** — uno de ellos HIGH, agotamiento de memoria en el parser multipart. La consulta a OSV para esa misma versión devolvía **cero**: su `ruby-advisory-db` iba más fresca. Se corrigió subiendo a 3.2.8 y fijando el piso en el `Gemfile`.
+
+Por eso los auditores nativos de cada ecosistema (`bundler-audit`, `govulncheck`, `pnpm audit`, `cargo audit`, `pip-audit`) siguen en CI y **bloqueando**: no son redundantes con una consulta centralizada.
+
+### Cómo se evita que esto vuelva a envejecer
+
+Cada caso declara su propio **manifiesto de seguridad** (`cases/NN-*/security.yml`): de qué versión viene cada runtime y cada dependencia, a cuál va, qué advisories cierra y por qué. El guardrail `scripts/validate_security_manifests.py` lo cruza en CI contra los Dockerfiles, el compose y los manifiestos de proyecto, y **falla el pipeline** si el manifiesto va por delante del código o si alguien reintroduce una versión declarada abandonada.
+
+> 📄 **Informe completo, método de verificación y alcance**: [docs/CVE_REMEDIATION_v4.11.0.md](docs/CVE_REMEDIATION_v4.11.0.md) — incluye qué **no** se cambió y por qué, y separa lo verificado con ejecución real de lo que queda en manos del pipeline.
+
+---
+
 ## 📋 Tabla de Contenidos
 
+- [🛡️ Remediación de CVE — ningún runtime en EOL (v4.11.0)](#️-remediación-de-cve--ningún-runtime-en-eol-v4110)
 - [🚀 Quickstart](#-quickstart)
 - [🧩 Casos de Integración (Tech Matrix)](#-casos-de-integración-tech-matrix)
 - [🛡️ Modelo de Seguridad Runtime](#️-modelo-de-seguridad-runtime)
@@ -111,7 +172,10 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 - **HTTP Security Headers**: Todos los servicios Apache sirven `X-Frame-Options`, `X-Content-Type-Options`, `Content-Security-Policy`, `Referrer-Policy` y `Permissions-Policy`. Listado de directorios deshabilitado.
 - **Caddy Edge Proxy**: HTTPS + Basic Auth + HSTS + CSP + Permissions-Policy completos.
 - **Supply Chain**: Trivy v0.35.0, pip-audit, Gitleaks, detección de Unicode bidi (CVE-2021-42574) y ofuscación base64 en CI.
-- **Dependabot**: PRs automáticos para 12 manifiestos en 6 ecosistemas (pip, docker, gomod, cargo, `npm` —rastrea los `pnpm-lock.yaml`—, github-actions).
+- **Versiones de runtime sin deuda**: ningún lenguaje del laboratorio corre sobre una versión en EOL, y el guardrail `validate_security_manifests.py` falla el pipeline si alguna vuelve a quedarse atrás. Ver [Remediación de CVE](#️-remediación-de-cve--ningún-runtime-en-eol-v4110).
+- **Cero `npm`**: pnpm 11 vía `corepack`, con scripts de instalación bloqueados y cuarentena de 24 h sobre publicaciones nuevas (mitigación Shai-Hulud). Builds con `--frozen-lockfile`.
+- **Dependencias con hash**: los 8 `requirements.txt` se compilan con `uv --generate-hashes`, lo que fuerza el modo `--require-hashes` de pip; los 9 paquetes Node llevan `pnpm-lock.yaml` commiteado y auditado.
+- **Dependabot**: PRs automáticos para **31 manifiestos en 10 ecosistemas** (pip, docker, gomod, cargo, nuget, gradle, bundler, pub, github-actions y `npm` —que rastrea los `pnpm-lock.yaml` sin ejecutar npm—), cubriendo los 20 casos.
 - **Line endings**: `.gitattributes` garantiza LF en scripts shell para evitar `bad interpreter` en contenedores Linux.
 - **Proceso no-root**: Todos los contenedores corren como usuario sin privilegios.
 

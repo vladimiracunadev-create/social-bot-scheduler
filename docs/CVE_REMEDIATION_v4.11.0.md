@@ -48,7 +48,7 @@ Cada entrada de `security.yml` lleva un `reason` que dice cuál de estas se apli
 | Casos revisados | 20 / 20 |
 | Cambios de runtime / imagen base | 51 |
 | Entradas de dependencia registradas | 92 |
-| Advisories distintos remediados | 74 |
+| Advisories distintos remediados | 78 |
 | · de ellos con identificador CVE | 41 |
 
 Entradas de dependencia agrupadas por la severidad **más alta** que OSV reporta
@@ -57,9 +57,9 @@ para esa dependencia:
 | Severidad máxima de la dependencia | Entradas |
 | :--- | ---: |
 | CRITICAL | 12 |
-| HIGH | 24 |
+| HIGH | 25 |
 | MODERATE | 8 |
-| sin advisory (mantenimiento) | 48 |
+| sin advisory (mantenimiento) | 47 |
 
 Motivo de los cambios de runtime:
 
@@ -137,7 +137,7 @@ Motivo de los cambios de runtime:
 «Paquetes» es la dependencia que los arrastraba y «Casos» los casos afectados.
 
 > **Sobre la columna de severidad**: es la severidad más alta que OSV reporta para
-> la **dependencia**, no la de cada advisory por separado. De los 74 advisories
+> la **dependencia**, no la de cada advisory por separado. De los 78 advisories
 > listados, solo 31 traen una severidad textual en OSV; el resto publica únicamente
 > un vector CVSS, y traducirlo a una etiqueta sería una interpretación nuestra, no un
 > dato de la fuente. Para la severidad exacta de un advisory concreto, el enlace
@@ -193,8 +193,10 @@ Motivo de los cambios de runtime:
 | HIGH | CVE-2026-89425 | `Maven/com.fasterxml.jackson.core:jackson-core`, `Maven/com.fasterxml.jackson:jackson-bom` | 10, 19 |
 | HIGH | CVE-2026-97032 | `Go/stdlib` | 13 |
 | HIGH | GHSA-27r3-jxmh-p828 | `npm/body-parser` | 03, 05, 14, 16, 17 |
+| HIGH | GHSA-2j8w-xcrc-x985 | `RubyGems/rack` | 07 |
 | HIGH | GHSA-37ch-88jc-xwx2 | `npm/path-to-regexp` | 05 |
 | HIGH | GHSA-5gvw-p9qm-jgwh | `Maven/com.fasterxml.jackson:jackson-bom` | 10 |
+| HIGH | GHSA-5v64-555j-wjxm | `RubyGems/rack` | 07 |
 | HIGH | GHSA-6g55-p6wh-862q | `npm/postcss` | 14 |
 | HIGH | GHSA-7f5h-v6xp-fcq8 | `PyPI/starlette` | 09 |
 | HIGH | GHSA-8988-9cw3-xx77 | `PyPI/urllib3` | 01, 02, 09 |
@@ -203,12 +205,14 @@ Motivo de los cambios de runtime:
 | HIGH | GHSA-fxqj-rqcc-2cmp | `npm/postcss` | 14 |
 | HIGH | GHSA-gh4c-6fx4-qh6g | `PyPI/urllib3` | 01 |
 | HIGH | GHSA-mrwp-f3q8-3g9p | `npm/follow-redirects` | 03, 04 |
+| HIGH | GHSA-p8x9-v4hv-2w4g | `RubyGems/rack` | 07 |
 | HIGH | GHSA-q3jh-wrc6-jgq8 | `npm/follow-redirects` | 03, 04 |
 | HIGH | GHSA-qx2v-qp2m-jg93 | `npm/postcss` | 14 |
 | HIGH | GHSA-r28c-9q8g-f849 | `npm/postcss` | 14 |
 | HIGH | GHSA-v422-hmwv-36x6 | `npm/body-parser` | 03, 05, 14, 16, 17 |
 | HIGH | GHSA-vxq7-64xx-v4gw | `PyPI/urllib3` | 01, 02, 09 |
 | HIGH | GHSA-wqp7-x3pw-xc5r | `PyPI/starlette` | 09 |
+| HIGH | GHSA-wvg4-6p58-3gh3 | `RubyGems/rack` | 07 |
 | HIGH | GHSA-x746-7m8f-x49c | `PyPI/starlette` | 09 |
 | MODERATE | CVE-2024-29041 | `npm/express` | 03 |
 | MODERATE | CVE-2024-43796 | `npm/express` | 03 |
@@ -260,6 +264,21 @@ repositorio se consultó:
 
 Tras aplicar los cambios se repitió la consulta a OSV sobre las versiones destino
 para confirmar que salen limpias.
+
+### Una base de datos no basta
+
+OSV no siempre va primero. Al pasar el pipeline, `bundler-audit` tumbó el job de
+Ruby con **cuatro advisories de `rack` 3.2.6** publicados ese mismo día — uno de
+ellos HIGH: el parser multipart retiene lo ya parseado en su buffer de scan y
+permite agotar la memoria (GHSA-5v64-555j-wjxm). La consulta a OSV para esa misma
+versión devolvía **cero**: su `ruby-advisory-db` iba más fresca que el índice de
+OSV. Se corrigió subiendo a 3.2.8 y fijando el piso en el `Gemfile`, porque
+`sinatra` solo pide `>= 3.0.0, < 4` y sin piso explícito bundler puede volver a
+resolver una versión vulnerable.
+
+La conclusión práctica: los auditores nativos de cada ecosistema
+(`bundler-audit`, `govulncheck`, `pnpm audit`, `cargo audit`, `pip-audit`) **no son
+redundantes** con una consulta a OSV. Se quedan, y bloqueando.
 
 ---
 

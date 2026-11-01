@@ -62,12 +62,22 @@ dependencies:
   - ecosystem: "RubyGems"
     package: "rack"
     from: "3.2.6 (Gemfile.lock)"
-    to: "3.2.6"
-    advisories: []
-    severity: "-"
+    to: "3.2.8"
+    advisories:
+      - "GHSA-5v64-555j-wjxm"
+      - "GHSA-2j8w-xcrc-x985"
+      - "GHSA-wvg4-6p58-3gh3"
+      - "GHSA-p8x9-v4hv-2w4g"
+    severity: "HIGH"
     note: >-
-      Ya estaba en el piso de los 25 advisories de la rama 3.x (el ultimo, CVE-2026-34829, se corrige
-      en 3.2.6).
+      3.2.6 ya cubria los 25 advisories previos de la rama 3.x, pero el 2026-11-01 se publicaron
+      otros cuatro: el parser multipart retiene lo ya parseado en su buffer de scan
+      (GHSA-5v64-555j-wjxm, HIGH, agotamiento de memoria), #host_with_port y #base_url devuelven un
+      Host invalido verbatim (GHSA-2j8w-xcrc-x985), Rack::Static salta sus header_rules con
+      segmentos de punto sin normalizar (GHSA-wvg4-6p58-3gh3) y el guardia de boundary multipart se
+      elude con un boundary vacio o citado (GHSA-p8x9-v4hv-2w4g). Los cuatro se corrigen en 3.2.8.
+      Los detecto bundler-audit en CI, no la consulta a OSV: su ruby-advisory-db iba mas fresca.
+      El Gemfile fija ahora el piso de forma explicita, porque sinatra solo pide >= 3.0.0, < 4.
   - ecosystem: "crates.io"
     package: "reqwest"
     from: "0.12"
