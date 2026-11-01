@@ -93,7 +93,7 @@ dependencies:
   - ecosystem: "Maven"
     package: "ch.qos.logback:logback-classic"
     from: "1.5.12"
-    to: "1.5.18"
+    to: "1.5.38"
     advisories: []
     severity: "-"
     applied_in: "`cases/10-java-to-kotlin/dest/build.gradle.kts` (dependencia Gradle)"
