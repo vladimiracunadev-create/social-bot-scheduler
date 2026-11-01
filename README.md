@@ -58,6 +58,7 @@ Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. 
 | ⚡ **Zig 0.13: por qué NO se subió** | 1 | — | **No se subió**: sin advisory y rompe el build | [Ver detalle](docs/upgrades/zig.md) |
 
 > 📘 **Procedimiento, historial y hallazgos abiertos**: [docs/VERSION_UPGRADES.md](docs/VERSION_UPGRADES.md) — el documento vivo que explica cómo se hace una subida de versión aquí, para este pase y los siguientes.
+> 📍 **Dónde está todo ahora mismo**, qué queda pendiente y por qué: [docs/ESTADO.md](docs/ESTADO.md).
 
 <!-- UPGRADES:FIN -->
 
@@ -193,6 +194,7 @@ El sistema no es solo una integración; es un catálogo vivo de patrones. Los qu
 
 | Tipo | Documento |
 | :--- | :--- |
+| 📍 **Estado actual** | [docs/ESTADO.md](docs/ESTADO.md) — dónde está todo, qué queda pendiente y por qué |
 | 🛡️ **Seguridad** | [SECURITY.md](SECURITY.md) \| [docs/RUNTIME_SECURITY.md](docs/RUNTIME_SECURITY.md) \| [docs/VERSION_UPGRADES.md](docs/VERSION_UPGRADES.md) |
 | 🏗️ **Arquitectura** | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
 | ☁️ **Migración a AWS** | [docs/AWS_MIGRATION.md](docs/AWS_MIGRATION.md) |

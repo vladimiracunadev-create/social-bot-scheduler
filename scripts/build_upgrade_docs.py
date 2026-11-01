@@ -1092,7 +1092,9 @@ def escribir_readme(indice):
     A(
         "> 📘 **Procedimiento, historial y hallazgos abiertos**: "
         "[docs/VERSION_UPGRADES.md](docs/VERSION_UPGRADES.md) — el documento vivo que "
-        "explica cómo se hace una subida de versión aquí, para este pase y los siguientes."
+        "explica cómo se hace una subida de versión aquí, para este pase y los siguientes.\n"
+        "> 📍 **Dónde está todo ahora mismo**, qué queda pendiente y por qué: "
+        "[docs/ESTADO.md](docs/ESTADO.md)."
     )
     A("")
     A(FIN)
