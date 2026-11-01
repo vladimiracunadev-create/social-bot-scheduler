@@ -79,7 +79,7 @@ dependencies:
   - ecosystem: "Maven"
     package: "org.postgresql:postgresql"
     from: "42.7.4"
-    to: "42.7.12"
+    to: "42.7.14"
     advisories:
       - "CVE-2025-49146"
       - "CVE-2026-42198"
@@ -87,7 +87,8 @@ dependencies:
     severity: "HIGH"
     applied_in: "`cases/10-java-to-kotlin/dest/build.gradle.kts` (dependencia Gradle)"
     note: >-
-      Fallback a autenticacion insegura con channelBinding=require, iteraciones PBKDF2 sin limite en
+      42.7.14 es el ultimo parche de la linea. Fallback a autenticacion insegura con
+      channelBinding=require, iteraciones PBKDF2 sin limite en
       SCRAM y downgrade silencioso del channel binding.
   - ecosystem: "Maven"
     package: "ch.qos.logback:logback-classic"

@@ -76,7 +76,7 @@ Las rutas de esta tabla las verifica `scripts/validate_security_manifests.py` en
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | 10 | `org.springframework.boot` | `3.3.5` | `3.5.16` | - | — | `cases/10-java-to-kotlin/origin/build.gradle.kts` (dependencia Gradle) |
 | 10 | `com.fasterxml.jackson:jackson-bom` | `2.21.4 (gestionada por Boot)` | `2.21.8 (ext["jackson-bom.version"])` | HIGH | GHSA-5gvw-p9qm-jgwh, CVE-2026-89425, CVE-2026-89407, CVE-2026-68494 | `cases/10-java-to-kotlin/origin/build.gradle.kts` (dependencia Gradle) |
-| 10 | `org.postgresql:postgresql` | `42.7.4` | `42.7.12` | HIGH | CVE-2025-49146, CVE-2026-42198, CVE-2026-54291 | `cases/10-java-to-kotlin/dest/build.gradle.kts` (dependencia Gradle) |
+| 10 | `org.postgresql:postgresql` | `42.7.4` | `42.7.14` | HIGH | CVE-2025-49146, CVE-2026-42198, CVE-2026-54291 | `cases/10-java-to-kotlin/dest/build.gradle.kts` (dependencia Gradle) |
 | 10 | `ch.qos.logback:logback-classic` | `1.5.12` | `1.5.18` | - | — | `cases/10-java-to-kotlin/dest/build.gradle.kts` (dependencia Gradle) |
 | 10 | `io.ktor` | `2.3.13` | `2.3.13` | - | — | `cases/10-java-to-kotlin/dest/build.gradle.kts` (`val ktorVersion = "2.3.13"`, linea 16) |
 | 19 | `ring/ring-core` | `1.12.2` | `1.15.6` | - | — | `cases/19-fsharp-to-clojure/dest/project.clj` (dependencia Leiningen) |

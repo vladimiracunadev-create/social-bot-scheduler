@@ -54,6 +54,11 @@ updates:
     labels:
       - "security"
       - "dependencies"
+    ignore:
+      # 3.13 es la rama elegida: 3.14+ reduce las ruedas precompiladas disponibles para los locks con hash.
+      - dependency-name: "python"
+        update-types:
+          - "version-update:semver-minor"
 
   # Go — Case 02 destination
   - package-ecosystem: "gomod"
@@ -90,6 +95,15 @@ updates:
     labels:
       - "security"
       - "dependencies"
+    ignore:
+      # reqwest 0.13 es ruptura de API en una crate 0.x; sin advisory.
+      - dependency-name: "reqwest"
+        update-types:
+          - "version-update:semver-minor"
+      # rumqttc 0.25 es ruptura de API en una crate 0.x; sin advisory.
+      - dependency-name: "rumqttc"
+        update-types:
+          - "version-update:semver-minor"
 
   # Rust — Case 17 origin. Faltaba: tiene Cargo.toml Y Cargo.lock, asi que las
   # transitivas (tokio y compania) solo se mantienen al dia si Dependabot las ve.
@@ -100,6 +114,15 @@ updates:
     labels:
       - "security"
       - "dependencies"
+    ignore:
+      # reqwest 0.13 es ruptura de API en una crate 0.x; sin advisory.
+      - dependency-name: "reqwest"
+        update-types:
+          - "version-update:semver-minor"
+      # rumqttc 0.25 es ruptura de API en una crate 0.x; sin advisory.
+      - dependency-name: "rumqttc"
+        update-types:
+          - "version-update:semver-minor"
 
   # npm — Case 03 destination (Node.js)
   - package-ecosystem: "npm"
@@ -109,6 +132,19 @@ updates:
     labels:
       - "security"
       - "dependencies"
+    ignore:
+      # Express 5 es ruptura; los advisories de la 4 se cierran con 4.22.3 + overrides.
+      - dependency-name: "express"
+        update-types:
+          - "version-update:semver-major"
+      # Next 16 es ruptura; 15.5.28 esta sobre el piso de sus 38 advisories.
+      - dependency-name: "next"
+        update-types:
+          - "version-update:semver-major"
+      # El driver 7 es ruptura y el 6 no tiene advisory abierto.
+      - dependency-name: "mongodb"
+        update-types:
+          - "version-update:semver-major"
 
   # npm — Case 04 origin (Node.js)
   - package-ecosystem: "npm"
@@ -118,6 +154,19 @@ updates:
     labels:
       - "security"
       - "dependencies"
+    ignore:
+      # Express 5 es ruptura; los advisories de la 4 se cierran con 4.22.3 + overrides.
+      - dependency-name: "express"
+        update-types:
+          - "version-update:semver-major"
+      # Next 16 es ruptura; 15.5.28 esta sobre el piso de sus 38 advisories.
+      - dependency-name: "next"
+        update-types:
+          - "version-update:semver-major"
+      # El driver 7 es ruptura y el 6 no tiene advisory abierto.
+      - dependency-name: "mongodb"
+        update-types:
+          - "version-update:semver-major"
 
   # --------------------------------------------------------------------------------------------
   # Cobertura ampliada (v4.11.0): hasta esta versión Dependabot solo vigilaba 9 de los 20 casos.
@@ -133,6 +182,19 @@ updates:
     labels:
       - "security"
       - "dependencies"
+    ignore:
+      # Express 5 es ruptura; los advisories de la 4 se cierran con 4.22.3 + overrides.
+      - dependency-name: "express"
+        update-types:
+          - "version-update:semver-major"
+      # Next 16 es ruptura; 15.5.28 esta sobre el piso de sus 38 advisories.
+      - dependency-name: "next"
+        update-types:
+          - "version-update:semver-major"
+      # El driver 7 es ruptura y el 6 no tiene advisory abierto.
+      - dependency-name: "mongodb"
+        update-types:
+          - "version-update:semver-major"
 
   # npm — Case 13 origin (Node/kafkajs)
   - package-ecosystem: "npm"
@@ -142,6 +204,19 @@ updates:
     labels:
       - "security"
       - "dependencies"
+    ignore:
+      # Express 5 es ruptura; los advisories de la 4 se cierran con 4.22.3 + overrides.
+      - dependency-name: "express"
+        update-types:
+          - "version-update:semver-major"
+      # Next 16 es ruptura; 15.5.28 esta sobre el piso de sus 38 advisories.
+      - dependency-name: "next"
+        update-types:
+          - "version-update:semver-major"
+      # El driver 7 es ruptura y el 6 no tiene advisory abierto.
+      - dependency-name: "mongodb"
+        update-types:
+          - "version-update:semver-major"
 
   # npm — Case 14 origin (Next.js)
   - package-ecosystem: "npm"
@@ -151,6 +226,19 @@ updates:
     labels:
       - "security"
       - "dependencies"
+    ignore:
+      # Express 5 es ruptura; los advisories de la 4 se cierran con 4.22.3 + overrides.
+      - dependency-name: "express"
+        update-types:
+          - "version-update:semver-major"
+      # Next 16 es ruptura; 15.5.28 esta sobre el piso de sus 38 advisories.
+      - dependency-name: "next"
+        update-types:
+          - "version-update:semver-major"
+      # El driver 7 es ruptura y el 6 no tiene advisory abierto.
+      - dependency-name: "mongodb"
+        update-types:
+          - "version-update:semver-major"
 
   # npm — Case 14 destination (Node/Express)
   - package-ecosystem: "npm"
@@ -160,6 +248,19 @@ updates:
     labels:
       - "security"
       - "dependencies"
+    ignore:
+      # Express 5 es ruptura; los advisories de la 4 se cierran con 4.22.3 + overrides.
+      - dependency-name: "express"
+        update-types:
+          - "version-update:semver-major"
+      # Next 16 es ruptura; 15.5.28 esta sobre el piso de sus 38 advisories.
+      - dependency-name: "next"
+        update-types:
+          - "version-update:semver-major"
+      # El driver 7 es ruptura y el 6 no tiene advisory abierto.
+      - dependency-name: "mongodb"
+        update-types:
+          - "version-update:semver-major"
 
   # npm — Case 16 origin (Apollo GraphQL)
   - package-ecosystem: "npm"
@@ -169,6 +270,19 @@ updates:
     labels:
       - "security"
       - "dependencies"
+    ignore:
+      # Express 5 es ruptura; los advisories de la 4 se cierran con 4.22.3 + overrides.
+      - dependency-name: "express"
+        update-types:
+          - "version-update:semver-major"
+      # Next 16 es ruptura; 15.5.28 esta sobre el piso de sus 38 advisories.
+      - dependency-name: "next"
+        update-types:
+          - "version-update:semver-major"
+      # El driver 7 es ruptura y el 6 no tiene advisory abierto.
+      - dependency-name: "mongodb"
+        update-types:
+          - "version-update:semver-major"
 
   # npm — Case 16 receiver (Node/Express)
   - package-ecosystem: "npm"
@@ -178,6 +292,19 @@ updates:
     labels:
       - "security"
       - "dependencies"
+    ignore:
+      # Express 5 es ruptura; los advisories de la 4 se cierran con 4.22.3 + overrides.
+      - dependency-name: "express"
+        update-types:
+          - "version-update:semver-major"
+      # Next 16 es ruptura; 15.5.28 esta sobre el piso de sus 38 advisories.
+      - dependency-name: "next"
+        update-types:
+          - "version-update:semver-major"
+      # El driver 7 es ruptura y el 6 no tiene advisory abierto.
+      - dependency-name: "mongodb"
+        update-types:
+          - "version-update:semver-major"
 
   # npm — Case 17 destination (Node/MQTT)
   - package-ecosystem: "npm"
@@ -187,6 +314,19 @@ updates:
     labels:
       - "security"
       - "dependencies"
+    ignore:
+      # Express 5 es ruptura; los advisories de la 4 se cierran con 4.22.3 + overrides.
+      - dependency-name: "express"
+        update-types:
+          - "version-update:semver-major"
+      # Next 16 es ruptura; 15.5.28 esta sobre el piso de sus 38 advisories.
+      - dependency-name: "next"
+        update-types:
+          - "version-update:semver-major"
+      # El driver 7 es ruptura y el 6 no tiene advisory abierto.
+      - dependency-name: "mongodb"
+        update-types:
+          - "version-update:semver-major"
 
   # pip — Case 04 destination (FastAPI)
   - package-ecosystem: "pip"
@@ -268,6 +408,33 @@ updates:
     labels:
       - "security"
       - "dependencies"
+    ignore:
+      # Spring Boot 4 es ruptura; 3.5.x sigue recibiendo parches.
+      - dependency-name: "org.springframework.boot"
+        update-types:
+          - "version-update:semver-major"
+      # Ktor 3 migra a kotlinx-io; sin advisory que lo justifique.
+      - dependency-name: "io.ktor:ktor-server-core-jvm"
+        update-types:
+          - "version-update:semver-major"
+      # Idem.
+      - dependency-name: "io.ktor:ktor-server-netty-jvm"
+        update-types:
+          - "version-update:semver-major"
+      # La 1.6 cambia de linea; 1.5.18 esta al dia y sin advisory.
+      - dependency-name: "ch.qos.logback:logback-classic"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-major"
+      # Shadow 9 exige revisar el toolchain; sin advisory.
+      - dependency-name: "com.gradleup.shadow"
+        update-types:
+          - "version-update:semver-major"
+      # Kotlin 2.4 arrastra Gradle 9; sin advisory.
+      - dependency-name: "org.jetbrains.kotlin.jvm"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
 
   # gradle — Case 10 destination (Kotlin / Ktor)
   - package-ecosystem: "gradle"
@@ -277,6 +444,33 @@ updates:
     labels:
       - "security"
       - "dependencies"
+    ignore:
+      # Spring Boot 4 es ruptura; 3.5.x sigue recibiendo parches.
+      - dependency-name: "org.springframework.boot"
+        update-types:
+          - "version-update:semver-major"
+      # Ktor 3 migra a kotlinx-io; sin advisory que lo justifique.
+      - dependency-name: "io.ktor:ktor-server-core-jvm"
+        update-types:
+          - "version-update:semver-major"
+      # Idem.
+      - dependency-name: "io.ktor:ktor-server-netty-jvm"
+        update-types:
+          - "version-update:semver-major"
+      # La 1.6 cambia de linea; 1.5.18 esta al dia y sin advisory.
+      - dependency-name: "ch.qos.logback:logback-classic"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-major"
+      # Shadow 9 exige revisar el toolchain; sin advisory.
+      - dependency-name: "com.gradleup.shadow"
+        update-types:
+          - "version-update:semver-major"
+      # Kotlin 2.4 arrastra Gradle 9; sin advisory.
+      - dependency-name: "org.jetbrains.kotlin.jvm"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
 
   # bundler — Case 07 destination (Ruby / Sinatra)
   - package-ecosystem: "bundler"
