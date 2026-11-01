@@ -435,6 +435,12 @@ updates:
         update-types:
           - "version-update:semver-major"
           - "version-update:semver-minor"
+      # El plugin de serializacion va atado a la version del compilador de Kotlin:
+      # si se congela kotlin.jvm, este tiene que ir con el o el build no cuadra.
+      - dependency-name: "org.jetbrains.kotlin.plugin.serialization"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
 
   # gradle — Case 10 destination (Kotlin / Ktor)
   - package-ecosystem: "gradle"
@@ -468,6 +474,12 @@ updates:
           - "version-update:semver-major"
       # Kotlin 2.4 arrastra Gradle 9; sin advisory.
       - dependency-name: "org.jetbrains.kotlin.jvm"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
+      # El plugin de serializacion va atado a la version del compilador de Kotlin:
+      # si se congela kotlin.jvm, este tiene que ir con el o el build no cuadra.
+      - dependency-name: "org.jetbrains.kotlin.plugin.serialization"
         update-types:
           - "version-update:semver-major"
           - "version-update:semver-minor"
