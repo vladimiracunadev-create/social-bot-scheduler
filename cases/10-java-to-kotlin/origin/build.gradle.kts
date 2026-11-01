@@ -1,7 +1,7 @@
 // Case 10 — Emisor Java (Spring Boot, modelo bloqueante MVC) que reenvía a n8n.
 plugins {
     java
-    id("org.springframework.boot") version "3.5.16"
+    id("org.springframework.boot") version "4.1.2"
     id("io.spring.dependency-management") version "1.1.7"
 }
 
