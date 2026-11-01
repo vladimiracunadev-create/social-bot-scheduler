@@ -2,19 +2,15 @@
 
 [![CI/CD Pipeline](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/actions/workflows/ci-cd.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Docker Hub](https://img.shields.io/badge/Docker-Ready-blue.svg?logo=docker&logoColor=white)](https://hub.docker.com/)
 [![Version](https://img.shields.io/badge/version-4.11.0-green.svg)](https://github.com/vladimiracunadev-create/social-bot-scheduler/releases)
 [![Sitio](https://img.shields.io/badge/Sitio-GitHub%20Pages-6366f1.svg?logo=githubpages&logoColor=white)](https://vladimiracunadev-create.github.io/social-bot-scheduler/)
-[![Security: Hardened](https://img.shields.io/badge/Security-Hardened-🛡️?color=red&labelColor=black)](SECURITY.md)
+[![Seguridad](https://img.shields.io/badge/seguridad-hardened-critical.svg?logo=shieldsdotio&logoColor=white)](SECURITY.md)
 [![Runtimes sin EOL](https://img.shields.io/badge/runtimes-0%20en%20EOL-success.svg?logo=shieldsdotio&logoColor=white)](docs/VERSION_UPGRADES.md)
 
 Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. El **Social Bot Scheduler** actúa como una **Matriz Tecnológica** donde **n8n** orquesta la comunicación entre bots emisores y receptores políglotas.
 
-> 🌐 **Sitio del laboratorio**: <https://vladimiracunadev-create.github.io/social-bot-scheduler/> — la matriz de casos y toda esta documentación navegable como HTML (se regenera desde el repositorio en cada push a `main`).
-
 > [!NOTE]
-> **¿Qué significa "🛡️ Security: Hardened"?**
-> Este repositorio implementa una política de **Aislamiento Runtime**: Todos los servicios están limitados a `localhost`, usan imágenes base seguras con escaneos de vulnerabilidades manuales (Trivy) y no contienen secretos hardcodeados, mitigando riesgos de cadena de suministro.
+> **¿Qué significa «hardened»?** Aislamiento runtime (todo publicado solo en `127.0.0.1`, procesos no-root, sin secretos en el código) y una cadena de suministro con auditores **bloqueantes** en CI: `pip-audit`, `pnpm audit`, `govulncheck`, `cargo audit`, `bundler-audit`, `dotnet list package --vulnerable`, más Trivy sobre la imagen y Gitleaks sobre el historial. El detalle, capa por capa, en [SECURITY.md](SECURITY.md).
 
 ---
 
@@ -76,13 +72,13 @@ Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. 
 
 ```bash
 cp .env.example .env
-docker-compose up -d
+docker compose up -d
 ```
 
 Este comando levanta el núcleo del laboratorio:
 
 - 🌐 **n8n**: `http://localhost:5678`
-- 🖥️ **Master Dashboard**: `http://localhost:8080` *(con detección automática de casos OFFLINE/READY, contadores en vivo, modal con `docker-compose --profile caseXX up -d` para levantar lo que falte y badges de RAM por caso — v4.3.0)*
+- 🖥️ **Master Dashboard**: `http://localhost:8080` *(con detección automática de casos OFFLINE/READY, contadores en vivo, modal con `docker compose --profile caseXX up -d` para levantar lo que falte y badges de RAM por caso)*
 - 🔒 **Seguridad**: Puertos bindeados solo a `127.0.0.1`.
 
 ### 2. Demo Local Completa (Mode: Full)
@@ -123,7 +119,7 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 | **20** | `Swift` | **n8n** | `Dart (Shelf)` | 🔥 **Firestore (emu)** | `case20` | [📐 Ver](cases/20-swift-to-dart/ARCHITECTURE.md) |
 
 > [!TIP]
-> **Lote 1** (`v4.5.0`): 11, 16, 17. **Lote 2** (`v4.6.0`): 10, 12, 18. **Lote 3** (`v4.7.0`): 15, 20. **Lote 4** (`v4.8.0`): 13, 14. **Auditoría Docker** (`v4.9.0`): los 19 casos verificados end-to-end uno a uno con Docker (persistencia real por cada motor), corrigiendo bugs reales de arranque y de healthcheck — detalle en [docs/AUDIT_v4.9.0.md](docs/AUDIT_v4.9.0.md). **19 de 20 casos operativos** vía `docker-compose --profile caseNN up -d`. Puertos por la regla `8080 + id` (ver [docs/PORTS.md](docs/PORTS.md)).
+> **Lote 1** (`v4.5.0`): 11, 16, 17. **Lote 2** (`v4.6.0`): 10, 12, 18. **Lote 3** (`v4.7.0`): 15, 20. **Lote 4** (`v4.8.0`): 13, 14. **Auditoría Docker** (`v4.9.0`): los 19 casos verificados end-to-end uno a uno con Docker (persistencia real por cada motor), corrigiendo bugs reales de arranque y de healthcheck — detalle en [docs/AUDIT_v4.9.0.md](docs/AUDIT_v4.9.0.md). **19 de 20 casos operativos** vía `docker compose --profile caseNN up -d`. Puertos por la regla `8080 + id` (ver [docs/PORTS.md](docs/PORTS.md)).
 
 ### 🧪 Único caso pendiente
 
@@ -149,10 +145,9 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 - **HTTP Security Headers**: Todos los servicios Apache sirven `X-Frame-Options`, `X-Content-Type-Options`, `Content-Security-Policy`, `Referrer-Policy` y `Permissions-Policy`. Listado de directorios deshabilitado.
 - **Caddy Edge Proxy**: HTTPS + Basic Auth + HSTS + CSP + Permissions-Policy completos.
 - **Supply Chain**: Trivy v0.35.0, pip-audit, Gitleaks, detección de Unicode bidi (CVE-2021-42574) y ofuscación base64 en CI.
-- **Versiones de runtime sin deuda**: ningún lenguaje del laboratorio corre sobre una versión en EOL, y el guardrail `validate_security_manifests.py` falla el pipeline si alguna vuelve a quedarse atrás. Ver [Seguridad de versiones](#️-seguridad-de-versiones-remediación-de-cve).
-- **Cero `npm`**: pnpm 11 vía `corepack`, con scripts de instalación bloqueados y cuarentena de 24 h sobre publicaciones nuevas (mitigación Shai-Hulud). Builds con `--frozen-lockfile`.
-- **Dependencias con hash**: los 8 `requirements.txt` se compilan con `uv --generate-hashes`, lo que fuerza el modo `--require-hashes` de pip; los 9 paquetes Node llevan `pnpm-lock.yaml` commiteado y auditado.
-- **Dependabot**: PRs automáticos para **31 manifiestos en 10 ecosistemas** (pip, docker, gomod, cargo, nuget, gradle, bundler, pub, github-actions y `npm` —que rastrea los `pnpm-lock.yaml` sin ejecutar npm—), cubriendo los 20 casos.
+- **Versiones sin deuda**: ningún runtime corre sobre una versión en EOL, cada cambio queda registrado en el `security.yml` de su caso y el guardrail `validate_security_manifests.py` falla el pipeline si la documentación y el código se separan. Ver [Seguridad de versiones](#️-seguridad-de-versiones-remediación-de-cve).
+- **Instalación reproducible**: `npm` no se invoca en ninguna superficie — pnpm vía `corepack`, con los scripts de instalación bloqueados y cuarentena sobre publicaciones recientes. Los locks de Python llevan hash SHA256 y los de Node van commiteados y auditados; los builds usan `--frozen-lockfile`.
+- **Dependabot**: cubre los manifiestos de los 20 casos en 10 ecosistemas (pip, docker, gomod, cargo, nuget, gradle, bundler, pub, github-actions y `npm` —que rastrea los `pnpm-lock.yaml` sin ejecutar npm—).
 - **Line endings**: `.gitattributes` garantiza LF en scripts shell para evitar `bad interpreter` en contenedores Linux.
 - **Proceso no-root**: Todos los contenedores corren como usuario sin privilegios.
 
@@ -171,7 +166,7 @@ El ecosistema demuestra cómo n8n puede actuar como un puente agnóstico entre c
 
 ## 🏗️ Arquitectura y Patrones
 
-El sistema no es solo una integración; es un catálogo vivo con **11 patrones arquitectónicos**:
+El sistema no es solo una integración; es un catálogo vivo de patrones. Los que más se notan al leer el código:
 
 1. **Microservicios**: 40+ contenedores independientes.
 2. **Event-Driven**: Comunicación 100% vía Webhooks.

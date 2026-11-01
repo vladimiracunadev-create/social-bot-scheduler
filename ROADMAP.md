@@ -12,7 +12,7 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 - [x] **78 advisories cerrados** (41 con CVE), verificados contra OSV.dev por versión exacta. Informe en [docs/VERSION_UPGRADES.md](docs/VERSION_UPGRADES.md).
 - [x] **Manifiesto de seguridad por caso** (`cases/NN-*/security.yml`) + guardrail `validate_security_manifests.py` en CI (P-08).
 - [x] **npm fuera del repositorio**: pnpm 11 vía corepack, política de supply-chain en `pnpm-workspace.yaml` y 9 lockfiles auditados en verde.
-- [x] **Dependabot de 9 a 31 entradas**, cubriendo los 20 casos.
+- [x] **Dependabot de 9 a 32 entradas**, cubriendo los 20 casos.
 - [ ] **Imágenes de base de datos e infraestructura**: fuera de este pase (`mongo:6.0`, `influxdb:1.8`); pendiente de revisión propia.
 - [ ] **`docker build` de las 29 imágenes**: tags verificados, build no ejecutado en local.
 
@@ -59,7 +59,7 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 - [x] **SHA-pinning de Actions (P-07)**: 27 `uses:` pinneadas a SHA de 40 chars en `ci-cd.yml` y `wiki-sync.yml`.
 - [x] **`cargo audit` bloqueante (P-05)**: sample Rust modernizado (`dotenvy`, `reqwest` 0.12) — RUSTSEC-2021-0141 y 2025-0134 cerrados.
 - [x] **`bundler-audit` con cobertura (P-06)**: `Gemfile` + `Gemfile.lock` en el caso Ruby.
-- [x] **5 ecosistemas auditando CVEs de forma bloqueante** en CI (Python, Go, Node, .NET, Rust, Ruby).
+- [x] **6 ecosistemas auditando CVEs de forma bloqueante** en CI (Python, Go, Node, .NET, Rust, Ruby).
 
 ### `v4.4.0` — "Cierre de Pendientes de Seguridad" 🔒 Ready
 

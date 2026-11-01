@@ -147,8 +147,8 @@ contra Docker Hub / MCR **antes** de escribir cada `FROM`.
   maliciosa en PyPI entraba en el build. Ahora usa `requirements.txt` con hashes SHA256.
 - **Builds Node reproducibles**: los 7 Dockerfiles pasan a `pnpm install --prod
   --frozen-lockfile` y copian el `pnpm-workspace.yaml` para que la política aplique en el build.
-- **Dependabot de 9 a 31 entradas**, cubriendo los 20 casos (`npm` ×9, `pip` ×8, `gomod` ×5,
-  `nuget` ×2, `gradle` ×2, `cargo`, `bundler`, `pub`, `docker`, `github-actions`). El caso 11
+- **Dependabot de 9 a 32 entradas**, cubriendo los 20 casos (`npm` ×9, `pip` ×8, `gomod` ×5,
+  `cargo` ×2, `nuget` ×2, `gradle` ×2, `bundler`, `pub`, `docker`, `github-actions`). El caso 11
   queda fuera a propósito y documentado: no hay nada que Dependabot pueda resolver.
 - **Imagen del hub**: la purga de `pip` del runtime apuntaba a rutas `python3.11` hardcodeadas.
   Con la base en 3.13 habría fallado en silencio y habría devuelto los hallazgos HIGH de Trivy;

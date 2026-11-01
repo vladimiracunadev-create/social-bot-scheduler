@@ -293,6 +293,100 @@ def check_structure(path: Path, doc: Any, lab_version: str) -> list[str]:
     return issues
 
 
+# Una linea que cita un release anterior describe lo que era cierto ENTONCES:
+# corregirle la cifra seria reescribir la historia, asi que se excluye.
+HISTORICO_RE = re.compile(r"v4\.(?:[0-9]|10)\b")
+
+
+def texto_actual(doc: Path) -> str:
+    """El documento sin sus lineas de registro historico."""
+    return "\n".join(
+        linea
+        for linea in doc.read_text(encoding="utf-8").splitlines()
+        if not HISTORICO_RE.search(linea)
+    )
+
+
+def check_doc_claims() -> list[str]:
+    """Comprueba las cifras que los documentos afirman sobre el propio repositorio."""
+    issues: list[str] = []
+
+    # Dependabot: cuantas entradas y cuantos ecosistemas hay de verdad.
+    dependabot = ROOT / ".github" / "dependabot.yml"
+    if dependabot.is_file():
+        cfg = yaml.safe_load(dependabot.read_text(encoding="utf-8")) or {}
+        updates = cfg.get("updates") or []
+        n_entradas = len(updates)
+        n_ecos = len({u.get("package-ecosystem") for u in updates})
+
+        # ROADMAP y CHANGELOG son registros historicos: sus cifras describen el
+        # estado de un release pasado y no deben "corregirse". Solo se comprueban
+        # los documentos de ESTADO ACTUAL.
+        for rel in ("SECURITY.md", "README.md"):
+            doc = ROOT / rel
+            if not doc.is_file():
+                continue
+            texto = texto_actual(doc)
+            for m in re.finditer(
+                r"\*?\*?(\d+) entradas\*?\*?[^.\n]{0,40}(?:que cubren|cubriendo)", texto
+            ):
+                if int(m.group(1)) != n_entradas:
+                    issues.append(
+                        f"{rel}: afirma {m.group(1)} entradas de Dependabot, "
+                        f"pero .github/dependabot.yml tiene {n_entradas}"
+                    )
+            for m in re.finditer(r"(\d+) ecosistemas", texto):
+                if int(m.group(1)) != n_ecos:
+                    issues.append(
+                        f"{rel}: afirma {m.group(1)} ecosistemas de Dependabot, "
+                        f"pero hay {n_ecos}"
+                    )
+            # Cada directorio citado tiene que existir.
+        for u in updates:
+            d = str(u.get("directory", "")).lstrip("/")
+            if d and not (ROOT / d).is_dir():
+                issues.append(
+                    f".github/dependabot.yml: la entrada {u.get('package-ecosystem')} "
+                    f"apunta a '/{d}', que no existe"
+                )
+
+    # Locks con hash de Python y lockfiles de Node, contados de verdad.
+    n_py = len(
+        [
+            q
+            for q in ROOT.rglob("requirements.txt")
+            if "venv" not in q.parts
+            and ".claude" not in q.parts
+            and "node_modules" not in q.parts
+        ]
+    )
+    n_node = len(
+        [
+            q
+            for q in (ROOT / "cases").rglob("pnpm-lock.yaml")
+            if "node_modules" not in q.parts
+        ]
+    )
+    for rel in ("SECURITY.md", "README.md"):
+        doc = ROOT / rel
+        if not doc.is_file():
+            continue
+        texto = texto_actual(doc)
+        for m in re.finditer(r"los (\d+) `requirements\.txt`", texto):
+            if int(m.group(1)) != n_py:
+                issues.append(
+                    f"{rel}: afirma {m.group(1)} requirements.txt, pero hay {n_py}"
+                )
+        for m in re.finditer(r"los (\d+) paquetes Node", texto):
+            if int(m.group(1)) != n_node:
+                issues.append(
+                    f"{rel}: afirma {m.group(1)} paquetes Node, pero hay {n_node} "
+                    f"con pnpm-lock.yaml"
+                )
+
+    return issues
+
+
 def main() -> int:
     issues: list[str] = []
     lab_version = read_version_from_readme()
@@ -367,6 +461,13 @@ def main() -> int:
                     f"abandonada en su security.yml, sigue usandose: {ref}"
                 )
                 break
+
+    # ------------------------------------------------------------------------------
+    # Afirmaciones numericas de la documentacion contra la realidad del repositorio.
+    # Una cifra escrita a mano en un .md envejece en cuanto alguien toca un fichero,
+    # y entonces la documentacion miente sin que nadie se entere.
+    # ------------------------------------------------------------------------------
+    issues.extend(check_doc_claims())
 
     if issues:
         print("Guardrail de manifiestos de seguridad: FALLA\n")
