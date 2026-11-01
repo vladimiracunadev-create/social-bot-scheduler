@@ -41,25 +41,25 @@ Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. 
 | ---: | ---: | ---: | ---: | ---: |
 | **78** (41 con CVE) | **51** | **92** | **0** | **5** (declarados) |
 
-Cada fila de la tabla enlaza a su documentación completa: ventanas de soporte con gráfico, justificación, la tabla de implementación fichero a fichero, los advisories del stack y el riesgo de ruptura.
+«Casos» es a cuántos de los 20 afecta el cambio; cada página lista cuáles. Ahí están también la ventana de soporte con su gráfico, la justificación, la tabla de implementación fichero a fichero y el riesgo de ruptura.
 
-| Stack | Cambio | Casos | Advisories | Por qué | Documentación |
-| :--- | :--- | :--- | ---: | :--- | :--- |
-| 🐹 | **Go 1.21 / 1.23 → 1.27** | 02, 03, 06, 13, 15 | 12 | EOL desde 2024-08-13; 72 advisories de stdlib | [Ver detalle](docs/upgrades/go.md) |
-| 🟩 | **Node.js 20 → 24 LTS** | 03, 04, 05, 13, 14, 16, 17 | 31 | EOL desde 2026-04-30 | [Ver detalle](docs/upgrades/nodejs.md) |
-| 🐍 | **Python 3.11 → 3.13 (Debian 12 → 13)** | 01, 02, 04, 08, 09, 12, 15 | 15 | Solo-seguridad; base Debian 12 → 13 | [Ver detalle](docs/upgrades/python.md) |
-| 🐘 | **PHP 8.2 → 8.4** | 01, 05, 06 | — | Soporte activo cerrado en 2024-12-31 | [Ver detalle](docs/upgrades/php.md) |
-| 💎 | **Ruby 3.2 → 3.4** | 07 | 4 | EOL desde 2026-03-31 | [Ver detalle](docs/upgrades/ruby.md) |
-| 🟦 | **.NET 6 / 9 → 10 (LTS)** | 08, 19 | — | .NET 6 llevaba 2 años sin parches | [Ver detalle](docs/upgrades/dotnet.md) |
-| 🏔️ | **Alpine 3.20 → 3.23.7** | 02, 13, 15, 17, 18 | — | Sin parches desde 2026-04-01 | [Ver detalle](docs/upgrades/alpine.md) |
-| 🦀 | **Rust 1.83 → 1.99** | 07, 17 | — | 16 releases de retraso | [Ver detalle](docs/upgrades/rust.md) |
-| 💜 | **Erlang/OTP 27 → 28 · Elixir 1.17 → 1.18** | 11 | 3 | `cowboy` con 3 advisories, uno HIGH | [Ver detalle](docs/upgrades/beam.md) |
-| 💠 | **Crystal 1.14 → 1.22** | 18 | — | `kemal` 1.15 exige Crystal ≥ 1.12 | [Ver detalle](docs/upgrades/crystal.md) |
-| 🧡 | **Swift 6.0 → 6.2** | 20 | — | 2 años de retraso | [Ver detalle](docs/upgrades/swift.md) |
-| 🎯 | **Dart y Debian: fuera los tags flotantes** | 20 | — | Tags flotantes: build irreproducible | [Ver detalle](docs/upgrades/dart.md) |
-| ☕ | **JVM: Temurin 21 se queda, Gradle 8.11 → 8.14** | 10, 19, 20 | 13 | Jackson, pgjdbc y Jetty vulnerables | [Ver detalle](docs/upgrades/jvm.md) |
-| 📦 | **pnpm 10 → 11: npm fuera del laboratorio** | 03, 04, 05, 13, 14, 16, 17, 20 | — | Mitigación Shai-Hulud + npm fuera | [Ver detalle](docs/upgrades/pnpm.md) |
-| ⚡ | **Zig 0.13: por qué NO se subió** | 18 | — | **No se subió**: sin advisory y rompe el build | [Ver detalle](docs/upgrades/zig.md) |
+| Cambio | Casos | Advisories | Por qué | Documentación |
+| :--- | ---: | ---: | :--- | :--- |
+| 🐹 **Go 1.21 / 1.23 → 1.27** | 5 | 12 | EOL desde 2024-08-13; 72 advisories de stdlib | [Ver detalle](docs/upgrades/go.md) |
+| 🟩 **Node.js 20 → 24 LTS** | 7 | 31 | EOL desde 2026-04-30 | [Ver detalle](docs/upgrades/nodejs.md) |
+| 🐍 **Python 3.11 → 3.13 (Debian 12 → 13)** | 7 | 15 | Solo-seguridad; base Debian 12 → 13 | [Ver detalle](docs/upgrades/python.md) |
+| 🐘 **PHP 8.2 → 8.4** | 3 | — | Soporte activo cerrado en 2024-12-31 | [Ver detalle](docs/upgrades/php.md) |
+| 💎 **Ruby 3.2 → 3.4** | 1 | 4 | EOL desde 2026-03-31 | [Ver detalle](docs/upgrades/ruby.md) |
+| 🟦 **.NET 6 / 9 → 10 (LTS)** | 2 | — | .NET 6 llevaba 2 años sin parches | [Ver detalle](docs/upgrades/dotnet.md) |
+| 🏔️ **Alpine 3.20 → 3.23.7** | 5 | — | Sin parches desde 2026-04-01 | [Ver detalle](docs/upgrades/alpine.md) |
+| 🦀 **Rust 1.83 → 1.99** | 2 | — | 16 releases de retraso | [Ver detalle](docs/upgrades/rust.md) |
+| 💜 **Erlang/OTP 27 → 28 · Elixir 1.17 → 1.18** | 1 | 3 | `cowboy` con 3 advisories, uno HIGH | [Ver detalle](docs/upgrades/beam.md) |
+| 💠 **Crystal 1.14 → 1.22** | 1 | — | `kemal` 1.15 exige Crystal ≥ 1.12 | [Ver detalle](docs/upgrades/crystal.md) |
+| 🧡 **Swift 6.0 → 6.2** | 1 | — | 2 años de retraso | [Ver detalle](docs/upgrades/swift.md) |
+| 🎯 **Dart y Debian: fuera los tags flotantes** | 1 | — | Tags flotantes: build irreproducible | [Ver detalle](docs/upgrades/dart.md) |
+| ☕ **JVM: Temurin 21 se queda, Gradle 8.11 → 8.14** | 3 | 13 | Jackson, pgjdbc y Jetty vulnerables | [Ver detalle](docs/upgrades/jvm.md) |
+| 📦 **pnpm 10 → 11: npm fuera del laboratorio** | 8 | — | Mitigación Shai-Hulud + npm fuera | [Ver detalle](docs/upgrades/pnpm.md) |
+| ⚡ **Zig 0.13: por qué NO se subió** | 1 | — | **No se subió**: sin advisory y rompe el build | [Ver detalle](docs/upgrades/zig.md) |
 
 > 📘 **Procedimiento, historial y hallazgos abiertos**: [docs/VERSION_UPGRADES.md](docs/VERSION_UPGRADES.md) — el documento vivo que explica cómo se hace una subida de versión aquí, para este pase y los siguientes.
 

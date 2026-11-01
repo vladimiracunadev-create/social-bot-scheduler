@@ -1056,13 +1056,13 @@ def escribir_readme(indice):
     )
     A("")
     A(
-        "Cada fila de la tabla enlaza a su documentación completa: ventanas de soporte con "
-        "gráfico, justificación, la tabla de implementación fichero a fichero, los "
-        "advisories del stack y el riesgo de ruptura."
+        "«Casos» es a cuántos de los 20 afecta el cambio; cada página lista cuáles. Ahí "
+        "están también la ventana de soporte con su gráfico, la justificación, la tabla "
+        "de implementación fichero a fichero y el riesgo de ruptura."
     )
     A("")
-    A("| Stack | Cambio | Casos | Advisories | Por qué | Documentación |")
-    A("| :--- | :--- | :--- | ---: | :--- | :--- |")
+    A("| Cambio | Casos | Advisories | Por qué | Documentación |")
+    A("| :--- | ---: | ---: | :--- | :--- |")
     MOTIVO = {
         "go": "EOL desde 2024-08-13; 72 advisories de stdlib",
         "nodejs": "EOL desde 2026-04-30",
@@ -1081,8 +1081,9 @@ def escribir_readme(indice):
         "zig": "**No se subió**: sin advisory y rompe el build",
     }
     for slug, icon, title, _h, casos, n_adv in indice:
+        n_casos = len(casos.split(", ")) if casos else 0
         A(
-            f"| {icon} | **{title}** | {casos or '—'} | {n_adv or '—'} | "
+            f"| {icon} **{title}** | {n_casos or '—'} | {n_adv or '—'} | "
             f"{MOTIVO.get(slug, '—')} | [Ver detalle](docs/upgrades/{slug}.md) |"
         )
     A("")
