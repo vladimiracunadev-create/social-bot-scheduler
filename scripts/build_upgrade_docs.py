@@ -27,7 +27,9 @@ import pathlib
 
 import yaml
 
-ROOT = pathlib.Path("C:/dev/social-bot-scheduler")
+# La raiz se deriva de la ubicacion del script, nunca de una ruta absoluta ni del
+# directorio de trabajo: asi funciona igual en cualquier maquina y en el runner de CI.
+ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "docs" / "upgrades"
 
 # slug del fichero -> metadatos del cambio
