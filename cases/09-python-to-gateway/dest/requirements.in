@@ -4,7 +4,7 @@
 #       requirements.in -o requirements.txt
 duckdb==2.0.0
 fastapi==0.162.0
-pydantic==2.14.2
+pydantic==2.14.3
 requests==2.34.2
 uvicorn==0.54.0
 slowapi>=0.1.10
