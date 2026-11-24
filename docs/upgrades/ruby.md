@@ -12,7 +12,7 @@
 | :--- | :--- |
 | **Casos afectados** | 1 (07) |
 | **Cambios de versión registrados** | 1 |
-| **Advisories cerrados en dependencias de este stack** | 4 |
+| **Advisories cerrados en dependencias de este stack** | 7 |
 | **Riesgo de ruptura** | Bajo para el intérprete |
 
 ## Ventanas de soporte
@@ -67,8 +67,8 @@ Las rutas de esta tabla las verifica `scripts/validate_security_manifests.py` en
 
 | Caso | Paquete | De | A | Severidad | Advisories | Fichero y mecanismo |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| 07 | `sinatra` | `4.2.1 (Gemfile.lock)` | `4.2.1` | - | — | `cases/07-rust-to-ruby/dest/Gemfile.lock` (version resuelta por bundler) |
-| 07 | `rack` | `3.2.6 (Gemfile.lock)` | `3.2.8` | HIGH | GHSA-5v64-555j-wjxm, GHSA-2j8w-xcrc-x985, GHSA-wvg4-6p58-3gh3, GHSA-p8x9-v4hv-2w4g | `cases/07-rust-to-ruby/dest/Gemfile` (piso de version de bundler); `cases/07-rust-to-ruby/dest/Gemfile.lock` (version resuelta por bundler) |
+| 07 | `sinatra` | `4.2.1 (Gemfile.lock)` | `4.2.2` | HIGH | GHSA-pf75-2v58-7mxg, GHSA-r29j-38x9-qr26, GHSA-vvhm-j6m8-64cw | `cases/07-rust-to-ruby/dest/Gemfile` (piso de version de bundler); `cases/07-rust-to-ruby/dest/Gemfile.lock` (version resuelta por bundler) |
+| 07 | `rack` | `3.2.6 (Gemfile.lock)` | `3.2.9` | HIGH | GHSA-5v64-555j-wjxm, GHSA-2j8w-xcrc-x985, GHSA-wvg4-6p58-3gh3, GHSA-p8x9-v4hv-2w4g | `cases/07-rust-to-ruby/dest/Gemfile` (piso de version de bundler); `cases/07-rust-to-ruby/dest/Gemfile.lock` (version resuelta por bundler) |
 
 ## Riesgo y verificación
 

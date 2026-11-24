@@ -14,7 +14,7 @@ Aquí está el detalle de cada cambio de versión del laboratorio: qué se movi�
 | 🟩 | **Node.js 20 → 24 LTS** | 03, 04, 05, 13, 14, 16, 17 | 31 | [Ver documentación](upgrades/nodejs.md) |
 | 🐍 | **Python 3.11 → 3.13 (Debian 12 → 13)** | 01, 02, 04, 08, 09, 12, 15 | 15 | [Ver documentación](upgrades/python.md) |
 | 🐘 | **PHP 8.2 → 8.4** | 01, 05, 06 | — | [Ver documentación](upgrades/php.md) |
-| 💎 | **Ruby 3.2 → 3.4** | 07 | 4 | [Ver documentación](upgrades/ruby.md) |
+| 💎 | **Ruby 3.2 → 3.4** | 07 | 7 | [Ver documentación](upgrades/ruby.md) |
 | 🟦 | **.NET 6 / 9 → 10 (LTS)** | 08, 19 | — | [Ver documentación](upgrades/dotnet.md) |
 | 🏔️ | **Alpine 3.20 → 3.23.7** | 02, 13, 15, 17, 18 | — | [Ver documentación](upgrades/alpine.md) |
 | 🦀 | **Rust 1.83 → 1.99** | 07, 17 | — | [Ver documentación](upgrades/rust.md) |
@@ -152,7 +152,7 @@ Primer pase sistemático. Ningún runtime del laboratorio queda en EOL.
 | Casos revisados | 20 / 20 |
 | Cambios de runtime / imagen base | 51 |
 | Entradas de dependencia revisadas | 92 |
-| Advisories cerrados | 78 |
+| Advisories cerrados | 81 |
 | · de ellos con identificador CVE | 41 |
 | Hallazgos declarados ABIERTOS | 5 |
 

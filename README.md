@@ -36,7 +36,7 @@ Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. 
 
 | Advisories cerrados | Cambios de runtime | Dependencias revisadas | Runtimes en EOL | Hallazgos abiertos |
 | ---: | ---: | ---: | ---: | ---: |
-| **78** (41 con CVE) | **51** | **92** | **0** | **5** (declarados) |
+| **81** (41 con CVE) | **51** | **92** | **0** | **5** (declarados) |
 
 «Casos» es a cuántos de los 20 afecta el cambio; cada página lista cuáles. Ahí están también la ventana de soporte con su gráfico, la justificación, la tabla de implementación fichero a fichero y el riesgo de ruptura.
 
@@ -46,7 +46,7 @@ Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. 
 | 🟩 **Node.js 20 → 24 LTS** | 7 | 31 | EOL desde 2026-04-30 | [Ver detalle](docs/upgrades/nodejs.md) |
 | 🐍 **Python 3.11 → 3.13 (Debian 12 → 13)** | 7 | 15 | Solo-seguridad; base Debian 12 → 13 | [Ver detalle](docs/upgrades/python.md) |
 | 🐘 **PHP 8.2 → 8.4** | 3 | — | Soporte activo cerrado en 2024-12-31 | [Ver detalle](docs/upgrades/php.md) |
-| 💎 **Ruby 3.2 → 3.4** | 1 | 4 | EOL desde 2026-03-31 | [Ver detalle](docs/upgrades/ruby.md) |
+| 💎 **Ruby 3.2 → 3.4** | 1 | 7 | EOL desde 2026-03-31 | [Ver detalle](docs/upgrades/ruby.md) |
 | 🟦 **.NET 6 / 9 → 10 (LTS)** | 2 | — | .NET 6 llevaba 2 años sin parches | [Ver detalle](docs/upgrades/dotnet.md) |
 | 🏔️ **Alpine 3.20 → 3.23.7** | 5 | — | Sin parches desde 2026-04-01 | [Ver detalle](docs/upgrades/alpine.md) |
 | 🦀 **Rust 1.83 → 1.99** | 2 | — | 16 releases de retraso | [Ver detalle](docs/upgrades/rust.md) |
