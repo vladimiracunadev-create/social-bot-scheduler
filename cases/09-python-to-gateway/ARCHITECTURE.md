@@ -144,12 +144,56 @@ Dashboard: [`http://localhost:8089`](http://localhost:8089)
 
 ---
 
+## 📊 Capa analítica — Power BI (opcional)
+
+La DuckDB de este caso es, además de su almacén operativo, la **fuente más rica
+de la capa analítica**: es el único caso del laboratorio que registra también
+sus fallos y la latencia de cada llamada al proveedor, así que es el único cuya
+fiabilidad se puede medir de verdad.
+
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontSize':'26px','fontFamily':'Segoe UI, Arial, sans-serif'},'flowchart':{'useMaxWidth':true,'htmlLabels':false,'nodeSpacing':55,'rankSpacing':70,'padding':16,'diagramPadding':16}}}%%
+flowchart LR
+    DB[("DuckDB<br/>/app/data/case09.duckdb")]
+    GUARD{{"assert_read_only<br/>+ read_only=True"}}
+    RED["redaction.py<br/>api_key_* fuera"]
+    CSV["case09_requests.csv<br/>case09_provider_calls.csv<br/>case09_repo_snapshots.csv<br/>+ esquema en estrella"]
+    PBI["social-bot-caso09.pbix"]
+
+    DB -. "SELECT paginado" .-> GUARD --> RED --> CSV --> PBI
+
+    classDef motor fill:#FFF000,stroke:#333,color:#000
+    classDef guardia fill:#C62828,stroke:#333,color:#fff
+    classDef analitico fill:#5B3E96,stroke:#333,color:#fff
+    classDef fichero fill:#455A64,stroke:#333,color:#fff
+    classDef powerbi fill:#F2C811,stroke:#333,color:#000
+    class DB motor
+    class GUARD guardia
+    class RED analitico
+    class CSV fichero
+    class PBI powerbi
+```
+
+La lectura **no altera el estado del caso**: la conexión se abre con
+`read_only=True`, que DuckDB hace cumplir a nivel de motor. Y las columnas
+`api_key_prefix` y `api_key_hash` de `integration_requests` **no salen en la
+exportación**: el contrato ni siquiera puede declararlas.
+
+```powershell
+python -m analytics.powerbi.cli export --case 09 --out analytics/powerbi/exports/case09
+```
+
+Detalle en [docs/POWER_BI_INTEGRATION.md](../../docs/POWER_BI_INTEGRATION.md).
+
+---
+
 ## 🔗 Enlaces
 
 - 📄 [README del caso](README.md)
 - 🗺️ [Arquitectura global del laboratorio](../../docs/ARCHITECTURE.md)
 - 🛡️ [Guardrails de resiliencia](../../docs/GUARDRAILS.md)
 - 🧩 [Índice de casos](../../docs/CASES_INDEX.md)
+- 📊 [Integración con Power BI](../../docs/POWER_BI_INTEGRATION.md)
 
 ---
 

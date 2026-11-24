@@ -123,12 +123,62 @@ Dashboard: [`http://localhost:8096`](http://localhost:8096)
 
 ---
 
+## 📊 Capa analítica — Power BI (opcional)
+
+La hypertable de TimescaleDB se lee con `psql --csv` dentro del contenedor, con
+la sesión fijada en `default_transaction_read_only=on`: **es el propio servidor
+el que rechaza una escritura**, no solo el guardia del módulo.
+
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontSize':'26px','fontFamily':'Segoe UI, Arial, sans-serif'},'flowchart':{'useMaxWidth':true,'htmlLabels':false,'nodeSpacing':55,'rankSpacing':70,'padding':16,'diagramPadding':16}}}%%
+flowchart LR
+    DB[("TimescaleDB<br/>hypertable social_posts")]
+    PSQL{{"psql --csv<br/>default_transaction_read_only=on"}}
+    GUARD["assert_read_only<br/>solo SELECT"]
+    CSV["case16_posts.csv<br/>+ esquema en estrella"]
+    PBI["social-bot-caso16.pbix"]
+    DQ["DirectQuery<br/>conector PostgreSQL nativo"]
+
+    DB -. "SELECT paginado" .-> PSQL --> GUARD --> CSV --> PBI
+    DB -. "no implementado" .-> DQ
+
+    classDef motor fill:#FFF000,stroke:#333,color:#000
+    classDef guardia fill:#C62828,stroke:#333,color:#fff
+    classDef analitico fill:#5B3E96,stroke:#333,color:#fff
+    classDef fichero fill:#455A64,stroke:#333,color:#fff
+    classDef powerbi fill:#F2C811,stroke:#333,color:#000
+    classDef pendiente fill:#ECEFF1,stroke:#999,color:#555,stroke-dasharray: 5 5
+    class DB motor
+    class PSQL analitico
+    class GUARD guardia
+    class CSV fichero
+    class PBI powerbi
+    class DQ pendiente
+```
+
+Es además el caso con mejor camino hacia **DirectQuery**, porque TimescaleDB es
+PostgreSQL y Power BI trae conector nativo: bastaría publicar el 5432 en
+loopback. Aparece en gris y con línea discontinua porque **no está implementado
+ni verificado**.
+
+> **Limitación del modelo:** igual que el caso 13, la hypertable solo guarda los
+> posts que llegaron, así que su tasa de éxito es 100 % por construcción.
+
+```powershell
+python -m analytics.powerbi.cli export --case 16 --out analytics/powerbi/exports/case16
+```
+
+Detalle en [docs/POWER_BI_INTEGRATION.md](../../docs/POWER_BI_INTEGRATION.md).
+
+---
+
 ## 🔗 Enlaces
 
 - 📄 [README del caso](README.md)
 - 🗺️ [Arquitectura global del laboratorio](../../docs/ARCHITECTURE.md)
 - 🛡️ [Guardrails de resiliencia](../../docs/GUARDRAILS.md)
 - 🧩 [Índice de casos](../../docs/CASES_INDEX.md)
+- 📊 [Integración con Power BI](../../docs/POWER_BI_INTEGRATION.md)
 
 ---
 

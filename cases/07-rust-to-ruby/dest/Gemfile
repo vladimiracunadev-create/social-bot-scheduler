@@ -4,7 +4,15 @@
 # audite estas dependencias en CI (P-06).
 source 'https://rubygems.org'
 
-gem 'sinatra'
+# Piso explicito de sinatra: 4.2.1 fija `rack-protection (= 4.2.1)`, que
+# arrastra 3 advisories publicados el 2026-11-22 (GHSA-pf75-2v58-7mxg HIGH, una
+# sola peticion hace que CookieTossing rechace o tire la sesion de todas las
+# siguientes; GHSA-r29j-38x9-qr26, HostAuthorization admite hosts ajenos
+# terminados en un host permitido con punto inicial; y GHSA-vvhm-j6m8-64cw, un
+# Referer ausente se trata como mismo origen). Los tres se corrigen en
+# rack-protection 4.2.2, que solo entra subiendo sinatra a 4.2.2: la version
+# esta fijada con `=`, asi que no se puede subir la dependencia por separado.
+gem 'sinatra', '>= 4.2.2'
 # Piso explícito de rack: 3.2.6 arrastra 4 advisories publicados el 2026-11-01
 # (GHSA-5v64-555j-wjxm HIGH, agotamiento de memoria en el parser multipart;
 # GHSA-2j8w-xcrc-x985, Host inválido devuelto verbatim por #host_with_port;

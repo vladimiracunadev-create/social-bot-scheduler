@@ -56,16 +56,27 @@ dependencies:
   - ecosystem: "RubyGems"
     package: "sinatra"
     from: "4.2.1 (Gemfile.lock)"
-    to: "4.2.1"
-    advisories: []
-    severity: "-"
-    applied_in: "`cases/07-rust-to-ruby/dest/Gemfile.lock` (version resuelta por bundler)"
+    to: "4.2.2"
+    advisories:
+      - "GHSA-pf75-2v58-7mxg"
+      - "GHSA-r29j-38x9-qr26"
+      - "GHSA-vvhm-j6m8-64cw"
+    severity: "HIGH"
+    applied_in: "`cases/07-rust-to-ruby/dest/Gemfile` (piso de version de bundler); `cases/07-rust-to-ruby/dest/Gemfile.lock` (version resuelta por bundler)"
     note: >-
-      Ya estaba por encima del piso: CVE-2024-21510 se corrige en 4.1.0 y CVE-2025-61921 en 4.2.0.
+      CVE-2024-21510 se corrige en 4.1.0 y CVE-2025-61921 en 4.2.0, asi que 4.2.1 ya estaba por
+      encima de esos pisos. El 2026-11-22 se publicaron tres advisories de rack-protection 4.2.1:
+      una sola peticion hace que CookieTossing rechace o tire la sesion de todas las siguientes
+      (GHSA-pf75-2v58-7mxg, HIGH), HostAuthorization admite hosts ajenos terminados en un host
+      permitido con punto inicial (GHSA-r29j-38x9-qr26) y un Referer ausente se trata como mismo
+      origen, lo que permite saltarse JsonCsrf, RemoteToken y RemoteReferrer (GHSA-vvhm-j6m8-64cw).
+      Los tres se corrigen en rack-protection 4.2.2, pero sinatra la fija con `=`, asi que la unica
+      via es subir sinatra a 4.2.2. Los detecto bundler-audit en CI sobre un commit que no tocaba
+      este caso: su ruby-advisory-db se actualiza en cada ejecucion.
   - ecosystem: "RubyGems"
     package: "rack"
     from: "3.2.6 (Gemfile.lock)"
-    to: "3.2.8"
+    to: "3.2.9"
     advisories:
       - "GHSA-5v64-555j-wjxm"
       - "GHSA-2j8w-xcrc-x985"
@@ -82,6 +93,8 @@ dependencies:
       elude con un boundary vacio o citado (GHSA-p8x9-v4hv-2w4g). Los cuatro se corrigen en 3.2.8.
       Los detecto bundler-audit en CI, no la consulta a OSV: su ruby-advisory-db iba mas fresca.
       El Gemfile fija ahora el piso de forma explicita, porque sinatra solo pide >= 3.0.0, < 4.
+      Al regenerar el lock para subir sinatra a 4.2.2, bundler resolvio 3.2.9; el piso
+      declarado en el Gemfile sigue siendo 3.2.8, que es donde se cierran los cuatro advisories.
   - ecosystem: "crates.io"
     package: "reqwest"
     from: "0.12"

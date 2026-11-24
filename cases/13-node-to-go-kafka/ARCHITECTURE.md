@@ -114,12 +114,59 @@ Dashboard: [`http://localhost:8093`](http://localhost:8093)
 
 ---
 
+## 📊 Capa analítica — Power BI (opcional)
+
+ClickHouse ya es un motor OLAP columnar, así que la capa analítica no
+transforma el modelo: lo proyecta al grano común de eventos para poder
+compararlo con los otros casos.
+
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontSize':'26px','fontFamily':'Segoe UI, Arial, sans-serif'},'flowchart':{'useMaxWidth':true,'htmlLabels':false,'nodeSpacing':55,'rankSpacing':70,'padding':16,'diagramPadding':16}}}%%
+flowchart LR
+    DB[("ClickHouse<br/>social_posts")]
+    CLI{{"clickhouse-client<br/>dentro del contenedor"}}
+    GUARD["assert_read_only<br/>solo SELECT"]
+    CSV["case13_posts.csv<br/>+ esquema en estrella"]
+    PBI["social-bot-caso13.pbix"]
+
+    DB -. "SELECT paginado" .-> CLI --> GUARD --> CSV --> PBI
+
+    classDef motor fill:#FFF000,stroke:#333,color:#000
+    classDef guardia fill:#C62828,stroke:#333,color:#fff
+    classDef analitico fill:#5B3E96,stroke:#333,color:#fff
+    classDef fichero fill:#455A64,stroke:#333,color:#fff
+    classDef powerbi fill:#F2C811,stroke:#333,color:#000
+    class DB motor
+    class CLI analitico
+    class GUARD guardia
+    class CSV fichero
+    class PBI powerbi
+```
+
+El contenedor de ClickHouse **no publica ningún puerto en el anfitrión**, y es
+deliberado, así que la lectura usa el `clickhouse-client` que ya vive dentro.
+La contraseña viaja por el entorno del contenedor (`docker exec -e NOMBRE`, sin
+valor), no en la línea de comandos.
+
+> **Limitación del modelo:** `social_posts` solo guarda los posts que
+> *llegaron*. Un fallo de publicación no deja fila, así que la tasa de éxito de
+> este caso en Power BI es 100 % por construcción, no por mérito.
+
+```powershell
+python -m analytics.powerbi.cli export --case 13 --out analytics/powerbi/exports/case13
+```
+
+Detalle en [docs/POWER_BI_INTEGRATION.md](../../docs/POWER_BI_INTEGRATION.md).
+
+---
+
 ## 🔗 Enlaces
 
 - 📄 [README del caso](README.md)
 - 🗺️ [Arquitectura global del laboratorio](../../docs/ARCHITECTURE.md)
 - 🛡️ [Guardrails de resiliencia](../../docs/GUARDRAILS.md)
 - 🧩 [Índice de casos](../../docs/CASES_INDEX.md)
+- 📊 [Integración con Power BI](../../docs/POWER_BI_INTEGRATION.md)
 
 ---
 

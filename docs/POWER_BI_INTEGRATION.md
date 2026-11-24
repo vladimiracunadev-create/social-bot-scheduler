@@ -98,37 +98,69 @@ nuevo ronda las 60 líneas.
 
 ## 2. Arquitectura
 
-```
-┌──────────────────────── TRANSACCIONAL (cases/) ────────────────────────┐
-│                                                                        │
-│  Caso 09  bot Python → n8n → gateway FastAPI → DuckDB embebida         │
-│  Caso 13  bot Node   → Kafka → consumidor Go → ClickHouse (OLAP)       │
-│  Caso 16  Apollo     → n8n → Hasura → TimescaleDB (hypertable)         │
-│                                                                        │
-└───────────────────────────────┬────────────────────────────────────────┘
-                                │  SOLO LECTURA (SELECT, paginado)
-                                ▼
-┌──────────────────── ANALÍTICO (analytics/powerbi/) ────────────────────┐
-│                                                                        │
-│  sources/     adaptador por motor (duckdb · clickhouse · timescaledb)  │
-│  transport.py guardia de solo lectura + docker exec                    │
-│  redaction.py lista de denegación de columnas (credenciales fuera)     │
-│  contracts.py contratos de dataset (nombre, columnas, tipos, grano)    │
-│  normalize.py esquema en estrella conformado                           │
-│  writer.py    CSV UTF-8 con BOM + manifest.json con SHA-256            │
-│  cli.py       list · export · merge · sample · validate                │
-│                                                                        │
-└───────────────────────────────┬────────────────────────────────────────┘
-                                │  ficheros CSV + manifiesto
-                                ▼
-                    ┌───────────────────────────┐
-                    │   Power BI Desktop        │
-                    │   (sin cuenta, sin nube)  │
-                    └───────────────────────────┘
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontSize':'26px','fontFamily':'Segoe UI, Arial, sans-serif'},'flowchart':{'useMaxWidth':true,'htmlLabels':false,'nodeSpacing':55,'rankSpacing':70,'padding':16,'diagramPadding':16}}}%%
+flowchart TB
+    subgraph TX["TRANSACCIONAL - cases/ (sin cambios)"]
+        direction TB
+        B09["Bot Python"] --> N09(["n8n"]) --> G09["Gateway FastAPI"] --> D09[("DuckDB")]
+        B13["Bot Node"] --> K13(["Kafka"]) --> G13["Consumidor Go"] --> D13[("ClickHouse")]
+        B16["Apollo GraphQL"] --> N16(["n8n"]) --> G16["Hasura"] --> D16[("TimescaleDB")]
+    end
+
+    subgraph AN["ANALITICO - analytics/powerbi/ (solo lectura)"]
+        direction TB
+        GUARD{{"assert_read_only<br/>solo SELECT / WITH"}}
+        SRC["sources/ - un adaptador por motor"]
+        RED["redaction.py<br/>credenciales fuera"]
+        NORM["normalize.py<br/>esquema en estrella"]
+        WRI["writer.py<br/>CSV UTF-8 + SHA-256"]
+        GUARD --> SRC --> RED --> NORM --> WRI
+    end
+
+    subgraph OUT["SALIDA - ficheros en disco"]
+        direction TB
+        CSV["fact_events.csv<br/>dim_case / dim_channel / dim_date<br/>+ datasets crudos por caso"]
+        MAN["manifest.json<br/>filas y checksum por fichero"]
+    end
+
+    PBI["Power BI Desktop<br/>un .pbix por caso<br/>sin cuenta y sin nube"]
+
+    D09 -. "SELECT paginado" .-> GUARD
+    D13 -. "SELECT paginado" .-> GUARD
+    D16 -. "SELECT paginado" .-> GUARD
+    WRI --> CSV
+    WRI --> MAN
+    CSV --> PBI
+
+    classDef origen fill:#3776AB,stroke:#333,color:#fff
+    classDef puente fill:#EA4B71,stroke:#333,color:#fff
+    classDef destino fill:#009688,stroke:#333,color:#fff
+    classDef motor fill:#FFF000,stroke:#333,color:#000
+    classDef analitico fill:#5B3E96,stroke:#333,color:#fff
+    classDef guardia fill:#C62828,stroke:#333,color:#fff
+    classDef fichero fill:#455A64,stroke:#333,color:#fff
+    classDef powerbi fill:#F2C811,stroke:#333,color:#000
+
+    class B09,B13,B16 origen
+    class N09,K13,N16 puente
+    class G09,G13,G16 destino
+    class D09,D13,D16 motor
+    class SRC,RED,NORM,WRI analitico
+    class GUARD guardia
+    class CSV,MAN fichero
+    class PBI powerbi
 ```
 
-Los dos mundos quedan separados a propósito: el analítico nunca abre una
-conexión de escritura, y el transaccional no sabe que el analítico existe.
+Tres lecturas del diagrama, que son las tres decisiones de diseño:
+
+- **Las flechas cruzan en un solo sentido.** Del mundo transaccional al
+  analítico, nunca al revés. Ningún componente de `analytics/` abre una
+  conexión de escritura, y ningún caso sabe que la capa analítica existe.
+- **Todo pasa por el mismo cuello de botella.** `assert_read_only` es el único
+  camino hacia los motores: no hay un atajo por caso.
+- **La frontera con Power BI son ficheros, no una conexión.** Por eso el
+  informe funciona con los contenedores apagados.
 
 ### Por qué `docker exec` y no un driver
 

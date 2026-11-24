@@ -50,7 +50,22 @@ de latencia media mostraba **363 ms también en la fila `integration_request`**,
 que no mide latencia ninguna. Se detectó abriendo el informe en Power BI, no
 leyendo el código.
 
+#### 🛡️ Arreglo de seguridad en el caso 07 (Ruby)
+
+`bundler-audit` dejó `main` en rojo sobre este mismo commit, por una causa
+ajena al cambio: el auditor refresca su `ruby-advisory-db` en cada ejecución, y
+el **2026-11-22** se publicaron tres advisories de `rack-protection 4.2.1`
+—`GHSA-pf75-2v58-7mxg` (**HIGH**), `GHSA-r29j-38x9-qr26` y
+`GHSA-vvhm-j6m8-64cw`—. Cualquier commit empujado ese día habría fallado igual.
+
+`sinatra 4.2.1` fija `rack-protection (= 4.2.1)`, así que la dependencia no se
+podía subir por separado: se sube **Sinatra a 4.2.2** con piso explícito en el
+`Gemfile`, igual que ya se hizo con `rack`. Al regenerar el lock, bundler
+resolvió además `rack 3.2.9` y `tilt 2.9.0`. Verificado con el mismo
+`bundle-audit check --update` que corre en CI: **No vulnerabilities found**.
+
 #### Añadido
+
 
 - `analytics/powerbi/` — contratos de dataset, redacción de columnas,
   transporte de solo lectura, adaptadores por motor, normalización a esquema en
