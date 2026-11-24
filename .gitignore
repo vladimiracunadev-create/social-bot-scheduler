@@ -69,3 +69,8 @@ erl_crash.dump
 
 # Sitio publico generado por scripts/build_site.py (se reconstruye en cada despliegue)
 site/
+
+# Exportaciones reales de la capa Power BI: se regeneran con
+# `python -m analytics.powerbi.cli export` y contienen datos de ejecucion.
+# La muestra sintetica (analytics/powerbi/samples/) si se versiona.
+analytics/powerbi/exports/

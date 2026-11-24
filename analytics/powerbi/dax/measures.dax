@@ -1,0 +1,142 @@
+// =====================================================================
+// Social Bot Scheduler - Medidas DAX del modelo conformado
+// Contratos v1.0.0 - datasets: fact_events, dim_case, dim_channel, dim_date
+// =====================================================================
+// Pega cada medida en Power BI Desktop (Modelado > Nueva medida).
+// Solo dependen del esquema en estrella conformado, asi que las mismas
+// medidas sirven para una muestra sintetica y para una exportacion real.
+//
+// Relaciones que se dan por hechas (ver model/DATA_MODEL.md):
+//   dim_case[case_id]    1 -> * fact_events[case_id]
+//   dim_channel[channel] 1 -> * fact_events[channel]
+//   dim_date[date_key]   1 -> * fact_events[date_key]   (marcada como tabla de fechas)
+
+// IMPORTANTE - por que KEEPFILTERS
+// Un filtro suelto dentro de CALCULATE *sustituye* al filtro que ya haya sobre
+// esa columna en el contexto. Verificado en Power BI Desktop con la
+// exportacion real del caso 09: sin KEEPFILTERS, una tabla cortada por
+// event_type mostraba 363 ms de latencia media tambien en la fila
+// integration_request, que no mide latencia ninguna. Con KEEPFILTERS el filtro
+// se interseca con el del contexto y esa fila queda en blanco, que es lo
+// correcto. Lo mismo aplica a las medidas cortadas por status.
+
+// --- Volumen ----------------------------------------------------------
+
+Total Events :=
+COUNTROWS ( fact_events )
+
+Integration Requests :=
+CALCULATE (
+    COUNTROWS ( fact_events ),
+    KEEPFILTERS ( fact_events[event_type] = "integration_request" )
+)
+
+Provider Calls :=
+CALCULATE (
+    COUNTROWS ( fact_events ),
+    KEEPFILTERS ( fact_events[event_type] = "provider_call" )
+)
+
+Posts Projected :=
+CALCULATE (
+    COUNTROWS ( fact_events ),
+    KEEPFILTERS ( fact_events[event_type] = "post" )
+)
+
+Cases With Activity :=
+DISTINCTCOUNT ( fact_events[case_id] )
+
+Active Channels :=
+DISTINCTCOUNT ( fact_events[channel] )
+
+// --- Fiabilidad -------------------------------------------------------
+
+Succeeded Events :=
+CALCULATE (
+    COUNTROWS ( fact_events ),
+    KEEPFILTERS ( fact_events[status] = "SUCCEEDED" )
+)
+
+Failed Events :=
+CALCULATE (
+    COUNTROWS ( fact_events ),
+    KEEPFILTERS ( fact_events[status] = "FAILED" )
+)
+
+Success Rate :=
+VAR Total = [Total Events]
+RETURN
+    IF ( Total = 0, BLANK (), DIVIDE ( [Succeeded Events], Total ) )
+
+Failure Rate :=
+VAR Total = [Total Events]
+RETURN
+    IF ( Total = 0, BLANK (), DIVIDE ( [Failed Events], Total ) )
+
+// --- Latencia (solo las llamadas al proveedor la miden) ---------------
+
+Avg Latency ms :=
+CALCULATE (
+    AVERAGE ( fact_events[latency_ms] ),
+    KEEPFILTERS ( fact_events[event_type] = "provider_call" )
+)
+
+Max Latency ms :=
+CALCULATE (
+    MAX ( fact_events[latency_ms] ),
+    KEEPFILTERS ( fact_events[event_type] = "provider_call" )
+)
+
+// p95 aproximado: PERCENTILEX.INC sobre las filas de llamada filtradas.
+// Exacto sobre la exportacion; aproximado si algun dia se usa DirectQuery.
+// Se declara a proposito en vez de presentarlo como exacto.
+P95 Latency ms :=
+VAR Calls =
+    CALCULATETABLE (
+        fact_events,
+        KEEPFILTERS ( fact_events[event_type] = "provider_call" ),
+        NOT ISBLANK ( fact_events[latency_ms] )
+    )
+RETURN
+    IF (
+        COUNTROWS ( Calls ) = 0,
+        BLANK (),
+        PERCENTILEX.INC ( Calls, fact_events[latency_ms], 0.95 )
+    )
+
+// --- Inteligencia de tiempo (exige dim_date marcada como tabla de fechas)
+
+Events 7D :=
+CALCULATE (
+    [Total Events],
+    DATESINPERIOD ( dim_date[date_key], MAX ( dim_date[date_key] ), -7, DAY )
+)
+
+Events Prev Day :=
+CALCULATE ( [Total Events], DATEADD ( dim_date[date_key], -1, DAY ) )
+
+Events Day over Day % :=
+VAR Previous = [Events Prev Day]
+RETURN
+    IF (
+        OR ( ISBLANK ( Previous ), Previous = 0 ),
+        BLANK (),
+        DIVIDE ( [Total Events] - Previous, Previous )
+    )
+
+Failure Rate 7D :=
+VAR Window =
+    DATESINPERIOD ( dim_date[date_key], MAX ( dim_date[date_key] ), -7, DAY )
+RETURN
+    DIVIDE (
+        CALCULATE ( [Failed Events], Window ),
+        CALCULATE ( [Total Events], Window )
+    )
+
+// --- Comparacion entre casos ------------------------------------------
+
+Events per Case :=
+CALCULATE ( [Total Events], ALLEXCEPT ( fact_events, dim_case ) )
+
+Share of Events :=
+DIVIDE ( [Total Events], CALCULATE ( [Total Events], ALL ( dim_case ) ) )

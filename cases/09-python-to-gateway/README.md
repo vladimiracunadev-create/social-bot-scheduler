@@ -61,3 +61,26 @@ make demo09
 ---
 
 *Desarrollado como parte del Social Bot Scheduler — controles de seguridad al día en v4.4.0*
+
+---
+
+## 📊 Power BI (opcional)
+
+Este caso es el origen más rico de la capa analítica: es el único que registra
+también sus **fallos** y la **latencia** de cada llamada al proveedor, así que
+es el único cuya fiabilidad se puede medir de verdad.
+
+```powershell
+python -m analytics.powerbi.cli export --case 09 --out analytics/powerbi/exports/case09
+```
+
+Exporta tres datasets en solo lectura (`case09_requests`,
+`case09_provider_calls`, `case09_repo_snapshots`) más el esquema en estrella
+conformado. La lectura abre la DuckDB con `read_only=True`, así que no puede
+alterar el estado del caso.
+
+**`api_key_prefix` y `api_key_hash` nunca salen en la exportación**: el
+contrato no se puede declarar con ellas.
+
+Informe listo para abrir: `analytics/powerbi/reports/social-bot-caso09.pbix`.
+Guía completa: [docs/POWER_BI_INTEGRATION.md](../../docs/POWER_BI_INTEGRATION.md).

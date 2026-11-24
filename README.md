@@ -23,6 +23,7 @@ Laboratorio de integración industrial **multi-lenguaje** y **multi-servicio**. 
 - [🏢 Superficies de Riesgo (No exponer a Internet)](#-superficies-de-riesgo-no-exponer-a-internet)
 - [🏗️ Arquitectura y Patrones](#️-arquitectura-y-patrones)
 - [⚙️ Comandos Útiles](#️-comandos-útiles)
+- [📊 Business Intelligence con Power BI](#-business-intelligence-con-power-bi-opcional)
 - [📚 Documentación Relacionada](#-documentación-relacionada)
 
 ---
@@ -190,6 +191,35 @@ El sistema no es solo una integración; es un catálogo vivo de patrones. Los qu
 
 ---
 
+## 📊 Business Intelligence con Power BI (opcional)
+
+Desde la **v4.12.0** el laboratorio puede exportar su historia real a
+**Microsoft Power BI**, sin cuenta y sin servicios en la nube.
+
+El módulo [`analytics/powerbi/`](analytics/powerbi/) lee en **solo lectura** los
+motores analíticos de los casos **09** (DuckDB), **13** (ClickHouse) y **16**
+(TimescaleDB), los normaliza a un esquema en estrella común y escribe CSV más
+un `manifest.json` con el SHA-256 de cada fichero. Hay un informe `.pbix` por
+caso, ya construido, en `analytics/powerbi/reports/`.
+
+```powershell
+python -m analytics.powerbi.cli export --case 09 --out analytics/powerbi/exports/case09
+```
+
+- **No cambia ningún caso**: cada consulta pasa por un guardia que solo admite
+  `SELECT`, y cada motor se abre en modo lectura.
+- **No exporta credenciales**: `api_key_prefix` y `api_key_hash` del caso 09
+  están prohibidas por contrato.
+- **No entra en el perfil `full`**: es opcional por construcción.
+- **Power BI no necesita Docker**: los contenedores solo hacen falta al
+  exportar; el informe se construye y refresca con todo apagado.
+
+Paso a paso con capturas de Power BI Desktop, modelo de datos, medidas DAX,
+pruebas y limitaciones declaradas en
+[docs/POWER_BI_INTEGRATION.md](docs/POWER_BI_INTEGRATION.md).
+
+---
+
 ## 📚 Documentación Relacionada
 
 | Tipo | Documento |
@@ -200,6 +230,7 @@ El sistema no es solo una integración; es un catálogo vivo de patrones. Los qu
 | ☁️ **Migración a AWS** | [docs/AWS_MIGRATION.md](docs/AWS_MIGRATION.md) |
 | 🎓 **Guías** | [docs/INSTALL.md](docs/INSTALL.md) \| [docs/VERIFICATION_GUIDE.md](docs/VERIFICATION_GUIDE.md) |
 | 🛠️ **Operación** | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) \| [n8n/README.md](n8n/README.md) |
+| 📊 **Business Intelligence** | [docs/POWER_BI_INTEGRATION.md](docs/POWER_BI_INTEGRATION.md) — exportación de solo lectura a Power BI (casos 09, 13 y 16) |
 | 🛣️ **Progreso** | [ROADMAP.md](ROADMAP.md) |
 | 🌐 **Sitio publicado** | [vladimiracunadev-create.github.io/social-bot-scheduler](https://vladimiracunadev-create.github.io/social-bot-scheduler/) |
 

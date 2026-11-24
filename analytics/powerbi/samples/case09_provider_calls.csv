@@ -1,0 +1,43 @@
+﻿call_id,request_id,provider,mode,endpoint,http_status,latency_ms,error_code,error_message,created_at
+call-0000,req-0000,github,public,/users/python/repos,200,375,,,2026-01-09T09:00:02
+call-0001,req-0001,github,public,/users/golang/repos,200,235,,,2026-01-09T09:17:02
+call-0002,req-0002,github,public,/users/rust-lang/repos,200,389,,,2026-01-09T09:34:02
+call-0003,req-0003,github,public,/users/python/repos,200,207,,,2026-01-09T09:51:02
+call-0004,req-0004,github,public,/users/golang/repos,200,802,,,2026-01-09T10:08:02
+call-0005,req-0005,github,public,/users/rust-lang/repos,200,291,,,2026-01-09T10:25:02
+call-0100,req-0100,github,public,/users/python/repos,403,2256,PROVIDER_ERROR,provider answered 403,2026-01-10T09:00:02
+call-0101,req-0101,github,public,/users/golang/repos,200,713,,,2026-01-10T09:17:02
+call-0102,req-0102,github,public,/users/rust-lang/repos,200,758,,,2026-01-10T09:34:02
+call-0103,req-0103,github,public,/users/python/repos,200,164,,,2026-01-10T09:51:02
+call-0104,req-0104,github,public,/users/golang/repos,200,609,,,2026-01-10T10:08:02
+call-0105,req-0105,github,public,/users/rust-lang/repos,200,428,,,2026-01-10T10:25:02
+call-0200,req-0200,github,public,/users/python/repos,502,2183,PROVIDER_ERROR,provider answered 502,2026-01-11T09:00:02
+call-0201,req-0201,github,public,/users/golang/repos,200,779,,,2026-01-11T09:17:02
+call-0202,req-0202,github,public,/users/rust-lang/repos,200,618,,,2026-01-11T09:34:02
+call-0203,req-0203,github,public,/users/python/repos,200,283,,,2026-01-11T09:51:02
+call-0204,req-0204,github,public,/users/golang/repos,502,2063,PROVIDER_ERROR,provider answered 502,2026-01-11T10:08:02
+call-0205,req-0205,github,public,/users/rust-lang/repos,500,934,PROVIDER_ERROR,provider answered 500,2026-01-11T10:25:02
+call-0300,req-0300,github,public,/users/python/repos,500,1699,PROVIDER_ERROR,provider answered 500,2026-01-12T09:00:02
+call-0301,req-0301,github,public,/users/golang/repos,200,125,,,2026-01-12T09:17:02
+call-0302,req-0302,github,public,/users/rust-lang/repos,200,818,,,2026-01-12T09:34:02
+call-0303,req-0303,github,public,/users/python/repos,500,2089,PROVIDER_ERROR,provider answered 500,2026-01-12T09:51:02
+call-0304,req-0304,github,public,/users/golang/repos,403,2578,PROVIDER_ERROR,provider answered 403,2026-01-12T10:08:02
+call-0305,req-0305,github,public,/users/rust-lang/repos,200,397,,,2026-01-12T10:25:02
+call-0400,req-0400,github,public,/users/python/repos,200,569,,,2026-01-13T09:00:02
+call-0401,req-0401,github,public,/users/golang/repos,500,1618,PROVIDER_ERROR,provider answered 500,2026-01-13T09:17:02
+call-0402,req-0402,github,public,/users/rust-lang/repos,200,604,,,2026-01-13T09:34:02
+call-0403,req-0403,github,public,/users/python/repos,200,417,,,2026-01-13T09:51:02
+call-0404,req-0404,github,public,/users/golang/repos,200,773,,,2026-01-13T10:08:02
+call-0405,req-0405,github,public,/users/rust-lang/repos,200,616,,,2026-01-13T10:25:02
+call-0500,req-0500,github,public,/users/python/repos,200,472,,,2026-01-14T09:00:02
+call-0501,req-0501,github,public,/users/golang/repos,502,2238,PROVIDER_ERROR,provider answered 502,2026-01-14T09:17:02
+call-0502,req-0502,github,public,/users/rust-lang/repos,200,711,,,2026-01-14T09:34:02
+call-0503,req-0503,github,public,/users/python/repos,200,508,,,2026-01-14T09:51:02
+call-0504,req-0504,github,public,/users/golang/repos,200,844,,,2026-01-14T10:08:02
+call-0505,req-0505,github,public,/users/rust-lang/repos,200,764,,,2026-01-14T10:25:02
+call-0600,req-0600,github,public,/users/python/repos,200,733,,,2026-01-15T09:00:02
+call-0601,req-0601,github,public,/users/golang/repos,200,758,,,2026-01-15T09:17:02
+call-0602,req-0602,github,public,/users/rust-lang/repos,200,570,,,2026-01-15T09:34:02
+call-0603,req-0603,github,public,/users/python/repos,200,709,,,2026-01-15T09:51:02
+call-0604,req-0604,github,public,/users/golang/repos,200,782,,,2026-01-15T10:08:02
+call-0605,req-0605,github,public,/users/rust-lang/repos,200,507,,,2026-01-15T10:25:02

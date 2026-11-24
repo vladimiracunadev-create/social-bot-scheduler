@@ -4,6 +4,79 @@ Todos los cambios notables en este proyecto se documentan sistemáticamente en e
 
 ---
 
+## 📦 [4.12.0] — 2026-11-24
+
+### 📊 Integración con Microsoft Power BI (opcional, solo lectura)
+
+El laboratorio ya sabía mover datos entre stacks; no sabía **contarlos**. Esta
+versión añade una capa analítica en `analytics/powerbi/` que exporta la
+historia real de los casos **09** (DuckDB), **13** (ClickHouse) y **16**
+(TimescaleDB) a CSV, y un informe de Power BI por caso.
+
+No es un caso numerado nuevo ni entra en el perfil Docker `full`: es opcional
+por construcción y vive fuera de `cases/`.
+
+**Qué se verificó, no qué se supone.** Los tres casos se levantaron uno a uno,
+se generó tráfico real contra cada uno, se exportó, se cargó en **Power BI
+Desktop 2.160.1151.0** y se apagó el stack antes de pasar al siguiente:
+
+| Caso | Motor | Tráfico real generado | Exportado |
+| :--- | :--- | ---: | ---: |
+| 09 | DuckDB | 8 peticiones (6 OK, 2 fallidas) | 76 filas crudas |
+| 13 | Kafka → ClickHouse | 8 posts | 8 filas |
+| 16 | Hasura → TimescaleDB | 7 posts | 7 filas |
+
+#### Seguridad de la capa analítica
+
+- **Solo lectura por construcción.** `assert_read_only()` rechaza cualquier
+  sentencia que no sea un único `SELECT`/`WITH`, y además cada motor se abre en
+  modo lectura: `read_only=True` en DuckDB, `default_transaction_read_only=on`
+  en TimescaleDB, `readonly=1` en ClickHouse por HTTP.
+- **Credenciales fuera de la exportación.** La tabla `integration_requests` del
+  caso 09 guarda `api_key_prefix` y `api_key_hash`; ninguna sale. El contrato
+  ni siquiera puede declararlas: `DatasetContract` lanza `RedactionError`.
+- **Secretos fuera de `argv`.** Las contraseñas de los motores viajan por el
+  entorno del proceso cliente (`docker exec -e NOMBRE`, sin valor), no en la
+  línea de comandos, donde quedarían visibles en la tabla de procesos del
+  anfitrión. Lo destapó una prueba, no una revisión a ojo.
+- **Volumen acotado.** Paginación obligatoria y techo de 50 000 filas por
+  dataset.
+
+#### Corrección encontrada al ejecutar el informe
+
+Las medidas DAX filtradas necesitaban `KEEPFILTERS`. Sin él, un filtro dentro
+de `CALCULATE` *sustituye* al del contexto en vez de intersecarlo, y la tabla
+de latencia media mostraba **363 ms también en la fila `integration_request`**,
+que no mide latencia ninguna. Se detectó abriendo el informe en Power BI, no
+leyendo el código.
+
+#### Añadido
+
+- `analytics/powerbi/` — contratos de dataset, redacción de columnas,
+  transporte de solo lectura, adaptadores por motor, normalización a esquema en
+  estrella, escritura de CSV con manifiesto SHA-256 y CLI
+  (`list`, `export`, `merge`, `sample`, `validate`).
+- `analytics/powerbi/reports/` — un `.pbix` por caso, listo para abrir.
+- `analytics/powerbi/dax/measures.dax` — 18 medidas DAX.
+- `analytics/powerbi/model/DATA_MODEL.md` — relaciones, tipos, granos y claves.
+- `tests/powerbi/` — **87 pruebas**, sin Docker y sin red.
+- `docs/POWER_BI_INTEGRATION.md` — paso a paso con capturas reales de Power BI
+  Desktop, seguridad, costos, limitaciones y resolución de errores.
+
+#### Limitaciones declaradas
+
+- La tasa de éxito de los casos 13 y 16 es **100 % por construcción**: esas
+  tablas solo guardan los posts que llegaron. Solo el caso 09 registra fallos.
+- **DirectQuery no está implementado.** TimescaleDB es PostgreSQL y el conector
+  nativo funcionaría publicando el 5432 en loopback, pero no se ha hecho ni
+  verificado.
+- Sin publicación al servicio Power BI ni refresco programado.
+- Los otros 17 casos no tienen adaptador. Varios lo admitirían (01 MySQL,
+  10 PostgreSQL, 12 pgvector, 14 PostgREST, 15 CockroachDB, 17 InfluxDB,
+  18 Neo4j); añadir uno son un contrato y una clase de ~60 líneas.
+
+---
+
 ## 📦 [4.11.0] — 2026-11-01
 
 ### 🛡️ Remediación de CVE multi-lenguaje en los 20 casos

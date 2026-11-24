@@ -69,3 +69,25 @@ WEBHOOK_URL=http://localhost:5678/webhook/social-bot-scheduler-graphql pnpm star
 ## ✅ Estado
 
 Implementado y verificado (build + boot + health). Parte del **Lote 1** del roadmap v5.0 → v4.5.
+
+---
+
+## 📊 Power BI (opcional)
+
+```powershell
+python -m analytics.powerbi.cli export --case 16 --out analytics/powerbi/exports/case16
+```
+
+Exporta `case16_posts` desde la hypertable de TimescaleDB usando `psql --csv`
+dentro del contenedor, con la sesión fijada en
+`default_transaction_read_only=on`: el propio servidor rechaza una escritura.
+
+Es además el caso con mejor camino hacia **DirectQuery**, porque TimescaleDB es
+PostgreSQL y Power BI trae conector nativo. Publicar el 5432 en loopback sería
+el único paso que falta; hoy **no está hecho ni verificado**.
+
+> **Limitación honesta:** igual que el caso 13, la hypertable solo guarda los
+> posts que llegaron, así que su tasa de éxito es 100 % por construcción.
+
+Informe listo para abrir: `analytics/powerbi/reports/social-bot-caso16.pbix`.
+Guía completa: [docs/POWER_BI_INTEGRATION.md](../../docs/POWER_BI_INTEGRATION.md).

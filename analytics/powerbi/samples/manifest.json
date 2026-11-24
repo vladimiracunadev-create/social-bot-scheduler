@@ -1,0 +1,143 @@
+{
+  "contract_version": "1.0.0",
+  "generated_at": "2026-01-15T00:00:00+00:00",
+  "cases": [
+    "09",
+    "13",
+    "16"
+  ],
+  "sources": {
+    "09": "synthetic sample (no engine read)",
+    "13": "synthetic sample (no engine read)",
+    "16": "synthetic sample (no engine read)"
+  },
+  "datasets": [
+    {
+      "dataset": "case09_requests",
+      "file": "case09_requests.csv",
+      "rows": 42,
+      "sha256": "fcb046e25f70105f8fdb01d392a35d475cb73c393249ab42498e95cb0702c439",
+      "columns": [
+        "request_id",
+        "channel",
+        "action",
+        "owner",
+        "request_limit",
+        "status",
+        "created_at"
+      ]
+    },
+    {
+      "dataset": "case09_provider_calls",
+      "file": "case09_provider_calls.csv",
+      "rows": 42,
+      "sha256": "ef2d64428834e83150a3c0b12ea3f2a76763ccb4f3510004fc0a90d14373b0f0",
+      "columns": [
+        "call_id",
+        "request_id",
+        "provider",
+        "mode",
+        "endpoint",
+        "http_status",
+        "latency_ms",
+        "error_code",
+        "error_message",
+        "created_at"
+      ]
+    },
+    {
+      "dataset": "case09_repo_snapshots",
+      "file": "case09_repo_snapshots.csv",
+      "rows": 99,
+      "sha256": "7553c49b6a6fa75c510d42cdfe23648056153e6118328f0839dae63a81149af5",
+      "columns": [
+        "request_id",
+        "repo",
+        "stars",
+        "language",
+        "url"
+      ]
+    },
+    {
+      "dataset": "case13_posts",
+      "file": "case13_posts.csv",
+      "rows": 35,
+      "sha256": "0c3866633aa840084fa680dc664d3e6ec4a44c482a5dc0a5ef43fcf3c496387c",
+      "columns": [
+        "id",
+        "channel",
+        "text",
+        "created_at"
+      ]
+    },
+    {
+      "dataset": "case16_posts",
+      "file": "case16_posts.csv",
+      "rows": 35,
+      "sha256": "520e5103cb77590125a07e75f0d0ab6af65c0d0823ff41c5e45baaa7bae615f9",
+      "columns": [
+        "id",
+        "channel",
+        "text",
+        "scheduled_at",
+        "created_at"
+      ]
+    },
+    {
+      "dataset": "dim_case",
+      "file": "dim_case.csv",
+      "rows": 3,
+      "sha256": "76e0e238dbbe580637fdef206e048ca1d0f13a228d4d784dbd7433bc282cdc2c",
+      "columns": [
+        "case_id",
+        "case_name",
+        "origin_stack",
+        "dest_stack",
+        "engine"
+      ]
+    },
+    {
+      "dataset": "dim_channel",
+      "file": "dim_channel.csv",
+      "rows": 3,
+      "sha256": "67aab06170220d50bb4fea550030965f816a0fd553a71a7522c225e9d0e47433",
+      "columns": [
+        "channel",
+        "channel_label"
+      ]
+    },
+    {
+      "dataset": "dim_date",
+      "file": "dim_date.csv",
+      "rows": 7,
+      "sha256": "196d712e9c5e576c7e8e6df002d8753a51bbca51de97e3da2b3488f0724c4ba2",
+      "columns": [
+        "date_key",
+        "year",
+        "month",
+        "day",
+        "iso_week",
+        "weekday"
+      ]
+    },
+    {
+      "dataset": "fact_events",
+      "file": "fact_events.csv",
+      "rows": 154,
+      "sha256": "2632b5288eb66ba725b0d20eb96969716a14a6e56438bbd09919d4ded2be9a23",
+      "columns": [
+        "event_id",
+        "case_id",
+        "event_type",
+        "channel",
+        "status",
+        "subject",
+        "occurred_at",
+        "date_key",
+        "latency_ms",
+        "http_status"
+      ]
+    }
+  ],
+  "total_rows": 420
+}

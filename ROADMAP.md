@@ -6,6 +6,18 @@ Este documento describe la evolución técnica y los objetivos estratégicos del
 
 ## ✅ Hitos Completados
 
+### `v4.12.0` — "Business Intelligence con Power BI" 📊 Ready
+
+- [x] **Módulo `analytics/powerbi/`**: capa analítica de solo lectura, fuera de `cases/` y fuera del perfil Docker `full`.
+- [x] **Tres adaptadores verificados con datos reales**: caso 09 (DuckDB, 8 peticiones con 2 fallos), caso 13 (Kafka → ClickHouse, 8 posts), caso 16 (Hasura → TimescaleDB, 7 posts). Cada caso se levantó, exportó y apagó por separado.
+- [x] **Un informe `.pbix` por caso** en `analytics/powerbi/reports/`, construido y abierto en Power BI Desktop 2.160.1151.0.
+- [x] **Seguridad**: guardia de solo lectura, motores abiertos en modo lectura, lista de denegación que deja fuera `api_key_prefix`/`api_key_hash`, secretos fuera de `argv`, paginación con techo de filas.
+- [x] **87 pruebas** en `tests/powerbi/`, sin Docker y sin red.
+- [x] **Documentación paso a paso con capturas reales**: [docs/POWER_BI_INTEGRATION.md](docs/POWER_BI_INTEGRATION.md).
+- [ ] **DirectQuery sobre TimescaleDB**: el conector PostgreSQL nativo funcionaría publicando el 5432 en loopback; **no implementado ni verificado**.
+- [ ] **Adaptadores para los otros casos** (01 MySQL, 10 PostgreSQL, 12 pgvector, 14 PostgREST, 15 CockroachDB, 17 InfluxDB, 18 Neo4j): admitirían uno, no están hechos.
+- [ ] **Publicación al servicio Power BI y refresco programado**: fuera de alcance, la fase local no usa nube.
+
 ### `v4.11.0` — "Remediación de CVE multi-lenguaje" 🛡️ Ready
 
 - [x] **51 cambios de runtime o imagen base** en los 20 casos: Go 1.21/1.23 → 1.27, Node 20 → 24 LTS, Python 3.11 → 3.13, PHP 8.2 → 8.4, Ruby 3.2 → 3.4, .NET 6/9 → 10, Alpine 3.20 → 3.23.7, Rust 1.83 → 1.99, OTP 27 → 28, Crystal 1.14 → 1.22, Swift 6.0 → 6.2.

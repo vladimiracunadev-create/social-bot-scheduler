@@ -1,0 +1,4 @@
+﻿case_id,case_name,origin_stack,dest_stack,engine
+09,09-python-to-gateway,Python,FastAPI,duckdb
+13,13-node-to-go-kafka,Node.js + Kafka,Go consumer,clickhouse
+16,16-graphql-to-hasura,Apollo GraphQL,Hasura,timescaledb

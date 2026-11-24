@@ -59,3 +59,23 @@ docker-compose --profile case13 up -d      # Kafka + ClickHouse + consumer Go
 ## ✅ Estado
 
 Implementado y verificado (build + boot + health). Parte del **Lote 4** del roadmap v5.0 → v4.8.
+
+---
+
+## 📊 Power BI (opcional)
+
+```powershell
+python -m analytics.powerbi.cli export --case 13 --out analytics/powerbi/exports/case13
+```
+
+Exporta `case13_posts` desde ClickHouse. Como el contenedor no publica ningún
+puerto en el anfitrión —y es deliberado—, la lectura usa el
+`clickhouse-client` que ya vive dentro del contenedor, con la contraseña
+viajando por el entorno y no por la línea de comandos.
+
+> **Limitación honesta:** ClickHouse solo almacena los posts que *llegaron*. Un
+> fallo de publicación no deja fila, así que la tasa de éxito de este caso en
+> Power BI es 100 % por construcción, no por mérito.
+
+Informe listo para abrir: `analytics/powerbi/reports/social-bot-caso13.pbix`.
+Guía completa: [docs/POWER_BI_INTEGRATION.md](../../docs/POWER_BI_INTEGRATION.md).
